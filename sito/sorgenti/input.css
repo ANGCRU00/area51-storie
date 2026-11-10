@@ -24,6 +24,9 @@
   .tractor-beam { background:linear-gradient(180deg,rgba(185,230,46,.5) 0%,rgba(124,58,237,.15) 60%,rgba(7,5,20,0) 100%); clip-path:polygon(32% 0,68% 0,100% 100%,0 100%); }
   @keyframes ufo-hover { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
   .animate-ufo { animation:ufo-hover 5s ease-in-out infinite; }
+  /* Oggetto nel raggio: fluttua piano e ondeggia, con un periodo diverso dal disco così non vanno in sincrono */
+  @keyframes carico-fluttua { 0%,100%{transform:translateY(0) rotate(-4deg)} 50%{transform:translateY(-7px) rotate(4deg)} }
+  .animate-carico { animation:carico-fluttua 3.4s ease-in-out infinite; transform-origin:50% 70%; }
   @keyframes bob { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-3px)} }
   .ufo-bobbing { animation:bob 2.4s ease-in-out infinite; }
   .nav-tractor-light { background:linear-gradient(180deg,rgba(185,230,46,.75),rgba(185,230,46,0)); clip-path:polygon(30% 0,70% 0,100% 100%,0 100%); }
@@ -41,7 +44,7 @@
   .pianeta { display:block; opacity:.5; filter:drop-shadow(0 0 10px var(--glow,rgba(185,230,46,.4))); }
   @media (min-width:1024px) { .pianeta { opacity:.9; } }
   @media (prefers-reduced-motion: reduce) {
-    .animate-ufo,.ufo-bobbing,.marquee,.shooting { animation:none !important; }
+    .animate-ufo,.animate-carico,.ufo-bobbing,.marquee,.shooting { animation:none !important; }
     .shooting{display:none}
   }
 }

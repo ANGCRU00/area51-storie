@@ -19,6 +19,12 @@
       <ellipse cx="136" cy="92" rx="27" ry="40" transform="rotate(-28 136 92)" fill="#140C2B"/>
       <circle cx="74" cy="76" r="8" fill="#fff"/><circle cx="146" cy="76" r="8" fill="#fff"/>
     </symbol>
+    <symbol id="carico-funko" viewBox="0 0 100 100">
+      <ellipse cx="50" cy="90" rx="26" ry="6" fill="#140C2B"/><rect x="39" y="76" width="9" height="12" rx="3" fill="#140C2B"/><rect x="52" y="76" width="9" height="12" rx="3" fill="#140C2B"/>
+      <rect x="36" y="56" width="28" height="24" rx="6" fill="#5B21B6" stroke="#140C2B" stroke-width="3.5"/>
+      <rect x="22" y="12" width="56" height="48" rx="14" fill="#FFE45C" stroke="#140C2B" stroke-width="3.5"/><circle cx="39" cy="38" r="5" fill="#140C2B"/><circle cx="61" cy="38" r="5" fill="#140C2B"/>
+      <path d="M34 10 q6 -8 16 -4 q10 -4 16 4" fill="#B9E62E" stroke="#140C2B" stroke-width="3" stroke-linejoin="round"/>
+    </symbol>
     <symbol id="radar" viewBox="0 0 60 60">
       <circle cx="30" cy="30" r="26" fill="#140C2B" stroke="#B9E62E" stroke-width="3"/>
       <circle cx="30" cy="30" r="16" fill="none" stroke="#B9E62E" stroke-width="1.5" stroke-opacity=".6"/>
@@ -322,9 +328,10 @@
           <h1 class="font-heavy text-[2.1rem] sm:text-5xl lg:text-6xl leading-[1.02] text-white">Figure &amp; <span class="text-brand-lime">Funko</span></h1>
         </div>
         <!-- Disco con raggio: il raggio resta nella sua colonna e non passa mai sopra il testo -->
-        <div class="relative shrink-0 w-28 sm:w-44 lg:w-56 sm:row-span-2 flex flex-col items-center" aria-hidden="true">
-          <svg class="w-full h-12 sm:h-20 lg:h-24 relative z-10 animate-ufo drop-shadow-[0_10px_25px_rgba(185,230,46,.35)]"><use href="#disco"/></svg>
+        <div class="relative shrink-0 w-28 sm:w-44 lg:w-56 sm:row-span-2 flex flex-col items-center animate-ufo" aria-hidden="true">
+          <svg class="w-full h-12 sm:h-20 lg:h-24 relative z-10 drop-shadow-[0_10px_25px_rgba(185,230,46,.35)]"><use href="#disco"/></svg>
           <div class="tractor-beam w-full h-16 sm:h-24 lg:h-28 -mt-2 opacity-80"></div>
+          <div class="absolute left-1/2 bottom-0 -translate-x-1/2 z-10 w-14 h-14 sm:w-20 sm:h-20 lg:w-24 lg:h-24"><svg class="w-full h-full animate-carico" aria-hidden="true"><use href="#carico-funko"/></svg></div>
         </div>
         <p class="mt-4 col-span-2 sm:col-span-1 text-base sm:text-lg text-brand-muted max-w-xl leading-relaxed">Funko Pop e action figure: versioni speciali, scale e pezzi da collezione. Scegli online, ritiri e paghi in negozio.</p>
       </div>
