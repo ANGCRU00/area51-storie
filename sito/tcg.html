@@ -19,6 +19,14 @@
       <ellipse cx="136" cy="92" rx="27" ry="40" transform="rotate(-28 136 92)" fill="#140C2B"/>
       <circle cx="74" cy="76" r="8" fill="#fff"/><circle cx="146" cy="76" r="8" fill="#fff"/>
     </symbol>
+    <symbol id="radar" viewBox="0 0 60 60">
+      <circle cx="30" cy="30" r="26" fill="#140C2B" stroke="#B9E62E" stroke-width="3"/>
+      <circle cx="30" cy="30" r="16" fill="none" stroke="#B9E62E" stroke-width="1.5" stroke-opacity=".6"/>
+      <circle cx="30" cy="30" r="7" fill="none" stroke="#B9E62E" stroke-width="1.5" stroke-opacity=".6"/>
+      <path d="M30 30 L30 4 A26 26 0 0 1 52.5 17 Z" fill="#B9E62E" fill-opacity=".45"/>
+      <line x1="30" y1="30" x2="30" y2="4" stroke="#B9E62E" stroke-width="3" stroke-linecap="round"/>
+      <circle cx="19" cy="39" r="3" fill="#FFE45C"/>
+    </symbol>
     <symbol id="disco" viewBox="-345 -175 690 290">
       <ellipse cx="0" cy="-60" rx="130" ry="100" fill="#DCEFA0" stroke="#140C2B" stroke-width="10"/>
       <g transform="translate(-58 -150) scale(.58)">
@@ -260,7 +268,7 @@
 
 <!-- Linguetta FILTRI fissata al bordo sinistro, con l'alieno appoggiato sopra -->
 <div class="fixed left-0 top-1/2 -translate-y-1/2 z-40 flex flex-col items-start xl:hidden">
-  <svg class="w-11 h-11 -mb-2 ml-0.5 relative z-10 -rotate-12 drop-shadow-[0_4px_8px_rgba(0,0,0,.5)] pointer-events-none" aria-hidden="true"><use href="#alieno"/></svg>
+  <svg class="w-11 h-11 -mb-2 ml-0.5 relative z-10 drop-shadow-[0_4px_8px_rgba(0,0,0,.5)] pointer-events-none" aria-hidden="true"><use href="#radar"/></svg>
   <button type="button" id="filtri-apri" aria-controls="filtri-pannello" aria-expanded="false"
     class="relative bg-brand-lime text-black font-heavy text-xs sm:text-sm tracking-[0.2em] w-10 sm:w-11 py-5 rounded-r-xl border-2 border-l-0 border-[#140C2B] shadow-[4px_4px_0_#5B21B6] hover:bg-[#a6d420] hover:w-12 transition-all flex flex-col items-center gap-2">
     <span class="[writing-mode:vertical-rl] rotate-180">FILTRI</span>
@@ -276,7 +284,7 @@
   class="fixed inset-y-0 left-0 z-[70] w-[min(92vw,380px)] bg-[#0d0724] border-r-2 border-brand-lime shadow-[8px_0_0_#5B21B6] flex flex-col xl:sticky xl:top-24 xl:bottom-auto xl:left-auto xl:z-10 xl:w-80 xl:shrink-0 xl:mt-14 xl:max-h-[calc(100vh-7.5rem)] xl:border-2 xl:rounded-2xl xl:shadow-[6px_6px_0_#5B21B6]">
   <div class="flex items-center justify-between gap-3 px-5 py-4 border-b border-brand-violet/40">
     <div class="flex items-center gap-3">
-      <svg class="w-9 h-9" aria-hidden="true"><use href="#alieno"/></svg>
+      <svg class="w-9 h-9" aria-hidden="true"><use href="#radar"/></svg>
       <h2 id="filtri-titolo" class="font-heavy text-xl text-white">Filtri</h2>
     </div>
     <button type="button" id="filtri-chiudi" aria-label="Chiudi i filtri" class="xl:hidden w-11 h-11 rounded-full border border-white/15 hover:border-brand-lime hover:text-brand-lime flex items-center justify-center transition-colors">
