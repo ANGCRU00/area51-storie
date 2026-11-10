@@ -64,3 +64,7 @@ Si parla in italiano. Tutti i testi visibili sono in italiano.
 - Per pubblicare: caricare `index.html` aggiornato nel repo `ANGCRU00/area51-uscite`.
 
 - Eventi: le schede sono righe a tutta larghezza (data a sinistra, titolo, ora, quota, in palio e descrizione al centro, posti occupati con barra e Iscriviti a destra), come nel design Stitch scelto da Angelo. Date, orari, quote, posti e nomi delle espansioni sono inventati (calendario 2026).
+
+- Pagina prodotto (`sito/prodotto.html`): riceve i dati dall'indirizzo (cat, id, t titolo, s sotto, p prezzo, b distintivo, e etichetta, d disponibilità, c1/c2 colori). Li scrive uno script in fondo a ogni pagina di categoria che riscrive i link delle schede (MutationObserver su `#griglia`), così funziona anche aperta come file. Azione: Aggiungi al carrello (disponibile), Prenota (preordine), Ordinalo (esaurito); per i Gadget si sceglie taglia o misura. Descrizione, foto e codice sono segnaposto.
+- Il negozio (`sito/negozio.html`): nome Area 51, Viale G. Falcone e P. Borsellino 35, 76121 Barletta, tel. 0883 884567, mappa https://maps.app.goo.gl/z5Y362wULi7cZeE7A. Orari dati da Angelo: lun 17-20:30; mar-sab 9:30-13 e 17-20:30; dom chiuso. Lo stato "Aperto ora / Chiuso" si calcola nel browser. Gli orari sono anche nel piede di ogni pagina e nel riquadro "Ritira in negozio" del prodotto. "Il negozio" nel menu e nel piede porta a questa pagina.
+
