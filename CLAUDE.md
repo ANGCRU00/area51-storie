@@ -9,7 +9,7 @@ Si parla in italiano. Tutti i testi visibili sono in italiano.
 | --- | --- |
 | `index.html` | Generatore di post e storie Instagram (pagina unica, font incorporati). Online su GitHub Pages: repo `ANGCRU00/area51-uscite`, branch `main` → https://angcru00.github.io/area51-uscite/ |
 | `generatore-sorgenti/` | Sorgente del generatore: `merged.template.html` con i segnaposto `%%BLACK%%` / `%%BOLD%%` per i font. `python build.py` riscrive `../index.html`. **Modifica il template, non `index.html`.** |
-| `sito/` | Nuovo sito della fumetteria (prototipo HTML + Tailwind). `index.html` = home fatta. `catalogo.html` = Manga & Fumetti fatto (prodotti DI ESEMPIO nell'array `SERIE` dello script; i link vanno a `prodotto.html?id=N`, ancora da fare). Da fare: scheda prodotto e le altre pagine. |
+| `sito/` | Nuovo sito della fumetteria (prototipo HTML + Tailwind). `index.html` = home fatta. `catalogo.html` = Manga & Fumetti fatto (prodotti DI ESEMPIO nell'array `SERIE` dello script; i link vanno a `prodotto.html?id=N`, ancora da fare). `tcg.html` = giochi di carte (Magic, Pokémon, Riftbound), fatta sul modello del catalogo: prodotti DI ESEMPIO con nomi generici e segnaposto `[ESPANSIONE]`, link a `prodotto.html?cat=tcg&id=N`. Nel menu la voce si chiama **TCG** (non più "Carte"). Da fare: scheda prodotto e le altre pagine. |
 | `sito/sorgenti/` | Config Tailwind 3.4 + `input.css`. Dopo aver cambiato classi: `npx tailwindcss@3.4.17 -c sorgenti/tailwind.config.js -i sorgenti/input.css -o css/style.css --minify` (dalla cartella `sito`, serve `@tailwindcss/forms`). |
 | `stitch/` | Materiale per Google Stitch: screenshot proposte, alieno e disco volante PNG, `prompt-stitch.txt`. |
 | `banner-griglia*/`, `tessera-punti/` | Banner a griglia Instagram (3 tessere 1080×1440) e tessera punti 85×55 mm (PDF tipografia). |
@@ -46,7 +46,7 @@ Si parla in italiano. Tutti i testi visibili sono in italiano.
 
 ## Dove siamo (ultimo aggiornamento 10/11/2026)
 
-- Fatto: `sito/index.html` (home) e `sito/catalogo.html` (Manga & Fumetti), entrambi verificati a 390 e 1440 px.
+- Fatto: `sito/index.html` (home), `sito/catalogo.html` (Manga & Fumetti) e `sito/tcg.html` (TCG), verificati a 390 e 1440 px. TCG: chip Gioco (Magic, Pokémon, Riftbound, Yu-Gi-Oh!) e Stato in alto, nella colonna filtri Cerca, Prodotto e Lingua. **Prodotto cambia con il gioco scelto** (ogni gioco ha i suoi nomi, nell'oggetto `GIOCHI` dello script; senza gioco scelto compare l'invito a sceglierne uno): Magic = bustine, bundle e fat pack, box, mazzi precostruiti, prerelease, singole, accessori; Pokémon = bustine, display, Elite Trainer Box, singole, accessori; Riftbound = bustine, booster display, bundle, Champion Deck, Proving Grounds, singole, accessori (solo inglese); Yu-Gi-Oh! = bustine, booster box, Structure Deck, Starter Deck, Tin, singole, accessori. Nomi trovati su negozi online italiani, non su siti ufficiali: da confrontare col listino del fornitore. Lingua mostra solo quelle dei giochi scelti. Fascia "Carte in tavola" che rimanda a Eventi.
 - Navicella nel menu: si muove con una molla (inerzia, si inclina, oscilla quando cambia direzione). Valori approvati da Angelo: prontezza `0.045`, attrito `0.80`, inclinazione max 15°. Stesso codice in tutte le pagine.
 - Regola in `sorgenti/input.css`: `[hidden]{display:none !important}` (senza, gli elementi `hidden` con classi flex restavano visibili).
 - Ogni nuova pagina copia da `catalogo.html`: simboli SVG (alieno, disco, pianeti, asteroidi), sfondo con sistema solare, testata con navicella, piede, e i due script in fondo.
