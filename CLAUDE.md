@@ -35,8 +35,8 @@ Si parla in italiano. Tutti i testi visibili sono in italiano.
 
 - Direzione scelta: **Proposta 1 · Notte stellata** (esiste anche una Proposta 2 chiara, accantonata per ora).
 - Pagina catalogo Manga & Fumetti:
-  - filtri in un **pannello a scomparsa** aperto da una linguetta lime "FILTRI" **fissata al bordo sinistro dello schermo**, con l'alieno appoggiato sopra;
-  - dentro: Genere, Lunghezza serie, Prezzo massimo, Editore, Edizione, Età consigliata, pulsanti Azzera / Mostra risultati;
+  - filtri: da **1280 px in su una colonna sempre visibile a sinistra** (larga 320 px, resta ferma mentre si scorre e si ferma sopra il piede); sotto 1280 px (tablet e telefono) il **pannello a scomparsa** aperto da una linguetta lime "FILTRI" **fissata al bordo sinistro dello schermo**, con l'alieno appoggiato sopra. È lo stesso `<aside id="filtri-pannello">`: lo script "Pannello filtri" lo mostra o lo nasconde al cambio di larghezza;
+  - dentro: Cerca (titolo o autore, senza accenti), Genere (14 voci, con Romance e Azione), Serie (volume unico / in corso / conclusa), Editore, Edizione, Età consigliata, pulsanti Azzera / Mostra risultati. Tolti per scelta di Angelo: Lunghezza serie a fasce e Prezzo massimo. Il campo `autore` non c'è ancora nei dati di esempio: la ricerca lo usa appena un prodotto lo ha;
   - sopra la griglia: chip Tipo (Manga, Fumetti italiani, Supereroi, Graphic novel) e Stato (Novità, Preordini, Disponibili in negozio), ordinamento, filtri attivi come chip rimovibili;
   - griglia **4 colonne × 4 righe = 16 prodotti per pagina** (2 per riga da telefono), paginazione;
   - disco volante a destra del titolo, raggio mai sopra il testo.

@@ -259,7 +259,7 @@
 </header>
 
 <!-- Linguetta FILTRI fissata al bordo sinistro, con l'alieno appoggiato sopra -->
-<div class="fixed left-0 top-1/2 -translate-y-1/2 z-40 flex flex-col items-start">
+<div class="fixed left-0 top-1/2 -translate-y-1/2 z-40 flex flex-col items-start xl:hidden">
   <svg class="w-11 h-11 -mb-2 ml-0.5 relative z-10 -rotate-12 drop-shadow-[0_4px_8px_rgba(0,0,0,.5)] pointer-events-none" aria-hidden="true"><use href="#alieno"/></svg>
   <button type="button" id="filtri-apri" aria-controls="filtri-pannello" aria-expanded="false"
     class="relative bg-brand-lime text-black font-heavy text-xs sm:text-sm tracking-[0.2em] w-10 sm:w-11 py-5 rounded-r-xl border-2 border-l-0 border-[#140C2B] shadow-[4px_4px_0_#5B21B6] hover:bg-[#a6d420] hover:w-12 transition-all flex flex-col items-center gap-2">
@@ -268,35 +268,34 @@
   </button>
 </div>
 
-<!-- Pannello filtri a scomparsa -->
+<!-- Filtri: da 1280 px in su restano sempre visibili in una colonna a sinistra (fissa mentre scorri);
+     sotto, pannello a scomparsa aperto dalla linguetta. Lo script "Pannello" li adatta al cambio di larghezza. -->
 <div id="filtri-velo" hidden class="fixed inset-0 z-[60] bg-[#070514]/70 backdrop-blur-sm"></div>
+<div class="max-w-7xl mx-auto xl:flex xl:items-start xl:gap-8 xl:px-8">
 <aside id="filtri-pannello" role="dialog" aria-modal="true" aria-labelledby="filtri-titolo" hidden
-  class="fixed inset-y-0 left-0 z-[70] w-[min(92vw,380px)] bg-[#0d0724] border-r-2 border-brand-lime shadow-[8px_0_0_#5B21B6] flex flex-col">
+  class="fixed inset-y-0 left-0 z-[70] w-[min(92vw,380px)] bg-[#0d0724] border-r-2 border-brand-lime shadow-[8px_0_0_#5B21B6] flex flex-col xl:sticky xl:top-24 xl:bottom-auto xl:left-auto xl:z-10 xl:w-80 xl:shrink-0 xl:mt-14 xl:max-h-[calc(100vh-7.5rem)] xl:border-2 xl:rounded-2xl xl:shadow-[6px_6px_0_#5B21B6]">
   <div class="flex items-center justify-between gap-3 px-5 py-4 border-b border-brand-violet/40">
     <div class="flex items-center gap-3">
       <svg class="w-9 h-9" aria-hidden="true"><use href="#alieno"/></svg>
       <h2 id="filtri-titolo" class="font-heavy text-xl text-white">Filtri</h2>
     </div>
-    <button type="button" id="filtri-chiudi" aria-label="Chiudi i filtri" class="w-11 h-11 rounded-full border border-white/15 hover:border-brand-lime hover:text-brand-lime flex items-center justify-center transition-colors">
+    <button type="button" id="filtri-chiudi" aria-label="Chiudi i filtri" class="xl:hidden w-11 h-11 rounded-full border border-white/15 hover:border-brand-lime hover:text-brand-lime flex items-center justify-center transition-colors">
       <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke-linecap="round" stroke-width="2.4"/></svg>
     </button>
   </div>
 
   <form id="filtri-form" class="flex-1 overflow-y-auto px-5 py-5 space-y-7">
+    <div>
+      <label for="cerca" class="block font-heavy text-xs uppercase tracking-widest text-brand-lime mb-3">Cerca</label>
+      <input id="cerca" type="search" placeholder="Titolo o autore" autocomplete="off" maxlength="60" class="w-full bg-[#120a2e] border border-white/15 hover:border-brand-lime focus:border-brand-lime focus:ring-1 focus:ring-brand-lime text-white text-sm font-semibold rounded-full px-4 py-2.5 placeholder:text-brand-muted">
+    </div>
     <fieldset>
       <legend class="font-heavy text-xs uppercase tracking-widest text-brand-lime mb-3">Genere</legend>
       <div class="grid grid-cols-2 gap-x-3 gap-y-2.5 text-sm font-semibold" data-gruppo="genere"></div>
     </fieldset>
     <fieldset>
-      <legend class="font-heavy text-xs uppercase tracking-widest text-brand-lime mb-3">Lunghezza serie</legend>
-      <div class="grid grid-cols-1 gap-y-2.5 text-sm font-semibold" data-gruppo="lunghezza"></div>
-    </fieldset>
-    <fieldset>
-      <legend class="font-heavy text-xs uppercase tracking-widest text-brand-lime mb-3">Prezzo massimo</legend>
-      <div class="flex items-center gap-4">
-        <input id="prezzo-max" type="range" min="4" max="40" step="1" value="40" aria-describedby="prezzo-valore" class="flex-1 accent-[#B9E62E] h-2 cursor-pointer">
-        <output id="prezzo-valore" for="prezzo-max" class="font-heavy text-brand-lime text-base w-20 text-right">40 €</output>
-      </div>
+      <legend class="font-heavy text-xs uppercase tracking-widest text-brand-lime mb-3">Serie</legend>
+      <div class="grid grid-cols-1 gap-y-2.5 text-sm font-semibold" data-gruppo="avanzamento"></div>
     </fieldset>
     <fieldset>
       <legend class="font-heavy text-xs uppercase tracking-widest text-brand-lime mb-3">Editore</legend>
@@ -312,15 +311,16 @@
     </fieldset>
   </form>
 
-  <div class="grid grid-cols-2 gap-3 px-5 py-4 border-t border-brand-violet/40 bg-[#0a051d]">
+  <div class="grid grid-cols-2 xl:grid-cols-1 gap-3 px-5 py-4 border-t border-brand-violet/40 bg-[#0a051d] xl:rounded-b-2xl">
     <button type="button" id="filtri-azzera" class="border-2 border-brand-violet hover:border-brand-lime text-white font-heavy text-sm px-4 py-3.5 rounded-full transition-colors">Azzera</button>
-    <button type="button" id="filtri-mostra" class="bg-brand-lime text-black font-heavy text-sm px-4 py-3.5 rounded-full shadow-brutal-violet hover:bg-[#a6d420] transition-colors">Mostra <span id="filtri-conta">0</span></button>
+    <button type="button" id="filtri-mostra" class="xl:hidden bg-brand-lime text-black font-heavy text-sm px-4 py-3.5 rounded-full shadow-brutal-violet hover:bg-[#a6d420] transition-colors">Mostra <span id="filtri-conta">0</span></button>
   </div>
 </aside>
 
-<main id="main" class="relative z-10">
-  <!-- Il margine sinistro più largo lascia spazio alla linguetta FILTRI fissa -->
-  <div class="max-w-7xl mx-auto pl-[3.25rem] pr-4 sm:pl-16 sm:pr-6 lg:pr-8 min-[1400px]:pl-8">
+<main id="main" class="relative z-10 xl:flex-1 xl:min-w-0">
+  <!-- Sotto 1280 px il margine sinistro più largo lascia spazio alla linguetta FILTRI fissa;
+       da 1280 px i filtri sono la colonna a sinistra e il margine lo dà la riga che li contiene -->
+  <div class="max-w-7xl mx-auto pl-[3.25rem] pr-4 sm:pl-16 sm:pr-6 lg:pr-8 xl:px-0">
 
     <!-- Titolo con il disco volante a destra -->
     <section class="pt-8 lg:pt-14 pb-8">
@@ -343,14 +343,14 @@
 
     <!-- Barra sopra la griglia: Tipo, Stato, ordinamento, filtri attivi -->
     <section aria-label="Scegli cosa vedere" class="space-y-4 pb-6 border-b border-brand-violet/40">
-      <div class="flex flex-col xl:flex-row xl:items-center gap-4 xl:gap-8">
+      <div class="flex flex-wrap items-center justify-between gap-x-6 gap-y-4">
         <div class="flex items-center gap-2 flex-wrap" role="group" aria-labelledby="tipo-etichetta">
-          <span id="tipo-etichetta" class="font-heavy text-[11px] uppercase tracking-widest text-brand-muted w-12">Tipo</span>
-          <div class="flex flex-wrap gap-2" data-chip="tipo"></div>
+          <span id="tipo-etichetta" class="font-heavy text-[11px] uppercase tracking-widest text-brand-muted shrink-0">Tipo</span>
+          <div class="flex flex-wrap gap-1.5" data-chip="tipo"></div>
         </div>
         <div class="flex items-center gap-2 flex-wrap" role="group" aria-labelledby="stato-etichetta">
-          <span id="stato-etichetta" class="font-heavy text-[11px] uppercase tracking-widest text-brand-muted w-12">Stato</span>
-          <div class="flex flex-wrap gap-2" data-chip="stato"></div>
+          <span id="stato-etichetta" class="font-heavy text-[11px] uppercase tracking-widest text-brand-muted shrink-0">Stato</span>
+          <div class="flex flex-wrap gap-1.5" data-chip="stato"></div>
         </div>
       </div>
       <div class="flex flex-wrap items-center justify-between gap-3">
@@ -405,6 +405,7 @@
     </section>
   </div>
 </main>
+</div>
 
 <!-- Piede -->
 <footer id="negozio" class="border-t-2 border-brand-lime bg-[#05030f] pt-16 pb-10 text-sm text-brand-muted relative z-10">
@@ -473,9 +474,9 @@
   /* ---------- Voci dei filtri ---------- */
   var OPZIONI = {
     tipo: [['manga', 'Manga'], ['italiani', 'Fumetti italiani'], ['supereroi', 'Supereroi'], ['graphic', 'Graphic novel']],
-    stato: [['novita', 'Novità'], ['preordine', 'Preordini'], ['disponibile', 'Disponibili in negozio']],
-    genere: [['shonen', 'Shōnen'], ['shojo', 'Shōjo'], ['seinen', 'Seinen'], ['josei', 'Josei'], ['fantasy', 'Fantasy'], ['fantascienza', 'Fantascienza'], ['horror', 'Horror'], ['giallo', 'Giallo'], ['sportivo', 'Sportivo'], ['commedia', 'Commedia'], ['avventura', 'Avventura'], ['slice', 'Slice of life']],
-    lunghezza: [['unico', 'Volume unico'], ['breve', 'Breve (2-10 volumi)'], ['media', 'Media (11-30 volumi)'], ['lunga', 'Lunga (oltre 30)']],
+    stato: [['novita', 'Novità'], ['preordine', 'Preordini'], ['disponibile', 'In negozio']],
+    genere: [['shonen', 'Shōnen'], ['shojo', 'Shōjo'], ['seinen', 'Seinen'], ['josei', 'Josei'], ['fantasy', 'Fantasy'], ['fantascienza', 'Fantascienza'], ['horror', 'Horror'], ['giallo', 'Giallo'], ['sportivo', 'Sportivo'], ['commedia', 'Commedia'], ['avventura', 'Avventura'], ['slice', 'Slice of life'], ['romance', 'Romance'], ['azione', 'Azione']],
+    avanzamento: [['unico', 'Volume unico'], ['corso', 'In corso'], ['conclusa', 'Conclusa']],
     editore: [['star', 'Star Comics'], ['planet', 'Planet Manga'], ['jpop', 'J-POP'], ['panini', 'Panini Comics'], ['bonelli', 'Sergio Bonelli Editore'], ['bd', 'Edizioni BD'], ['coconino', 'Coconino Press']],
     edizione: [['standard', 'Standard'], ['variant', 'Variant'], ['deluxe', 'Deluxe'], ['box', 'Cofanetto']],
     eta: [['tutti', 'Per tutti'], ['13', '13+'], ['16', '16+'], ['18', '18+']]
@@ -487,23 +488,23 @@
 
   /* ---------- Prodotti DI ESEMPIO (titoli inventati): il catalogo vero lo carica il negozio ---------- */
   var SERIE = [
-    // titolo, tipo, genere, lunghezza, editore, eta, prezzo, volumi
-    ['Orbita', 'manga', 'fantascienza', 'media', 'star', '13', 6.9, 4],
-    ['Lame di cenere', 'manga', 'shonen', 'lunga', 'planet', '13', 5.9, 4],
-    ['Il giardino di Mei', 'manga', 'shojo', 'breve', 'star', 'tutti', 5.5, 3],
-    ['Notte a Kabukichō', 'manga', 'seinen', 'media', 'jpop', '16', 7.5, 3],
-    ['Ufficio 9', 'manga', 'josei', 'breve', 'jpop', '13', 6.5, 2],
-    ['Fuori campo', 'manga', 'sportivo', 'lunga', 'planet', 'tutti', 5.2, 3],
+    // titolo, tipo, genere, serie (unico / corso / conclusa), editore, eta, prezzo, volumi
+    ['Orbita', 'manga', 'fantascienza', 'conclusa', 'star', '13', 6.9, 4],
+    ['Lame di cenere', 'manga', 'shonen', 'corso', 'planet', '13', 5.9, 4],
+    ['Il giardino di Mei', 'manga', 'romance', 'conclusa', 'star', 'tutti', 5.5, 3],
+    ['Notte a Kabukichō', 'manga', 'seinen', 'corso', 'jpop', '16', 7.5, 3],
+    ['Ufficio 9', 'manga', 'josei', 'conclusa', 'jpop', '13', 6.5, 2],
+    ['Fuori campo', 'manga', 'sportivo', 'corso', 'planet', 'tutti', 5.2, 3],
     ['La casa sul lago', 'manga', 'horror', 'unico', 'jpop', '18', 12.9, 1],
-    ['Spiriti in affitto', 'manga', 'commedia', 'media', 'star', 'tutti', 5.9, 2],
-    ['Il drago di carta', 'manga', 'fantasy', 'lunga', 'planet', '13', 5.9, 3],
-    ['Caffè all\'angolo', 'manga', 'slice', 'breve', 'bd', 'tutti', 6.9, 2],
-    ['Ispettore Moretti', 'italiani', 'giallo', 'lunga', 'bonelli', '13', 4.9, 3],
-    ['Frontiera', 'italiani', 'avventura', 'lunga', 'bonelli', '13', 4.9, 2],
-    ['Sotto Barletta', 'italiani', 'horror', 'breve', 'bd', '16', 15, 1],
-    ['Capitan Cometa', 'supereroi', 'avventura', 'lunga', 'panini', '13', 4.5, 3],
-    ['Lega Notturna', 'supereroi', 'fantascienza', 'media', 'panini', '13', 5, 2],
-    ['Quantum Girl', 'supereroi', 'avventura', 'breve', 'panini', 'tutti', 18, 1],
+    ['Spiriti in affitto', 'manga', 'commedia', 'conclusa', 'star', 'tutti', 5.9, 2],
+    ['Il drago di carta', 'manga', 'fantasy', 'corso', 'planet', '13', 5.9, 3],
+    ['Caffè all\'angolo', 'manga', 'shojo', 'conclusa', 'bd', 'tutti', 6.9, 2],
+    ['Ispettore Moretti', 'italiani', 'giallo', 'corso', 'bonelli', '13', 4.9, 3],
+    ['Frontiera', 'italiani', 'azione', 'corso', 'bonelli', '13', 4.9, 2],
+    ['Sotto Barletta', 'italiani', 'horror', 'conclusa', 'bd', '16', 15, 1],
+    ['Capitan Cometa', 'supereroi', 'azione', 'corso', 'panini', '13', 4.5, 3],
+    ['Lega Notturna', 'supereroi', 'fantascienza', 'corso', 'panini', '13', 5, 2],
+    ['Quantum Girl', 'supereroi', 'avventura', 'conclusa', 'panini', 'tutti', 18, 1],
     ['L\'ultimo faro', 'graphic', 'slice', 'unico', 'coconino', '13', 22, 1],
     ['Polvere di stelle', 'graphic', 'fantascienza', 'unico', 'coconino', '16', 24, 1],
     ['Tre giorni d\'estate', 'graphic', 'slice', 'unico', 'bd', 'tutti', 19, 1]
@@ -518,7 +519,7 @@
       var prezzo = edizione === 'variant' ? s[6] + 3 : edizione === 'box' ? s[6] * 3 + 4 : s[6];
       PRODOTTI.push({
         id: n, serie: s[0], titolo: s[7] > 1 ? s[0] + '. Volume ' + String(v).padStart(2, '0') : s[0],
-        tipo: s[1], genere: s[2], lunghezza: s[3], editore: s[4], eta: s[5], edizione: edizione,
+        tipo: s[1], genere: s[2], avanzamento: s[3], editore: s[4], eta: s[5], edizione: edizione,
         prezzo: Math.round(prezzo * 100) / 100, novita: novita, preordine: preordine, disponibile: disponibile,
         ordineNovita: (n * 37) % 101, colori: COLORI[si % COLORI.length]
       });
@@ -526,9 +527,9 @@
   });
 
   /* ---------- Stato della pagina ---------- */
-  var PER_PAGINA = 16, PREZZO_MAX = 40;
-  var stato = { tipo: [], stato: [], genere: [], lunghezza: [], editore: [], edizione: [], eta: [], prezzo: PREZZO_MAX, ordina: 'rilevanza', pagina: 1 };
-  var GRUPPI_PANNELLO = ['genere', 'lunghezza', 'editore', 'edizione', 'eta'];
+  var PER_PAGINA = 16;
+  var stato = { tipo: [], stato: [], genere: [], avanzamento: [], editore: [], edizione: [], eta: [], cerca: '', ordina: 'rilevanza', pagina: 1 };
+  var GRUPPI_PANNELLO = ['genere', 'avanzamento', 'editore', 'edizione', 'eta'];
 
   // Filtri passati nell'indirizzo, es. catalogo.html?stato=preordine&tipo=manga
   var q = new URLSearchParams(location.search);
@@ -536,6 +537,7 @@
     var val = q.get(g); if (!val) return;
     stato[g] = val.split(',').filter(function (x) { return OPZIONI[g].some(function (o) { return o[0] === x; }); });
   });
+  stato.cerca = (q.get('cerca') || '').slice(0, 60);
 
   /* ---------- Caselle del pannello e chip ---------- */
   GRUPPI_PANNELLO.forEach(function (g) {
@@ -546,15 +548,17 @@
         '<span>' + o[1] + '</span></label>';
     }).join('');
   });
-  var CHIP_SI = 'bg-brand-lime text-black font-heavy border border-brand-lime shadow-brutal-violet';
-  var CHIP_NO = 'bg-[#120a2e] border border-white/15 hover:border-brand-lime hover:text-brand-lime font-semibold';
+  // Stesso carattere e stesso bordo in entrambi gli stati: cambiano solo i colori, così il chip non si allarga al click
+  var CHIP_BASE = 'chip text-sm font-bold px-3 py-2 rounded-full border transition-colors ';
+  var CHIP_SI = 'bg-brand-lime text-black border-brand-lime shadow-brutal-violet';
+  var CHIP_NO = 'bg-[#120a2e] border-white/15 hover:border-brand-lime hover:text-brand-lime';
   ['tipo', 'stato'].forEach(function (g) {
     document.querySelector('[data-chip="' + g + '"]').innerHTML = OPZIONI[g].map(function (o) {
-      return '<button type="button" data-g="' + g + '" data-v="' + o[0] + '" aria-pressed="false" class="chip text-sm px-4 py-2 rounded-full transition-colors">' + o[1] + '</button>';
+      return '<button type="button" data-g="' + g + '" data-v="' + o[0] + '" aria-pressed="false" class="' + CHIP_BASE + CHIP_NO + '">' + o[1] + '</button>';
     }).join('');
   });
 
-  var form = document.getElementById('filtri-form'), prezzoIn = document.getElementById('prezzo-max'), prezzoOut = document.getElementById('prezzo-valore');
+  var form = document.getElementById('filtri-form'), cercaIn = document.getElementById('cerca');
   var griglia = document.getElementById('griglia'), vuoto = document.getElementById('vuoto'), pag = document.getElementById('paginazione');
   var conteggio = document.getElementById('conteggio'), ordina = document.getElementById('ordina');
   var attiviRiga = document.getElementById('attivi-riga'), attivi = document.getElementById('attivi');
@@ -563,15 +567,19 @@
   function euro(x) { return x.toFixed(2).replace('.', ',') + ' €'; }
   function esc(t) { return String(t).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
 
+  // Per la ricerca: minuscole e senza accenti, così "kabukicho" trova "Kabukichō"
+  function semplifica(t) { return String(t).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, ''); }
   function filtra() {
+    var ago = semplifica(stato.cerca.trim());
     return PRODOTTI.filter(function (p) {
+      if (ago && semplifica(p.titolo + ' ' + p.serie + ' ' + (p.autore || '')).indexOf(ago) < 0) return false;
       if (stato.tipo.length && stato.tipo.indexOf(p.tipo) < 0) return false;
       if (stato.stato.length && !stato.stato.some(function (s) { return p[s]; })) return false;
       for (var i = 0; i < GRUPPI_PANNELLO.length; i++) {
         var g = GRUPPI_PANNELLO[i];
         if (stato[g].length && stato[g].indexOf(p[g]) < 0) return false;
       }
-      return p.prezzo <= stato.prezzo;
+      return true;
     });
   }
   function ordinaLista(l) {
@@ -593,7 +601,7 @@
     var azione = p.preordine
       ? '<a href="prodotto.html?id=' + p.id + '" class="bg-brand-violet hover:bg-brand-violetGlow text-white font-heavy text-xs px-4 py-2.5 rounded-full transition-colors">Prenota</a>'
       : p.disponibile
-        ? '<button type="button" data-aggiungi="' + p.id + '" class="hover:bg-brand-lime hover:text-black font-heavy text-xs px-4 py-2.5 rounded-full border border-white/25 hover:border-brand-lime transition-colors">Aggiungi</button>'
+        ? '<button type="button" data-aggiungi="' + p.id + '" class="min-w-[7.5rem] text-center hover:bg-brand-lime hover:text-black font-heavy text-xs px-4 py-2.5 rounded-full border border-white/25 hover:border-brand-lime transition-colors">Aggiungi</button>'
         : '<a href="prodotto.html?id=' + p.id + '" class="hover:bg-brand-lime hover:text-black font-heavy text-xs px-4 py-2.5 rounded-full border border-white/25 hover:border-brand-lime transition-colors">Ordina</a>';
     return '<li class="bg-[#0e0926]/90 rounded-2xl border border-white/10 p-3 hover:border-brand-lime transition-colors flex flex-col justify-between group">' +
       '<a href="prodotto.html?id=' + p.id + '" class="block">' +
@@ -621,7 +629,7 @@
   }
 
   function quanti() {
-    var t = stato.prezzo < PREZZO_MAX ? 1 : 0;
+    var t = stato.cerca.trim() ? 1 : 0;
     GRUPPI_PANNELLO.forEach(function (g) { t += stato[g].length; });
     return t;
   }
@@ -648,17 +656,17 @@
     document.querySelectorAll('.chip').forEach(function (c) {
       var si = stato[c.dataset.g].indexOf(c.dataset.v) >= 0;
       c.setAttribute('aria-pressed', String(si));
-      c.className = 'chip text-sm px-4 py-2 rounded-full transition-colors ' + (si ? CHIP_SI : CHIP_NO);
+      c.className = CHIP_BASE + (si ? CHIP_SI : CHIP_NO);
     });
 
-    // Caselle e prezzo nel pannello
+    // Caselle e ricerca nel pannello (il campo non si tocca mentre ci si scrive)
     form.querySelectorAll('input[type=checkbox]').forEach(function (c) { c.checked = stato[c.name].indexOf(c.value) >= 0; });
-    prezzoIn.value = stato.prezzo; prezzoOut.textContent = stato.prezzo < PREZZO_MAX ? stato.prezzo + ' €' : 'Tutti';
+    if (document.activeElement !== cercaIn) cercaIn.value = stato.cerca;
 
     // Filtri attivi come chip rimovibili
     var chips = [];
     GRUPPI_PANNELLO.forEach(function (g) { stato[g].forEach(function (v) { chips.push([g, v, nome(g, v)]); }); });
-    if (stato.prezzo < PREZZO_MAX) chips.push(['prezzo', '', 'Fino a ' + stato.prezzo + ' €']);
+    if (stato.cerca.trim()) chips.push(['cerca', '', 'Cerca: ' + stato.cerca.trim()]);
     attivi.innerHTML = chips.map(function (c) {
       return '<button type="button" data-togli-g="' + c[0] + '" data-togli-v="' + c[1] + '" aria-label="Togli il filtro ' + esc(c[2]) + '" class="inline-flex items-center gap-2 bg-brand-violet/40 border border-brand-violet hover:border-brand-lime text-white text-xs font-bold pl-3 pr-2 py-1.5 rounded-full transition-colors">' +
         esc(c[2]) + '<span aria-hidden="true" class="w-5 h-5 rounded-full bg-[#140C2B] text-brand-lime flex items-center justify-center text-sm leading-none">×</span></button>';
@@ -686,7 +694,7 @@
     }
   });
   form.addEventListener('submit', function (e) { e.preventDefault(); });
-  prezzoIn.addEventListener('input', function () { stato.prezzo = Number(prezzoIn.value); stato.pagina = 1; disegna(); });
+  cercaIn.addEventListener('input', function () { stato.cerca = cercaIn.value; stato.pagina = 1; disegna(); });
   ordina.addEventListener('change', function () { stato.ordina = ordina.value; stato.pagina = 1; disegna(); });
   pag.addEventListener('click', function (e) {
     var b = e.target.closest('[data-pagina]'); if (!b) return;
@@ -695,11 +703,11 @@
   attivi.addEventListener('click', function (e) {
     var b = e.target.closest('[data-togli-g]'); if (!b) return;
     var g = b.dataset.togliG;
-    if (g === 'prezzo') stato.prezzo = PREZZO_MAX;
+    if (g === 'cerca') stato.cerca = '';
     else stato[g] = stato[g].filter(function (v) { return v !== b.dataset.togliV; });
     stato.pagina = 1; disegna();
   });
-  function azzeraPannello() { GRUPPI_PANNELLO.forEach(function (g) { stato[g] = []; }); stato.prezzo = PREZZO_MAX; stato.pagina = 1; disegna(); }
+  function azzeraPannello() { GRUPPI_PANNELLO.forEach(function (g) { stato[g] = []; }); stato.cerca = ''; stato.pagina = 1; disegna(); }
   document.getElementById('filtri-azzera').addEventListener('click', azzeraPannello);
   document.getElementById('attivi-azzera').addEventListener('click', azzeraPannello);
   document.getElementById('vuoto-azzera').addEventListener('click', function () { stato.tipo = []; stato.stato = []; azzeraPannello(); });
@@ -714,8 +722,24 @@
     b.textContent = 'Aggiunto ✓'; b.disabled = true;
   });
 
-  /* ---------- Pannello a scomparsa ---------- */
+  /* ---------- Pannello filtri: colonna fissa da 1280 px, a scomparsa sotto ---------- */
   var apri = document.getElementById('filtri-apri'), pannello = document.getElementById('filtri-pannello'), velo = document.getElementById('filtri-velo');
+  var largo = window.matchMedia('(min-width: 1280px)');
+  function adattaPannello() {
+    if (largo.matches) {
+      // colonna sempre visibile: non è più una finestra modale
+      pannello.hidden = false; velo.hidden = true;
+      document.body.style.overflow = '';
+      pannello.removeAttribute('role'); pannello.removeAttribute('aria-modal');
+      apri.setAttribute('aria-expanded', 'false');
+    } else {
+      pannello.hidden = true; velo.hidden = true;
+      document.body.style.overflow = '';
+      pannello.setAttribute('role', 'dialog'); pannello.setAttribute('aria-modal', 'true');
+    }
+  }
+  adattaPannello();
+  if (largo.addEventListener) largo.addEventListener('change', adattaPannello); else largo.addListener(adattaPannello);
   function focusabili() { return Array.from(pannello.querySelectorAll('button, input, select, a[href]')).filter(function (el) { return !el.disabled && el.offsetParent !== null; }); }
   function apriPannello() {
     pannello.hidden = false; velo.hidden = false;
@@ -734,7 +758,7 @@
   document.getElementById('filtri-mostra').addEventListener('click', function () { chiudiPannello(); document.getElementById('main').scrollIntoView({ behavior: 'smooth', block: 'start' }); });
   velo.addEventListener('click', chiudiPannello);
   document.addEventListener('keydown', function (e) {
-    if (pannello.hidden) return;
+    if (largo.matches || pannello.hidden) return;
     if (e.key === 'Escape') { chiudiPannello(); return; }
     if (e.key === 'Tab') {
       var f = focusabili(), primo = f[0], ultimo = f[f.length - 1];
