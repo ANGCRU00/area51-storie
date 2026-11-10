@@ -1,10 +1,13 @@
-@font-face{font-family:'Archivo';src:url(../fonts/archivo.woff2) format('woff2');font-weight:100 900;font-stretch:62% 125%;font-display:swap;unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
-@font-face{font-family:'Archivo';src:url(../fonts/archivo-ext.woff2) format('woff2');font-weight:100 900;font-stretch:62% 125%;font-display:swap;unicode-range:U+0100-02AF,U+0304,U+0308,U+0329,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF}
+@font-face{font-family:'Archivo';src:url(../fonts/archivo.woff2) format('woff2');font-weight:100 900;font-stretch:62% 125%;font-display:block;unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:'Archivo';src:url(../fonts/archivo-ext.woff2) format('woff2');font-weight:100 900;font-stretch:62% 125%;font-display:block;unicode-range:U+0100-02AF,U+0304,U+0308,U+0329,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF}
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 /* L'attributo hidden vince sempre sulle classi flex/grid */
 [hidden] { display:none !important; }
+/* Da 1280 px la colonna dei filtri si vede subito: non aspetta che lo script tolga l'attributo hidden, altrimenti a ogni
+   ricarica la pagina parte senza colonna e poi si sposta */
+@media (min-width:1280px) { #filtri-pannello[hidden] { display:flex !important; } }
 @layer base {
   /* Titoli: Archivo largo e nerissimo, come grafiche e storie */
   .font-heavy { font-family:'Archivo',sans-serif; font-weight:900; font-stretch:125%; letter-spacing:-0.01em; }
@@ -27,6 +30,9 @@
   /* Oggetto nel raggio: fluttua piano e ondeggia, con un periodo diverso dal disco così non vanno in sincrono */
   @keyframes carico-fluttua { 0%,100%{transform:translateY(0) rotate(-4deg)} 50%{transform:translateY(-7px) rotate(4deg)} }
   .animate-carico { animation:carico-fluttua 3.4s ease-in-out infinite; transform-origin:50% 70%; }
+  /* Modale account: entra con una breve dissolvenza */
+  @keyframes modale-entra { from{opacity:0;transform:translateY(14px) scale(.97)} to{opacity:1;transform:none} }
+  .animate-modale { animation:modale-entra .22s ease-out; }
   @keyframes bob { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-3px)} }
   .ufo-bobbing { animation:bob 2.4s ease-in-out infinite; }
   .nav-tractor-light { background:linear-gradient(180deg,rgba(185,230,46,.75),rgba(185,230,46,0)); clip-path:polygon(30% 0,70% 0,100% 100%,0 100%); }
@@ -44,7 +50,7 @@
   .pianeta { display:block; opacity:.5; filter:drop-shadow(0 0 10px var(--glow,rgba(185,230,46,.4))); }
   @media (min-width:1024px) { .pianeta { opacity:.9; } }
   @media (prefers-reduced-motion: reduce) {
-    .animate-ufo,.animate-carico,.ufo-bobbing,.marquee,.shooting { animation:none !important; }
+    .animate-ufo,.animate-carico,.animate-modale,.ufo-bobbing,.marquee,.shooting { animation:none !important; }
     .shooting{display:none}
   }
 }
