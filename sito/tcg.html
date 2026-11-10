@@ -933,6 +933,7 @@
       var disp = Array.prototype.filter.call(li.querySelectorAll('p'), function (p) { return p.textContent.indexOf('●') >= 0; })[0];
       var p = new URLSearchParams();
       p.set('cat', cat);
+      if (li.dataset.ean) p.set('ean', li.dataset.ean);
       if (idm) p.set('id', idm[1]);
       p.set('t', testo(li.querySelector('h3')));
       p.set('s', testo(li.querySelector('p.uppercase')));

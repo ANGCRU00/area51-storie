@@ -649,7 +649,7 @@
       : p.disponibile
         ? '<button type="button" data-aggiungi="' + p.id + '" class="min-w-[7.5rem] text-center hover:bg-brand-lime hover:text-black font-heavy text-xs px-4 py-2.5 rounded-full border border-white/25 hover:border-brand-lime transition-colors">Aggiungi</button>'
         : '<a href="prodotto.html?id=' + p.id + '" class="hover:bg-brand-lime hover:text-black font-heavy text-xs px-4 py-2.5 rounded-full border border-white/25 hover:border-brand-lime transition-colors">Ordina</a>';
-    return '<li class="bg-[#0e0926]/90 rounded-2xl border border-white/10 p-3 hover:border-brand-lime transition-colors flex flex-col justify-between group">' +
+    return '<li data-ean="' + esc(p.ean || '') + '" class="bg-[#0e0926]/90 rounded-2xl border border-white/10 p-3 hover:border-brand-lime transition-colors flex flex-col justify-between group">' +
       '<a href="prodotto.html?id=' + p.id + '" class="block">' +
         '<div class="relative aspect-[3/4] rounded-xl overflow-hidden mb-3" style="background:linear-gradient(150deg,' + p.colori[0] + ',' + p.colori[1] + ')">' +
           (p.copertina
@@ -910,6 +910,7 @@
       var disp = Array.prototype.filter.call(li.querySelectorAll('p'), function (p) { return p.textContent.indexOf('●') >= 0; })[0];
       var p = new URLSearchParams();
       p.set('cat', cat);
+      if (li.dataset.ean) p.set('ean', li.dataset.ean);
       if (idm) p.set('id', idm[1]);
       p.set('t', testo(li.querySelector('h3')));
       p.set('s', testo(li.querySelector('p.uppercase')));
