@@ -54,3 +54,14 @@
     .shooting{display:none}
   }
 }
+/* Schede in elenco: parole lunghe vanno a capo e i bottoni non sforano le colonne strette */
+#griglia > li { min-width:0; }
+#griglia h3, #griglia a { overflow-wrap:anywhere; }
+@media (max-width:420px) {
+  #griglia li > div.border-t > a, #griglia li > div.border-t > button { width:100%; min-width:0; text-align:center; }
+}
+/* Telefono: i link di testo del piede e del percorso hanno un'area di tocco più alta */
+@media (max-width:767px) {
+  footer nav a, footer address a, nav[aria-label="Percorso"] a { display:inline-block; padding-block:.45rem; }
+  footer ul.space-y-3 > li + li { margin-top:0 !important; }
+}

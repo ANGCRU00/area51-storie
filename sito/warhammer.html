@@ -248,7 +248,7 @@
     </nav>
 
     <div class="flex items-center gap-2 sm:gap-3">
-      <button type="button" aria-label="Cerca prodotti" class="w-11 h-11 rounded-full border border-white/15 hover:border-brand-lime flex items-center justify-center hover:text-brand-lime transition-colors">
+      <button type="button" aria-label="Cerca prodotti" class="max-[359px]:hidden w-11 h-11 rounded-full border border-white/15 hover:border-brand-lime flex items-center justify-center hover:text-brand-lime transition-colors">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-linecap="round" stroke-width="2"/></svg>
       </button>
       <button type="button" aria-label="Lista desideri" class="hidden sm:flex w-11 h-11 rounded-full border border-white/15 hover:border-brand-lime items-center justify-center hover:text-brand-lime transition-colors">
@@ -841,7 +841,7 @@
     return { el: el, vel: +d.vel, verso: +d.verso || 1, x0: +d.x, amp: +d.amp, onde: +d.onde, fase: +d.fase, giro: +d.giro || 0, inclina: +d.inclina || 0, x: 0, r: Math.random() * 360, w: 0 };
   });
   function misura() {
-    W = document.documentElement.clientWidth || window.innerWidth;
+    W = document.documentElement.clientWidth || window.innerWidth || 1024;
     stato.forEach(function (s) { var b = s.el.firstElementChild.getBoundingClientRect(); s.w = b.width || 80; s.h = b.height || s.w; if (!s.pronto) { s.x = s.x0 * W; s.pronto = true; } });
     if (fascia) {
       var a = +fascia.dataset.amp, o = +fascia.dataset.onde, f = +fascia.dataset.fase, pa = '', pb = '';
