@@ -320,7 +320,7 @@
             <p id="volume" hidden class="font-heavy text-xl sm:text-2xl text-brand-lime mt-2 uppercase"></p>
           </div>
 
-          <dl id="specifiche" hidden class="grid grid-cols-[repeat(auto-fit,minmax(8.5rem,1fr))] gap-x-6 gap-y-4 rounded-xl border border-white/10 bg-white/[0.03] p-4 sm:p-5 text-sm"></dl>
+          <dl id="specifiche" hidden class="grid grid-cols-[repeat(auto-fit,minmax(7.5rem,1fr))] gap-x-5 gap-y-4 rounded-xl border border-white/10 bg-white/[0.03] p-4 sm:p-5 text-sm"></dl>
 
           <div class="flex flex-wrap items-center gap-x-6 gap-y-3">
             <span id="prezzo" class="font-heavy text-4xl sm:text-5xl text-brand-lime leading-none"></span>
@@ -557,6 +557,7 @@
     // scheda con i dati che abbiamo davvero
     var voci = [['Editore', EDITORI[r[4]] || r[4]], ['EAN', r[0]], ['Data di uscita', dataTesto(r) || '—'], ['Edizione', EDIZIONI[r[6]]]];
     if (r[11]) voci.push(['Autore', r[11]]);
+    if (r[12]) voci.push(['Pagine', String(r[12])]);
     var sp = $('specifiche'); sp.hidden = false;
     voci.forEach(function (v) {
       var d = el('div'); d.appendChild(el('dt', 'text-[10px] font-heavy uppercase tracking-widest text-brand-muted mb-1', v[0]));
