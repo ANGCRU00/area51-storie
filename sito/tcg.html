@@ -205,7 +205,7 @@
     <a class="flex items-center gap-2 sm:gap-3 group shrink-0" href="index.html" aria-label="Area 51 Fumetteria, home">
       <svg class="w-11 h-11 group-hover:rotate-12 transition-transform" aria-hidden="true"><use href="#alieno"/></svg>
       <span class="flex flex-col leading-none">
-        <span class="font-heavy text-2xl text-white">AREA 51</span>
+        <span class="font-heavy text-xl sm:text-2xl text-white">AREA 51</span>
         <span class="text-[10px] tracking-[0.3em] text-brand-lime font-bold">FUMETTERIA</span>
       </span>
     </a>
@@ -315,17 +315,17 @@
       <nav aria-label="Percorso" class="text-xs font-semibold text-brand-muted mb-5">
         <a class="hover:text-brand-lime" href="index.html">Home</a> <span aria-hidden="true" class="mx-1.5 text-brand-violetGlow">/</span> <span class="text-white" aria-current="page">TCG</span>
       </nav>
-      <div class="flex items-start justify-between gap-4">
+      <div class="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-x-4">
         <div class="min-w-0">
           <span class="-rotate-2 inline-block bg-brand-lime text-black px-3 py-1 rounded font-heavy text-[11px] uppercase tracking-wider shadow-brutal-violet mb-4">TCG</span>
           <h1 class="font-heavy text-[2.1rem] sm:text-5xl lg:text-6xl leading-[1.02] text-white">Giochi di <span class="text-brand-lime">carte</span></h1>
-          <p class="mt-4 text-base sm:text-lg text-brand-muted max-w-xl leading-relaxed">Magic, Pokémon, Riftbound e Yu-Gi-Oh!: bustine, box, mazzi e carte singole. Scegli online, ritiri e paghi in negozio.</p>
         </div>
         <!-- Disco con raggio: il raggio resta nella sua colonna e non passa mai sopra il testo -->
-        <div class="relative shrink-0 w-28 sm:w-44 lg:w-56 flex flex-col items-center" aria-hidden="true">
+        <div class="relative shrink-0 w-28 sm:w-44 lg:w-56 sm:row-span-2 flex flex-col items-center" aria-hidden="true">
           <svg class="w-full h-12 sm:h-20 lg:h-24 relative z-10 animate-ufo drop-shadow-[0_10px_25px_rgba(185,230,46,.35)]"><use href="#disco"/></svg>
           <div class="tractor-beam w-full h-16 sm:h-24 lg:h-28 -mt-2 opacity-80"></div>
         </div>
+        <p class="mt-4 col-span-2 sm:col-span-1 text-base sm:text-lg text-brand-muted max-w-xl leading-relaxed">Magic, Pokémon, Riftbound e Yu-Gi-Oh!: bustine, box, mazzi e carte singole. Scegli online, ritiri e paghi in negozio.</p>
       </div>
     </section>
 
@@ -375,7 +375,7 @@
         </div>
       </div>
 
-      <nav id="paginazione" aria-label="Pagine del catalogo" class="flex flex-wrap items-center justify-center gap-2 mt-12"></nav>
+      <nav id="paginazione" aria-label="Pagine del catalogo" class="flex flex-wrap items-center justify-center gap-1.5 sm:gap-2 mt-12"></nav>
       <p class="mt-8 text-sm text-brand-muted">Prodotti e prezzi di esempio: il catalogo vero lo carica il negozio.</p>
     </section>
 
@@ -669,10 +669,30 @@
 
   function bottonePagina(etichetta, num, opz) {
     opz = opz || {};
-    if (opz.disabilitato) return '<span class="px-4 py-2.5 rounded-full border border-white/10 text-brand-muted/50 text-sm font-heavy" aria-hidden="true">' + etichetta + '</span>';
+    // Più piccoli sul telefono (40 px) così freccia, numeri e freccia stanno su una riga
+    var base = 'inline-flex items-center justify-center min-w-[2.5rem] sm:min-w-[2.75rem] h-10 sm:h-11 px-3 sm:px-4 rounded-full border font-heavy text-sm transition-colors ';
+    if (opz.ellisse) return '<span class="inline-flex items-end justify-center w-4 sm:w-6 h-10 sm:h-11 pb-2.5 text-brand-muted" aria-hidden="true">…</span>';
+    if (opz.disabilitato) return '<span class="' + base + 'border-white/10 text-brand-muted/50" aria-hidden="true">' + etichetta + '</span>';
     var cls = opz.corrente ? 'bg-brand-lime text-black border-brand-lime shadow-brutal-violet' : 'bg-[#120a2e] border-white/15 hover:border-brand-lime hover:text-brand-lime';
     return '<button type="button" data-pagina="' + num + '" ' + (opz.corrente ? 'aria-current="page"' : '') + (opz.aria ? ' aria-label="' + opz.aria + '"' : '') +
-      ' class="min-w-[2.75rem] h-11 px-4 rounded-full border font-heavy text-sm transition-colors ' + cls + '">' + etichetta + '</button>';
+      ' class="' + base + cls + '">' + etichetta + '</button>';
+  }
+
+  // Numeri da mostrare, con "…" nei buchi. Fino a 5 pagine tutte; oltre: la prima, l'ultima, la corrente
+  // e, se c'è spazio (vicine), anche le due accanto.
+  function numeriPagina(cur, tot, vicine) {
+    var set = {};
+    if (tot <= 5) { for (var i = 1; i <= tot; i++) set[i] = true; }
+    else { [1, tot, cur].concat(vicine ? [cur - 1, cur + 1] : []).forEach(function (x) { if (x >= 1 && x <= tot) set[x] = true; }); }
+    var nums = Object.keys(set).map(Number).sort(function (a, b) { return a - b; }), out = [];
+    nums.forEach(function (x, i) { if (i && x - nums[i - 1] > 1) out.push('…'); out.push(x); });
+    return out;
+  }
+  function gruppoNumeri(cur, tot, vicine) {
+    return numeriPagina(cur, tot, vicine).map(function (x) {
+      return x === '…' ? bottonePagina('…', 0, { ellisse: true })
+        : bottonePagina(String(x), x, { corrente: x === cur, aria: 'Pagina ' + x });
+    }).join('');
   }
 
   function quanti() {
@@ -692,11 +712,12 @@
     conteggio.textContent = tot === 0 ? 'Nessun risultato' : (tot === 1 ? '1 risultato' : tot + ' risultati') + (pagine > 1 ? ' · pagina ' + stato.pagina + ' di ' + pagine : '');
     conta.textContent = tot;
 
-    // Paginazione
+    // Paginazione: sul telefono meno numeri (uno stretto, uno largo), da sm in su anche le pagine vicine
     if (pagine > 1) {
-      var h = bottonePagina('←', stato.pagina - 1, { disabilitato: stato.pagina === 1, aria: 'Pagina precedente' });
-      for (var i = 1; i <= pagine; i++) h += bottonePagina(String(i), i, { corrente: i === stato.pagina, aria: 'Pagina ' + i });
-      h += bottonePagina('→', stato.pagina + 1, { disabilitato: stato.pagina === pagine, aria: 'Pagina successiva' });
+      var h = bottonePagina('←', stato.pagina - 1, { disabilitato: stato.pagina === 1, aria: 'Pagina precedente' }) +
+        '<div class="flex items-center gap-1.5 sm:hidden">' + gruppoNumeri(stato.pagina, pagine, false) + '</div>' +
+        '<div class="hidden sm:flex items-center gap-2">' + gruppoNumeri(stato.pagina, pagine, true) + '</div>' +
+        bottonePagina('→', stato.pagina + 1, { disabilitato: stato.pagina === pagine, aria: 'Pagina successiva' });
       pag.innerHTML = h; pag.hidden = false;
     } else { pag.innerHTML = ''; pag.hidden = true; }
 
