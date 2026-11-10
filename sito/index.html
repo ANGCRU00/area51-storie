@@ -201,7 +201,7 @@
 
 <!-- Testata -->
 <header class="sticky top-0 z-50 bg-[#070514]/90 backdrop-blur-md border-b border-brand-violet/40">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-4">
+  <div class="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-4">
     <a class="flex items-center gap-2 sm:gap-3 group shrink-0" href="index.html" aria-label="Area 51 Fumetteria, home">
       <svg class="w-11 h-11 group-hover:rotate-12 transition-transform" aria-hidden="true"><use href="#alieno"/></svg>
       <span class="flex flex-col leading-none">
@@ -210,7 +210,7 @@
       </span>
     </a>
 
-    <nav class="hidden xl:flex items-center gap-2 relative text-sm font-semibold" id="main-nav" aria-label="Categorie">
+    <nav class="hidden min-[1420px]:flex items-center gap-2 relative text-sm font-semibold" id="main-nav" aria-label="Categorie">
       <div class="pointer-events-none absolute -top-4 left-0 z-30" id="nav-ufo-follower" aria-hidden="true">
         <div class="ufo-bobbing flex flex-col items-center drop-shadow-[0_2px_10px_rgba(185,230,46,.65)]">
           <svg class="w-10 h-5" id="nav-ufo-ship"><use href="#disco"/></svg>
@@ -223,6 +223,7 @@
         <a class="nav-link whitespace-nowrap px-2.5 py-2 rounded-full hover:text-brand-lime hover:bg-[#180e3e] transition-colors" href="giochi.html">Giochi da tavolo</a>
         <a class="nav-link whitespace-nowrap px-2.5 py-2 rounded-full hover:text-brand-lime hover:bg-[#180e3e] transition-colors" href="figure.html">Figure &amp; Funko</a>
         <a class="nav-link whitespace-nowrap px-2.5 py-2 rounded-full hover:text-brand-lime hover:bg-[#180e3e] transition-colors" href="warhammer.html">Warhammer</a>
+        <a class="nav-link whitespace-nowrap px-2.5 py-2 rounded-full hover:text-brand-lime hover:bg-[#180e3e] transition-colors" href="#gadget">Gadget</a>
         <a class="nav-link whitespace-nowrap px-2.5 py-2 rounded-full hover:text-brand-lime hover:bg-[#180e3e] transition-colors" href="#eventi">Eventi</a>
       </div>
       <a class="nav-link ml-1 border border-brand-lime/60 hover:bg-brand-lime text-brand-lime hover:text-black font-bold text-xs uppercase tracking-wider whitespace-nowrap px-3 py-2.5 rounded-full transition-colors" href="#negozio">Il negozio ↗</a>
@@ -235,25 +236,29 @@
       <button type="button" aria-label="Lista desideri" class="hidden sm:flex w-11 h-11 rounded-full border border-white/15 hover:border-brand-lime items-center justify-center hover:text-brand-lime transition-colors">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M4.3 6.3a4.5 4.5 0 000 6.4L12 20.4l7.7-7.7a4.5 4.5 0 00-6.4-6.4L12 7.6l-1.3-1.3a4.5 4.5 0 00-6.4 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/></svg>
       </button>
+      <a href="#account" aria-label="Il tuo account" class="hidden sm:flex w-11 h-11 rounded-full border border-white/15 hover:border-brand-lime items-center justify-center hover:text-brand-lime transition-colors">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 11a4 4 0 100-8 4 4 0 000 8zM4 21v-1a6 6 0 016-6h4a6 6 0 016 6v1" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/></svg>
+      </a>
       <a class="whitespace-nowrap bg-brand-lime text-black font-heavy text-xs px-3.5 sm:px-4 py-3 rounded-full flex items-center gap-2 shadow-brutal-violet" href="#carrello" aria-label="Carrello, 0 prodotti">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"/></svg>
         <span class="hidden sm:inline">Carrello · 0</span><span class="sm:hidden">0</span>
       </a>
-      <button type="button" id="menu-btn" aria-label="Apri il menu" aria-expanded="false" aria-controls="menu-mobile" class="xl:hidden w-11 h-11 rounded-full border border-white/15 flex items-center justify-center">
+      <button type="button" id="menu-btn" aria-label="Apri il menu" aria-expanded="false" aria-controls="menu-mobile" class="min-[1420px]:hidden w-11 h-11 rounded-full border border-white/15 flex items-center justify-center">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" stroke-linecap="round" stroke-width="2.2"/></svg>
       </button>
     </div>
   </div>
   <!-- Menu da telefono -->
-  <nav id="menu-mobile" hidden aria-label="Menu" class="xl:hidden border-t border-brand-violet/40 bg-[#0d0724]">
-    <div class="max-w-7xl mx-auto px-4 py-4 grid grid-cols-2 gap-2 text-base font-semibold">
+  <nav id="menu-mobile" hidden aria-label="Menu" class="min-[1420px]:hidden border-t border-brand-violet/40 bg-[#0d0724]">
+    <div class="max-w-[1440px] mx-auto px-4 py-4 grid grid-cols-2 gap-2 text-base font-semibold">
       <a class="px-4 py-3 rounded-xl bg-white/5" href="catalogo.html">Manga &amp; Fumetti</a>
       <a class="px-4 py-3 rounded-xl bg-white/5" href="tcg.html">TCG</a>
       <a class="px-4 py-3 rounded-xl bg-white/5" href="giochi.html">Giochi da tavolo</a>
       <a class="px-4 py-3 rounded-xl bg-white/5" href="figure.html">Figure &amp; Funko</a>
       <a class="px-4 py-3 rounded-xl bg-white/5" href="warhammer.html">Warhammer</a>
+      <a class="px-4 py-3 rounded-xl bg-white/5" href="#gadget">Gadget</a>
       <a class="px-4 py-3 rounded-xl bg-white/5" href="#eventi">Eventi</a>
-      <a class="col-span-2 px-4 py-3 rounded-xl border border-brand-lime text-brand-lime text-center" href="#negozio">Il negozio ↗</a>
+      <a class="px-4 py-3 rounded-xl border border-brand-lime text-brand-lime text-center" href="#negozio">Il negozio ↗</a>
     </div>
   </nav>
 </header>
@@ -262,7 +267,7 @@
 
 <!-- Hero -->
 <section class="relative pt-12 pb-20 lg:pt-20 lg:pb-28">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-12 gap-14 lg:gap-8 items-center">
+  <div class="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-12 gap-14 lg:gap-8 items-center">
     <div class="lg:col-span-7 flex flex-col items-start gap-6">
       <span class="-rotate-2 inline-flex items-center gap-2 bg-brand-lime text-black px-4 py-1.5 rounded font-heavy text-xs uppercase tracking-wider shadow-brutal-violet">
         <span class="w-2 h-2 rounded-full bg-black"></span>Avvistamento confermato
@@ -306,7 +311,7 @@
 </div>
 
 <!-- Nuovi arrivi -->
-<section id="catalogo" class="py-20 lg:py-28 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<section id="catalogo" class="py-20 lg:py-28 max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
   <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-10">
     <div>
       <p class="text-xs font-heavy text-brand-lime uppercase tracking-widest mb-2">Nuovi mondi · in negozio e in arrivo</p>
@@ -360,7 +365,7 @@
 </section>
 
 <!-- Club + Chiedicelo -->
-<section class="py-8 lg:py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<section class="py-8 lg:py-16 max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
   <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
     <div id="club" class="border-2 border-brand-lime rounded-3xl p-7 sm:p-10 bg-[#0d0724]/95 flex flex-col justify-between shadow-[0_0_30px_rgba(185,230,46,.15)]">
       <div>
@@ -398,7 +403,7 @@
 </section>
 
 <!-- Eventi -->
-<section id="eventi" class="py-20 lg:py-28 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<section id="eventi" class="py-20 lg:py-28 max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
   <div class="mb-12">
     <p class="text-xs font-heavy text-brand-lime uppercase tracking-widest mb-2">Fuori dallo schermo, dentro l'avventura</p>
     <h2 class="font-heavy text-3xl sm:text-4xl lg:text-5xl text-white leading-tight">Stesso pianeta. Stesse passioni.</h2>
@@ -426,7 +431,7 @@
 </section>
 
 <!-- Newsletter -->
-<section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
+<section class="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 pb-20">
   <div class="border-2 border-dashed border-brand-lime rounded-2xl p-7 sm:p-12 bg-[#0d0824]/95 flex flex-col lg:flex-row items-center justify-between gap-8">
     <div class="max-w-lg text-center lg:text-left">
       <h2 class="font-heavy text-2xl sm:text-3xl text-white mb-2 leading-tight">Le prossime novità, nella tua inbox.</h2>
@@ -445,7 +450,7 @@
 
 <!-- Piede -->
 <footer id="negozio" class="border-t-2 border-brand-lime bg-[#05030f] pt-16 pb-10 text-sm text-brand-muted relative z-10">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+  <div class="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-10 mb-12">
       <div class="lg:col-span-2 space-y-4">
         <div class="flex items-center gap-3"><svg class="w-9 h-9" aria-hidden="true"><use href="#alieno"/></svg><span class="font-heavy text-2xl text-white">AREA 51</span></div>
