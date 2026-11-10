@@ -352,12 +352,12 @@
       </div>
 
       <!-- Trama (i testi veri li scrive il negozio) e ritiro, affiancati -->
-      <div class="mt-12 grid lg:grid-cols-3 gap-6">
+      <div class="mt-12 grid lg:grid-cols-3 lg:items-start gap-6">
         <section class="lg:col-span-2 rounded-2xl border border-white/10 bg-[#0e0926]/90 p-5 sm:p-6" aria-labelledby="trama-titolo">
           <h2 id="trama-titolo" class="font-heavy text-xl sm:text-2xl text-white uppercase mb-4">Trama <span class="text-brand-lime">&amp;</span> dettagli</h2>
-          <p class="text-sm sm:text-base font-semibold text-brand-muted leading-relaxed">[DESCRIZIONE del prodotto: la scrive il negozio]</p>
+          <div id="trama-testo" class="space-y-4 text-sm sm:text-base font-semibold text-brand-muted leading-relaxed"><p>[DESCRIZIONE del prodotto: la scrive il negozio]</p></div>
         </section>
-        <section class="rounded-2xl border-2 border-dashed border-brand-lime/70 bg-[#0e0926]/90 p-5 sm:p-6 space-y-2.5" aria-labelledby="ritiro-titolo">
+        <section class="lg:sticky lg:top-28 rounded-2xl border-2 border-dashed border-brand-lime/70 bg-[#0e0926]/90 p-5 sm:p-6 space-y-2.5" aria-labelledby="ritiro-titolo">
           <h2 id="ritiro-titolo" class="font-heavy text-lg text-white uppercase">Ritiro in negozio</h2>
           <p class="text-sm font-semibold text-brand-muted leading-relaxed">Scegli online, ritiri e paghi al bancone di Area 51 Fumetteria, Viale G. Falcone e P. Borsellino, 35, Barletta. Non spediamo.</p>
           <p class="flex flex-wrap gap-x-5 gap-y-1 text-sm font-heavy">
@@ -469,6 +469,7 @@
 })();
 </script>
 <script src="dati/catalogo.js"></script>
+<script src="dati/trame.js"></script>
 <script>
 (function () {
 
@@ -552,6 +553,13 @@
 
   /* ---------- Parte ricca, solo per il catalogo con i dati ---------- */
   if (r) {
+    // trama della serie, se il negozio l'ha scritta
+    var trama = (window.TRAME || {})[r[2].toLowerCase()];
+    if (trama) {
+      var tb = $('trama-testo'); tb.textContent = '';
+      trama.forEach(function (par) { tb.appendChild(el('p', '', par)); });
+    }
+
     // etichette
     var bx = $('badges'); bx.hidden = false;
     if (P.etichetta) bx.appendChild(el('span', 'inline-block font-heavy text-[11px] uppercase tracking-wider px-3 py-1.5 rounded-md ' + (preordine ? 'bg-brand-violet text-white' : 'bg-brand-lime text-black'), P.etichetta));
