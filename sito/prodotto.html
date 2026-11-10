@@ -320,13 +320,9 @@
 
           <dl id="specifiche" hidden class="grid grid-cols-[repeat(auto-fit,minmax(8.5rem,1fr))] gap-x-6 gap-y-4 rounded-xl border border-white/10 bg-white/[0.03] p-4 sm:p-5 text-sm"></dl>
 
-          <div class="flex flex-wrap items-end gap-x-6 gap-y-2">
+          <div class="flex flex-wrap items-center gap-x-6 gap-y-3">
             <span id="prezzo" class="font-heavy text-4xl sm:text-5xl text-brand-lime leading-none"></span>
-          </div>
-
-          <div class="rounded-xl border border-white/10 bg-white/[0.03] p-4 flex flex-wrap items-center justify-between gap-3">
-            <p id="disponibilita" class="text-sm sm:text-base font-heavy text-white"></p>
-            <span id="negozio-stato" class="inline-flex items-center gap-2 text-xs font-bold px-3 py-1.5 rounded-full border border-white/15"></span>
+            <p id="disponibilita" class="text-sm font-heavy text-white rounded-full border border-white/15 bg-white/[0.03] px-4 py-2"></p>
           </div>
 
           <fieldset id="edizioni" hidden>
@@ -352,25 +348,24 @@
           </div>
           <p id="esito" role="status" class="text-sm font-bold text-brand-lime min-h-[1.25rem] -mt-3 empty:min-h-0 empty:-mt-6"></p>
 
-          <!-- Ritiro in negozio -->
-          <div class="rounded-2xl border border-white/10 bg-[#0e0926]/90 p-5 sm:p-6 space-y-3">
-            <h2 class="font-heavy text-lg text-white">Ritiro e pagamento in negozio</h2>
-            <p class="text-sm font-semibold text-brand-muted leading-relaxed">
-              Scegli online, ritiri e paghi direttamente al bancone di <span class="text-white">Area 51 Fumetteria</span>, Viale G. Falcone e P. Borsellino, 35, Barletta. Non spediamo.
-            </p>
-            <a href="negozio.html" class="inline-block text-sm font-heavy text-brand-lime hover:underline">Orari e mappa →</a>
-          </div>
         </div>
       </div>
 
-      <!-- Trama e dettagli: i testi veri li scrive il negozio -->
-      <section class="mt-12 rounded-2xl border border-white/10 bg-[#0e0926]/90 p-6 sm:p-8" aria-labelledby="trama-titolo">
-        <h2 id="trama-titolo" class="font-heavy text-xl sm:text-2xl text-white uppercase mb-5">Trama <span class="text-brand-lime">&amp;</span> dettagli</h2>
-        <div class="grid md:grid-cols-[minmax(0,1fr)_minmax(0,22rem)] gap-8">
+      <!-- Trama (i testi veri li scrive il negozio) e ritiro, affiancati -->
+      <div class="mt-12 grid lg:grid-cols-3 gap-6">
+        <section class="lg:col-span-2 rounded-2xl border border-white/10 bg-[#0e0926]/90 p-5 sm:p-6" aria-labelledby="trama-titolo">
+          <h2 id="trama-titolo" class="font-heavy text-xl sm:text-2xl text-white uppercase mb-4">Trama <span class="text-brand-lime">&amp;</span> dettagli</h2>
           <p class="text-sm sm:text-base font-semibold text-brand-muted leading-relaxed">[DESCRIZIONE del prodotto: la scrive il negozio]</p>
-          <dl id="dettagli" class="grid grid-cols-[auto_1fr] gap-x-6 gap-y-2 text-sm font-semibold rounded-xl border border-white/10 bg-white/[0.03] p-4 self-start"></dl>
-        </div>
-      </section>
+        </section>
+        <section class="rounded-2xl border-2 border-dashed border-brand-lime/70 bg-[#0e0926]/90 p-5 sm:p-6 space-y-2.5" aria-labelledby="ritiro-titolo">
+          <h2 id="ritiro-titolo" class="font-heavy text-lg text-white uppercase">Ritiro in negozio</h2>
+          <p class="text-sm font-semibold text-brand-muted leading-relaxed">Scegli online, ritiri e paghi al bancone di Area 51 Fumetteria, Viale G. Falcone e P. Borsellino, 35, Barletta. Non spediamo.</p>
+          <p class="flex flex-wrap gap-x-5 gap-y-1 text-sm font-heavy">
+            <a href="negozio.html" class="text-brand-lime hover:underline">Orari e mappa →</a>
+            <a href="index.html#chiedicelo" class="text-brand-lime hover:underline">Non lo trovi? Chiedicelo →</a>
+          </p>
+        </section>
+      </div>
 
       <section id="volumi" hidden class="mt-10 rounded-2xl border border-white/10 bg-[#0e0926]/90 p-6 sm:p-8" aria-labelledby="volumi-titolo">
         <h2 id="volumi-titolo" class="font-heavy text-xl sm:text-2xl text-white uppercase mb-5">Tutti i volumi della serie <span id="serie-nome" class="text-brand-lime"></span></h2>
@@ -386,12 +381,6 @@
         <ul id="consigli-lista" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4"></ul>
       </section>
 
-      <section class="mt-12 grid sm:grid-cols-2 lg:grid-cols-4 gap-6" aria-label="Come funziona">
-        <div class="space-y-2"><h3 class="font-heavy text-sm uppercase tracking-wider text-brand-lime">Ritiro in negozio</h3><p class="text-sm font-semibold text-brand-muted leading-relaxed">Scegli online e passa a Barletta negli orari di apertura.</p></div>
-        <div class="space-y-2"><h3 class="font-heavy text-sm uppercase tracking-wider text-brand-lime">Paghi al ritiro</h3><p class="text-sm font-semibold text-brand-muted leading-relaxed">Nessun pagamento online: paghi al bancone quando ritiri.</p></div>
-        <div class="space-y-2"><h3 class="font-heavy text-sm uppercase tracking-wider text-brand-lime">Nessuna spedizione</h3><p class="text-sm font-semibold text-brand-muted leading-relaxed">Non spediamo: i prodotti si ritirano solo in negozio.</p></div>
-        <div class="space-y-2"><h3 class="font-heavy text-sm uppercase tracking-wider text-brand-lime">Non lo trovi?</h3><p class="text-sm font-semibold text-brand-muted leading-relaxed">Dicci cosa ti serve: verifichiamo se possiamo procurartelo. <a href="index.html#chiedicelo" class="text-brand-lime hover:underline font-heavy">Chiedicelo →</a></p></div>
-      </section>
     </div>
   </div>
 </main>
@@ -482,52 +471,12 @@
 <script src="dati/catalogo.js"></script>
 <script>
 (function () {
-  /* ---------- Orari del negozio (gli stessi in tutto il sito) ---------- */
-  // Indice = giorno della settimana come in JavaScript: 0 domenica (chiuso), 1 lunedì (solo sera), 2 martedì ... 6 sabato
-  var MATTINA_SERA = [['09:30', '13:00'], ['17:00', '20:30']];
-  var ORARI = [null, [['17:00', '20:30']], MATTINA_SERA, MATTINA_SERA, MATTINA_SERA, MATTINA_SERA, MATTINA_SERA];
-  var GIORNI = ['domenica', 'lunedì', 'martedì', 'mercoledì', 'giovedì', 'venerdì', 'sabato'];
-  function minuti(h) { var p = h.split(':'); return Number(p[0]) * 60 + Number(p[1]); }
-  function breve(h) { var p = h.split(':'); return String(Number(p[0])) + (p[1] === '00' ? '' : ':' + p[1]); }
-  function fasce(giorno) {
-    var o = ORARI[giorno];
-    return o ? o.map(function (f) { return f[0] + '–' + f[1]; }).join(' · ') : 'Chiuso';
-  }
-  // Com'è il negozio adesso: aperto o chiuso, e quando cambia
-  function statoNegozio(adesso) {
-    var d = adesso || new Date(), g = d.getDay(), m = d.getHours() * 60 + d.getMinutes();
-    var oggi = ORARI[g] || [], i;
-    for (i = 0; i < oggi.length; i++) {
-      if (m >= minuti(oggi[i][0]) && m < minuti(oggi[i][1])) return { aperto: true, testo: 'Aperto ora · chiude alle ' + breve(oggi[i][1]) };
-    }
-    for (i = 0; i < oggi.length; i++) {
-      if (m < minuti(oggi[i][0])) return { aperto: false, testo: 'Chiuso · riapre oggi alle ' + breve(oggi[i][0]) };
-    }
-    for (var k = 1; k <= 7; k++) {
-      var gg = (g + k) % 7;
-      if (ORARI[gg]) return { aperto: false, testo: 'Chiuso · riapre ' + (k === 1 ? 'domani' : GIORNI[gg]) + ' alle ' + breve(ORARI[gg][0][0]) };
-    }
-    return { aperto: false, testo: 'Chiuso' };
-  }
-
 
   var q = new URLSearchParams(location.search);
   var NOMI = { catalogo: 'Manga & Fumetti', tcg: 'TCG', figure: 'Figure & Funko', giochi: 'Giochi da tavolo', warhammer: 'Warhammer', gadget: 'Gadget' };
   var cat = NOMI[q.get('cat')] ? q.get('cat') : '';
   function $(id) { return document.getElementById(id); }
   function el(tag, cls, testo) { var e = document.createElement(tag); if (cls) e.className = cls; if (testo != null) e.textContent = testo; return e; }
-
-  // Stato del negozio, aggiornato ogni minuto
-  function aggiornaNegozio() {
-    var s = statoNegozio(), box = $('negozio-stato');
-    box.textContent = '';
-    var punto = el('span', 'w-2 h-2 rounded-full ' + (s.aperto ? 'bg-brand-lime' : 'bg-[#FB923C]'));
-    punto.setAttribute('aria-hidden', 'true');
-    box.appendChild(punto);
-    box.appendChild(document.createTextNode(s.testo));
-  }
-  aggiornaNegozio();
-  setInterval(aggiornaNegozio, 60000);
 
   /* ---------- Di quale prodotto si tratta ----------
      Catalogo Manga & Fumetti: arriva l'EAN e tutto si legge da dati/catalogo.js (volumi, edizioni, consigli).
@@ -710,16 +659,6 @@
       if (varianti.length === 1) b.click();
     });
   }
-
-  // Dettagli: solo ciò che sappiamo davvero, il resto resta segnaposto
-  var righe = r
-    ? [['Categoria', NOMI.catalogo], ['Serie', r[2]], ['Editore', EDITORI[r[4]] || r[4]], ['EAN', r[0]]]
-    : [['Categoria', cat ? NOMI[cat] : 'Catalogo'], ['Dettagli', P.sotto || '—'], ['Codice', '[CODICE]']];
-  var dl = $('dettagli');
-  righe.forEach(function (x) {
-    dl.appendChild(el('dt', 'text-brand-muted', x[0]));
-    dl.appendChild(el('dd', 'text-white', x[1]));
-  });
 
   // Azione principale e quantità
   var qta = 1, azione = $('azione'), esito = $('esito');
