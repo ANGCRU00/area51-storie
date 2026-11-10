@@ -456,6 +456,7 @@
   </div>
 </footer>
 
+<script src="dati/catalogo.js"></script>
 <script>
 (function () {
   /* ---------- Testata: menu da telefono e disco che segue il menu (come la home) ---------- */
@@ -551,10 +552,41 @@
     }
   });
 
+  /* ---------- Dati momentanei dai cataloghi degli editori (dati/catalogo.js) ----------
+     Titoli e prezzi sono quelli dei cataloghi Panini, J-POP e Star Comics. Genere, età, serie in corso o conclusa,
+     copertine e giacenze non ci sono nei cataloghi: i filtri senza dati si nascondono da soli.
+     "Preordine" = uscita futura, "Novità" = uscito negli ultimi 60 giorni; "In negozio" è presunto, non una giacenza vera. */
+  var MESI_IT = ['gennaio', 'febbraio', 'marzo', 'aprile', 'maggio', 'giugno', 'luglio', 'agosto', 'settembre', 'ottobre', 'novembre', 'dicembre'];
+  if (window.CATALOGO_DATI && window.CATALOGO_DATI.length) {
+    var OGGI = Date.now(), GIORNO = 864e5;
+    PRODOTTI = window.CATALOGO_DATI.map(function (r, i) {
+      var quando = r[8] ? new Date(r[8] + 'T00:00:00').getTime() : 0;
+      var preordine = quando > OGGI, novita = !preordine && quando > 0 && OGGI - quando <= 60 * GIORNO;
+      var d = quando ? new Date(quando) : null, h = 0;
+      for (var k = 0; k < r[2].length; k++) h = (h * 31 + r[2].charCodeAt(k)) >>> 0;
+      return {
+        id: i + 1, ean: r[0], titolo: r[1], serie: r[2], tipo: '', genere: '', avanzamento: '', editore: r[4], eta: '', edizione: r[6],
+        prezzo: r[7], novita: novita, preordine: preordine, disponibile: !preordine,
+        uscitaTesto: d ? (r[9] ? d.getDate() + ' ' : '') + MESI_IT[d.getMonth()] + ' ' + d.getFullYear() : '',
+        ordineNovita: quando ? Math.round(quando / GIORNO) : 0, colori: COLORI[h % COLORI.length]
+      };
+    });
+  }
+  // Solo le voci di filtro che hanno almeno un prodotto
+  Object.keys(OPZIONI).forEach(function (g) {
+    if (g === 'stato') return;
+    OPZIONI[g] = OPZIONI[g].filter(function (o) { return PRODOTTI.some(function (p) { return p[g] === o[0]; }); });
+  });
+
   /* ---------- Stato della pagina ---------- */
   var PER_PAGINA = 16;
   var stato = { tipo: [], stato: [], genere: [], avanzamento: [], editore: [], edizione: [], eta: [], cerca: '', ordina: 'rilevanza', pagina: 1 };
-  var GRUPPI_PANNELLO = ['genere', 'avanzamento', 'editore', 'edizione', 'eta'];
+  var GRUPPI_PANNELLO = ['genere', 'avanzamento', 'editore', 'edizione', 'eta'].filter(function (g) { return OPZIONI[g].length > 0; });
+  // Gruppi senza dati: via dal pannello (e la riga Tipo dalla barra)
+  ['genere', 'avanzamento', 'editore', 'edizione', 'eta'].forEach(function (g) {
+    if (!OPZIONI[g].length) document.querySelector('[data-gruppo="' + g + '"]').closest('fieldset').hidden = true;
+  });
+  if (!OPZIONI.tipo.length) document.querySelector('[data-chip="tipo"]').parentElement.hidden = true;
 
   // Filtri passati nell'indirizzo, es. catalogo.html?stato=preordine&tipo=manga
   var q = new URLSearchParams(location.search);
@@ -613,7 +645,7 @@
     else if (stato.ordina === 'prezzo-su') c.sort(function (a, b) { return a.prezzo - b.prezzo; });
     else if (stato.ordina === 'prezzo-giu') c.sort(function (a, b) { return b.prezzo - a.prezzo; });
     else if (stato.ordina === 'titolo') c.sort(function (a, b) { return a.titolo.localeCompare(b.titolo, 'it'); });
-    else c.sort(function (a, b) { return (b.novita + b.preordine) - (a.novita + a.preordine) || a.id - b.id; });
+    else c.sort(function (a, b) { return (b.novita + b.preordine) - (a.novita + a.preordine) || b.ordineNovita - a.ordineNovita || a.id - b.id; });
     return c;
   }
 
@@ -621,7 +653,7 @@
     var etichetta = p.preordine ? '<span class="absolute top-2 left-2 bg-brand-violet text-white font-heavy text-[10px] px-2.5 py-0.5 rounded -rotate-2">PREORDINE</span>'
       : p.novita ? '<span class="absolute top-2 left-2 bg-brand-lime text-black font-heavy text-[10px] px-2.5 py-0.5 rounded -rotate-2">NOVITÀ</span>' : '';
     var edizione = p.edizione !== 'standard' ? '<span class="absolute bottom-2 right-2 bg-[#140C2B]/85 text-brand-lime border border-brand-lime/60 font-heavy text-[10px] px-2 py-0.5 rounded">' + nome('edizione', p.edizione).toUpperCase() + '</span>' : '';
-    var disp = p.preordine ? '<span class="text-brand-violetGlow">●</span> Preordine · esce [DATA]'
+    var disp = p.preordine ? '<span class="text-brand-violetGlow">●</span> Preordine · esce ' + esc(p.uscitaTesto || '[DATA]')
       : p.disponibile ? '<span class="text-brand-lime">●</span> Disponibile in negozio' : '<span class="text-[#FB923C]">●</span> Esaurito, ordinabile';
     var azione = p.preordine
       ? '<a href="prodotto.html?id=' + p.id + '" class="bg-brand-violet hover:bg-brand-violetGlow text-white font-heavy text-xs px-4 py-2.5 rounded-full transition-colors">Prenota</a>'
@@ -636,7 +668,7 @@
             '<span class="mt-2 text-[10px] font-bold tracking-[0.2em] text-white/75">[COPERTINA]</span>' +
           '</div>' + etichetta + edizione +
         '</div>' +
-        '<p class="text-[11px] font-bold text-brand-muted tracking-wider uppercase">' + nome('tipo', p.tipo) + ' · ' + nome('editore', p.editore) + '</p>' +
+        '<p class="text-[11px] font-bold text-brand-muted tracking-wider uppercase">' + [p.tipo && nome('tipo', p.tipo), nome('editore', p.editore)].filter(Boolean).join(' · ') + '</p>' +
         '<h3 class="font-heavy text-sm sm:text-lg text-white mt-1 leading-snug group-hover:text-brand-lime transition-colors">' + esc(p.titolo) + '</h3>' +
         '<p class="mt-1.5 text-[11px] sm:text-xs font-semibold text-brand-muted">' + disp + '</p>' +
       '</a>' +
