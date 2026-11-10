@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html class="scroll-smooth" lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Manga e Fumetti | Area 51 Fumetteria, Barletta</title>
+<meta name="description" content="Catalogo manga, fumetti italiani, supereroi e graphic novel della Fumetteria Area 51 a Barletta. Ritiro e pagamento in negozio.">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body class="text-brand-text font-body overflow-x-hidden antialiased relative selection:bg-brand-lime selection:text-black">
+
+<!-- Simboli disegnati una volta e riusati: alieno e disco volante (uguali alla home) -->
+<svg aria-hidden="true" style="position:absolute;width:0;height:0;overflow:hidden">
+  <defs>
+    <symbol id="alieno" viewBox="0 0 220 220">
+      <path transform="translate(9 9)" d="M100 10 C152 10 188 46 188 88 C188 128 148 170 112 184 C102 188 92 186 82 180 L30 200 L46 158 C26 138 12 114 12 88 C12 46 48 10 100 10 Z" fill="#140C2B"/>
+      <path d="M100 10 C152 10 188 46 188 88 C188 128 148 170 112 184 C102 188 92 186 82 180 L30 200 L46 158 C26 138 12 114 12 88 C12 46 48 10 100 10 Z" fill="#B9E62E" stroke="#140C2B" stroke-width="6" stroke-linejoin="round"/>
+      <ellipse cx="64" cy="92" rx="27" ry="40" transform="rotate(28 64 92)" fill="#140C2B"/>
+      <ellipse cx="136" cy="92" rx="27" ry="40" transform="rotate(-28 136 92)" fill="#140C2B"/>
+      <circle cx="74" cy="76" r="8" fill="#fff"/><circle cx="146" cy="76" r="8" fill="#fff"/>
+    </symbol>
+    <symbol id="disco" viewBox="-345 -175 690 290">
+      <ellipse cx="0" cy="-60" rx="130" ry="100" fill="#DCEFA0" stroke="#140C2B" stroke-width="10"/>
+      <g transform="translate(-58 -150) scale(.58)">
+        <path d="M100 10 C152 10 188 46 188 88 C188 128 148 170 112 184 C102 188 92 186 82 180 L30 200 L46 158 C26 138 12 114 12 88 C12 46 48 10 100 10 Z" fill="#B9E62E" stroke="#140C2B" stroke-width="6"/>
+        <ellipse cx="64" cy="92" rx="27" ry="40" transform="rotate(28 64 92)" fill="#140C2B"/>
+        <ellipse cx="136" cy="92" rx="27" ry="40" transform="rotate(-28 136 92)" fill="#140C2B"/>
+        <circle cx="74" cy="76" r="8" fill="#fff"/><circle cx="146" cy="76" r="8" fill="#fff"/>
+      </g>
+      <ellipse cx="0" cy="10" rx="310" ry="86" fill="#8D99AE" stroke="#140C2B" stroke-width="10"/>
+      <ellipse cx="0" cy="-6" rx="300" ry="44" fill="#C9D3DE"/>
+      <ellipse cx="0" cy="54" rx="150" ry="26" fill="#5C677D" stroke="#140C2B" stroke-width="8"/>
+      <g stroke="#140C2B" stroke-width="6">
+        <circle cx="-230" cy="28" r="18" fill="#B9E62E"/><circle cx="-120" cy="46" r="18" fill="#FFE45C"/><circle cx="0" cy="52" r="18" fill="#B9E62E"/><circle cx="120" cy="46" r="18" fill="#FFE45C"/><circle cx="230" cy="28" r="18" fill="#B9E62E"/>
+      </g>
+    </symbol>
+    <!-- Sistema solare di sfondo: pianeti che attraversano lo schermo, sempre dietro i contenuti -->
+    <radialGradient id="g-luna" cx="35%" cy="30%" r="75%"><stop offset="0" stop-color="#5B4A9E"/><stop offset=".55" stop-color="#2A1A5E"/><stop offset="1" stop-color="#120A2E"/></radialGradient>
+    <radialGradient id="g-gioviano" cx="35%" cy="30%" r="75%"><stop offset="0" stop-color="#FFC266"/><stop offset=".5" stop-color="#E8711C"/><stop offset="1" stop-color="#7A2E08"/></radialGradient>
+    <radialGradient id="g-terra" cx="35%" cy="30%" r="75%"><stop offset="0" stop-color="#5FD0FF"/><stop offset=".55" stop-color="#1E73D8"/><stop offset="1" stop-color="#0B2E6B"/></radialGradient>
+    <radialGradient id="g-marte" cx="35%" cy="30%" r="75%"><stop offset="0" stop-color="#FF6B6B"/><stop offset=".55" stop-color="#C81E3A"/><stop offset="1" stop-color="#5E0B1E"/></radialGradient>
+    <radialGradient id="g-fasce" cx="35%" cy="30%" r="75%"><stop offset="0" stop-color="#FFA94D"/><stop offset=".5" stop-color="#D9531E"/><stop offset="1" stop-color="#3D1775"/></radialGradient>
+    <radialGradient id="g-saturno" cx="35%" cy="30%" r="75%"><stop offset="0" stop-color="#FFC266"/><stop offset=".5" stop-color="#C0588F"/><stop offset="1" stop-color="#3D1775"/></radialGradient>
+    <radialGradient id="g-urano" cx="35%" cy="30%" r="75%"><stop offset="0" stop-color="#6EF0DC"/><stop offset=".55" stop-color="#0E9F9A"/><stop offset="1" stop-color="#0B3B57"/></radialGradient>
+    <radialGradient id="g-nettuno" cx="35%" cy="30%" r="75%"><stop offset="0" stop-color="#8FB2FF"/><stop offset=".55" stop-color="#3056D3"/><stop offset="1" stop-color="#172A6E"/></radialGradient>
+    <linearGradient id="g-ombra" x1="0" y1="0" x2="1" y2="1"><stop offset=".45" stop-color="#070514" stop-opacity="0"/><stop offset="1" stop-color="#070514" stop-opacity=".6"/></linearGradient>
+    <clipPath id="c-sfera"><circle cx="60" cy="60" r="38"/></clipPath>
+
+    <symbol id="p-luna" viewBox="0 0 120 120">
+      <circle cx="60" cy="60" r="36" fill="url(#g-luna)"/>
+      <circle cx="47" cy="48" r="8" fill="none" stroke="#8B5CF6" stroke-width="3"/>
+      <circle cx="70" cy="64" r="10" fill="none" stroke="#B9E62E" stroke-width="3"/>
+      <circle cx="48" cy="77" r="5" fill="none" stroke="#8B5CF6" stroke-width="2.5"/>
+      <circle cx="60" cy="60" r="36" fill="url(#g-ombra)"/>
+        <ellipse cx="46" cy="44" rx="12" ry="7" transform="rotate(-30 46 44)" fill="#fff" opacity=".22"/>
+      <path d="M86 24 A44 44 0 1 1 26 92" fill="none" stroke="#B9E62E" stroke-width="3" stroke-linecap="round"/>
+      <circle cx="62" cy="8" r="3" fill="#B9E62E" opacity=".7"/>
+    </symbol>
+    <symbol id="p-gioviano" viewBox="0 0 160 120">
+      <path d="M6 40 L38 26 M38 26 L64 34" stroke="#B9E62E" stroke-width="2" stroke-dasharray="3 4" opacity=".6"/>
+      <circle cx="6" cy="40" r="3.5" fill="#B9E62E"/><circle cx="38" cy="26" r="4.5" fill="#E5E7EB"/>
+      <path d="M136 46 L132 92 L100 106" fill="none" stroke="#B9E62E" stroke-width="2" stroke-dasharray="3 4" opacity=".6"/>
+      <g transform="translate(26 0)">
+        <circle cx="60" cy="60" r="38" fill="url(#g-gioviano)"/>
+        <g clip-path="url(#c-sfera)" fill="none" stroke-linecap="round">
+          <path d="M18 46 Q60 34 104 46" stroke="#B9E62E" stroke-width="3.5" opacity=".85"/>
+          <path d="M18 62 Q60 52 104 64" stroke="#B9E62E" stroke-width="3" opacity=".75"/>
+          <path d="M22 78 Q60 70 100 80" stroke="#FCD34D" stroke-width="2.5" opacity=".7"/>
+        </g>
+        <circle cx="50" cy="68" r="3" fill="#B9E62E"/>
+        <circle cx="60" cy="60" r="38" fill="url(#g-ombra)"/>
+        <ellipse cx="46" cy="43" rx="13" ry="8" transform="rotate(-30 46 43)" fill="#fff" opacity=".22"/>
+      </g>
+      <circle cx="136" cy="46" r="6" fill="#8B5CF6" stroke="#C4B5FD" stroke-width="1.5"/>
+    </symbol>
+    <symbol id="p-terra" viewBox="0 0 140 120">
+      <ellipse cx="62" cy="64" rx="58" ry="19" transform="rotate(-10 62 64)" fill="none" stroke="#B9E62E" stroke-width="2.5" stroke-dasharray="4 5" opacity=".75"/>
+      <circle cx="60" cy="60" r="38" fill="url(#g-terra)"/>
+      <g clip-path="url(#c-sfera)" fill="#B9E62E">
+        <path d="M36 44 q8 -12 22 -6 q8 8 -2 16 q-14 6 -20 -10z"/>
+        <path d="M64 58 q14 -8 20 4 q2 14 -12 16 q-12 -2 -8 -20z"/>
+        <path d="M42 80 q8 -3 10 4 q-5 6 -10 -4z"/>
+      </g>
+      <g clip-path="url(#c-sfera)" fill="none" stroke="#fff" stroke-width="2" opacity=".55" stroke-linecap="round">
+        <path d="M28 60 Q60 50 96 58"/><path d="M34 72 Q62 64 92 70"/>
+      </g>
+      <circle cx="60" cy="60" r="38" fill="url(#g-ombra)"/>
+        <ellipse cx="46" cy="43" rx="13" ry="8" transform="rotate(-30 46 43)" fill="#fff" opacity=".22"/>
+      <path d="M4 64 A58 19 0 0 0 120 64" transform="rotate(-10 62 64)" fill="none" stroke="#B9E62E" stroke-width="2.5" stroke-dasharray="4 5" opacity=".9"/>
+      <circle cx="122" cy="46" r="8" fill="#E5E7EB" stroke="#9CA3AF" stroke-width="1.5"/>
+      <circle cx="120" cy="44" r="2" fill="#9CA3AF"/><circle cx="125" cy="49" r="1.5" fill="#9CA3AF"/>
+    </symbol>
+    <symbol id="p-marte" viewBox="0 0 120 120">
+      <circle cx="60" cy="60" r="38" fill="url(#g-marte)"/>
+      <g clip-path="url(#c-sfera)"><ellipse cx="60" cy="24" rx="16" ry="7" fill="#FFF4E0"/></g>
+      <path d="M36 44 Q60 56 86 42" fill="none" stroke="#5E0B1E" stroke-width="3.5" stroke-linecap="round"/>
+      <circle cx="47" cy="64" r="8" fill="#3D0A14" opacity=".8"/>
+      
+      <circle cx="76" cy="72" r="5" fill="none" stroke="#B9E62E" stroke-width="2.5"/>
+      <circle cx="60" cy="60" r="38" fill="url(#g-ombra)"/>
+        <ellipse cx="46" cy="43" rx="13" ry="8" transform="rotate(-30 46 43)" fill="#fff" opacity=".22"/>
+    </symbol>
+    <symbol id="p-fasce" viewBox="0 0 120 120">
+      <circle cx="60" cy="60" r="38" fill="url(#g-fasce)"/>
+      <g clip-path="url(#c-sfera)" fill="none" stroke-linecap="round">
+        <path d="M16 42 Q60 32 104 44" stroke="#6D28D9" stroke-width="6"/>
+        <path d="M16 56 Q60 48 104 58" stroke="#B9E62E" stroke-width="2.5"/>
+        <path d="M16 72 Q60 64 104 74" stroke="#6D28D9" stroke-width="7"/>
+        <path d="M20 86 Q60 80 100 88" stroke="#FCD34D" stroke-width="2.5"/>
+      </g>
+      <ellipse cx="76" cy="64" rx="9" ry="5.5" fill="#E11D48" stroke="#FCD34D" stroke-width="2"/>
+      <circle cx="60" cy="60" r="38" fill="url(#g-ombra)"/>
+        <ellipse cx="46" cy="43" rx="13" ry="8" transform="rotate(-30 46 43)" fill="#fff" opacity=".22"/>
+    </symbol>
+    <symbol id="p-saturno" viewBox="0 0 180 120">
+      <ellipse cx="90" cy="62" rx="80" ry="20" transform="rotate(-16 90 62)" fill="none" stroke="#7C3AED" stroke-width="6"/>
+      <g transform="translate(30 0)">
+        <circle cx="60" cy="60" r="36" fill="url(#g-saturno)"/>
+        <g clip-path="url(#c-sfera)" fill="none" stroke-linecap="round">
+          <path d="M20 50 Q60 42 100 52" stroke="#FCD34D" stroke-width="3" opacity=".7"/>
+          <path d="M20 70 Q60 62 100 72" stroke="#6D28D9" stroke-width="4" opacity=".7"/>
+        </g>
+        <circle cx="60" cy="60" r="36" fill="url(#g-ombra)"/>
+        <ellipse cx="46" cy="44" rx="12" ry="7" transform="rotate(-30 46 44)" fill="#fff" opacity=".22"/>
+      </g>
+      <path d="M10 62 A80 20 0 0 0 170 62" transform="rotate(-16 90 62)" fill="none" stroke="#B9E62E" stroke-width="6" stroke-linecap="round"/>
+      <path d="M22 66 A68 15 0 0 0 158 66" transform="rotate(-16 90 62)" fill="none" stroke="#DCEFA0" stroke-width="2" opacity=".8"/>
+    </symbol>
+    <symbol id="p-urano" viewBox="0 0 120 140">
+      <ellipse cx="60" cy="70" rx="14" ry="58" transform="rotate(14 60 70)" fill="none" stroke="#7C3AED" stroke-width="3.5"/>
+      <g transform="translate(0 10)">
+        <circle cx="60" cy="60" r="36" fill="url(#g-urano)"/>
+        <g clip-path="url(#c-sfera)" fill="none" stroke="#99F6E4" stroke-width="2.5" opacity=".5"><path d="M20 50 Q60 44 100 52"/><path d="M20 70 Q60 64 100 72"/></g>
+        <circle cx="60" cy="60" r="36" fill="url(#g-ombra)"/>
+        <ellipse cx="46" cy="44" rx="12" ry="7" transform="rotate(-30 46 44)" fill="#fff" opacity=".22"/>
+      </g>
+      <path d="M60 12 A14 58 0 0 1 60 128" transform="rotate(14 60 70)" fill="none" stroke="#B9E62E" stroke-width="3.5" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="p-nettuno" viewBox="0 0 120 120">
+      <circle cx="60" cy="60" r="38" fill="url(#g-nettuno)"/>
+      <g clip-path="url(#c-sfera)" fill="none" stroke-linecap="round">
+        <path d="M18 44 Q60 36 102 46" stroke="#B9E62E" stroke-width="2.5"/>
+        <path d="M18 60 Q60 54 102 62" stroke="#C7D2FE" stroke-width="2" opacity=".6"/>
+        <path d="M20 84 Q60 78 100 86" stroke="#B9E62E" stroke-width="2.5"/>
+      </g>
+      <ellipse cx="54" cy="72" rx="8" ry="4" fill="none" stroke="#B9E62E" stroke-width="2.5"/>
+      <circle cx="60" cy="60" r="38" fill="url(#g-ombra)"/>
+        <ellipse cx="46" cy="43" rx="13" ry="8" transform="rotate(-30 46 43)" fill="#fff" opacity=".22"/>
+    </symbol>
+    <linearGradient id="g-ast" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7A4BE0"/><stop offset=".55" stop-color="#4C1D95"/><stop offset="1" stop-color="#26105C"/></linearGradient>
+    <symbol id="p-ast1" viewBox="0 0 48 40">
+      <polygon points="8,14 18,5 34,6 43,17 37,32 18,35 6,26" fill="url(#g-ast)" stroke="#B9E62E" stroke-width="1.8" stroke-linejoin="round"/>
+      <ellipse cx="23" cy="19" rx="4.5" ry="3.5" fill="#1A0B40"/>
+    </symbol>
+    <symbol id="p-ast2" viewBox="0 0 60 44">
+      <polygon points="6,16 16,6 40,4 54,14 52,30 38,40 14,39 4,28" fill="url(#g-ast)" stroke="#B9E62E" stroke-width="1.8" stroke-linejoin="round"/>
+      <path d="M20 12 Q30 7 38 12" fill="none" stroke="#F1ECFB" stroke-width="1.6" stroke-linecap="round" opacity=".8"/>
+      <ellipse cx="35" cy="20" rx="5" ry="3.8" fill="none" stroke="#DCEFA0" stroke-width="1.6"/>
+    </symbol>
+    <symbol id="p-ast3" viewBox="0 0 32 26">
+      <polygon points="4,12 14,3 28,8 25,21 9,23" fill="#6D3FD1" stroke="#8B5CF6" stroke-width="1" stroke-linejoin="round"/>
+      <polygon points="14,3 28,8 18,13" fill="#9F7AEA" opacity=".6"/>
+    </symbol>
+    <symbol id="p-ast4" viewBox="0 0 50 38">
+      <polygon points="6,18 14,7 32,4 44,12 45,26 32,34 12,33" fill="url(#g-ast)" stroke="#B9E62E" stroke-width="1.8" stroke-linejoin="round"/>
+      <ellipse cx="21" cy="17" rx="4" ry="3.2" fill="#3730A3" stroke="#1A0B40" stroke-width="1"/>
+    </symbol>
+    <symbol id="p-ast5" viewBox="0 0 26 22">
+      <polygon points="3,11 11,3 23,7 20,18 8,19" fill="#7C4DDB" stroke="#C4B5FD" stroke-width="1" stroke-linejoin="round"/>
+    </symbol>
+  </defs>
+</svg>
+
+<!-- Sfondo: nebulose, sistema solare in movimento e due stelle cadenti, tutto dietro i contenuti -->
+<div aria-hidden="true" class="pointer-events-none absolute inset-0 z-0 overflow-hidden">
+  <div class="absolute -top-40 -left-40 w-[600px] h-[600px] rounded-full bg-brand-violet/20 blur-[130px]"></div>
+  <div class="absolute top-[30%] -right-48 w-[620px] h-[620px] rounded-full bg-[#7C3AED]/15 blur-[150px]"></div>
+  <div class="absolute top-[70%] -left-32 w-[560px] h-[560px] rounded-full bg-[#5B21B6]/15 blur-[140px]"></div>
+  <!-- Sistema solare: i corpi viaggiano lungo curve ondulate, escono da un lato e rientrano dall'altro.
+       Il moto lo calcola lo script "sistema solare" in fondo alla pagina; tutto sta dietro ai contenuti (z-0). -->
+  <div class="corpo" style="top:2%" data-vel="9" data-x="0.06" data-amp="26" data-onde="0.8" data-fase="0.1" data-giro="0" data-verso="1" data-inclina="4"><svg class="pianeta w-14 h-14 lg:w-20 lg:h-20" style="--glow:rgba(139,92,246,.5)"><use href="#p-luna"/></svg></div>
+  <div class="corpo" style="top:1.5%" data-vel="7" data-x="0.8" data-amp="30" data-onde="0.6" data-fase="0.55" data-giro="0" data-verso="-1" data-inclina="4"><svg class="pianeta w-24 h-[4.5rem] lg:w-40 lg:h-[7.5rem]" style="--glow:rgba(232,113,28,.5)"><use href="#p-gioviano"/></svg></div>
+  <div class="corpo" style="top:35%" data-vel="8" data-x="0.86" data-amp="34" data-onde="0.7" data-fase="0.3" data-giro="0" data-verso="1" data-inclina="4"><svg class="pianeta w-20 h-[4.3rem] lg:w-36 lg:h-[7.7rem]" style="--glow:rgba(30,115,216,.5)"><use href="#p-terra"/></svg></div>
+  <div class="corpo" style="top:42%" data-vel="11" data-x="0.04" data-amp="22" data-onde="1.1" data-fase="0.8" data-giro="0" data-verso="-1" data-inclina="4"><svg class="pianeta w-14 h-14 lg:w-[5.5rem] lg:h-[5.5rem]" style="--glow:rgba(200,30,58,.5)"><use href="#p-marte"/></svg></div>
+  <svg class="fascia absolute left-0 top-[47%] w-full h-24 -translate-y-1/2 overflow-visible" data-amp="16" data-onde="1.6" data-fase="0.2" aria-hidden="true"><path class="fascia-a" fill="none" stroke="#B9E62E" stroke-width="1.5" stroke-dasharray="5 6" opacity=".55"/><path class="fascia-b" fill="none" stroke="#8B5CF6" stroke-width="1.5" stroke-dasharray="1.5 6" stroke-linecap="round" opacity=".6"/></svg>
+  <div class="corpo" style="top:47%" data-vel="16" data-x="0.04" data-amp="16" data-onde="1.6" data-fase="0.2" data-giro="14" data-verso="1" data-inclina="4"><svg class="pianeta w-7 h-6 lg:w-10 lg:h-8" style="--glow:rgba(185,230,46,.35)"><use href="#p-ast1"/></svg></div>
+  <div class="corpo" style="top:calc(47% - 10px)" data-vel="18" data-x="0.13" data-amp="16" data-onde="1.6" data-fase="0.2" data-giro="-30" data-verso="1" data-inclina="4"><svg class="pianeta w-4 h-3 lg:w-6 lg:h-5" style="--glow:rgba(139,92,246,.45)"><use href="#p-ast3"/></svg></div>
+  <div class="corpo" style="top:47%" data-vel="15" data-x="0.25" data-amp="16" data-onde="1.6" data-fase="0.2" data-giro="-10" data-verso="1" data-inclina="4"><svg class="pianeta w-7 h-6 lg:w-11 lg:h-8" style="--glow:rgba(185,230,46,.35)"><use href="#p-ast4"/></svg></div>
+  <div class="corpo" style="top:calc(47% - 4px)" data-vel="13" data-x="0.4" data-amp="16" data-onde="1.6" data-fase="0.2" data-giro="8" data-verso="1" data-inclina="4"><svg class="pianeta w-9 h-7 lg:w-14 lg:h-10" style="--glow:rgba(185,230,46,.35)"><use href="#p-ast2"/></svg></div>
+  <div class="corpo" style="top:calc(47% + 6px)" data-vel="17" data-x="0.58" data-amp="16" data-onde="1.6" data-fase="0.2" data-giro="-16" data-verso="1" data-inclina="4"><svg class="pianeta w-7 h-6 lg:w-10 lg:h-8" style="--glow:rgba(185,230,46,.35)"><use href="#p-ast1"/></svg></div>
+  <div class="corpo" style="top:calc(47% - 2px)" data-vel="14" data-x="0.79" data-amp="16" data-onde="1.6" data-fase="0.2" data-giro="11" data-verso="1" data-inclina="4"><svg class="pianeta w-7 h-6 lg:w-11 lg:h-8" style="--glow:rgba(185,230,46,.35)"><use href="#p-ast4"/></svg></div>
+  <div class="corpo" style="top:calc(47% - 14px)" data-vel="19" data-x="0.9" data-amp="16" data-onde="1.6" data-fase="0.2" data-giro="24" data-verso="1" data-inclina="4"><svg class="pianeta w-4 h-3 lg:w-6 lg:h-5" style="--glow:rgba(139,92,246,.45)"><use href="#p-ast5"/></svg></div>
+  <div class="corpo" style="top:52%" data-vel="6" data-x="0.88" data-amp="28" data-onde="0.7" data-fase="0.65" data-giro="0" data-verso="1" data-inclina="4"><svg class="pianeta w-20 h-20 lg:w-32 lg:h-32" style="--glow:rgba(217,83,30,.5)"><use href="#p-fasce"/></svg></div>
+  <div class="corpo" style="top:61%" data-vel="7" data-x="0.02" data-amp="32" data-onde="0.5" data-fase="0.15" data-giro="0" data-verso="-1" data-inclina="4"><svg class="pianeta w-28 h-[4.7rem] lg:w-44 lg:h-[7.3rem]" style="--glow:rgba(185,230,46,.4)"><use href="#p-saturno"/></svg></div>
+  <div class="corpo" style="top:76%" data-vel="9" data-x="0.88" data-amp="26" data-onde="0.9" data-fase="0.4" data-giro="0" data-verso="1" data-inclina="4"><svg class="pianeta w-16 h-[4.7rem] lg:w-24 lg:h-28" style="--glow:rgba(14,159,154,.5)"><use href="#p-urano"/></svg></div>
+  <div class="corpo" style="top:89%" data-vel="8" data-x="0.05" data-amp="24" data-onde="0.8" data-fase="0.9" data-giro="0" data-verso="-1" data-inclina="4"><svg class="pianeta w-16 h-16 lg:w-24 lg:h-24" style="--glow:rgba(48,86,211,.5)"><use href="#p-nettuno"/></svg></div>
+</div>
+<div aria-hidden="true" class="pointer-events-none fixed inset-0 z-[1] overflow-hidden">
+  <div class="shooting s1"></div><div class="shooting s2"></div>
+</div>
+
+<!-- Testata -->
+<header class="sticky top-0 z-50 bg-[#070514]/90 backdrop-blur-md border-b border-brand-violet/40">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-4">
+    <a class="flex items-center gap-2 sm:gap-3 group shrink-0" href="index.html" aria-label="Area 51 Fumetteria, home">
+      <svg class="w-11 h-11 group-hover:rotate-12 transition-transform" aria-hidden="true"><use href="#alieno"/></svg>
+      <span class="flex flex-col leading-none">
+        <span class="font-heavy text-2xl text-white">AREA 51</span>
+        <span class="text-[10px] tracking-[0.3em] text-brand-lime font-bold">FUMETTERIA</span>
+      </span>
+    </a>
+
+    <nav class="hidden lg:flex items-center gap-2 relative text-sm font-semibold" id="main-nav" aria-label="Categorie">
+      <div class="pointer-events-none absolute -top-4 left-0 z-30" id="nav-ufo-follower" aria-hidden="true">
+        <div class="ufo-bobbing flex flex-col items-center drop-shadow-[0_2px_10px_rgba(185,230,46,.65)]">
+          <svg class="w-10 h-5" id="nav-ufo-ship"><use href="#disco"/></svg>
+          <div class="nav-tractor-light w-8 h-4 -mt-0.5"></div>
+        </div>
+      </div>
+      <div class="flex items-center bg-[#0d0724] border border-brand-violet/60 rounded-full p-1 gap-0.5">
+        <a class="nav-link px-3.5 py-2 rounded-full text-brand-lime bg-[#180e3e]" href="catalogo.html" aria-current="page">Manga &amp; Fumetti</a>
+        <a class="nav-link px-3.5 py-2 rounded-full hover:text-brand-lime hover:bg-[#180e3e] transition-colors" href="index.html#catalogo">Carte</a>
+        <a class="nav-link px-3.5 py-2 rounded-full hover:text-brand-lime hover:bg-[#180e3e] transition-colors" href="index.html#catalogo">Giochi</a>
+        <a class="nav-link px-3.5 py-2 rounded-full hover:text-brand-lime hover:bg-[#180e3e] transition-colors" href="index.html#catalogo">Figure</a>
+        <a class="nav-link px-3.5 py-2 rounded-full hover:text-brand-lime hover:bg-[#180e3e] transition-colors" href="index.html#catalogo">Warhammer</a>
+        <a class="nav-link px-3.5 py-2 rounded-full hover:text-brand-lime hover:bg-[#180e3e] transition-colors" href="index.html#eventi">Eventi</a>
+      </div>
+      <a class="nav-link ml-1 border border-brand-lime/60 hover:bg-brand-lime text-brand-lime hover:text-black font-bold text-xs uppercase tracking-wider px-3.5 py-2.5 rounded-full transition-colors" href="index.html#negozio">Il negozio ↗</a>
+    </nav>
+
+    <div class="flex items-center gap-2 sm:gap-3">
+      <button type="button" aria-label="Cerca prodotti" class="w-11 h-11 rounded-full border border-white/15 hover:border-brand-lime flex items-center justify-center hover:text-brand-lime transition-colors">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-linecap="round" stroke-width="2"/></svg>
+      </button>
+      <button type="button" aria-label="Lista desideri" class="hidden sm:flex w-11 h-11 rounded-full border border-white/15 hover:border-brand-lime items-center justify-center hover:text-brand-lime transition-colors">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M4.3 6.3a4.5 4.5 0 000 6.4L12 20.4l7.7-7.7a4.5 4.5 0 00-6.4-6.4L12 7.6l-1.3-1.3a4.5 4.5 0 00-6.4 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/></svg>
+      </button>
+      <a id="carrello" class="bg-brand-lime text-black font-heavy text-xs px-3.5 sm:px-4 py-3 rounded-full flex items-center gap-2 shadow-brutal-violet" href="#carrello" aria-label="Carrello, 0 prodotti">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"/></svg>
+        <span class="hidden sm:inline">Carrello · <span class="js-carrello-n">0</span></span><span class="sm:hidden js-carrello-n">0</span>
+      </a>
+      <button type="button" id="menu-btn" aria-label="Apri il menu" aria-expanded="false" aria-controls="menu-mobile" class="lg:hidden w-11 h-11 rounded-full border border-white/15 flex items-center justify-center">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" stroke-linecap="round" stroke-width="2.2"/></svg>
+      </button>
+    </div>
+  </div>
+  <!-- Menu da telefono -->
+  <nav id="menu-mobile" hidden aria-label="Menu" class="lg:hidden border-t border-brand-violet/40 bg-[#0d0724]">
+    <div class="max-w-7xl mx-auto px-4 py-4 grid grid-cols-2 gap-2 text-base font-semibold">
+      <a class="px-4 py-3 rounded-xl bg-brand-lime/15 text-brand-lime" href="catalogo.html" aria-current="page">Manga &amp; Fumetti</a>
+      <a class="px-4 py-3 rounded-xl bg-white/5" href="index.html#catalogo">Carte</a>
+      <a class="px-4 py-3 rounded-xl bg-white/5" href="index.html#catalogo">Giochi</a>
+      <a class="px-4 py-3 rounded-xl bg-white/5" href="index.html#catalogo">Figure</a>
+      <a class="px-4 py-3 rounded-xl bg-white/5" href="index.html#catalogo">Warhammer</a>
+      <a class="px-4 py-3 rounded-xl bg-white/5" href="index.html#eventi">Eventi</a>
+      <a class="col-span-2 px-4 py-3 rounded-xl border border-brand-lime text-brand-lime text-center" href="index.html#negozio">Il negozio ↗</a>
+    </div>
+  </nav>
+</header>
+
+<!-- Linguetta FILTRI fissata al bordo sinistro, con l'alieno appoggiato sopra -->
+<div class="fixed left-0 top-1/2 -translate-y-1/2 z-40 flex flex-col items-start">
+  <svg class="w-11 h-11 -mb-2 ml-0.5 relative z-10 -rotate-12 drop-shadow-[0_4px_8px_rgba(0,0,0,.5)] pointer-events-none" aria-hidden="true"><use href="#alieno"/></svg>
+  <button type="button" id="filtri-apri" aria-controls="filtri-pannello" aria-expanded="false"
+    class="relative bg-brand-lime text-black font-heavy text-xs sm:text-sm tracking-[0.2em] w-10 sm:w-11 py-5 rounded-r-xl border-2 border-l-0 border-[#140C2B] shadow-[4px_4px_0_#5B21B6] hover:bg-[#a6d420] hover:w-12 transition-all flex flex-col items-center gap-2">
+    <span class="[writing-mode:vertical-rl] rotate-180">FILTRI</span>
+    <span id="filtri-badge" hidden class="min-w-[1.4rem] h-[1.4rem] px-1 rounded-full bg-[#140C2B] text-brand-lime text-[11px] tracking-normal flex items-center justify-center">0</span>
+  </button>
+</div>
+
+<!-- Pannello filtri a scomparsa -->
+<div id="filtri-velo" hidden class="fixed inset-0 z-[60] bg-[#070514]/70 backdrop-blur-sm"></div>
+<aside id="filtri-pannello" role="dialog" aria-modal="true" aria-labelledby="filtri-titolo" hidden
+  class="fixed inset-y-0 left-0 z-[70] w-[min(92vw,380px)] bg-[#0d0724] border-r-2 border-brand-lime shadow-[8px_0_0_#5B21B6] flex flex-col">
+  <div class="flex items-center justify-between gap-3 px-5 py-4 border-b border-brand-violet/40">
+    <div class="flex items-center gap-3">
+      <svg class="w-9 h-9" aria-hidden="true"><use href="#alieno"/></svg>
+      <h2 id="filtri-titolo" class="font-heavy text-xl text-white">Filtri</h2>
+    </div>
+    <button type="button" id="filtri-chiudi" aria-label="Chiudi i filtri" class="w-11 h-11 rounded-full border border-white/15 hover:border-brand-lime hover:text-brand-lime flex items-center justify-center transition-colors">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke-linecap="round" stroke-width="2.4"/></svg>
+    </button>
+  </div>
+
+  <form id="filtri-form" class="flex-1 overflow-y-auto px-5 py-5 space-y-7">
+    <fieldset>
+      <legend class="font-heavy text-xs uppercase tracking-widest text-brand-lime mb-3">Genere</legend>
+      <div class="grid grid-cols-2 gap-x-3 gap-y-2.5 text-sm font-semibold" data-gruppo="genere"></div>
+    </fieldset>
+    <fieldset>
+      <legend class="font-heavy text-xs uppercase tracking-widest text-brand-lime mb-3">Lunghezza serie</legend>
+      <div class="grid grid-cols-1 gap-y-2.5 text-sm font-semibold" data-gruppo="lunghezza"></div>
+    </fieldset>
+    <fieldset>
+      <legend class="font-heavy text-xs uppercase tracking-widest text-brand-lime mb-3">Prezzo massimo</legend>
+      <div class="flex items-center gap-4">
+        <input id="prezzo-max" type="range" min="4" max="40" step="1" value="40" aria-describedby="prezzo-valore" class="flex-1 accent-[#B9E62E] h-2 cursor-pointer">
+        <output id="prezzo-valore" for="prezzo-max" class="font-heavy text-brand-lime text-base w-20 text-right">40 €</output>
+      </div>
+    </fieldset>
+    <fieldset>
+      <legend class="font-heavy text-xs uppercase tracking-widest text-brand-lime mb-3">Editore</legend>
+      <div class="grid grid-cols-1 gap-y-2.5 text-sm font-semibold" data-gruppo="editore"></div>
+    </fieldset>
+    <fieldset>
+      <legend class="font-heavy text-xs uppercase tracking-widest text-brand-lime mb-3">Edizione</legend>
+      <div class="grid grid-cols-2 gap-x-3 gap-y-2.5 text-sm font-semibold" data-gruppo="edizione"></div>
+    </fieldset>
+    <fieldset>
+      <legend class="font-heavy text-xs uppercase tracking-widest text-brand-lime mb-3">Età consigliata</legend>
+      <div class="grid grid-cols-2 gap-x-3 gap-y-2.5 text-sm font-semibold" data-gruppo="eta"></div>
+    </fieldset>
+  </form>
+
+  <div class="grid grid-cols-2 gap-3 px-5 py-4 border-t border-brand-violet/40 bg-[#0a051d]">
+    <button type="button" id="filtri-azzera" class="border-2 border-brand-violet hover:border-brand-lime text-white font-heavy text-sm px-4 py-3.5 rounded-full transition-colors">Azzera</button>
+    <button type="button" id="filtri-mostra" class="bg-brand-lime text-black font-heavy text-sm px-4 py-3.5 rounded-full shadow-brutal-violet hover:bg-[#a6d420] transition-colors">Mostra <span id="filtri-conta">0</span></button>
+  </div>
+</aside>
+
+<main id="main" class="relative z-10">
+  <!-- Il margine sinistro più largo lascia spazio alla linguetta FILTRI fissa -->
+  <div class="max-w-7xl mx-auto pl-[3.25rem] pr-4 sm:pl-16 sm:pr-6 lg:pr-8 min-[1400px]:pl-8">
+
+    <!-- Titolo con il disco volante a destra -->
+    <section class="pt-8 lg:pt-14 pb-8">
+      <nav aria-label="Percorso" class="text-xs font-semibold text-brand-muted mb-5">
+        <a class="hover:text-brand-lime" href="index.html">Home</a> <span aria-hidden="true" class="mx-1.5 text-brand-violetGlow">/</span> <span class="text-white" aria-current="page">Manga &amp; Fumetti</span>
+      </nav>
+      <div class="flex items-start justify-between gap-4">
+        <div class="min-w-0">
+          <span class="-rotate-2 inline-block bg-brand-lime text-black px-3 py-1 rounded font-heavy text-[11px] uppercase tracking-wider shadow-brutal-violet mb-4">Catalogo</span>
+          <h1 class="font-heavy text-[2.1rem] sm:text-5xl lg:text-6xl leading-[1.02] text-white">Manga &amp; <span class="text-brand-lime">Fumetti</span></h1>
+          <p class="mt-4 text-base sm:text-lg text-brand-muted max-w-xl leading-relaxed">Serie nuove, volumi mancanti, edizioni da collezione. Scegli online, ritiri e paghi in negozio.</p>
+        </div>
+        <!-- Disco con raggio: il raggio resta nella sua colonna e non passa mai sopra il testo -->
+        <div class="relative shrink-0 w-28 sm:w-44 lg:w-56 flex flex-col items-center" aria-hidden="true">
+          <svg class="w-full h-12 sm:h-20 lg:h-24 relative z-10 animate-ufo drop-shadow-[0_10px_25px_rgba(185,230,46,.35)]"><use href="#disco"/></svg>
+          <div class="tractor-beam w-full h-16 sm:h-24 lg:h-28 -mt-2 opacity-80"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Barra sopra la griglia: Tipo, Stato, ordinamento, filtri attivi -->
+    <section aria-label="Scegli cosa vedere" class="space-y-4 pb-6 border-b border-brand-violet/40">
+      <div class="flex flex-col xl:flex-row xl:items-center gap-4 xl:gap-8">
+        <div class="flex items-center gap-2 flex-wrap" role="group" aria-labelledby="tipo-etichetta">
+          <span id="tipo-etichetta" class="font-heavy text-[11px] uppercase tracking-widest text-brand-muted w-12">Tipo</span>
+          <div class="flex flex-wrap gap-2" data-chip="tipo"></div>
+        </div>
+        <div class="flex items-center gap-2 flex-wrap" role="group" aria-labelledby="stato-etichetta">
+          <span id="stato-etichetta" class="font-heavy text-[11px] uppercase tracking-widest text-brand-muted w-12">Stato</span>
+          <div class="flex flex-wrap gap-2" data-chip="stato"></div>
+        </div>
+      </div>
+      <div class="flex flex-wrap items-center justify-between gap-3">
+        <p id="conteggio" role="status" class="text-sm font-semibold text-brand-muted"></p>
+        <label class="flex items-center gap-2 text-sm font-semibold">
+          <span class="text-brand-muted">Ordina per</span>
+          <select id="ordina" class="bg-[#120a2e] border border-white/15 hover:border-brand-lime focus:border-brand-lime focus:ring-1 focus:ring-brand-lime text-white text-sm font-semibold rounded-full pl-4 pr-9 py-2.5">
+            <option value="rilevanza">In evidenza</option>
+            <option value="novita">Più recenti</option>
+            <option value="prezzo-su">Prezzo crescente</option>
+            <option value="prezzo-giu">Prezzo decrescente</option>
+            <option value="titolo">Titolo A-Z</option>
+          </select>
+        </label>
+      </div>
+      <div id="attivi-riga" hidden class="flex flex-wrap items-center gap-2">
+        <span class="font-heavy text-[11px] uppercase tracking-widest text-brand-muted mr-1">Filtri attivi</span>
+        <div id="attivi" class="flex flex-wrap gap-2"></div>
+        <button type="button" id="attivi-azzera" class="text-brand-lime font-heavy text-xs hover:underline ml-1">Azzera tutto</button>
+      </div>
+    </section>
+
+    <!-- Griglia: 4 colonne x 4 righe = 16 per pagina, 2 per riga da telefono -->
+    <section aria-label="Prodotti" class="pt-8 pb-6">
+      <ul id="griglia" class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6"></ul>
+
+      <div id="vuoto" hidden class="border-2 border-dashed border-brand-lime rounded-2xl p-8 sm:p-12 bg-[#0d0824]/95 text-center flex flex-col items-center gap-4">
+        <svg class="w-20 h-20 -rotate-6" aria-hidden="true"><use href="#alieno"/></svg>
+        <h2 class="font-heavy text-2xl sm:text-3xl text-white">Nessun avvistamento.</h2>
+        <p class="text-brand-muted max-w-md">Con questi filtri non troviamo niente. Prova a toglierne qualcuno, oppure chiedici il titolo che cerchi.</p>
+        <div class="flex flex-wrap justify-center gap-3 pt-2">
+          <button type="button" id="vuoto-azzera" class="bg-brand-lime text-black font-heavy text-sm px-6 py-3.5 rounded-full shadow-brutal-violet hover:bg-[#a6d420] transition-colors">Azzera i filtri</button>
+          <a class="border-2 border-brand-violet hover:border-brand-lime text-white font-heavy text-sm px-6 py-3 rounded-full transition-colors" href="index.html#chiedicelo">Chiedicelo <span class="text-brand-lime" aria-hidden="true">↗</span></a>
+        </div>
+      </div>
+
+      <nav id="paginazione" aria-label="Pagine del catalogo" class="flex flex-wrap items-center justify-center gap-2 mt-12"></nav>
+      <p class="mt-8 text-sm text-brand-muted">Prodotti, editori e prezzi di esempio: il catalogo vero lo carica il negozio.</p>
+    </section>
+
+    <!-- Chiedicelo, versione corta -->
+    <section class="py-12 lg:py-16">
+      <div class="bg-[#5B21B6] rounded-3xl p-7 sm:p-10 flex flex-col md:flex-row md:items-center justify-between gap-6 shadow-[0_0_35px_rgba(91,33,182,.4)] relative overflow-hidden">
+        <div class="relative z-10 max-w-xl">
+          <p class="text-brand-lime font-heavy text-xs uppercase tracking-widest mb-2">Non lo trovi? Chiedicelo.</p>
+          <h2 class="font-heavy text-2xl sm:text-3xl text-white mb-2 leading-tight">Ti manca un volume?</h2>
+          <p class="text-white/90 leading-relaxed">Dicci titolo e numero: verifichiamo se possiamo procurartelo.</p>
+        </div>
+        <a class="relative z-10 self-start md:self-center inline-flex items-center gap-2 bg-brand-lime text-black font-heavy text-sm px-7 py-4 rounded-full shadow-[5px_5px_0_#140C2B] hover:bg-[#a6d420] transition-colors whitespace-nowrap" href="index.html#chiedicelo">Chiedi un prodotto →</a>
+        <svg class="absolute -right-6 -bottom-8 w-40 h-40 opacity-20 pointer-events-none" aria-hidden="true"><use href="#alieno"/></svg>
+      </div>
+    </section>
+  </div>
+</main>
+
+<!-- Piede -->
+<footer id="negozio" class="border-t-2 border-brand-lime bg-[#05030f] pt-16 pb-10 text-sm text-brand-muted relative z-10">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-10 mb-12">
+      <div class="lg:col-span-2 space-y-4">
+        <div class="flex items-center gap-3"><svg class="w-9 h-9" aria-hidden="true"><use href="#alieno"/></svg><span class="font-heavy text-2xl text-white">AREA 51</span></div>
+        <p class="max-w-sm">Manga, fumetti, giochi, carte. E un posto dove parlarne.</p>
+        <address class="not-italic leading-relaxed">
+          <span class="block text-brand-lime font-bold">Viale G. Falcone e P. Borsellino, 35</span>
+          <span class="block text-white">76121 Barletta (BT) · <a class="underline hover:text-brand-lime" href="tel:+390883884567">0883 884567</a></span>
+        </address>
+      </div>
+      <nav aria-label="Esplora"><h3 class="font-heavy text-white text-xs uppercase tracking-wider mb-4">Esplora</h3>
+        <ul class="space-y-3 font-semibold"><li><a class="hover:text-brand-lime" href="catalogo.html">Catalogo</a></li><li><a class="hover:text-brand-lime" href="index.html#catalogo">Warhammer</a></li><li><a class="hover:text-brand-lime" href="catalogo.html?stato=preordine">Preordini</a></li><li><a class="hover:text-brand-lime" href="#wishlist">Wishlist</a></li></ul></nav>
+      <nav aria-label="Area 51"><h3 class="font-heavy text-white text-xs uppercase tracking-wider mb-4">Area 51</h3>
+        <ul class="space-y-3 font-semibold"><li><a class="hover:text-brand-lime" href="index.html#negozio">Il negozio</a></li><li><a class="hover:text-brand-lime" href="index.html#club">Area 51 Club</a></li><li><a class="hover:text-brand-lime" href="index.html#eventi">Eventi</a></li><li><a class="hover:text-brand-lime" href="index.html#chiedicelo">Chiedicelo</a></li></ul></nav>
+      <nav aria-label="Parliamone"><h3 class="font-heavy text-white text-xs uppercase tracking-wider mb-4">Parliamone</h3>
+        <ul class="space-y-3 font-semibold"><li><a class="hover:text-brand-lime" href="#account">Il tuo account</a></li><li><a class="hover:text-brand-lime" href="#aiuto">Ritiro e domande</a></li><li><a class="hover:text-brand-lime" href="#privacy">Privacy</a></li></ul></nav>
+    </div>
+    <div class="pt-8 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-brand-muted/80">
+      <p>© 2026 Fumetteria Area 51 · Barletta</p>
+      <p>Ritiro e pagamento in negozio, nessuna spedizione.</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function () {
+  /* ---------- Testata: menu da telefono e disco che segue il menu (come la home) ---------- */
+  var btn = document.getElementById('menu-btn'), menu = document.getElementById('menu-mobile');
+  btn.addEventListener('click', function () {
+    var aperto = menu.hidden;
+    menu.hidden = !aperto;
+    btn.setAttribute('aria-expanded', String(aperto));
+    btn.setAttribute('aria-label', aperto ? 'Chiudi il menu' : 'Apri il menu');
+  });
+  var nav = document.getElementById('main-nav'), ufo = document.getElementById('nav-ufo-follower');
+  if (nav && ufo) {
+    var links = Array.from(nav.querySelectorAll('.nav-link')), attivo = links[0];
+    /* Molla con inerzia: la navicella accelera, si inclina nel verso in cui va,
+       e quando cambia direzione frena, oscilla e si raddrizza */
+    var ridotto = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var px = 0, vel = 0, meta = 0, giro = 0;
+    ufo.style.transformOrigin = '50% 35%';
+    function disegnaUfo(incl) { ufo.style.transform = 'translateX(' + px.toFixed(2) + 'px) rotate(' + incl.toFixed(2) + 'deg)'; }
+    function passo() {
+      vel = (vel + (meta - px) * 0.045) * 0.80;   // forza della molla, poi attrito
+      px += vel;
+      if (Math.abs(meta - px) < 0.3 && Math.abs(vel) < 0.05) { px = meta; vel = 0; disegnaUfo(0); giro = 0; return; }
+      disegnaUfo(Math.max(-15, Math.min(15, vel * 2.2)));
+      giro = requestAnimationFrame(passo);
+    }
+    function vai(el, subito) {
+      var n = nav.getBoundingClientRect(), r = el.getBoundingClientRect();
+      meta = r.left - n.left + r.width / 2 - (ufo.offsetWidth || 40) / 2;
+      if (subito || ridotto) { cancelAnimationFrame(giro); giro = 0; px = meta; vel = 0; disegnaUfo(0); return; }
+      if (!giro) giro = requestAnimationFrame(passo);
+    }
+    window.addEventListener('load', function () { vai(attivo, true); });
+    window.addEventListener('resize', function () { vai(attivo, true); });
+    links.forEach(function (l) { l.addEventListener('mouseenter', function () { vai(l); }); l.addEventListener('focus', function () { vai(l); }); });
+    nav.addEventListener('mouseleave', function () { vai(attivo); });
+  }
+
+  /* ---------- Voci dei filtri ---------- */
+  var OPZIONI = {
+    tipo: [['manga', 'Manga'], ['italiani', 'Fumetti italiani'], ['supereroi', 'Supereroi'], ['graphic', 'Graphic novel']],
+    stato: [['novita', 'Novità'], ['preordine', 'Preordini'], ['disponibile', 'Disponibili in negozio']],
+    genere: [['shonen', 'Shōnen'], ['shojo', 'Shōjo'], ['seinen', 'Seinen'], ['josei', 'Josei'], ['fantasy', 'Fantasy'], ['fantascienza', 'Fantascienza'], ['horror', 'Horror'], ['giallo', 'Giallo'], ['sportivo', 'Sportivo'], ['commedia', 'Commedia'], ['avventura', 'Avventura'], ['slice', 'Slice of life']],
+    lunghezza: [['unico', 'Volume unico'], ['breve', 'Breve (2-10 volumi)'], ['media', 'Media (11-30 volumi)'], ['lunga', 'Lunga (oltre 30)']],
+    editore: [['star', 'Star Comics'], ['planet', 'Planet Manga'], ['jpop', 'J-POP'], ['panini', 'Panini Comics'], ['bonelli', 'Sergio Bonelli Editore'], ['bd', 'Edizioni BD'], ['coconino', 'Coconino Press']],
+    edizione: [['standard', 'Standard'], ['variant', 'Variant'], ['deluxe', 'Deluxe'], ['box', 'Cofanetto']],
+    eta: [['tutti', 'Per tutti'], ['13', '13+'], ['16', '16+'], ['18', '18+']]
+  };
+  function nome(gruppo, valore) {
+    var o = OPZIONI[gruppo].find(function (x) { return x[0] === valore; });
+    return o ? o[1] : valore;
+  }
+
+  /* ---------- Prodotti DI ESEMPIO (titoli inventati): il catalogo vero lo carica il negozio ---------- */
+  var SERIE = [
+    // titolo, tipo, genere, lunghezza, editore, eta, prezzo, volumi
+    ['Orbita', 'manga', 'fantascienza', 'media', 'star', '13', 6.9, 4],
+    ['Lame di cenere', 'manga', 'shonen', 'lunga', 'planet', '13', 5.9, 4],
+    ['Il giardino di Mei', 'manga', 'shojo', 'breve', 'star', 'tutti', 5.5, 3],
+    ['Notte a Kabukichō', 'manga', 'seinen', 'media', 'jpop', '16', 7.5, 3],
+    ['Ufficio 9', 'manga', 'josei', 'breve', 'jpop', '13', 6.5, 2],
+    ['Fuori campo', 'manga', 'sportivo', 'lunga', 'planet', 'tutti', 5.2, 3],
+    ['La casa sul lago', 'manga', 'horror', 'unico', 'jpop', '18', 12.9, 1],
+    ['Spiriti in affitto', 'manga', 'commedia', 'media', 'star', 'tutti', 5.9, 2],
+    ['Il drago di carta', 'manga', 'fantasy', 'lunga', 'planet', '13', 5.9, 3],
+    ['Caffè all\'angolo', 'manga', 'slice', 'breve', 'bd', 'tutti', 6.9, 2],
+    ['Ispettore Moretti', 'italiani', 'giallo', 'lunga', 'bonelli', '13', 4.9, 3],
+    ['Frontiera', 'italiani', 'avventura', 'lunga', 'bonelli', '13', 4.9, 2],
+    ['Sotto Barletta', 'italiani', 'horror', 'breve', 'bd', '16', 15, 1],
+    ['Capitan Cometa', 'supereroi', 'avventura', 'lunga', 'panini', '13', 4.5, 3],
+    ['Lega Notturna', 'supereroi', 'fantascienza', 'media', 'panini', '13', 5, 2],
+    ['Quantum Girl', 'supereroi', 'avventura', 'breve', 'panini', 'tutti', 18, 1],
+    ['L\'ultimo faro', 'graphic', 'slice', 'unico', 'coconino', '13', 22, 1],
+    ['Polvere di stelle', 'graphic', 'fantascienza', 'unico', 'coconino', '16', 24, 1],
+    ['Tre giorni d\'estate', 'graphic', 'slice', 'unico', 'bd', 'tutti', 19, 1]
+  ];
+  var COLORI = [['#22D3EE', '#5B21B6'], ['#FCD34D', '#EC4899'], ['#8B5CF6', '#1E1B4B'], ['#B9E62E', '#3D1775'], ['#F472B6', '#7C3AED'], ['#34D399', '#1E3A8A'], ['#FB923C', '#7F1D1D'], ['#60A5FA', '#312E81']];
+  var PRODOTTI = [], n = 0;
+  SERIE.forEach(function (s, si) {
+    for (var v = 1; v <= s[7]; v++) {
+      n++;
+      var preordine = (n % 9 === 0), novita = !preordine && (n % 4 === 1), disponibile = !preordine && (n % 7 !== 3);
+      var edizione = s[7] === 1 ? (s[6] > 20 ? 'deluxe' : 'standard') : (v === 1 && n % 3 === 0 ? 'variant' : (v === s[7] && n % 5 === 0 ? 'box' : 'standard'));
+      var prezzo = edizione === 'variant' ? s[6] + 3 : edizione === 'box' ? s[6] * 3 + 4 : s[6];
+      PRODOTTI.push({
+        id: n, serie: s[0], titolo: s[7] > 1 ? s[0] + '. Volume ' + String(v).padStart(2, '0') : s[0],
+        tipo: s[1], genere: s[2], lunghezza: s[3], editore: s[4], eta: s[5], edizione: edizione,
+        prezzo: Math.round(prezzo * 100) / 100, novita: novita, preordine: preordine, disponibile: disponibile,
+        ordineNovita: (n * 37) % 101, colori: COLORI[si % COLORI.length]
+      });
+    }
+  });
+
+  /* ---------- Stato della pagina ---------- */
+  var PER_PAGINA = 16, PREZZO_MAX = 40;
+  var stato = { tipo: [], stato: [], genere: [], lunghezza: [], editore: [], edizione: [], eta: [], prezzo: PREZZO_MAX, ordina: 'rilevanza', pagina: 1 };
+  var GRUPPI_PANNELLO = ['genere', 'lunghezza', 'editore', 'edizione', 'eta'];
+
+  // Filtri passati nell'indirizzo, es. catalogo.html?stato=preordine&tipo=manga
+  var q = new URLSearchParams(location.search);
+  ['tipo', 'stato'].concat(GRUPPI_PANNELLO).forEach(function (g) {
+    var val = q.get(g); if (!val) return;
+    stato[g] = val.split(',').filter(function (x) { return OPZIONI[g].some(function (o) { return o[0] === x; }); });
+  });
+
+  /* ---------- Caselle del pannello e chip ---------- */
+  GRUPPI_PANNELLO.forEach(function (g) {
+    var box = document.querySelector('[data-gruppo="' + g + '"]');
+    box.innerHTML = OPZIONI[g].map(function (o) {
+      return '<label class="flex items-center gap-2.5 cursor-pointer py-0.5 hover:text-brand-lime">' +
+        '<input type="checkbox" name="' + g + '" value="' + o[0] + '" class="w-5 h-5 rounded border-2 border-brand-line bg-[#160d3d] text-brand-lime focus:ring-brand-lime focus:ring-offset-0">' +
+        '<span>' + o[1] + '</span></label>';
+    }).join('');
+  });
+  var CHIP_SI = 'bg-brand-lime text-black font-heavy border border-brand-lime shadow-brutal-violet';
+  var CHIP_NO = 'bg-[#120a2e] border border-white/15 hover:border-brand-lime hover:text-brand-lime font-semibold';
+  ['tipo', 'stato'].forEach(function (g) {
+    document.querySelector('[data-chip="' + g + '"]').innerHTML = OPZIONI[g].map(function (o) {
+      return '<button type="button" data-g="' + g + '" data-v="' + o[0] + '" aria-pressed="false" class="chip text-sm px-4 py-2 rounded-full transition-colors">' + o[1] + '</button>';
+    }).join('');
+  });
+
+  var form = document.getElementById('filtri-form'), prezzoIn = document.getElementById('prezzo-max'), prezzoOut = document.getElementById('prezzo-valore');
+  var griglia = document.getElementById('griglia'), vuoto = document.getElementById('vuoto'), pag = document.getElementById('paginazione');
+  var conteggio = document.getElementById('conteggio'), ordina = document.getElementById('ordina');
+  var attiviRiga = document.getElementById('attivi-riga'), attivi = document.getElementById('attivi');
+  var badge = document.getElementById('filtri-badge'), conta = document.getElementById('filtri-conta');
+
+  function euro(x) { return x.toFixed(2).replace('.', ',') + ' €'; }
+  function esc(t) { return String(t).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+
+  function filtra() {
+    return PRODOTTI.filter(function (p) {
+      if (stato.tipo.length && stato.tipo.indexOf(p.tipo) < 0) return false;
+      if (stato.stato.length && !stato.stato.some(function (s) { return p[s]; })) return false;
+      for (var i = 0; i < GRUPPI_PANNELLO.length; i++) {
+        var g = GRUPPI_PANNELLO[i];
+        if (stato[g].length && stato[g].indexOf(p[g]) < 0) return false;
+      }
+      return p.prezzo <= stato.prezzo;
+    });
+  }
+  function ordinaLista(l) {
+    var c = l.slice();
+    if (stato.ordina === 'novita') c.sort(function (a, b) { return b.ordineNovita - a.ordineNovita; });
+    else if (stato.ordina === 'prezzo-su') c.sort(function (a, b) { return a.prezzo - b.prezzo; });
+    else if (stato.ordina === 'prezzo-giu') c.sort(function (a, b) { return b.prezzo - a.prezzo; });
+    else if (stato.ordina === 'titolo') c.sort(function (a, b) { return a.titolo.localeCompare(b.titolo, 'it'); });
+    else c.sort(function (a, b) { return (b.novita + b.preordine) - (a.novita + a.preordine) || a.id - b.id; });
+    return c;
+  }
+
+  function scheda(p) {
+    var etichetta = p.preordine ? '<span class="absolute top-2 left-2 bg-brand-violet text-white font-heavy text-[10px] px-2.5 py-0.5 rounded -rotate-2">PREORDINE</span>'
+      : p.novita ? '<span class="absolute top-2 left-2 bg-brand-lime text-black font-heavy text-[10px] px-2.5 py-0.5 rounded -rotate-2">NOVITÀ</span>' : '';
+    var edizione = p.edizione !== 'standard' ? '<span class="absolute bottom-2 right-2 bg-[#140C2B]/85 text-brand-lime border border-brand-lime/60 font-heavy text-[10px] px-2 py-0.5 rounded">' + nome('edizione', p.edizione).toUpperCase() + '</span>' : '';
+    var disp = p.preordine ? '<span class="text-brand-violetGlow">●</span> Preordine · esce [DATA]'
+      : p.disponibile ? '<span class="text-brand-lime">●</span> Disponibile in negozio' : '<span class="text-[#FB923C]">●</span> Esaurito, ordinabile';
+    var azione = p.preordine
+      ? '<a href="prodotto.html?id=' + p.id + '" class="bg-brand-violet hover:bg-brand-violetGlow text-white font-heavy text-xs px-4 py-2.5 rounded-full transition-colors">Prenota</a>'
+      : p.disponibile
+        ? '<button type="button" data-aggiungi="' + p.id + '" class="hover:bg-brand-lime hover:text-black font-heavy text-xs px-4 py-2.5 rounded-full border border-white/25 hover:border-brand-lime transition-colors">Aggiungi</button>'
+        : '<a href="prodotto.html?id=' + p.id + '" class="hover:bg-brand-lime hover:text-black font-heavy text-xs px-4 py-2.5 rounded-full border border-white/25 hover:border-brand-lime transition-colors">Ordina</a>';
+    return '<li class="bg-[#0e0926]/90 rounded-2xl border border-white/10 p-3 hover:border-brand-lime transition-colors flex flex-col justify-between group">' +
+      '<a href="prodotto.html?id=' + p.id + '" class="block">' +
+        '<div class="relative aspect-[3/4] rounded-xl overflow-hidden mb-3" style="background:linear-gradient(150deg,' + p.colori[0] + ',' + p.colori[1] + ')">' +
+          '<div class="absolute inset-0 flex flex-col items-center justify-center p-3 text-center group-hover:scale-105 transition-transform duration-300">' +
+            '<span class="font-heavy text-white text-sm sm:text-lg leading-tight drop-shadow-[2px_2px_0_rgba(20,12,43,.6)]">' + esc(p.serie) + '</span>' +
+            '<span class="mt-2 text-[10px] font-bold tracking-[0.2em] text-white/75">[COPERTINA]</span>' +
+          '</div>' + etichetta + edizione +
+        '</div>' +
+        '<p class="text-[11px] font-bold text-brand-muted tracking-wider uppercase">' + nome('tipo', p.tipo) + ' · ' + nome('editore', p.editore) + '</p>' +
+        '<h3 class="font-heavy text-sm sm:text-lg text-white mt-1 leading-snug group-hover:text-brand-lime transition-colors">' + esc(p.titolo) + '</h3>' +
+        '<p class="mt-1.5 text-[11px] sm:text-xs font-semibold text-brand-muted">' + disp + '</p>' +
+      '</a>' +
+      '<div class="flex flex-wrap items-center justify-between gap-2 mt-3 pt-3 border-t border-white/10">' +
+        '<span class="font-heavy text-base sm:text-lg text-brand-lime">' + euro(p.prezzo) + '</span>' + azione +
+      '</div></li>';
+  }
+
+  function bottonePagina(etichetta, num, opz) {
+    opz = opz || {};
+    if (opz.disabilitato) return '<span class="px-4 py-2.5 rounded-full border border-white/10 text-brand-muted/50 text-sm font-heavy" aria-hidden="true">' + etichetta + '</span>';
+    var cls = opz.corrente ? 'bg-brand-lime text-black border-brand-lime shadow-brutal-violet' : 'bg-[#120a2e] border-white/15 hover:border-brand-lime hover:text-brand-lime';
+    return '<button type="button" data-pagina="' + num + '" ' + (opz.corrente ? 'aria-current="page"' : '') + (opz.aria ? ' aria-label="' + opz.aria + '"' : '') +
+      ' class="min-w-[2.75rem] h-11 px-4 rounded-full border font-heavy text-sm transition-colors ' + cls + '">' + etichetta + '</button>';
+  }
+
+  function quanti() {
+    var t = stato.prezzo < PREZZO_MAX ? 1 : 0;
+    GRUPPI_PANNELLO.forEach(function (g) { t += stato[g].length; });
+    return t;
+  }
+
+  function disegna(scorri) {
+    var lista = ordinaLista(filtra()), tot = lista.length, pagine = Math.max(1, Math.ceil(tot / PER_PAGINA));
+    if (stato.pagina > pagine) stato.pagina = pagine;
+    var inizio = (stato.pagina - 1) * PER_PAGINA, pezzo = lista.slice(inizio, inizio + PER_PAGINA);
+
+    griglia.innerHTML = pezzo.map(scheda).join('');
+    griglia.hidden = tot === 0; vuoto.hidden = tot !== 0;
+    conteggio.textContent = tot === 0 ? 'Nessun risultato' : (tot === 1 ? '1 risultato' : tot + ' risultati') + (pagine > 1 ? ' · pagina ' + stato.pagina + ' di ' + pagine : '');
+    conta.textContent = tot;
+
+    // Paginazione
+    if (pagine > 1) {
+      var h = bottonePagina('←', stato.pagina - 1, { disabilitato: stato.pagina === 1, aria: 'Pagina precedente' });
+      for (var i = 1; i <= pagine; i++) h += bottonePagina(String(i), i, { corrente: i === stato.pagina, aria: 'Pagina ' + i });
+      h += bottonePagina('→', stato.pagina + 1, { disabilitato: stato.pagina === pagine, aria: 'Pagina successiva' });
+      pag.innerHTML = h; pag.hidden = false;
+    } else { pag.innerHTML = ''; pag.hidden = true; }
+
+    // Chip Tipo e Stato
+    document.querySelectorAll('.chip').forEach(function (c) {
+      var si = stato[c.dataset.g].indexOf(c.dataset.v) >= 0;
+      c.setAttribute('aria-pressed', String(si));
+      c.className = 'chip text-sm px-4 py-2 rounded-full transition-colors ' + (si ? CHIP_SI : CHIP_NO);
+    });
+
+    // Caselle e prezzo nel pannello
+    form.querySelectorAll('input[type=checkbox]').forEach(function (c) { c.checked = stato[c.name].indexOf(c.value) >= 0; });
+    prezzoIn.value = stato.prezzo; prezzoOut.textContent = stato.prezzo < PREZZO_MAX ? stato.prezzo + ' €' : 'Tutti';
+
+    // Filtri attivi come chip rimovibili
+    var chips = [];
+    GRUPPI_PANNELLO.forEach(function (g) { stato[g].forEach(function (v) { chips.push([g, v, nome(g, v)]); }); });
+    if (stato.prezzo < PREZZO_MAX) chips.push(['prezzo', '', 'Fino a ' + stato.prezzo + ' €']);
+    attivi.innerHTML = chips.map(function (c) {
+      return '<button type="button" data-togli-g="' + c[0] + '" data-togli-v="' + c[1] + '" aria-label="Togli il filtro ' + esc(c[2]) + '" class="inline-flex items-center gap-2 bg-brand-violet/40 border border-brand-violet hover:border-brand-lime text-white text-xs font-bold pl-3 pr-2 py-1.5 rounded-full transition-colors">' +
+        esc(c[2]) + '<span aria-hidden="true" class="w-5 h-5 rounded-full bg-[#140C2B] text-brand-lime flex items-center justify-center text-sm leading-none">×</span></button>';
+    }).join('');
+    attiviRiga.hidden = chips.length === 0;
+    var k = quanti(); badge.hidden = k === 0; badge.textContent = k;
+
+    if (scorri) document.getElementById('main').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  /* ---------- Eventi ---------- */
+  document.querySelectorAll('.chip').forEach(function (c) {
+    c.addEventListener('click', function () {
+      var l = stato[c.dataset.g], i = l.indexOf(c.dataset.v);
+      if (i >= 0) l.splice(i, 1); else l.push(c.dataset.v);
+      stato.pagina = 1; disegna();
+    });
+  });
+  form.addEventListener('change', function (e) {
+    var t = e.target;
+    if (t.type === 'checkbox') {
+      var l = stato[t.name], i = l.indexOf(t.value);
+      if (t.checked && i < 0) l.push(t.value); else if (!t.checked && i >= 0) l.splice(i, 1);
+      stato.pagina = 1; disegna();
+    }
+  });
+  form.addEventListener('submit', function (e) { e.preventDefault(); });
+  prezzoIn.addEventListener('input', function () { stato.prezzo = Number(prezzoIn.value); stato.pagina = 1; disegna(); });
+  ordina.addEventListener('change', function () { stato.ordina = ordina.value; stato.pagina = 1; disegna(); });
+  pag.addEventListener('click', function (e) {
+    var b = e.target.closest('[data-pagina]'); if (!b) return;
+    stato.pagina = Number(b.dataset.pagina); disegna(true);
+  });
+  attivi.addEventListener('click', function (e) {
+    var b = e.target.closest('[data-togli-g]'); if (!b) return;
+    var g = b.dataset.togliG;
+    if (g === 'prezzo') stato.prezzo = PREZZO_MAX;
+    else stato[g] = stato[g].filter(function (v) { return v !== b.dataset.togliV; });
+    stato.pagina = 1; disegna();
+  });
+  function azzeraPannello() { GRUPPI_PANNELLO.forEach(function (g) { stato[g] = []; }); stato.prezzo = PREZZO_MAX; stato.pagina = 1; disegna(); }
+  document.getElementById('filtri-azzera').addEventListener('click', azzeraPannello);
+  document.getElementById('attivi-azzera').addEventListener('click', azzeraPannello);
+  document.getElementById('vuoto-azzera').addEventListener('click', function () { stato.tipo = []; stato.stato = []; azzeraPannello(); });
+
+  // Carrello: conta solo in questa pagina (dimostrazione)
+  var nCarrello = 0;
+  griglia.addEventListener('click', function (e) {
+    var b = e.target.closest('[data-aggiungi]'); if (!b) return;
+    nCarrello++;
+    document.querySelectorAll('.js-carrello-n').forEach(function (s) { s.textContent = nCarrello; });
+    document.getElementById('carrello').setAttribute('aria-label', 'Carrello, ' + nCarrello + ' prodotti');
+    b.textContent = 'Aggiunto ✓'; b.disabled = true;
+  });
+
+  /* ---------- Pannello a scomparsa ---------- */
+  var apri = document.getElementById('filtri-apri'), pannello = document.getElementById('filtri-pannello'), velo = document.getElementById('filtri-velo');
+  function focusabili() { return Array.from(pannello.querySelectorAll('button, input, select, a[href]')).filter(function (el) { return !el.disabled && el.offsetParent !== null; }); }
+  function apriPannello() {
+    pannello.hidden = false; velo.hidden = false;
+    document.body.style.overflow = 'hidden';
+    apri.setAttribute('aria-expanded', 'true');
+    document.getElementById('filtri-chiudi').focus();
+  }
+  function chiudiPannello() {
+    pannello.hidden = true; velo.hidden = true;
+    document.body.style.overflow = '';
+    apri.setAttribute('aria-expanded', 'false');
+    apri.focus();
+  }
+  apri.addEventListener('click', apriPannello);
+  document.getElementById('filtri-chiudi').addEventListener('click', chiudiPannello);
+  document.getElementById('filtri-mostra').addEventListener('click', function () { chiudiPannello(); document.getElementById('main').scrollIntoView({ behavior: 'smooth', block: 'start' }); });
+  velo.addEventListener('click', chiudiPannello);
+  document.addEventListener('keydown', function (e) {
+    if (pannello.hidden) return;
+    if (e.key === 'Escape') { chiudiPannello(); return; }
+    if (e.key === 'Tab') {
+      var f = focusabili(), primo = f[0], ultimo = f[f.length - 1];
+      if (e.shiftKey && document.activeElement === primo) { e.preventDefault(); ultimo.focus(); }
+      else if (!e.shiftKey && document.activeElement === ultimo) { e.preventDefault(); primo.focus(); }
+    }
+  });
+
+  disegna();
+})();
+</script>
+<script>
+/* Sistema solare di sfondo: ogni .corpo avanza in orizzontale (data-vel px/s, data-verso 1 o -1),
+   sale e scende lungo un'onda (data-amp px, data-onde onde per larghezza schermo, data-fase),
+   si inclina seguendo la curva e, per gli asteroidi, ruota su se stesso (data-giro gradi/s).
+   Uscito da un lato rientra dall'altro. Con "riduci movimento" resta fermo in data-x. */
+(function () {
+  var corpi = Array.from(document.querySelectorAll('.corpo')), fascia = document.querySelector('.fascia');
+  if (!corpi.length) return;
+  var ridotto = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var W = 0;
+  function onda(x, amp, onde, fase) { return amp * Math.sin((x / W * onde + fase) * Math.PI * 2); }
+  function pendenza(x, amp, onde, fase) { return amp * Math.cos((x / W * onde + fase) * Math.PI * 2) * (onde / W) * Math.PI * 2; }
+  var stato = corpi.map(function (el) {
+    var d = el.dataset;
+    return { el: el, vel: +d.vel, verso: +d.verso || 1, x0: +d.x, amp: +d.amp, onde: +d.onde, fase: +d.fase, giro: +d.giro || 0, inclina: +d.inclina || 0, x: 0, r: Math.random() * 360, w: 0 };
+  });
+  function misura() {
+    W = document.documentElement.clientWidth || window.innerWidth;
+    stato.forEach(function (s) { var b = s.el.firstElementChild.getBoundingClientRect(); s.w = b.width || 80; s.h = b.height || s.w; if (!s.pronto) { s.x = s.x0 * W; s.pronto = true; } });
+    if (fascia) {
+      var a = +fascia.dataset.amp, o = +fascia.dataset.onde, f = +fascia.dataset.fase, pa = '', pb = '';
+      for (var x = -20; x <= W + 20; x += 12) {
+        var y = 48 + onda(x, a, o, f);
+        pa += (pa ? ' L' : 'M') + x + ' ' + y.toFixed(1);
+        pb += (pb ? ' L' : 'M') + x + ' ' + (y + 12 + 4 * Math.sin(x / W * 9)).toFixed(1);
+      }
+      fascia.querySelector('.fascia-a').setAttribute('d', pa);
+      fascia.querySelector('.fascia-b').setAttribute('d', pb);
+    }
+  }
+  function posa(s) {
+    var y = onda(s.x, s.amp, s.onde, s.fase), incl = Math.atan(pendenza(s.x, s.amp, s.onde, s.fase)) * 180 / Math.PI;
+    var rot = s.giro ? s.r : Math.max(-s.inclina, Math.min(s.inclina, incl));
+    s.el.style.transform = 'translate(' + (s.x - s.w / 2).toFixed(1) + 'px,' + (y - s.h / 2).toFixed(1) + 'px) rotate(' + rot.toFixed(1) + 'deg)';
+  }
+  var prima = 0;
+  function passo(t) {
+    var dt = prima ? Math.min(0.05, (t - prima) / 1000) : 0; prima = t;
+    stato.forEach(function (s) {
+      s.x += s.vel * s.verso * dt;
+      var m = s.w / 2 + 30;
+      if (s.verso > 0 && s.x > W + m) s.x = -m;
+      if (s.verso < 0 && s.x < -m) s.x = W + m;
+      s.r += s.giro * dt;
+      posa(s);
+    });
+    requestAnimationFrame(passo);
+  }
+  misura();
+  window.addEventListener('resize', misura);
+  stato.forEach(posa);
+  if (!ridotto) requestAnimationFrame(passo);
+})();
+</script>
+</body>
+</html>

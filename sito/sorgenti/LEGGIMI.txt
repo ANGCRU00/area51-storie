@@ -1,0 +1,4 @@
+Il file css/style.css è generato con Tailwind CSS 3.4 da questi sorgenti.
+Per rigenerarlo dopo aver cambiato le classi nelle pagine:
+  npx tailwindcss@3.4.17 -c sorgenti/tailwind.config.js -i sorgenti/input.css -o css/style.css --minify
+(serve anche il plugin @tailwindcss/forms)

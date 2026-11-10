@@ -1,0 +1,35 @@
+PROMPT PER GOOGLE STITCH – FUMETTERIA AREA 51
+Fate due progetti separati. Stesso prompt, cambia solo il blocco STYLE.
+Allegate a entrambi: alieno-area51.png, disco-volante-area51.png, le 4 foto del negozio,
+riferimento-banner-instagram.png, riferimento-post-uscite.jpg
++ PROGETTO 1: proposta1-notte-desktop.png e proposta1-notte-telefono.png
++ PROGETTO 2: proposta2-chiaro-desktop.png e proposta2-chiaro-telefono.png
+
+======================================================================
+PROMPT BASE (uguale per tutti e due)
+======================================================================
+Design a responsive website for "Fumetteria Area 51", a comic book, manga, trading card game and collectibles shop in Barletta, Italy. All text in Italian. Use the attached screenshots as the layout reference, the attached alien and flying saucer images as the brand illustrations, and the attached shop photos for real product imagery.
+
+[INCOLLA QUI IL BLOCCO STYLE DEL PROGETTO]
+
+Pages: Home, Catalogo (with filters: categoria, novità, preordini), Scheda prodotto, Eventi (tornei Magic, Pokémon, Riftbound), Area 51 Club (tessera punti: 10 timbri = premio), Chiedicelo (form per richiedere un prodotto), Il negozio (indirizzo, mappa, orari), Carrello e Wishlist.
+
+Home sections: header with logo and categories (Manga & Fumetti, Carte, Giochi, Figure, Warhammer, Eventi, Il negozio) plus search, account, wishlist and cart; hero "Storie di un altro pianeta." with the flying saucer's lime beam lighting a featured product; lime ticker "OGGETTI DI CULTO ✦ PERSONE DI CASA ✦ UN ALTRO VOLUME? SEMPRE."; "La tua prossima ossessione arriva qui." new arrivals product grid with filter chips; Area 51 Club card "Raccogli 10 avvistamenti."; "Avete questo fumetto?" Chiedicelo block; 3 event cards (Carte in tavola, Una sera mille mondi, Il party è qui); newsletter; footer with "Viale G. Falcone e P. Borsellino, 35 – 76121 Barletta (BT) – 0883 884567".
+
+======================================================================
+STYLE – PROGETTO 1 · NOTTE STELLATA
+======================================================================
+Style: UFO / Area 51 theme. Dark night-sky background (#070514 → #1A0E3D) with small white stars. Lime #B9E62E as main accent (buttons, highlights, glowing borders with soft lime glow). Violet #5B21B6 for secondary accents and hard offset shadows. Light text #F1ECFB, muted text #B3A9CC. Headings in Archivo Black Expanded (uppercase feel, very wide), body in Archivo Bold. Playful comic-book feel: slightly rotated labels, hard shadows, a cartoon flying saucer with a green alien whose lime beam highlights featured products. Mobile-first.
+
+======================================================================
+STYLE – PROGETTO 2 · CHIARO CON ACCENTI AREA 51
+======================================================================
+Style: UFO / Area 51 theme on a light background. Page background #F7F5FC, text #140C2B, muted text #3F3858. Bold comic-book look: white cards with 3px black (#140C2B) borders and hard offset shadows (6px, black or violet #5B21B6), no blur. Lime #B9E62E for main buttons, badges and highlights (always with black text and black border). Violet #5B21B6 for labels, links and secondary accents. Headings in Archivo Black Expanded (very wide), body in Archivo Bold. The night sky (#140C2B → #5B21B6 with small stars) appears only inside the hero panel and the Club card: there a cartoon flying saucer with a green alien shines a lime beam on a featured product. Slightly rotated labels, playful but very readable. Mobile-first.
+
+======================================================================
+CONSIGLI
+======================================================================
+1. Prima generate solo la HOME in tutti e due i progetti e confrontatele.
+2. Poi le altre pagine una alla volta, sempre in parallelo.
+3. Correzioni a piccoli passi ("bottoni più grandi", "sposta il disco a destra").
+4. Alla fine esportate in Figma o HTML per lo sviluppatore del sito.

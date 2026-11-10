@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html class="scroll-smooth" lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Area 51 Fumetteria | Manga, giochi, carte e collezionismo a Barletta</title>
+<meta name="description" content="Fumetteria Area 51 a Barletta: manga, fumetti, carte TCG, figure, Warhammer e tornei. Viale G. Falcone e P. Borsellino 35.">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body class="text-brand-text font-body overflow-x-hidden antialiased relative selection:bg-brand-lime selection:text-black">
+
+<!-- Simboli disegnati una volta e riusati: alieno e disco volante -->
+<svg aria-hidden="true" style="position:absolute;width:0;height:0;overflow:hidden">
+  <defs>
+    <symbol id="alieno" viewBox="0 0 220 220">
+      <path transform="translate(9 9)" d="M100 10 C152 10 188 46 188 88 C188 128 148 170 112 184 C102 188 92 186 82 180 L30 200 L46 158 C26 138 12 114 12 88 C12 46 48 10 100 10 Z" fill="#140C2B"/>
+      <path d="M100 10 C152 10 188 46 188 88 C188 128 148 170 112 184 C102 188 92 186 82 180 L30 200 L46 158 C26 138 12 114 12 88 C12 46 48 10 100 10 Z" fill="#B9E62E" stroke="#140C2B" stroke-width="6" stroke-linejoin="round"/>
+      <ellipse cx="64" cy="92" rx="27" ry="40" transform="rotate(28 64 92)" fill="#140C2B"/>
+      <ellipse cx="136" cy="92" rx="27" ry="40" transform="rotate(-28 136 92)" fill="#140C2B"/>
+      <circle cx="74" cy="76" r="8" fill="#fff"/><circle cx="146" cy="76" r="8" fill="#fff"/>
+    </symbol>
+    <symbol id="disco" viewBox="-345 -175 690 290">
+      <ellipse cx="0" cy="-60" rx="130" ry="100" fill="#DCEFA0" stroke="#140C2B" stroke-width="10"/>
+      <g transform="translate(-58 -150) scale(.58)">
+        <path d="M100 10 C152 10 188 46 188 88 C188 128 148 170 112 184 C102 188 92 186 82 180 L30 200 L46 158 C26 138 12 114 12 88 C12 46 48 10 100 10 Z" fill="#B9E62E" stroke="#140C2B" stroke-width="6"/>
+        <ellipse cx="64" cy="92" rx="27" ry="40" transform="rotate(28 64 92)" fill="#140C2B"/>
+        <ellipse cx="136" cy="92" rx="27" ry="40" transform="rotate(-28 136 92)" fill="#140C2B"/>
+        <circle cx="74" cy="76" r="8" fill="#fff"/><circle cx="146" cy="76" r="8" fill="#fff"/>
+      </g>
+      <ellipse cx="0" cy="10" rx="310" ry="86" fill="#8D99AE" stroke="#140C2B" stroke-width="10"/>
+      <ellipse cx="0" cy="-6" rx="300" ry="44" fill="#C9D3DE"/>
+      <ellipse cx="0" cy="54" rx="150" ry="26" fill="#5C677D" stroke="#140C2B" stroke-width="8"/>
+      <g stroke="#140C2B" stroke-width="6">
+        <circle cx="-230" cy="28" r="18" fill="#B9E62E"/><circle cx="-120" cy="46" r="18" fill="#FFE45C"/><circle cx="0" cy="52" r="18" fill="#B9E62E"/><circle cx="120" cy="46" r="18" fill="#FFE45C"/><circle cx="230" cy="28" r="18" fill="#B9E62E"/>
+      </g>
+    </symbol>
+    <!-- Sistema solare di sfondo: pianeti che attraversano lo schermo, sempre dietro i contenuti -->
+    <radialGradient id="g-luna" cx="35%" cy="30%" r="75%"><stop offset="0" stop-color="#5B4A9E"/><stop offset=".55" stop-color="#2A1A5E"/><stop offset="1" stop-color="#120A2E"/></radialGradient>
+    <radialGradient id="g-gioviano" cx="35%" cy="30%" r="75%"><stop offset="0" stop-color="#FFC266"/><stop offset=".5" stop-color="#E8711C"/><stop offset="1" stop-color="#7A2E08"/></radialGradient>
+    <radialGradient id="g-terra" cx="35%" cy="30%" r="75%"><stop offset="0" stop-color="#5FD0FF"/><stop offset=".55" stop-color="#1E73D8"/><stop offset="1" stop-color="#0B2E6B"/></radialGradient>
+    <radialGradient id="g-marte" cx="35%" cy="30%" r="75%"><stop offset="0" stop-color="#FF6B6B"/><stop offset=".55" stop-color="#C81E3A"/><stop offset="1" stop-color="#5E0B1E"/></radialGradient>
+    <radialGradient id="g-fasce" cx="35%" cy="30%" r="75%"><stop offset="0" stop-color="#FFA94D"/><stop offset=".5" stop-color="#D9531E"/><stop offset="1" stop-color="#3D1775"/></radialGradient>
+    <radialGradient id="g-saturno" cx="35%" cy="30%" r="75%"><stop offset="0" stop-color="#FFC266"/><stop offset=".5" stop-color="#C0588F"/><stop offset="1" stop-color="#3D1775"/></radialGradient>
+    <radialGradient id="g-urano" cx="35%" cy="30%" r="75%"><stop offset="0" stop-color="#6EF0DC"/><stop offset=".55" stop-color="#0E9F9A"/><stop offset="1" stop-color="#0B3B57"/></radialGradient>
+    <radialGradient id="g-nettuno" cx="35%" cy="30%" r="75%"><stop offset="0" stop-color="#8FB2FF"/><stop offset=".55" stop-color="#3056D3"/><stop offset="1" stop-color="#172A6E"/></radialGradient>
+    <linearGradient id="g-ombra" x1="0" y1="0" x2="1" y2="1"><stop offset=".45" stop-color="#070514" stop-opacity="0"/><stop offset="1" stop-color="#070514" stop-opacity=".6"/></linearGradient>
+    <clipPath id="c-sfera"><circle cx="60" cy="60" r="38"/></clipPath>
+
+    <symbol id="p-luna" viewBox="0 0 120 120">
+      <circle cx="60" cy="60" r="36" fill="url(#g-luna)"/>
+      <circle cx="47" cy="48" r="8" fill="none" stroke="#8B5CF6" stroke-width="3"/>
+      <circle cx="70" cy="64" r="10" fill="none" stroke="#B9E62E" stroke-width="3"/>
+      <circle cx="48" cy="77" r="5" fill="none" stroke="#8B5CF6" stroke-width="2.5"/>
+      <circle cx="60" cy="60" r="36" fill="url(#g-ombra)"/>
+        <ellipse cx="46" cy="44" rx="12" ry="7" transform="rotate(-30 46 44)" fill="#fff" opacity=".22"/>
+      <path d="M86 24 A44 44 0 1 1 26 92" fill="none" stroke="#B9E62E" stroke-width="3" stroke-linecap="round"/>
+      <circle cx="62" cy="8" r="3" fill="#B9E62E" opacity=".7"/>
+    </symbol>
+    <symbol id="p-gioviano" viewBox="0 0 160 120">
+      <path d="M6 40 L38 26 M38 26 L64 34" stroke="#B9E62E" stroke-width="2" stroke-dasharray="3 4" opacity=".6"/>
+      <circle cx="6" cy="40" r="3.5" fill="#B9E62E"/><circle cx="38" cy="26" r="4.5" fill="#E5E7EB"/>
+      <path d="M136 46 L132 92 L100 106" fill="none" stroke="#B9E62E" stroke-width="2" stroke-dasharray="3 4" opacity=".6"/>
+      <g transform="translate(26 0)">
+        <circle cx="60" cy="60" r="38" fill="url(#g-gioviano)"/>
+        <g clip-path="url(#c-sfera)" fill="none" stroke-linecap="round">
+          <path d="M18 46 Q60 34 104 46" stroke="#B9E62E" stroke-width="3.5" opacity=".85"/>
+          <path d="M18 62 Q60 52 104 64" stroke="#B9E62E" stroke-width="3" opacity=".75"/>
+          <path d="M22 78 Q60 70 100 80" stroke="#FCD34D" stroke-width="2.5" opacity=".7"/>
+        </g>
+        <circle cx="50" cy="68" r="3" fill="#B9E62E"/>
+        <circle cx="60" cy="60" r="38" fill="url(#g-ombra)"/>
+        <ellipse cx="46" cy="43" rx="13" ry="8" transform="rotate(-30 46 43)" fill="#fff" opacity=".22"/>
+      </g>
+      <circle cx="136" cy="46" r="6" fill="#8B5CF6" stroke="#C4B5FD" stroke-width="1.5"/>
+    </symbol>
+    <symbol id="p-terra" viewBox="0 0 140 120">
+      <ellipse cx="62" cy="64" rx="58" ry="19" transform="rotate(-10 62 64)" fill="none" stroke="#B9E62E" stroke-width="2.5" stroke-dasharray="4 5" opacity=".75"/>
+      <circle cx="60" cy="60" r="38" fill="url(#g-terra)"/>
+      <g clip-path="url(#c-sfera)" fill="#B9E62E">
+        <path d="M36 44 q8 -12 22 -6 q8 8 -2 16 q-14 6 -20 -10z"/>
+        <path d="M64 58 q14 -8 20 4 q2 14 -12 16 q-12 -2 -8 -20z"/>
+        <path d="M42 80 q8 -3 10 4 q-5 6 -10 -4z"/>
+      </g>
+      <g clip-path="url(#c-sfera)" fill="none" stroke="#fff" stroke-width="2" opacity=".55" stroke-linecap="round">
+        <path d="M28 60 Q60 50 96 58"/><path d="M34 72 Q62 64 92 70"/>
+      </g>
+      <circle cx="60" cy="60" r="38" fill="url(#g-ombra)"/>
+        <ellipse cx="46" cy="43" rx="13" ry="8" transform="rotate(-30 46 43)" fill="#fff" opacity=".22"/>
+      <path d="M4 64 A58 19 0 0 0 120 64" transform="rotate(-10 62 64)" fill="none" stroke="#B9E62E" stroke-width="2.5" stroke-dasharray="4 5" opacity=".9"/>
+      <circle cx="122" cy="46" r="8" fill="#E5E7EB" stroke="#9CA3AF" stroke-width="1.5"/>
+      <circle cx="120" cy="44" r="2" fill="#9CA3AF"/><circle cx="125" cy="49" r="1.5" fill="#9CA3AF"/>
+    </symbol>
+    <symbol id="p-marte" viewBox="0 0 120 120">
+      <circle cx="60" cy="60" r="38" fill="url(#g-marte)"/>
+      <g clip-path="url(#c-sfera)"><ellipse cx="60" cy="24" rx="16" ry="7" fill="#FFF4E0"/></g>
+      <path d="M36 44 Q60 56 86 42" fill="none" stroke="#5E0B1E" stroke-width="3.5" stroke-linecap="round"/>
+      <circle cx="47" cy="64" r="8" fill="#3D0A14" opacity=".8"/>
+      
+      <circle cx="76" cy="72" r="5" fill="none" stroke="#B9E62E" stroke-width="2.5"/>
+      <circle cx="60" cy="60" r="38" fill="url(#g-ombra)"/>
+        <ellipse cx="46" cy="43" rx="13" ry="8" transform="rotate(-30 46 43)" fill="#fff" opacity=".22"/>
+    </symbol>
+    <symbol id="p-fasce" viewBox="0 0 120 120">
+      <circle cx="60" cy="60" r="38" fill="url(#g-fasce)"/>
+      <g clip-path="url(#c-sfera)" fill="none" stroke-linecap="round">
+        <path d="M16 42 Q60 32 104 44" stroke="#6D28D9" stroke-width="6"/>
+        <path d="M16 56 Q60 48 104 58" stroke="#B9E62E" stroke-width="2.5"/>
+        <path d="M16 72 Q60 64 104 74" stroke="#6D28D9" stroke-width="7"/>
+        <path d="M20 86 Q60 80 100 88" stroke="#FCD34D" stroke-width="2.5"/>
+      </g>
+      <ellipse cx="76" cy="64" rx="9" ry="5.5" fill="#E11D48" stroke="#FCD34D" stroke-width="2"/>
+      <circle cx="60" cy="60" r="38" fill="url(#g-ombra)"/>
+        <ellipse cx="46" cy="43" rx="13" ry="8" transform="rotate(-30 46 43)" fill="#fff" opacity=".22"/>
+    </symbol>
+    <symbol id="p-saturno" viewBox="0 0 180 120">
+      <ellipse cx="90" cy="62" rx="80" ry="20" transform="rotate(-16 90 62)" fill="none" stroke="#7C3AED" stroke-width="6"/>
+      <g transform="translate(30 0)">
+        <circle cx="60" cy="60" r="36" fill="url(#g-saturno)"/>
+        <g clip-path="url(#c-sfera)" fill="none" stroke-linecap="round">
+          <path d="M20 50 Q60 42 100 52" stroke="#FCD34D" stroke-width="3" opacity=".7"/>
+          <path d="M20 70 Q60 62 100 72" stroke="#6D28D9" stroke-width="4" opacity=".7"/>
+        </g>
+        <circle cx="60" cy="60" r="36" fill="url(#g-ombra)"/>
+        <ellipse cx="46" cy="44" rx="12" ry="7" transform="rotate(-30 46 44)" fill="#fff" opacity=".22"/>
+      </g>
+      <path d="M10 62 A80 20 0 0 0 170 62" transform="rotate(-16 90 62)" fill="none" stroke="#B9E62E" stroke-width="6" stroke-linecap="round"/>
+      <path d="M22 66 A68 15 0 0 0 158 66" transform="rotate(-16 90 62)" fill="none" stroke="#DCEFA0" stroke-width="2" opacity=".8"/>
+    </symbol>
+    <symbol id="p-urano" viewBox="0 0 120 140">
+      <ellipse cx="60" cy="70" rx="14" ry="58" transform="rotate(14 60 70)" fill="none" stroke="#7C3AED" stroke-width="3.5"/>
+      <g transform="translate(0 10)">
+        <circle cx="60" cy="60" r="36" fill="url(#g-urano)"/>
+        <g clip-path="url(#c-sfera)" fill="none" stroke="#99F6E4" stroke-width="2.5" opacity=".5"><path d="M20 50 Q60 44 100 52"/><path d="M20 70 Q60 64 100 72"/></g>
+        <circle cx="60" cy="60" r="36" fill="url(#g-ombra)"/>
+        <ellipse cx="46" cy="44" rx="12" ry="7" transform="rotate(-30 46 44)" fill="#fff" opacity=".22"/>
+      </g>
+      <path d="M60 12 A14 58 0 0 1 60 128" transform="rotate(14 60 70)" fill="none" stroke="#B9E62E" stroke-width="3.5" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="p-nettuno" viewBox="0 0 120 120">
+      <circle cx="60" cy="60" r="38" fill="url(#g-nettuno)"/>
+      <g clip-path="url(#c-sfera)" fill="none" stroke-linecap="round">
+        <path d="M18 44 Q60 36 102 46" stroke="#B9E62E" stroke-width="2.5"/>
+        <path d="M18 60 Q60 54 102 62" stroke="#C7D2FE" stroke-width="2" opacity=".6"/>
+        <path d="M20 84 Q60 78 100 86" stroke="#B9E62E" stroke-width="2.5"/>
+      </g>
+      <ellipse cx="54" cy="72" rx="8" ry="4" fill="none" stroke="#B9E62E" stroke-width="2.5"/>
+      <circle cx="60" cy="60" r="38" fill="url(#g-ombra)"/>
+        <ellipse cx="46" cy="43" rx="13" ry="8" transform="rotate(-30 46 43)" fill="#fff" opacity=".22"/>
+    </symbol>
+    <linearGradient id="g-ast" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7A4BE0"/><stop offset=".55" stop-color="#4C1D95"/><stop offset="1" stop-color="#26105C"/></linearGradient>
+    <symbol id="p-ast1" viewBox="0 0 48 40">
+      <polygon points="8,14 18,5 34,6 43,17 37,32 18,35 6,26" fill="url(#g-ast)" stroke="#B9E62E" stroke-width="1.8" stroke-linejoin="round"/>
+      <ellipse cx="23" cy="19" rx="4.5" ry="3.5" fill="#1A0B40"/>
+    </symbol>
+    <symbol id="p-ast2" viewBox="0 0 60 44">
+      <polygon points="6,16 16,6 40,4 54,14 52,30 38,40 14,39 4,28" fill="url(#g-ast)" stroke="#B9E62E" stroke-width="1.8" stroke-linejoin="round"/>
+      <path d="M20 12 Q30 7 38 12" fill="none" stroke="#F1ECFB" stroke-width="1.6" stroke-linecap="round" opacity=".8"/>
+      <ellipse cx="35" cy="20" rx="5" ry="3.8" fill="none" stroke="#DCEFA0" stroke-width="1.6"/>
+    </symbol>
+    <symbol id="p-ast3" viewBox="0 0 32 26">
+      <polygon points="4,12 14,3 28,8 25,21 9,23" fill="#6D3FD1" stroke="#8B5CF6" stroke-width="1" stroke-linejoin="round"/>
+      <polygon points="14,3 28,8 18,13" fill="#9F7AEA" opacity=".6"/>
+    </symbol>
+    <symbol id="p-ast4" viewBox="0 0 50 38">
+      <polygon points="6,18 14,7 32,4 44,12 45,26 32,34 12,33" fill="url(#g-ast)" stroke="#B9E62E" stroke-width="1.8" stroke-linejoin="round"/>
+      <ellipse cx="21" cy="17" rx="4" ry="3.2" fill="#3730A3" stroke="#1A0B40" stroke-width="1"/>
+    </symbol>
+    <symbol id="p-ast5" viewBox="0 0 26 22">
+      <polygon points="3,11 11,3 23,7 20,18 8,19" fill="#7C4DDB" stroke="#C4B5FD" stroke-width="1" stroke-linejoin="round"/>
+    </symbol>
+  </defs>
+</svg>
+
+<!-- Sfondo: nebulose, sistema solare in movimento e due stelle cadenti, tutto dietro i contenuti -->
+<div aria-hidden="true" class="pointer-events-none absolute inset-0 z-0 overflow-hidden">
+  <div class="absolute -top-40 -left-40 w-[600px] h-[600px] rounded-full bg-brand-violet/20 blur-[130px]"></div>
+  <div class="absolute top-[30%] -right-48 w-[620px] h-[620px] rounded-full bg-[#7C3AED]/15 blur-[150px]"></div>
+  <div class="absolute top-[70%] -left-32 w-[560px] h-[560px] rounded-full bg-[#5B21B6]/15 blur-[140px]"></div>
+  <!-- Sistema solare: i corpi viaggiano lungo curve ondulate, escono da un lato e rientrano dall'altro.
+       Il moto lo calcola lo script "sistema solare" in fondo alla pagina; tutto sta dietro ai contenuti (z-0). -->
+  <div class="corpo" style="top:2%" data-vel="9" data-x="0.06" data-amp="26" data-onde="0.8" data-fase="0.1" data-giro="0" data-verso="1" data-inclina="4"><svg class="pianeta w-14 h-14 lg:w-20 lg:h-20" style="--glow:rgba(139,92,246,.5)"><use href="#p-luna"/></svg></div>
+  <div class="corpo" style="top:1.5%" data-vel="7" data-x="0.8" data-amp="30" data-onde="0.6" data-fase="0.55" data-giro="0" data-verso="-1" data-inclina="4"><svg class="pianeta w-24 h-[4.5rem] lg:w-40 lg:h-[7.5rem]" style="--glow:rgba(232,113,28,.5)"><use href="#p-gioviano"/></svg></div>
+  <div class="corpo" style="top:35%" data-vel="8" data-x="0.86" data-amp="34" data-onde="0.7" data-fase="0.3" data-giro="0" data-verso="1" data-inclina="4"><svg class="pianeta w-20 h-[4.3rem] lg:w-36 lg:h-[7.7rem]" style="--glow:rgba(30,115,216,.5)"><use href="#p-terra"/></svg></div>
+  <div class="corpo" style="top:42%" data-vel="11" data-x="0.04" data-amp="22" data-onde="1.1" data-fase="0.8" data-giro="0" data-verso="-1" data-inclina="4"><svg class="pianeta w-14 h-14 lg:w-[5.5rem] lg:h-[5.5rem]" style="--glow:rgba(200,30,58,.5)"><use href="#p-marte"/></svg></div>
+  <svg class="fascia absolute left-0 top-[47%] w-full h-24 -translate-y-1/2 overflow-visible" data-amp="16" data-onde="1.6" data-fase="0.2" aria-hidden="true"><path class="fascia-a" fill="none" stroke="#B9E62E" stroke-width="1.5" stroke-dasharray="5 6" opacity=".55"/><path class="fascia-b" fill="none" stroke="#8B5CF6" stroke-width="1.5" stroke-dasharray="1.5 6" stroke-linecap="round" opacity=".6"/></svg>
+  <div class="corpo" style="top:47%" data-vel="16" data-x="0.04" data-amp="16" data-onde="1.6" data-fase="0.2" data-giro="14" data-verso="1" data-inclina="4"><svg class="pianeta w-7 h-6 lg:w-10 lg:h-8" style="--glow:rgba(185,230,46,.35)"><use href="#p-ast1"/></svg></div>
+  <div class="corpo" style="top:calc(47% - 10px)" data-vel="18" data-x="0.13" data-amp="16" data-onde="1.6" data-fase="0.2" data-giro="-30" data-verso="1" data-inclina="4"><svg class="pianeta w-4 h-3 lg:w-6 lg:h-5" style="--glow:rgba(139,92,246,.45)"><use href="#p-ast3"/></svg></div>
+  <div class="corpo" style="top:47%" data-vel="15" data-x="0.25" data-amp="16" data-onde="1.6" data-fase="0.2" data-giro="-10" data-verso="1" data-inclina="4"><svg class="pianeta w-7 h-6 lg:w-11 lg:h-8" style="--glow:rgba(185,230,46,.35)"><use href="#p-ast4"/></svg></div>
+  <div class="corpo" style="top:calc(47% - 4px)" data-vel="13" data-x="0.4" data-amp="16" data-onde="1.6" data-fase="0.2" data-giro="8" data-verso="1" data-inclina="4"><svg class="pianeta w-9 h-7 lg:w-14 lg:h-10" style="--glow:rgba(185,230,46,.35)"><use href="#p-ast2"/></svg></div>
+  <div class="corpo" style="top:calc(47% + 6px)" data-vel="17" data-x="0.58" data-amp="16" data-onde="1.6" data-fase="0.2" data-giro="-16" data-verso="1" data-inclina="4"><svg class="pianeta w-7 h-6 lg:w-10 lg:h-8" style="--glow:rgba(185,230,46,.35)"><use href="#p-ast1"/></svg></div>
+  <div class="corpo" style="top:calc(47% - 2px)" data-vel="14" data-x="0.79" data-amp="16" data-onde="1.6" data-fase="0.2" data-giro="11" data-verso="1" data-inclina="4"><svg class="pianeta w-7 h-6 lg:w-11 lg:h-8" style="--glow:rgba(185,230,46,.35)"><use href="#p-ast4"/></svg></div>
+  <div class="corpo" style="top:calc(47% - 14px)" data-vel="19" data-x="0.9" data-amp="16" data-onde="1.6" data-fase="0.2" data-giro="24" data-verso="1" data-inclina="4"><svg class="pianeta w-4 h-3 lg:w-6 lg:h-5" style="--glow:rgba(139,92,246,.45)"><use href="#p-ast5"/></svg></div>
+  <div class="corpo" style="top:52%" data-vel="6" data-x="0.88" data-amp="28" data-onde="0.7" data-fase="0.65" data-giro="0" data-verso="1" data-inclina="4"><svg class="pianeta w-20 h-20 lg:w-32 lg:h-32" style="--glow:rgba(217,83,30,.5)"><use href="#p-fasce"/></svg></div>
+  <div class="corpo" style="top:61%" data-vel="7" data-x="0.02" data-amp="32" data-onde="0.5" data-fase="0.15" data-giro="0" data-verso="-1" data-inclina="4"><svg class="pianeta w-28 h-[4.7rem] lg:w-44 lg:h-[7.3rem]" style="--glow:rgba(185,230,46,.4)"><use href="#p-saturno"/></svg></div>
+  <div class="corpo" style="top:76%" data-vel="9" data-x="0.88" data-amp="26" data-onde="0.9" data-fase="0.4" data-giro="0" data-verso="1" data-inclina="4"><svg class="pianeta w-16 h-[4.7rem] lg:w-24 lg:h-28" style="--glow:rgba(14,159,154,.5)"><use href="#p-urano"/></svg></div>
+  <div class="corpo" style="top:89%" data-vel="8" data-x="0.05" data-amp="24" data-onde="0.8" data-fase="0.9" data-giro="0" data-verso="-1" data-inclina="4"><svg class="pianeta w-16 h-16 lg:w-24 lg:h-24" style="--glow:rgba(48,86,211,.5)"><use href="#p-nettuno"/></svg></div>
+</div>
+<div aria-hidden="true" class="pointer-events-none fixed inset-0 z-[1] overflow-hidden">
+  <div class="shooting s1"></div><div class="shooting s2"></div>
+</div>
+
+<!-- Testata -->
+<header class="sticky top-0 z-50 bg-[#070514]/90 backdrop-blur-md border-b border-brand-violet/40">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-4">
+    <a class="flex items-center gap-2 sm:gap-3 group shrink-0" href="index.html" aria-label="Area 51 Fumetteria, home">
+      <svg class="w-11 h-11 group-hover:rotate-12 transition-transform" aria-hidden="true"><use href="#alieno"/></svg>
+      <span class="flex flex-col leading-none">
+        <span class="font-heavy text-2xl text-white">AREA 51</span>
+        <span class="text-[10px] tracking-[0.3em] text-brand-lime font-bold">FUMETTERIA</span>
+      </span>
+    </a>
+
+    <nav class="hidden lg:flex items-center gap-2 relative text-sm font-semibold" id="main-nav" aria-label="Categorie">
+      <div class="pointer-events-none absolute -top-4 left-0 z-30" id="nav-ufo-follower" aria-hidden="true">
+        <div class="ufo-bobbing flex flex-col items-center drop-shadow-[0_2px_10px_rgba(185,230,46,.65)]">
+          <svg class="w-10 h-5" id="nav-ufo-ship"><use href="#disco"/></svg>
+          <div class="nav-tractor-light w-8 h-4 -mt-0.5"></div>
+        </div>
+      </div>
+      <div class="flex items-center bg-[#0d0724] border border-brand-violet/60 rounded-full p-1 gap-0.5">
+        <a class="nav-link px-3.5 py-2 rounded-full hover:text-brand-lime hover:bg-[#180e3e] transition-colors" href="catalogo.html">Manga &amp; Fumetti</a>
+        <a class="nav-link px-3.5 py-2 rounded-full hover:text-brand-lime hover:bg-[#180e3e] transition-colors" href="#catalogo">Carte</a>
+        <a class="nav-link px-3.5 py-2 rounded-full hover:text-brand-lime hover:bg-[#180e3e] transition-colors" href="#catalogo">Giochi</a>
+        <a class="nav-link px-3.5 py-2 rounded-full hover:text-brand-lime hover:bg-[#180e3e] transition-colors" href="#catalogo">Figure</a>
+        <a class="nav-link px-3.5 py-2 rounded-full hover:text-brand-lime hover:bg-[#180e3e] transition-colors" href="#catalogo">Warhammer</a>
+        <a class="nav-link px-3.5 py-2 rounded-full hover:text-brand-lime hover:bg-[#180e3e] transition-colors" href="#eventi">Eventi</a>
+      </div>
+      <a class="nav-link ml-1 border border-brand-lime/60 hover:bg-brand-lime text-brand-lime hover:text-black font-bold text-xs uppercase tracking-wider px-3.5 py-2.5 rounded-full transition-colors" href="#negozio">Il negozio ↗</a>
+    </nav>
+
+    <div class="flex items-center gap-2 sm:gap-3">
+      <button type="button" aria-label="Cerca prodotti" class="w-11 h-11 rounded-full border border-white/15 hover:border-brand-lime flex items-center justify-center hover:text-brand-lime transition-colors">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-linecap="round" stroke-width="2"/></svg>
+      </button>
+      <button type="button" aria-label="Lista desideri" class="hidden sm:flex w-11 h-11 rounded-full border border-white/15 hover:border-brand-lime items-center justify-center hover:text-brand-lime transition-colors">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M4.3 6.3a4.5 4.5 0 000 6.4L12 20.4l7.7-7.7a4.5 4.5 0 00-6.4-6.4L12 7.6l-1.3-1.3a4.5 4.5 0 00-6.4 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/></svg>
+      </button>
+      <a class="bg-brand-lime text-black font-heavy text-xs px-3.5 sm:px-4 py-3 rounded-full flex items-center gap-2 shadow-brutal-violet" href="#carrello" aria-label="Carrello, 0 prodotti">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"/></svg>
+        <span class="hidden sm:inline">Carrello · 0</span><span class="sm:hidden">0</span>
+      </a>
+      <button type="button" id="menu-btn" aria-label="Apri il menu" aria-expanded="false" aria-controls="menu-mobile" class="lg:hidden w-11 h-11 rounded-full border border-white/15 flex items-center justify-center">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" stroke-linecap="round" stroke-width="2.2"/></svg>
+      </button>
+    </div>
+  </div>
+  <!-- Menu da telefono -->
+  <nav id="menu-mobile" hidden aria-label="Menu" class="lg:hidden border-t border-brand-violet/40 bg-[#0d0724]">
+    <div class="max-w-7xl mx-auto px-4 py-4 grid grid-cols-2 gap-2 text-base font-semibold">
+      <a class="px-4 py-3 rounded-xl bg-white/5" href="catalogo.html">Manga &amp; Fumetti</a>
+      <a class="px-4 py-3 rounded-xl bg-white/5" href="#catalogo">Carte</a>
+      <a class="px-4 py-3 rounded-xl bg-white/5" href="#catalogo">Giochi</a>
+      <a class="px-4 py-3 rounded-xl bg-white/5" href="#catalogo">Figure</a>
+      <a class="px-4 py-3 rounded-xl bg-white/5" href="#catalogo">Warhammer</a>
+      <a class="px-4 py-3 rounded-xl bg-white/5" href="#eventi">Eventi</a>
+      <a class="col-span-2 px-4 py-3 rounded-xl border border-brand-lime text-brand-lime text-center" href="#negozio">Il negozio ↗</a>
+    </div>
+  </nav>
+</header>
+
+<main id="main" class="relative z-10">
+
+<!-- Hero -->
+<section class="relative pt-12 pb-20 lg:pt-20 lg:pb-28">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-12 gap-14 lg:gap-8 items-center">
+    <div class="lg:col-span-7 flex flex-col items-start gap-6">
+      <span class="-rotate-2 inline-flex items-center gap-2 bg-brand-lime text-black px-4 py-1.5 rounded font-heavy text-xs uppercase tracking-wider shadow-brutal-violet">
+        <span class="w-2 h-2 rounded-full bg-black"></span>Avvistamento confermato
+      </span>
+      <h1 class="font-heavy text-[2.6rem] sm:text-6xl lg:text-7xl leading-[1.02] text-white">Storie di un altro <span class="text-brand-lime">pianeta.</span></h1>
+      <p class="text-lg sm:text-xl text-brand-muted max-w-xl leading-relaxed">Manga da divorare. Mondi da esplorare. Piccole ossessioni da portare a casa.</p>
+      <div class="flex flex-wrap items-center gap-4 pt-1">
+        <a class="bg-brand-lime text-black font-heavy text-sm sm:text-base px-7 py-4 rounded-full flex items-center gap-2 shadow-brutal-violet hover:bg-[#a6d420] transition-colors" href="catalogo.html">Esplora gli scaffali <span aria-hidden="true">→</span></a>
+        <a class="border-2 border-brand-violet hover:border-brand-lime bg-[#130d31]/80 text-white font-heavy text-sm sm:text-base px-6 py-3.5 rounded-full transition-colors" href="#negozio">Vieni a trovarci <span class="text-brand-lime" aria-hidden="true">↗</span></a>
+      </div>
+      <p class="text-sm text-brand-muted/90">Per lettori, giocatori, collezionisti. E terrestri curiosi.</p>
+    </div>
+
+    <div class="lg:col-span-5 relative flex flex-col items-center">
+      <svg class="w-64 sm:w-72 h-28 sm:h-32 relative z-30 animate-ufo drop-shadow-[0_10px_25px_rgba(185,230,46,.35)]" aria-hidden="true"><use href="#disco"/></svg>
+      <div class="tractor-beam w-80 sm:w-96 h-80 absolute top-24 z-10" aria-hidden="true"></div>
+      <article class="relative z-20 w-72 sm:w-80 bg-gradient-to-b from-[#1b1240] to-[#0c0822] p-3 rounded-2xl border-2 border-brand-lime/80 shadow-glow-lime -rotate-2">
+        <div class="relative h-72 rounded-xl overflow-hidden">
+          <img class="w-full h-full object-cover" src="img/angolo-manga.jpg" alt="L'angolo manga della fumetteria Area 51">
+          <span class="absolute top-3 left-3 bg-brand-lime text-black font-heavy text-[11px] px-2.5 py-0.5 rounded">IN EVIDENZA</span>
+        </div>
+        <div class="pt-3 pb-1 px-2">
+          <p class="text-[11px] font-bold text-brand-lime uppercase tracking-widest">Manga · Novità</p>
+          <h2 class="font-heavy text-lg text-white mt-0.5">Orbita. Volume 01</h2>
+          <div class="flex items-center justify-between mt-2 pt-2 border-t border-white/10">
+            <span class="font-heavy text-brand-lime text-xl">6,90 €</span>
+            <span class="text-xs font-semibold text-brand-muted bg-white/5 px-2 py-1 rounded">In negozio</span>
+          </div>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- Nastro -->
+<div class="w-full bg-brand-lime py-3 overflow-hidden border-y-2 border-black -rotate-1 relative z-20 shadow-[0_8px_0_#5B21B6]" aria-label="Oggetti di culto, persone di casa, un altro volume? Sempre.">
+  <div class="marquee font-heavy text-black text-sm sm:text-base tracking-widest uppercase" aria-hidden="true">
+    <span class="flex items-center gap-6 pr-6"><span>Oggetti di culto</span><span>✦</span><span>Persone di casa</span><span>✦</span><span>Un altro volume? Sempre.</span><span>✦</span><span>Oggetti di culto</span><span>✦</span><span>Persone di casa</span><span>✦</span><span>Un altro volume? Sempre.</span><span>✦</span></span>
+    <span class="flex items-center gap-6 pr-6"><span>Oggetti di culto</span><span>✦</span><span>Persone di casa</span><span>✦</span><span>Un altro volume? Sempre.</span><span>✦</span><span>Oggetti di culto</span><span>✦</span><span>Persone di casa</span><span>✦</span><span>Un altro volume? Sempre.</span><span>✦</span></span>
+  </div>
+</div>
+
+<!-- Nuovi arrivi -->
+<section id="catalogo" class="py-20 lg:py-28 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+  <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-10">
+    <div>
+      <p class="text-xs font-heavy text-brand-lime uppercase tracking-widest mb-2">Nuovi mondi · in negozio e in arrivo</p>
+      <h2 class="font-heavy text-3xl sm:text-4xl lg:text-5xl text-white leading-tight">La tua prossima ossessione arriva qui.</h2>
+    </div>
+    <a class="text-brand-lime font-heavy text-sm hover:underline self-start lg:self-end" href="catalogo.html">Esplora tutto il catalogo →</a>
+  </div>
+  <div class="flex flex-wrap gap-2.5 mb-10" role="group" aria-label="Filtra i nuovi arrivi">
+    <button type="button" aria-pressed="true" class="bg-brand-lime text-black font-heavy text-sm px-5 py-2.5 rounded-full shadow-brutal-violet">Nuovi arrivi</button>
+    <button type="button" aria-pressed="false" class="bg-[#120a2e] hover:text-brand-lime border border-white/15 hover:border-brand-lime font-semibold text-sm px-5 py-2.5 rounded-full transition-colors">Prossime uscite</button>
+    <button type="button" aria-pressed="false" class="bg-[#120a2e] hover:text-brand-lime border border-white/15 hover:border-brand-lime font-semibold text-sm px-5 py-2.5 rounded-full transition-colors">Manga &amp; Fumetti</button>
+    <button type="button" aria-pressed="false" class="bg-[#120a2e] hover:text-brand-lime border border-white/15 hover:border-brand-lime font-semibold text-sm px-5 py-2.5 rounded-full transition-colors">Carte &amp; TCG</button>
+    <button type="button" aria-pressed="false" class="bg-[#120a2e] hover:text-brand-lime border border-white/15 hover:border-brand-lime font-semibold text-sm px-5 py-2.5 rounded-full transition-colors">Figure</button>
+    <button type="button" aria-pressed="false" class="bg-[#120a2e] hover:text-brand-lime border border-white/15 hover:border-brand-lime font-semibold text-sm px-5 py-2.5 rounded-full transition-colors">Warhammer</button>
+  </div>
+  <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
+    <article class="bg-[#0e0926]/90 rounded-2xl border border-white/10 p-3 hover:border-brand-lime transition-colors flex flex-col justify-between group">
+      <div>
+        <div class="relative h-44 sm:h-64 rounded-xl overflow-hidden mb-3"><img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" src="img/angolo-manga.jpg" alt="Orbita, volume 01"><span class="absolute top-2 left-2 bg-brand-lime text-black font-heavy text-[10px] px-2.5 py-0.5 rounded">NOVITÀ</span></div>
+        <p class="text-[11px] font-bold text-brand-muted tracking-wider uppercase">Manga</p>
+        <h3 class="font-heavy text-sm sm:text-lg text-white mt-1 leading-snug">Orbita. Volume 01</h3>
+      </div>
+      <div class="flex flex-wrap items-center justify-between gap-2 mt-4 pt-3 border-t border-white/10"><span class="font-heavy text-base sm:text-lg text-brand-lime">6,90 €</span><button type="button" class="hover:bg-brand-lime hover:text-black font-heavy text-xs px-4 py-2.5 rounded-full border border-white/25 hover:border-brand-lime transition-colors">Aggiungi</button></div>
+    </article>
+    <article class="bg-[#0e0926]/90 rounded-2xl border border-white/10 p-3 hover:border-brand-lime transition-colors flex flex-col justify-between group">
+      <div>
+        <div class="relative h-44 sm:h-64 rounded-xl overflow-hidden mb-3"><img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" src="img/figure.jpg" alt="Robot 051, figure"><span class="absolute top-2 left-2 bg-brand-lime text-black font-heavy text-[10px] px-2.5 py-0.5 rounded">NOVITÀ</span></div>
+        <p class="text-[11px] font-bold text-brand-muted tracking-wider uppercase">Figure</p>
+        <h3 class="font-heavy text-sm sm:text-lg text-white mt-1 leading-snug">Robot 051</h3>
+      </div>
+      <div class="flex flex-wrap items-center justify-between gap-2 mt-4 pt-3 border-t border-white/10"><span class="font-heavy text-base sm:text-lg text-brand-lime">29,90 €</span><button type="button" class="hover:bg-brand-lime hover:text-black font-heavy text-xs px-4 py-2.5 rounded-full border border-white/25 hover:border-brand-lime transition-colors">Aggiungi</button></div>
+    </article>
+    <article class="bg-[#0e0926]/90 rounded-2xl border border-white/10 p-3 hover:border-brand-lime transition-colors flex flex-col justify-between group">
+      <div>
+        <div class="relative h-44 sm:h-64 rounded-xl overflow-hidden mb-3"><img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" src="img/warhammer.jpg" alt="Scaffale Warhammer"><span class="absolute top-2 left-2 bg-brand-violet text-white font-heavy text-[10px] px-2.5 py-0.5 rounded">PREORDINE</span></div>
+        <p class="text-[11px] font-bold text-brand-muted tracking-wider uppercase">Warhammer</p>
+        <h3 class="font-heavy text-sm sm:text-lg text-white mt-1 leading-snug">[Nome prodotto]</h3>
+      </div>
+      <div class="flex flex-wrap items-center justify-between gap-2 mt-4 pt-3 border-t border-white/10"><span class="font-heavy text-base sm:text-lg text-brand-lime">[Prezzo]</span><button type="button" class="bg-brand-violet hover:bg-brand-violetGlow text-white font-heavy text-xs px-4 py-2.5 rounded-full transition-colors">Prenota</button></div>
+    </article>
+    <article class="bg-[#0e0926]/90 rounded-2xl border border-white/10 p-3 hover:border-brand-lime transition-colors flex flex-col justify-between group">
+      <div>
+        <div class="relative h-44 sm:h-64 rounded-xl overflow-hidden mb-3"><img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" src="img/parete-manga.jpg" alt="Parete dei manga"><span class="absolute top-2 left-2 bg-brand-lime text-black font-heavy text-[10px] px-2.5 py-0.5 rounded">NOVITÀ</span></div>
+        <p class="text-[11px] font-bold text-brand-muted tracking-wider uppercase">Fumetti</p>
+        <h3 class="font-heavy text-sm sm:text-lg text-white mt-1 leading-snug">[Nome prodotto]</h3>
+      </div>
+      <div class="flex flex-wrap items-center justify-between gap-2 mt-4 pt-3 border-t border-white/10"><span class="font-heavy text-base sm:text-lg text-brand-lime">[Prezzo]</span><button type="button" class="hover:bg-brand-lime hover:text-black font-heavy text-xs px-4 py-2.5 rounded-full border border-white/25 hover:border-brand-lime transition-colors">Aggiungi</button></div>
+    </article>
+  </div>
+  <p class="mt-6 text-sm text-brand-muted">Prodotti e prezzi di esempio: il catalogo vero lo carica il negozio.</p>
+</section>
+
+<!-- Club + Chiedicelo -->
+<section class="py-8 lg:py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
+    <div id="club" class="border-2 border-brand-lime rounded-3xl p-7 sm:p-10 bg-[#0d0724]/95 flex flex-col justify-between shadow-[0_0_30px_rgba(185,230,46,.15)]">
+      <div>
+        <p class="text-brand-lime font-heavy text-xs uppercase tracking-widest mb-2">Area 51 Club</p>
+        <h2 class="font-heavy text-3xl sm:text-4xl text-white mb-4 leading-tight">Raccogli 10 avvistamenti.</h2>
+        <p class="text-brand-muted text-base leading-relaxed mb-6">Un timbro a ogni acquisto. Al decimo, il premio è tuo. Chiedi la tessera in negozio.</p>
+        <a class="inline-flex items-center gap-2 bg-brand-lime text-black font-heavy text-sm px-6 py-3.5 rounded-full shadow-brutal-violet hover:bg-[#a6d420] transition-colors mb-8" href="#club">Scopri il club →</a>
+      </div>
+      <div class="bg-[#180e3e] border border-white/10 rounded-2xl p-4 sm:p-5" role="img" aria-label="Tessera punti: 10 caselle, l'ultima è il premio">
+        <p class="text-[11px] font-heavy text-brand-muted uppercase mb-3 flex justify-between"><span>Tessera avvistamenti</span><span class="text-brand-lime">10 timbri = premio</span></p>
+        <div class="grid grid-cols-5 gap-3">
+          <span class="aspect-square rounded-full bg-[#F1ECFB] border-2 border-brand-lime flex items-center justify-center"><svg class="w-1/2 h-1/2 opacity-20"><use href="#alieno"/></svg></span>
+          <span class="aspect-square rounded-full bg-[#F1ECFB] border-2 border-brand-lime flex items-center justify-center"><svg class="w-1/2 h-1/2 opacity-20"><use href="#alieno"/></svg></span>
+          <span class="aspect-square rounded-full bg-[#F1ECFB] border-2 border-brand-lime flex items-center justify-center"><svg class="w-1/2 h-1/2 opacity-20"><use href="#alieno"/></svg></span>
+          <span class="aspect-square rounded-full bg-[#F1ECFB] border-2 border-brand-lime flex items-center justify-center"><svg class="w-1/2 h-1/2 opacity-20"><use href="#alieno"/></svg></span>
+          <span class="aspect-square rounded-full bg-[#F1ECFB] border-2 border-brand-lime flex items-center justify-center"><svg class="w-1/2 h-1/2 opacity-20"><use href="#alieno"/></svg></span>
+          <span class="aspect-square rounded-full bg-[#F1ECFB] border-2 border-brand-lime flex items-center justify-center"><svg class="w-1/2 h-1/2 opacity-20"><use href="#alieno"/></svg></span>
+          <span class="aspect-square rounded-full bg-[#F1ECFB] border-2 border-brand-lime flex items-center justify-center"><svg class="w-1/2 h-1/2 opacity-20"><use href="#alieno"/></svg></span>
+          <span class="aspect-square rounded-full bg-[#F1ECFB] border-2 border-brand-lime flex items-center justify-center"><svg class="w-1/2 h-1/2 opacity-20"><use href="#alieno"/></svg></span>
+          <span class="aspect-square rounded-full bg-[#F1ECFB] border-2 border-brand-lime flex items-center justify-center"><svg class="w-1/2 h-1/2 opacity-20"><use href="#alieno"/></svg></span>
+          <span class="aspect-square rounded-full bg-brand-lime border-2 border-[#140C2B] flex items-center justify-center"><svg class="w-4/5 h-2/5"><use href="#disco"/></svg></span>
+        </div>
+      </div>
+    </div>
+    <div id="chiedicelo" class="bg-[#5B21B6] rounded-3xl p-7 sm:p-10 flex flex-col justify-between shadow-[0_0_35px_rgba(91,33,182,.4)] relative overflow-hidden">
+      <div class="relative z-10">
+        <p class="text-brand-lime font-heavy text-xs uppercase tracking-widest mb-2">Non lo trovi? Chiedicelo.</p>
+        <h2 class="font-heavy text-3xl sm:text-4xl text-white mb-4 leading-tight">Avete questo fumetto?</h2>
+        <p class="text-white/90 text-base sm:text-lg leading-relaxed mb-8 max-w-md">Il volume mancante, un gioco, una figure. Raccontaci cosa cerchi: verifichiamo se possiamo procurartelo.</p>
+      </div>
+      <a class="relative z-10 self-start inline-flex items-center gap-2 bg-brand-lime text-black font-heavy text-sm px-7 py-4 rounded-full shadow-[5px_5px_0_#140C2B] hover:bg-[#a6d420] transition-colors" href="#chiedicelo">Chiedi un prodotto →</a>
+      <svg class="absolute -right-6 -bottom-6 w-48 h-48 opacity-20 pointer-events-none" aria-hidden="true"><use href="#alieno"/></svg>
+    </div>
+  </div>
+</section>
+
+<!-- Eventi -->
+<section id="eventi" class="py-20 lg:py-28 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+  <div class="mb-12">
+    <p class="text-xs font-heavy text-brand-lime uppercase tracking-widest mb-2">Fuori dallo schermo, dentro l'avventura</p>
+    <h2 class="font-heavy text-3xl sm:text-4xl lg:text-5xl text-white leading-tight">Stesso pianeta. Stesse passioni.</h2>
+  </div>
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <a href="#eventi" class="bg-[#0e0926]/90 border border-brand-violet/40 hover:border-brand-lime rounded-2xl p-7 flex flex-col gap-3 transition-colors group">
+      <span class="w-12 h-12 rounded-xl bg-brand-violet/30 border border-brand-violet/60 flex items-center justify-center text-brand-lime text-2xl mb-3" aria-hidden="true">♠</span>
+      <h3 class="font-heavy text-2xl text-white">Carte in tavola</h3>
+      <p class="text-brand-muted leading-relaxed">Tornei Magic, Pokémon e Riftbound, mazzi e nuove sfide.</p>
+      <span class="text-brand-lime font-heavy text-sm mt-auto pt-3 group-hover:underline">Prossimi tornei →</span>
+    </a>
+    <a href="#eventi" class="bg-[#0e0926]/90 border border-brand-violet/40 hover:border-brand-lime rounded-2xl p-7 flex flex-col gap-3 transition-colors group">
+      <span class="w-12 h-12 rounded-xl bg-brand-violet/30 border border-brand-violet/60 flex items-center justify-center text-brand-lime text-2xl mb-3" aria-hidden="true">⚄</span>
+      <h3 class="font-heavy text-2xl text-white">Una sera, mille mondi</h3>
+      <p class="text-brand-muted leading-relaxed">Giochi da tavolo da scoprire insieme.</p>
+      <span class="text-brand-lime font-heavy text-sm mt-auto pt-3 group-hover:underline">Scopri le serate →</span>
+    </a>
+    <a href="#eventi" class="bg-[#0e0926]/90 border border-brand-violet/40 hover:border-brand-lime rounded-2xl p-7 flex flex-col gap-3 transition-colors group">
+      <span class="w-12 h-12 rounded-xl bg-brand-violet/30 border border-brand-violet/60 flex items-center justify-center text-brand-lime text-2xl mb-3" aria-hidden="true">✦</span>
+      <h3 class="font-heavy text-2xl text-white">Il party è qui</h3>
+      <p class="text-brand-muted leading-relaxed">Storie e avventure di gioco di ruolo.</p>
+      <span class="text-brand-lime font-heavy text-sm mt-auto pt-3 group-hover:underline">Unisciti al tavolo →</span>
+    </a>
+  </div>
+</section>
+
+<!-- Newsletter -->
+<section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
+  <div class="border-2 border-dashed border-brand-lime rounded-2xl p-7 sm:p-12 bg-[#0d0824]/95 flex flex-col lg:flex-row items-center justify-between gap-8">
+    <div class="max-w-lg text-center lg:text-left">
+      <h2 class="font-heavy text-2xl sm:text-3xl text-white mb-2 leading-tight">Le prossime novità, nella tua inbox.</h2>
+      <p class="text-brand-muted">Nuovi arrivi, preordini e appuntamenti in negozio.</p>
+    </div>
+    <form id="newsletter" class="w-full lg:w-auto flex-1 max-w-md flex flex-col sm:flex-row gap-2" novalidate>
+      <label for="email" class="sr-only">La tua email</label>
+      <input id="email" type="email" required placeholder="La tua email" class="w-full bg-[#160d3d] border border-brand-violet/60 text-white placeholder-brand-muted/70 px-4 py-3.5 rounded-full focus:border-brand-lime focus:ring-1 focus:ring-brand-lime">
+      <button type="submit" class="bg-brand-lime text-black font-heavy text-sm px-7 py-3.5 rounded-full shadow-brutal-violet hover:bg-[#a6d420] transition-colors whitespace-nowrap">Iscrivimi</button>
+    </form>
+  </div>
+  <p id="newsletter-msg" role="status" class="mt-3 text-center lg:text-right text-sm text-brand-lime"></p>
+</section>
+
+</main>
+
+<!-- Piede -->
+<footer id="negozio" class="border-t-2 border-brand-lime bg-[#05030f] pt-16 pb-10 text-sm text-brand-muted relative z-10">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-10 mb-12">
+      <div class="lg:col-span-2 space-y-4">
+        <div class="flex items-center gap-3"><svg class="w-9 h-9" aria-hidden="true"><use href="#alieno"/></svg><span class="font-heavy text-2xl text-white">AREA 51</span></div>
+        <p class="max-w-sm">Manga, fumetti, giochi, carte. E un posto dove parlarne.</p>
+        <address class="not-italic leading-relaxed">
+          <span class="block text-brand-lime font-bold">Viale G. Falcone e P. Borsellino, 35</span>
+          <span class="block text-white">76121 Barletta (BT) · <a class="underline hover:text-brand-lime" href="tel:+390883884567">0883 884567</a></span>
+        </address>
+      </div>
+      <nav aria-label="Esplora"><h3 class="font-heavy text-white text-xs uppercase tracking-wider mb-4">Esplora</h3>
+        <ul class="space-y-3 font-semibold"><li><a class="hover:text-brand-lime" href="catalogo.html">Catalogo</a></li><li><a class="hover:text-brand-lime" href="#catalogo">Warhammer</a></li><li><a class="hover:text-brand-lime" href="#catalogo">Preordini</a></li><li><a class="hover:text-brand-lime" href="#wishlist">Wishlist</a></li></ul></nav>
+      <nav aria-label="Area 51"><h3 class="font-heavy text-white text-xs uppercase tracking-wider mb-4">Area 51</h3>
+        <ul class="space-y-3 font-semibold"><li><a class="hover:text-brand-lime" href="#negozio">Il negozio</a></li><li><a class="hover:text-brand-lime" href="#club">Area 51 Club</a></li><li><a class="hover:text-brand-lime" href="#eventi">Eventi</a></li><li><a class="hover:text-brand-lime" href="#chiedicelo">Chiedicelo</a></li></ul></nav>
+      <nav aria-label="Parliamone"><h3 class="font-heavy text-white text-xs uppercase tracking-wider mb-4">Parliamone</h3>
+        <ul class="space-y-3 font-semibold"><li><a class="hover:text-brand-lime" href="#account">Il tuo account</a></li><li><a class="hover:text-brand-lime" href="#aiuto">Ritiro e domande</a></li><li><a class="hover:text-brand-lime" href="#privacy">Privacy</a></li></ul></nav>
+    </div>
+    <div class="pt-8 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-brand-muted/80">
+      <p>© 2026 Fumetteria Area 51 · Barletta</p>
+      <p>Ritiro e pagamento in negozio, nessuna spedizione.</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function () {
+  /* Menu da telefono */
+  var btn = document.getElementById('menu-btn'), menu = document.getElementById('menu-mobile');
+  btn.addEventListener('click', function () {
+    var aperto = menu.hidden;
+    menu.hidden = !aperto;
+    btn.setAttribute('aria-expanded', String(aperto));
+    btn.setAttribute('aria-label', aperto ? 'Chiudi il menu' : 'Apri il menu');
+  });
+
+  /* Disco volante che segue la voce del menu sotto il mouse */
+  var nav = document.getElementById('main-nav'), ufo = document.getElementById('nav-ufo-follower');
+  if (nav && ufo) {
+    var links = Array.from(nav.querySelectorAll('.nav-link')), attivo = links[0];
+    /* Molla con inerzia: la navicella accelera, si inclina nel verso in cui va,
+       e quando cambia direzione frena, oscilla e si raddrizza */
+    var ridotto = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var px = 0, vel = 0, meta = 0, giro = 0;
+    ufo.style.transformOrigin = '50% 35%';
+    function disegnaUfo(incl) { ufo.style.transform = 'translateX(' + px.toFixed(2) + 'px) rotate(' + incl.toFixed(2) + 'deg)'; }
+    function passo() {
+      vel = (vel + (meta - px) * 0.045) * 0.80;   // forza della molla, poi attrito
+      px += vel;
+      if (Math.abs(meta - px) < 0.3 && Math.abs(vel) < 0.05) { px = meta; vel = 0; disegnaUfo(0); giro = 0; return; }
+      disegnaUfo(Math.max(-15, Math.min(15, vel * 2.2)));
+      giro = requestAnimationFrame(passo);
+    }
+    function vai(el, subito) {
+      var n = nav.getBoundingClientRect(), r = el.getBoundingClientRect();
+      meta = r.left - n.left + r.width / 2 - (ufo.offsetWidth || 40) / 2;
+      if (subito || ridotto) { cancelAnimationFrame(giro); giro = 0; px = meta; vel = 0; disegnaUfo(0); return; }
+      if (!giro) giro = requestAnimationFrame(passo);
+    }
+    window.addEventListener('load', function () { vai(attivo, true); });
+    window.addEventListener('resize', function () { vai(attivo, true); });
+    links.forEach(function (l) { l.addEventListener('mouseenter', function () { vai(l); }); l.addEventListener('focus', function () { vai(l); }); });
+    nav.addEventListener('mouseleave', function () { vai(attivo); });
+  }
+
+  /* Newsletter: messaggio nella pagina, niente finestre di avviso */
+  var form = document.getElementById('newsletter'), msg = document.getElementById('newsletter-msg'), email = document.getElementById('email');
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    if (!email.value || !email.checkValidity()) { msg.textContent = 'Controlla l\'indirizzo email.'; email.focus(); return; }
+    msg.textContent = 'Grazie! Le iscrizioni apriranno a breve: ti scriveremo appena il servizio è attivo.';
+    form.reset();
+  });
+})();
+</script>
+<script>
+/* Sistema solare di sfondo: ogni .corpo avanza in orizzontale (data-vel px/s, data-verso 1 o -1),
+   sale e scende lungo un'onda (data-amp px, data-onde onde per larghezza schermo, data-fase),
+   si inclina seguendo la curva e, per gli asteroidi, ruota su se stesso (data-giro gradi/s).
+   Uscito da un lato rientra dall'altro. Con "riduci movimento" resta fermo in data-x. */
+(function () {
+  var corpi = Array.from(document.querySelectorAll('.corpo')), fascia = document.querySelector('.fascia');
+  if (!corpi.length) return;
+  var ridotto = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var W = 0;
+  function onda(x, amp, onde, fase) { return amp * Math.sin((x / W * onde + fase) * Math.PI * 2); }
+  function pendenza(x, amp, onde, fase) { return amp * Math.cos((x / W * onde + fase) * Math.PI * 2) * (onde / W) * Math.PI * 2; }
+  var stato = corpi.map(function (el) {
+    var d = el.dataset;
+    return { el: el, vel: +d.vel, verso: +d.verso || 1, x0: +d.x, amp: +d.amp, onde: +d.onde, fase: +d.fase, giro: +d.giro || 0, inclina: +d.inclina || 0, x: 0, r: Math.random() * 360, w: 0 };
+  });
+  function misura() {
+    W = document.documentElement.clientWidth || window.innerWidth;
+    stato.forEach(function (s) { var b = s.el.firstElementChild.getBoundingClientRect(); s.w = b.width || 80; s.h = b.height || s.w; if (!s.pronto) { s.x = s.x0 * W; s.pronto = true; } });
+    if (fascia) {
+      var a = +fascia.dataset.amp, o = +fascia.dataset.onde, f = +fascia.dataset.fase, pa = '', pb = '';
+      for (var x = -20; x <= W + 20; x += 12) {
+        var y = 48 + onda(x, a, o, f);
+        pa += (pa ? ' L' : 'M') + x + ' ' + y.toFixed(1);
+        pb += (pb ? ' L' : 'M') + x + ' ' + (y + 12 + 4 * Math.sin(x / W * 9)).toFixed(1);
+      }
+      fascia.querySelector('.fascia-a').setAttribute('d', pa);
+      fascia.querySelector('.fascia-b').setAttribute('d', pb);
+    }
+  }
+  function posa(s) {
+    var y = onda(s.x, s.amp, s.onde, s.fase), incl = Math.atan(pendenza(s.x, s.amp, s.onde, s.fase)) * 180 / Math.PI;
+    var rot = s.giro ? s.r : Math.max(-s.inclina, Math.min(s.inclina, incl));
+    s.el.style.transform = 'translate(' + (s.x - s.w / 2).toFixed(1) + 'px,' + (y - s.h / 2).toFixed(1) + 'px) rotate(' + rot.toFixed(1) + 'deg)';
+  }
+  var prima = 0;
+  function passo(t) {
+    var dt = prima ? Math.min(0.05, (t - prima) / 1000) : 0; prima = t;
+    stato.forEach(function (s) {
+      s.x += s.vel * s.verso * dt;
+      var m = s.w / 2 + 30;
+      if (s.verso > 0 && s.x > W + m) s.x = -m;
+      if (s.verso < 0 && s.x < -m) s.x = W + m;
+      s.r += s.giro * dt;
+      posa(s);
+    });
+    requestAnimationFrame(passo);
+  }
+  misura();
+  window.addEventListener('resize', misura);
+  stato.forEach(posa);
+  if (!ridotto) requestAnimationFrame(passo);
+})();
+</script>
+</body>
+</html>

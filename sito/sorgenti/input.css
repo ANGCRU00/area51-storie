@@ -1,0 +1,47 @@
+@font-face{font-family:'Archivo';src:url(../fonts/archivo.woff2) format('woff2');font-weight:100 900;font-stretch:62% 125%;font-display:swap;unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:'Archivo';src:url(../fonts/archivo-ext.woff2) format('woff2');font-weight:100 900;font-stretch:62% 125%;font-display:swap;unicode-range:U+0100-02AF,U+0304,U+0308,U+0329,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+/* L'attributo hidden vince sempre sulle classi flex/grid */
+[hidden] { display:none !important; }
+@layer base {
+  /* Titoli: Archivo largo e nerissimo, come grafiche e storie */
+  .font-heavy { font-family:'Archivo',sans-serif; font-weight:900; font-stretch:125%; letter-spacing:-0.01em; }
+  body {
+    background-color:#070514;
+    background-image:
+      radial-gradient(1px 1px at 25px 35px,#fff 100%,transparent),
+      radial-gradient(1.5px 1.5px at 120px 80px,#B9E62E 100%,transparent),
+      radial-gradient(1px 1px at 280px 220px,#fff 100%,transparent),
+      radial-gradient(2px 2px at 450px 150px,#a78bfa 100%,transparent),
+      radial-gradient(1px 1px at 620px 70px,#fff 100%,transparent),
+      radial-gradient(1.5px 1.5px at 800px 310px,#fff 100%,transparent),
+      radial-gradient(1px 1px at 980px 190px,#fff 100%,transparent),
+      radial-gradient(1.5px 1.5px at 330px 470px,#fff 100%,transparent);
+    background-size:550px 550px;
+  }
+  .tractor-beam { background:linear-gradient(180deg,rgba(185,230,46,.5) 0%,rgba(124,58,237,.15) 60%,rgba(7,5,20,0) 100%); clip-path:polygon(32% 0,68% 0,100% 100%,0 100%); }
+  @keyframes ufo-hover { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+  .animate-ufo { animation:ufo-hover 5s ease-in-out infinite; }
+  @keyframes bob { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-3px)} }
+  .ufo-bobbing { animation:bob 2.4s ease-in-out infinite; }
+  .nav-tractor-light { background:linear-gradient(180deg,rgba(185,230,46,.75),rgba(185,230,46,0)); clip-path:polygon(30% 0,70% 0,100% 100%,0 100%); }
+  /* Nastro che scorre davvero */
+  @keyframes marquee { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+  .marquee { display:flex; width:max-content; animation:marquee 28s linear infinite; }
+  /* Due stelle cadenti, discrete */
+  .shooting { position:absolute; height:2px; border-radius:9999px; opacity:0; background:linear-gradient(90deg,transparent,#B9E62E 85%,#fff); box-shadow:0 0 10px rgba(185,230,46,.7); }
+  @keyframes shoot { 0%{transform:translate3d(0,0,0) rotate(145deg) scaleX(.2);opacity:0} 8%{opacity:1} 80%{opacity:.4} 100%{transform:translate3d(-700px,500px,0) rotate(145deg) scaleX(1);opacity:0} }
+  .s1 { top:8%; left:88%; width:180px; animation:shoot 7s ease-out infinite .5s; }
+  .s2 { top:40%; left:95%; width:210px; animation:shoot 9s ease-out infinite 4s; }
+  /* Sistema solare: il moto lungo le curve lo calcola lo script in fondo alle pagine.
+     .pianeta ha solo l'alone del suo colore (--glow). */
+  .corpo { position:absolute; left:0; will-change:transform; }
+  .pianeta { display:block; opacity:.5; filter:drop-shadow(0 0 10px var(--glow,rgba(185,230,46,.4))); }
+  @media (min-width:1024px) { .pianeta { opacity:.9; } }
+  @media (prefers-reduced-motion: reduce) {
+    .animate-ufo,.ufo-bobbing,.marquee,.shooting { animation:none !important; }
+    .shooting{display:none}
+  }
+}
