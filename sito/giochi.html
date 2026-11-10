@@ -923,6 +923,8 @@
       p.set('d', testo(disp).replace(/^●\s*/, ''));
       if (colori[0]) p.set('c1', colori[0]);
       if (colori[1]) p.set('c2', colori[1]);
+      var foto = li.querySelector('img');
+      if (foto) p.set('i', foto.getAttribute('src'));
       var url = 'prodotto.html?' + p.toString();
       li.querySelectorAll('a[href^="prodotto.html"]').forEach(function (a) { a.setAttribute('href', url); a.dataset.pronto = '1'; });
     });

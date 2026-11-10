@@ -554,7 +554,7 @@
 
   /* ---------- Dati momentanei dai cataloghi degli editori (dati/catalogo.js) ----------
      Titoli e prezzi sono quelli dei cataloghi Panini, J-POP e Star Comics. Genere, età, serie in corso o conclusa,
-     copertine e giacenze non ci sono nei cataloghi: i filtri senza dati si nascondono da soli.
+     copertine e giacenze non ci sono nei cataloghi (le copertine sono ritagliate dai PDF): scegliendo Genere, Età, Serie o Tipo non si trova ancora niente.
      "Preordine" = uscita futura, "Novità" = uscito negli ultimi 60 giorni; "In negozio" è presunto, non una giacenza vera. */
   var MESI_IT = ['gennaio', 'febbraio', 'marzo', 'aprile', 'maggio', 'giugno', 'luglio', 'agosto', 'settembre', 'ottobre', 'novembre', 'dicembre'];
   if (window.CATALOGO_DATI && window.CATALOGO_DATI.length) {
@@ -567,26 +567,15 @@
       return {
         id: i + 1, ean: r[0], titolo: r[1], serie: r[2], tipo: '', genere: '', avanzamento: '', editore: r[4], eta: '', edizione: r[6],
         prezzo: r[7], novita: novita, preordine: preordine, disponibile: !preordine,
-        uscitaTesto: d ? (r[9] ? d.getDate() + ' ' : '') + MESI_IT[d.getMonth()] + ' ' + d.getFullYear() : '',
+        copertina: r[10] ? 'img/copertine/' + r[0] + '.webp' : '', uscitaTesto: d ? (r[9] ? d.getDate() + ' ' : '') + MESI_IT[d.getMonth()] + ' ' + d.getFullYear() : '',
         ordineNovita: quando ? Math.round(quando / GIORNO) : 0, colori: COLORI[h % COLORI.length]
       };
     });
   }
-  // Solo le voci di filtro che hanno almeno un prodotto
-  Object.keys(OPZIONI).forEach(function (g) {
-    if (g === 'stato') return;
-    OPZIONI[g] = OPZIONI[g].filter(function (o) { return PRODOTTI.some(function (p) { return p[g] === o[0]; }); });
-  });
-
   /* ---------- Stato della pagina ---------- */
   var PER_PAGINA = 16;
   var stato = { tipo: [], stato: [], genere: [], avanzamento: [], editore: [], edizione: [], eta: [], cerca: '', ordina: 'rilevanza', pagina: 1 };
-  var GRUPPI_PANNELLO = ['genere', 'avanzamento', 'editore', 'edizione', 'eta'].filter(function (g) { return OPZIONI[g].length > 0; });
-  // Gruppi senza dati: via dal pannello (e la riga Tipo dalla barra)
-  ['genere', 'avanzamento', 'editore', 'edizione', 'eta'].forEach(function (g) {
-    if (!OPZIONI[g].length) document.querySelector('[data-gruppo="' + g + '"]').closest('fieldset').hidden = true;
-  });
-  if (!OPZIONI.tipo.length) document.querySelector('[data-chip="tipo"]').parentElement.hidden = true;
+  var GRUPPI_PANNELLO = ['genere', 'avanzamento', 'editore', 'edizione', 'eta'];
 
   // Filtri passati nell'indirizzo, es. catalogo.html?stato=preordine&tipo=manga
   var q = new URLSearchParams(location.search);
@@ -663,10 +652,12 @@
     return '<li class="bg-[#0e0926]/90 rounded-2xl border border-white/10 p-3 hover:border-brand-lime transition-colors flex flex-col justify-between group">' +
       '<a href="prodotto.html?id=' + p.id + '" class="block">' +
         '<div class="relative aspect-[3/4] rounded-xl overflow-hidden mb-3" style="background:linear-gradient(150deg,' + p.colori[0] + ',' + p.colori[1] + ')">' +
-          '<div class="absolute inset-0 flex flex-col items-center justify-center p-3 text-center group-hover:scale-105 transition-transform duration-300">' +
-            '<span class="font-heavy text-white text-sm sm:text-lg leading-tight drop-shadow-[2px_2px_0_rgba(20,12,43,.6)]">' + esc(p.serie) + '</span>' +
-            '<span class="mt-2 text-[10px] font-bold tracking-[0.2em] text-white/75">[COPERTINA]</span>' +
-          '</div>' + etichetta + edizione +
+          (p.copertina
+            ? '<img src="' + esc(p.copertina) + '" alt="Copertina di ' + esc(p.titolo) + '" width="220" height="320" loading="lazy" decoding="async" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">'
+            : '<div class="absolute inset-0 flex flex-col items-center justify-center p-3 text-center group-hover:scale-105 transition-transform duration-300">' +
+              '<span class="font-heavy text-white text-sm sm:text-lg leading-tight drop-shadow-[2px_2px_0_rgba(20,12,43,.6)]">' + esc(p.serie) + '</span>' +
+              '<span class="mt-2 text-[10px] font-bold tracking-[0.2em] text-white/75">[COPERTINA]</span>' +
+            '</div>') + etichetta + edizione +
         '</div>' +
         '<p class="text-[11px] font-bold text-brand-muted tracking-wider uppercase">' + [p.tipo && nome('tipo', p.tipo), nome('editore', p.editore)].filter(Boolean).join(' · ') + '</p>' +
         '<h3 class="font-heavy text-sm sm:text-lg text-white mt-1 leading-snug group-hover:text-brand-lime transition-colors">' + esc(p.titolo) + '</h3>' +
@@ -928,6 +919,8 @@
       p.set('d', testo(disp).replace(/^●\s*/, ''));
       if (colori[0]) p.set('c1', colori[0]);
       if (colori[1]) p.set('c2', colori[1]);
+      var foto = li.querySelector('img');
+      if (foto) p.set('i', foto.getAttribute('src'));
       var url = 'prodotto.html?' + p.toString();
       li.querySelectorAll('a[href^="prodotto.html"]').forEach(function (a) { a.setAttribute('href', url); a.dataset.pronto = '1'; });
     });
