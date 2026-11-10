@@ -91,3 +91,5 @@ Si parla in italiano. Tutti i testi visibili sono in italiano.
 - Selettore delle edizioni: ora è una fila di pulsanti piccoli (pillole alte 30 px, con nome e prezzo) a destra del prezzo; sul telefono va a capo sotto il prezzo. La riga "Standard: non nei cataloghi · Chiedicela" è una pillola tratteggiata.
 
 - Pagina prodotto al 95%: `<body class="scala-95 ...">` in `prodotto.html` e la regola `.scala-95 { zoom:.95; }` in `sorgenti/input.css` (equivale a uno zoom del browser al 95% su tutta la pagina, testata e piede compresi; vale a tutte le larghezze, nessuno scorrimento laterale). Per cambiare la scala basta modificare quel numero e ricompilare il CSS.
+
+- Piede delle pagine: tolta la colonna "Esplora" perché ripeteva il menu in alto (voluto da Angelo). Ora ha il blocco Area 51 (indirizzo, telefono, orari) a metà larghezza e due colonne di link, "Area 51" (Il negozio, Area 51 Club, Eventi, Preordini, Chiedicelo) e "Parliamone" (Il tuo account, Wishlist, Ritiro e domande, Privacy). Preordini e Wishlist erano in Esplora e sono stati spostati.
