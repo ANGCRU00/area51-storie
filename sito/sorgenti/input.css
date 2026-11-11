@@ -46,7 +46,8 @@
   .s2 { top:40%; left:95%; width:210px; animation:shoot 9s ease-out infinite 4s; }
   /* Sistema solare: il moto lungo le curve lo calcola lo script in fondo alle pagine.
      .pianeta ha solo l'alone del suo colore (--glow). */
-  .corpo { position:absolute; left:0; will-change:transform; }
+  .corpo { position:absolute; left:0; will-change:transform; visibility:hidden; }
+  .corpo.pronto { visibility:visible; }
   .pianeta { display:block; opacity:.5; filter:drop-shadow(0 0 10px var(--glow,rgba(185,230,46,.4))); }
   @media (min-width:1024px) { .pianeta { opacity:.9; } }
   @media (prefers-reduced-motion: reduce) {

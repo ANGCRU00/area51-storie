@@ -868,7 +868,7 @@
   }
   misura();
   window.addEventListener('resize', misura);
-  stato.forEach(posa);
+  stato.forEach(function (s) { posa(s); s.el.classList.add('pronto'); });
   if (!ridotto) requestAnimationFrame(passo);
 })();
 </script>
