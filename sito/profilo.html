@@ -549,7 +549,7 @@
       li.appendChild(a);
       var piede = el('div', 'flex flex-wrap items-center justify-between gap-2 mt-3 pt-3 border-t border-white/10');
       piede.appendChild(el('span', 'font-heavy text-sm sm:text-base text-brand-lime', s.p ? A51.euro(s.p) : ''));
-      var ag = el('button', 'hover:bg-brand-lime hover:text-black font-heavy text-xs px-4 py-2.5 rounded-full border border-white/25 hover:border-brand-lime transition-colors', 'Aggiungi'); ag.type = 'button';
+      var ag = el('button', 'hover:bg-brand-lime hover:text-black font-heavy text-xs px-4 py-2.5 rounded-full rounded-bl-[4px] shadow-[3px_3px_0_#5B21B6] border border-white/25 hover:border-brand-lime transition-colors', 'Aggiungi'); ag.type = 'button';
       ag.addEventListener('click', function () { A51.carrello.aggiungi(s, 1); ag.textContent = 'Aggiunto ✓'; setTimeout(function () { ag.textContent = 'Aggiungi'; }, 1800); });
       piede.appendChild(ag); li.appendChild(piede);
       var tg = el('button', 'absolute top-5 right-5 z-10 w-9 h-9 rounded-full bg-[#140C2B]/85 border border-brand-lime text-brand-lime flex items-center justify-center'); tg.type = 'button'; tg.setAttribute('aria-label', 'Togli dai preferiti: ' + s.t); tg.innerHTML = CUORE;
