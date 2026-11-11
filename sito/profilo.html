@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex, nofollow">
 <title>Il tuo profilo | Area 51 Fumetteria, Barletta</title>
-<meta name="description" content="Il tuo profilo Area 51: preferiti, carrello, serie che segui e iscrizioni agli eventi.">
+<meta name="description" content="Il tuo profilo Area 51: foto, preferiti, serie che segui e iscrizioni agli eventi.">
 <link rel="stylesheet" href="css/style.css">
 <link rel="preload" href="fonts/archivo.woff2" as="font" type="font/woff2" crossorigin>
 <script src="js/area51.js"></script>
@@ -257,7 +257,7 @@
       <a href="profilo.html" aria-label="Il tuo profilo" class="hidden sm:flex w-11 h-11 rounded-full border border-white/15 hover:border-brand-lime items-center justify-center hover:text-brand-lime transition-colors">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 11a4 4 0 100-8 4 4 0 000 8zM4 21v-1a6 6 0 016-6h4a6 6 0 016 6v1" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/></svg>
       </a>
-      <a id="carrello" class="whitespace-nowrap bg-brand-lime text-black font-heavy text-xs px-3.5 sm:px-4 py-3 rounded-full flex items-center gap-2 shadow-brutal-violet" href="profilo.html#carrello" aria-label="Carrello, 0 prodotti">
+      <a id="carrello" class="whitespace-nowrap bg-brand-lime text-black font-heavy text-xs px-3.5 sm:px-4 py-3 rounded-full flex items-center gap-2 shadow-brutal-violet" href="carrello.html" aria-label="Carrello, 0 prodotti">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"/></svg>
         <span class="hidden sm:inline">Carrello · <span class="js-carrello-n">0</span></span><span class="sm:hidden js-carrello-n">0</span>
       </a>
@@ -306,122 +306,113 @@
       <a class="hover:text-brand-lime" href="index.html">Home</a> <span aria-hidden="true" class="mx-1.5 text-brand-violetGlow">/</span> <span class="text-white" aria-current="page">Il tuo profilo</span>
     </nav>
 
-    <!-- Intestazione del profilo -->
-    <section class="flex flex-col sm:flex-row sm:items-center gap-5 sm:gap-7">
-      <div id="avatar" class="shrink-0 w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-brand-lime text-black font-heavy text-4xl flex items-center justify-center shadow-brutal-violet" aria-hidden="true"></div>
-      <div class="min-w-0">
-        <span class="-rotate-2 inline-block bg-brand-lime text-black px-3 py-1 rounded font-heavy text-[11px] uppercase tracking-wider shadow-brutal-violet mb-3">Il tuo profilo</span>
-        <h1 id="saluto" class="font-heavy text-3xl sm:text-5xl text-white leading-tight">Ciao, terrestre.</h1>
-        <p class="mt-2 max-w-2xl text-sm sm:text-base font-semibold text-brand-muted leading-relaxed">Preferiti, carrello, serie che segui e iscrizioni agli eventi. Per ora restano <span class="text-white">solo su questo dispositivo</span>: l'accesso con un account arriverà con il negozio online.</p>
-      </div>
-    </section>
+    <div class="grid grid-cols-1 lg:grid-cols-[minmax(0,20rem)_minmax(0,1fr)] gap-6 lg:gap-10 items-start">
 
-    <!-- Indice -->
-    <nav aria-label="Le sezioni del profilo" class="mt-8 flex flex-wrap gap-2">
-      <a href="#preferiti" class="chip-profilo">Preferiti <span id="c-pref" class="num-profilo">0</span></a>
-      <a href="#carrello" class="chip-profilo">Carrello <span id="c-car" class="num-profilo">0</span></a>
-      <a href="#serie" class="chip-profilo">Serie che segui <span id="c-serie" class="num-profilo">0</span></a>
-      <a href="#eventi" class="chip-profilo">I miei eventi <span id="c-ev" class="num-profilo">0</span></a>
-      <a href="#tessera" class="chip-profilo">Tessera Club</a>
-      <a href="#dati" class="chip-profilo">I miei dati</a>
-    </nav>
-
-    <!-- Preferiti -->
-    <section id="preferiti" class="mt-12 scroll-mt-28" aria-labelledby="t-pref">
-      <h2 id="t-pref" class="font-heavy text-2xl sm:text-3xl text-white uppercase mb-5">Preferiti</h2>
-      <ul id="pref-lista" hidden class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-5"></ul>
-      <div id="pref-vuoto" class="vuoto-profilo">
-        <svg class="w-14 h-14 shrink-0" aria-hidden="true"><use href="#alieno"/></svg>
-        <div><p class="font-heavy text-lg text-white">Ancora nessun preferito.</p><p class="text-sm font-semibold text-brand-muted mt-1">Premi il cuore su un fumetto per ritrovarlo qui.</p></div>
-        <a href="catalogo.html" class="btn-profilo">Vai al catalogo</a>
-      </div>
-    </section>
-
-    <!-- Carrello -->
-    <section id="carrello" class="mt-14 scroll-mt-28" aria-labelledby="t-car">
-      <h2 id="t-car" class="font-heavy text-2xl sm:text-3xl text-white uppercase mb-5">Carrello</h2>
-      <div id="car-pieno" hidden class="grid lg:grid-cols-[minmax(0,1fr)_minmax(0,22rem)] gap-6 items-start">
-        <ul id="car-lista" class="space-y-3"></ul>
-        <aside class="rounded-2xl border-2 border-brand-lime/60 bg-[#0e0926]/90 p-5 sm:p-6 space-y-4 lg:sticky lg:top-28" aria-label="Riepilogo del carrello">
-          <div class="flex items-end justify-between gap-3"><span class="text-sm font-heavy text-brand-muted uppercase tracking-wider">Totale al ritiro</span><span id="car-totale" class="font-heavy text-3xl text-brand-lime leading-none"></span></div>
-          <p class="text-sm font-semibold text-brand-muted leading-relaxed">Non si paga online: paghi in negozio quando ritiri. Non spediamo. Prima di passare, chiama per sapere se è tutto disponibile.</p>
-          <div class="flex flex-col gap-2.5">
-            <button type="button" id="car-copia" class="bg-brand-lime text-black font-heavy text-sm px-5 py-3.5 rounded-full shadow-brutal-violet hover:bg-[#a6d420] transition-colors">Copia la lista per il negozio</button>
-            <a href="tel:+390883884567" class="text-center border-2 border-brand-violet hover:border-brand-lime text-white font-heavy text-sm px-5 py-3 rounded-full transition-colors">Chiama il negozio · 0883 884567</a>
-            <button type="button" id="car-svuota" class="text-xs font-heavy text-brand-muted hover:text-brand-lime py-2">Svuota il carrello</button>
+      <!-- Colonna del profilo: foto, nome, sezioni -->
+      <aside class="min-w-0 lg:sticky lg:top-28 rounded-3xl border-2 border-brand-lime/60 bg-[#0d0724]/95 p-5 sm:p-6 shadow-[6px_6px_0_#5B21B6]" aria-label="Il tuo profilo">
+        <div class="flex lg:flex-col items-center lg:text-center gap-4 lg:gap-3">
+          <div class="relative shrink-0">
+            <button type="button" id="foto-btn" class="block w-24 h-24 lg:w-32 lg:h-32 rounded-full overflow-hidden bg-brand-lime text-black font-heavy text-5xl flex items-center justify-center border-4 border-[#140C2B] shadow-brutal-violet focus-visible:outline-none" aria-label="Cambia la foto del profilo">
+              <span id="avatar" class="w-full h-full flex items-center justify-center"></span>
+            </button>
+            <span class="pointer-events-none absolute bottom-0 right-0 w-9 h-9 rounded-full bg-[#140C2B] border-2 border-brand-lime text-brand-lime flex items-center justify-center" aria-hidden="true">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>
+            </span>
+            <input id="foto-file" type="file" accept="image/*" class="sr-only" tabindex="-1" aria-hidden="true">
           </div>
-          <p id="car-esito" role="status" class="text-sm font-bold text-brand-lime min-h-[1.25rem]"></p>
-        </aside>
-      </div>
-      <div id="car-vuoto" class="vuoto-profilo">
-        <svg class="w-14 h-14 shrink-0" aria-hidden="true"><use href="#alieno"/></svg>
-        <div><p class="font-heavy text-lg text-white">Il carrello è vuoto.</p><p class="text-sm font-semibold text-brand-muted mt-1">Quello che aggiungi lo ritiri e lo paghi in negozio.</p></div>
-        <a href="catalogo.html" class="btn-profilo">Scegli qualcosa</a>
-      </div>
-    </section>
-
-    <!-- Serie che segui -->
-    <section id="serie" class="mt-14 scroll-mt-28" aria-labelledby="t-serie">
-      <h2 id="t-serie" class="font-heavy text-2xl sm:text-3xl text-white uppercase mb-2">Serie che segui</h2>
-      <p class="text-sm font-semibold text-brand-muted mb-5">Dalla scheda di un volume premi "Segui la serie": qui vedi quando esce il prossimo.</p>
-      <ul id="serie-lista" hidden class="grid md:grid-cols-2 gap-4"></ul>
-      <div id="serie-vuoto" class="vuoto-profilo">
-        <svg class="w-14 h-14 shrink-0" aria-hidden="true"><use href="#alieno"/></svg>
-        <div><p class="font-heavy text-lg text-white">Non segui ancora nessuna serie.</p><p class="text-sm font-semibold text-brand-muted mt-1">Apri un volume e premi "Segui la serie".</p></div>
-        <a href="catalogo.html" class="btn-profilo">Vai al catalogo</a>
-      </div>
-    </section>
-
-    <!-- I miei eventi -->
-    <section id="eventi" class="mt-14 scroll-mt-28" aria-labelledby="t-ev">
-      <h2 id="t-ev" class="font-heavy text-2xl sm:text-3xl text-white uppercase mb-2">I miei eventi</h2>
-      <p class="text-sm font-semibold text-brand-muted mb-5">Per ora l'iscrizione resta solo su questo dispositivo: confermala in negozio o chiamando lo 0883 884567.</p>
-      <ul id="ev-lista" hidden class="grid md:grid-cols-2 gap-4"></ul>
-      <div id="ev-vuoto" class="vuoto-profilo">
-        <svg class="w-14 h-14 shrink-0" aria-hidden="true"><use href="#alieno"/></svg>
-        <div><p class="font-heavy text-lg text-white">Nessuna iscrizione.</p><p class="text-sm font-semibold text-brand-muted mt-1">Tornei, serate e avventure sono nella pagina Eventi.</p></div>
-        <a href="eventi.html" class="btn-profilo">Guarda gli eventi</a>
-      </div>
-    </section>
-
-    <!-- Tessera Club -->
-    <section id="tessera" class="mt-14 scroll-mt-28" aria-labelledby="t-tessera">
-      <h2 id="t-tessera" class="font-heavy text-2xl sm:text-3xl text-white uppercase mb-5">Tessera Area 51 Club</h2>
-      <div class="rounded-3xl border-2 border-brand-lime bg-[#0d0724]/95 p-6 sm:p-8 grid lg:grid-cols-2 gap-8 items-center shadow-[0_0_30px_rgba(185,230,46,.15)]">
-        <div>
-          <p class="text-brand-lime font-heavy text-xs uppercase tracking-widest mb-2">Raccogli 10 avvistamenti</p>
-          <p class="font-heavy text-2xl sm:text-3xl text-white leading-tight mb-3">Un timbro a ogni acquisto. Al decimo, il premio è tuo.</p>
-          <p class="text-sm sm:text-base font-semibold text-brand-muted leading-relaxed">La tessera si ritira in negozio e i timbri li mette il negozio al bancone. Quando gli account saranno attivi, i tuoi timbri compariranno qui.</p>
+          <div class="min-w-0">
+            <p class="font-heavy text-xs uppercase tracking-widest text-brand-lime">Il tuo profilo</p>
+            <h1 id="saluto" class="font-heavy text-2xl sm:text-3xl text-white leading-tight mt-1">Ciao, terrestre.</h1>
+            <p class="mt-1 text-xs font-semibold text-brand-muted flex flex-wrap lg:justify-center gap-x-3">
+              <button type="button" id="foto-cambia" class="font-heavy text-brand-lime hover:underline py-1">Cambia foto</button>
+              <button type="button" id="foto-togli" hidden class="font-heavy text-brand-muted hover:text-brand-lime py-1">Togli foto</button>
+            </p>
+            <p id="foto-esito" role="status" class="text-xs font-bold text-brand-lime min-h-[1rem]"></p>
+          </div>
         </div>
-        <div class="bg-[#180e3e] border border-white/10 rounded-2xl p-4 sm:p-5" role="img" aria-label="Tessera punti: 10 caselle, l'ultima è il premio">
-          <div id="tessera-caselle" class="grid grid-cols-5 gap-3"></div>
-        </div>
-      </div>
-    </section>
 
-    <!-- I miei dati -->
-    <section id="dati" class="mt-14 scroll-mt-28" aria-labelledby="t-dati">
-      <h2 id="t-dati" class="font-heavy text-2xl sm:text-3xl text-white uppercase mb-2">I miei dati</h2>
-      <p class="text-sm font-semibold text-brand-muted mb-5">Servono solo a salutarti qui. Restano su questo dispositivo e non vengono inviati a nessuno.</p>
-      <div class="grid lg:grid-cols-2 gap-6 items-start">
-        <form id="dati-form" class="rounded-2xl border border-white/10 bg-[#0e0926]/90 p-5 sm:p-6 space-y-4" novalidate>
-          <div><label for="d-nome" class="block font-heavy text-xs uppercase tracking-widest text-brand-lime mb-2">Come ti chiami</label>
-            <input id="d-nome" type="text" maxlength="40" autocomplete="given-name" class="campo-profilo" placeholder="Il tuo nome"></div>
-          <div><label for="d-tel" class="block font-heavy text-xs uppercase tracking-widest text-brand-lime mb-2">Telefono</label>
-            <input id="d-tel" type="tel" maxlength="20" autocomplete="tel" class="campo-profilo" placeholder="Per farti richiamare"></div>
-          <div><label for="d-email" class="block font-heavy text-xs uppercase tracking-widest text-brand-lime mb-2">Email</label>
-            <input id="d-email" type="email" maxlength="80" autocomplete="email" class="campo-profilo" placeholder="nome@esempio.it"></div>
-          <div class="flex flex-wrap items-center gap-3"><button type="submit" class="bg-brand-lime text-black font-heavy text-sm px-6 py-3 rounded-full shadow-brutal-violet hover:bg-[#a6d420] transition-colors">Salva</button><span id="dati-esito" role="status" class="text-sm font-bold text-brand-lime"></span></div>
-        </form>
-        <div class="rounded-2xl border border-white/10 bg-[#0e0926]/90 p-5 sm:p-6 space-y-3">
-          <h3 class="font-heavy text-lg text-white">Cosa sta salvato qui</h3>
-          <ul class="text-sm font-semibold text-brand-muted space-y-1.5 list-disc pl-5"><li>Preferiti, carrello e serie che segui</li><li>Le iscrizioni agli eventi</li><li>Nome, telefono ed email che scrivi qui accanto</li></ul>
-          <p class="text-sm font-semibold text-brand-muted leading-relaxed">Se cambi dispositivo o browser, non li ritrovi.</p>
-          <button type="button" id="dati-azzera" class="border-2 border-brand-violet hover:border-brand-lime text-white font-heavy text-sm px-5 py-2.5 rounded-full transition-colors">Cancella tutti i miei dati</button>
-          <p id="azzera-esito" role="status" class="text-sm font-bold text-brand-lime min-h-[1.25rem]"></p>
-        </div>
+        <nav aria-label="Sezioni del profilo" class="mt-5 lg:mt-6 -mx-1 flex lg:flex-col gap-2 overflow-x-auto lg:overflow-visible pb-1 lg:pb-0 px-1" id="sezioni">
+          <button type="button" data-sez="preferiti" class="tab-profilo">Preferiti <span id="c-pref" class="num-profilo">0</span></button>
+          <button type="button" data-sez="serie" class="tab-profilo">Serie che segui <span id="c-serie" class="num-profilo">0</span></button>
+          <button type="button" data-sez="eventi" class="tab-profilo">I miei eventi <span id="c-ev" class="num-profilo">0</span></button>
+          <button type="button" data-sez="tessera" class="tab-profilo">Tessera Club</button>
+          <button type="button" data-sez="dati" class="tab-profilo">I miei dati</button>
+        </nav>
+        <p class="mt-5 text-xs font-semibold text-brand-muted leading-relaxed">Per ora tutto resta <span class="text-white">solo su questo dispositivo</span>: l'accesso con un account arriverà con il negozio online.</p>
+      </aside>
+
+      <!-- Pannelli: se ne vede uno alla volta -->
+      <div class="min-w-0">
+        <section id="p-preferiti" aria-labelledby="t-pref">
+          <h2 id="t-pref" class="font-heavy text-2xl sm:text-3xl text-white uppercase mb-5">Preferiti</h2>
+          <ul id="pref-lista" hidden class="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-5"></ul>
+          <div id="pref-vuoto" class="vuoto-profilo">
+            <svg class="w-14 h-14 shrink-0" aria-hidden="true"><use href="#alieno"/></svg>
+            <div><p class="font-heavy text-lg text-white">Ancora nessun preferito.</p><p class="text-sm font-semibold text-brand-muted mt-1">Premi il cuore su un fumetto per ritrovarlo qui.</p></div>
+            <a href="catalogo.html" class="btn-profilo">Vai al catalogo</a>
+          </div>
+        </section>
+
+        <section id="p-serie" aria-labelledby="t-serie" hidden>
+          <h2 id="t-serie" class="font-heavy text-2xl sm:text-3xl text-white uppercase mb-2">Serie che segui</h2>
+          <p class="text-sm font-semibold text-brand-muted mb-5">Dalla scheda di un volume premi "Segui la serie": qui vedi quando esce il prossimo.</p>
+          <ul id="serie-lista" hidden class="grid xl:grid-cols-2 gap-4"></ul>
+          <div id="serie-vuoto" class="vuoto-profilo">
+            <svg class="w-14 h-14 shrink-0" aria-hidden="true"><use href="#alieno"/></svg>
+            <div><p class="font-heavy text-lg text-white">Non segui ancora nessuna serie.</p><p class="text-sm font-semibold text-brand-muted mt-1">Apri un volume e premi "Segui la serie".</p></div>
+            <a href="catalogo.html" class="btn-profilo">Vai al catalogo</a>
+          </div>
+        </section>
+
+        <section id="p-eventi" aria-labelledby="t-ev" hidden>
+          <h2 id="t-ev" class="font-heavy text-2xl sm:text-3xl text-white uppercase mb-2">I miei eventi</h2>
+          <p class="text-sm font-semibold text-brand-muted mb-5">Per ora l'iscrizione resta solo su questo dispositivo: confermala in negozio o chiamando lo 0883 884567.</p>
+          <ul id="ev-lista" hidden class="grid xl:grid-cols-2 gap-4"></ul>
+          <div id="ev-vuoto" class="vuoto-profilo">
+            <svg class="w-14 h-14 shrink-0" aria-hidden="true"><use href="#alieno"/></svg>
+            <div><p class="font-heavy text-lg text-white">Nessuna iscrizione.</p><p class="text-sm font-semibold text-brand-muted mt-1">Tornei, serate e avventure sono nella pagina Eventi.</p></div>
+            <a href="eventi.html" class="btn-profilo">Guarda gli eventi</a>
+          </div>
+        </section>
+
+        <section id="p-tessera" aria-labelledby="t-tessera" hidden>
+          <h2 id="t-tessera" class="font-heavy text-2xl sm:text-3xl text-white uppercase mb-5">Tessera Area 51 Club</h2>
+          <div class="rounded-3xl border-2 border-brand-lime bg-[#0d0724]/95 p-6 sm:p-8 grid grid-cols-1 xl:grid-cols-2 gap-8 items-center shadow-[0_0_30px_rgba(185,230,46,.15)]">
+            <div>
+              <p class="text-brand-lime font-heavy text-xs uppercase tracking-widest mb-2">Raccogli 10 avvistamenti</p>
+              <p class="font-heavy text-2xl sm:text-3xl text-white leading-tight mb-3">Un timbro a ogni acquisto. Al decimo, il premio è tuo.</p>
+              <p class="text-sm sm:text-base font-semibold text-brand-muted leading-relaxed">La tessera si ritira in negozio e i timbri li mette il negozio al bancone. Quando gli account saranno attivi, i tuoi timbri compariranno qui.</p>
+            </div>
+            <div class="bg-[#180e3e] border border-white/10 rounded-2xl p-4 sm:p-5" role="img" aria-label="Tessera punti: 10 caselle, l'ultima è il premio">
+              <div id="tessera-caselle" class="grid grid-cols-5 gap-3"></div>
+            </div>
+          </div>
+        </section>
+
+        <section id="p-dati" aria-labelledby="t-dati" hidden>
+          <h2 id="t-dati" class="font-heavy text-2xl sm:text-3xl text-white uppercase mb-2">I miei dati</h2>
+          <p class="text-sm font-semibold text-brand-muted mb-5">Servono solo a salutarti qui. Restano su questo dispositivo e non vengono inviati a nessuno.</p>
+          <div class="grid xl:grid-cols-2 gap-6 items-start">
+            <form id="dati-form" class="rounded-2xl border border-white/10 bg-[#0e0926]/90 p-5 sm:p-6 space-y-4" novalidate>
+              <div><label for="d-nome" class="block font-heavy text-xs uppercase tracking-widest text-brand-lime mb-2">Come ti chiami</label>
+                <input id="d-nome" type="text" maxlength="40" autocomplete="given-name" class="campo-profilo" placeholder="Il tuo nome"></div>
+              <div><label for="d-tel" class="block font-heavy text-xs uppercase tracking-widest text-brand-lime mb-2">Telefono</label>
+                <input id="d-tel" type="tel" maxlength="20" autocomplete="tel" class="campo-profilo" placeholder="Per farti richiamare"></div>
+              <div><label for="d-email" class="block font-heavy text-xs uppercase tracking-widest text-brand-lime mb-2">Email</label>
+                <input id="d-email" type="email" maxlength="80" autocomplete="email" class="campo-profilo" placeholder="nome@esempio.it"></div>
+              <div class="flex flex-wrap items-center gap-3"><button type="submit" class="bg-brand-lime text-black font-heavy text-sm px-6 py-3 rounded-full shadow-brutal-violet hover:bg-[#a6d420] transition-colors">Salva</button><span id="dati-esito" role="status" class="text-sm font-bold text-brand-lime"></span></div>
+            </form>
+            <div class="rounded-2xl border border-white/10 bg-[#0e0926]/90 p-5 sm:p-6 space-y-3">
+              <h3 class="font-heavy text-lg text-white">Cosa sta salvato qui</h3>
+              <ul class="text-sm font-semibold text-brand-muted space-y-1.5 list-disc pl-5"><li>Foto del profilo, nome, telefono ed email</li><li>Preferiti, carrello e serie che segui</li><li>Le iscrizioni agli eventi</li></ul>
+              <p class="text-sm font-semibold text-brand-muted leading-relaxed">Se cambi dispositivo o browser, non li ritrovi.</p>
+              <button type="button" id="dati-azzera" class="border-2 border-brand-violet hover:border-brand-lime text-white font-heavy text-sm px-5 py-2.5 rounded-full transition-colors">Cancella tutti i miei dati</button>
+              <p id="azzera-esito" role="status" class="text-sm font-bold text-brand-lime min-h-[1.25rem]"></p>
+            </div>
+          </div>
+        </section>
       </div>
-    </section>
+    </div>
   </div>
 </main>
 
@@ -495,11 +486,13 @@
 <script src="dati/catalogo.js"></script>
 <script src="dati/eventi.js"></script>
 <script>
-/* Profilo: legge da js/area51.js (preferiti, carrello, serie seguite, iscrizioni, dati) e dal catalogo; tutto resta su questo dispositivo */
+/* Profilo: legge da js/area51.js (preferiti, serie seguite, iscrizioni, dati, foto) e dal catalogo; tutto resta su questo dispositivo */
 (function () {
+  if (location.hash === '#carrello') { location.replace('carrello.html'); return; }
   var D = window.CATALOGO_DATI || [], E = window.EVENTI_DATI || [];
   var MESI = ['gennaio', 'febbraio', 'marzo', 'aprile', 'maggio', 'giugno', 'luglio', 'agosto', 'settembre', 'ottobre', 'novembre', 'dicembre'];
   var NM = { Gen: 0, Feb: 1, Mar: 2, Apr: 3, Mag: 4, Giu: 5, Lug: 6, Ago: 7, Set: 8, Ott: 9, Nov: 10, Dic: 11 };
+  var SEZ = ['preferiti', 'serie', 'eventi', 'tessera', 'dati'];
   function $(id) { return document.getElementById(id); }
   function el(tag, cls, testo) { var e = document.createElement(tag); if (cls) e.className = cls; if (testo != null) e.textContent = testo; return e; }
   var CUORE = '<svg class="w-4 h-4 fill-current" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M4.3 6.3a4.5 4.5 0 000 6.4L12 20.4l7.7-7.7a4.5 4.5 0 00-6.4-6.4L12 7.6l-1.3-1.3a4.5 4.5 0 00-6.4 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/></svg>';
@@ -508,20 +501,45 @@
   function copertina(s, cls) {
     var box = el('div', cls + ' relative overflow-hidden bg-[#120a2e]');
     if (s.i) { var im = el('img', 'absolute inset-0 w-full h-full object-cover'); im.src = s.i; im.alt = ''; im.loading = 'lazy'; im.width = 220; im.height = 320; box.appendChild(im); }
-    else { box.style.background = 'linear-gradient(150deg,#7C3AED,#1E1B4B)'; var t = el('span', 'absolute inset-0 flex items-center justify-center p-2 text-center font-heavy text-white text-xs leading-tight', s.t); box.appendChild(t); }
+    else { box.style.background = 'linear-gradient(150deg,#7C3AED,#1E1B4B)'; box.appendChild(el('span', 'absolute inset-0 flex items-center justify-center p-2 text-center font-heavy text-white text-xs leading-tight', s.t)); }
     return box;
   }
 
-  /* ---------- Intestazione ---------- */
+  /* ---------- Colonna del profilo: foto, nome, conteggi ---------- */
+  function trovaEvento(k) { for (var i = 0; i < E.length; i++) if ([E[i][3], E[i][5], E[i][6]].join('|') === k) return E[i]; return null; }
   function testa() {
-    var nome = A51.profilo.leggi().nome.trim(), av = $('avatar');
+    var p = A51.profilo.leggi(), nome = p.nome.trim(), av = $('avatar');
     $('saluto').textContent = nome ? 'Ciao, ' + nome + '.' : 'Ciao, terrestre.';
     av.textContent = '';
-    if (nome) av.textContent = nome.charAt(0).toUpperCase();
-    else { var s = document.createElementNS('http://www.w3.org/2000/svg', 'svg'); s.setAttribute('class', 'w-14 h-14'); var u = document.createElementNS('http://www.w3.org/2000/svg', 'use'); u.setAttribute('href', '#alieno'); s.appendChild(u); av.appendChild(s); }
-    $('c-pref').textContent = A51.pref.tutti().length; $('c-car').textContent = A51.carrello.conta();
-    $('c-serie').textContent = A51.serie.tutti().length; $('c-ev').textContent = A51.iscrizioni.tutti().filter(function (k) { return !!trovaEvento(k); }).length;
+    if (p.foto) { var im = el('img', 'w-full h-full object-cover'); im.src = p.foto; im.alt = ''; av.appendChild(im); }
+    else if (nome) av.textContent = nome.charAt(0).toUpperCase();
+    else { var s = document.createElementNS('http://www.w3.org/2000/svg', 'svg'); s.setAttribute('class', 'w-3/5 h-3/5'); var u = document.createElementNS('http://www.w3.org/2000/svg', 'use'); u.setAttribute('href', '#alieno'); s.appendChild(u); av.appendChild(s); }
+    $('foto-togli').hidden = !p.foto;
+    $('c-pref').textContent = A51.pref.tutti().length; $('c-serie').textContent = A51.serie.tutti().length;
+    $('c-ev').textContent = A51.iscrizioni.tutti().filter(function (k) { return !!trovaEvento(k); }).length;
   }
+
+  /* ---------- Foto del profilo: ritagliata quadrata e ridotta a 256 px, salvata sul dispositivo ---------- */
+  var fileIn = $('foto-file'), esitoFoto = $('foto-esito');
+  function scegliFoto() { esitoFoto.textContent = ''; fileIn.click(); }
+  $('foto-btn').addEventListener('click', scegliFoto); $('foto-cambia').addEventListener('click', scegliFoto);
+  $('foto-togli').addEventListener('click', function () { A51.profilo.salva({ foto: '' }); esitoFoto.textContent = 'Foto tolta.'; });
+  fileIn.addEventListener('change', function () {
+    var f = fileIn.files && fileIn.files[0]; if (!f) return;
+    if (!/^image\//.test(f.type)) { esitoFoto.textContent = 'Scegli un\'immagine (JPG, PNG o simili).'; fileIn.value = ''; return; }
+    if (f.size > 15 * 1024 * 1024) { esitoFoto.textContent = 'Immagine troppo pesante: provane una sotto i 15 MB.'; fileIn.value = ''; return; }
+    var url = URL.createObjectURL(f), img = new Image();
+    img.onload = function () {
+      var S = 256, c = document.createElement('canvas'); c.width = S; c.height = S;
+      var m = Math.min(img.naturalWidth, img.naturalHeight), ctx = c.getContext('2d');
+      ctx.drawImage(img, (img.naturalWidth - m) / 2, (img.naturalHeight - m) / 2, m, m, 0, 0, S, S);
+      URL.revokeObjectURL(url);
+      A51.profilo.salva({ foto: c.toDataURL('image/jpeg', 0.85) });
+      esitoFoto.textContent = A51.profilo.leggi().foto ? 'Foto aggiornata.' : 'Non riesco a salvare la foto su questo dispositivo.';
+    };
+    img.onerror = function () { URL.revokeObjectURL(url); esitoFoto.textContent = 'Non riesco a leggere questa immagine.'; };
+    img.src = url; fileIn.value = '';
+  });
 
   /* ---------- Preferiti ---------- */
   function preferiti() {
@@ -529,61 +547,20 @@
     l.forEach(function (s) {
       var li = el('li', 'relative bg-[#0e0926]/90 rounded-2xl border border-white/10 p-3 hover:border-brand-lime transition-colors flex flex-col justify-between group');
       var a = el('a', 'block'); a.href = s.l || 'catalogo.html';
-      var cop = copertina(s, 'aspect-[3/4] rounded-xl mb-3'); a.appendChild(cop);
+      a.appendChild(copertina(s, 'aspect-[3/4] rounded-xl mb-3'));
       if (s.e) a.appendChild(el('p', 'text-[11px] font-bold text-brand-muted tracking-wider uppercase', s.e));
       a.appendChild(el('h3', 'font-heavy text-sm sm:text-base text-white mt-1 leading-snug group-hover:text-brand-lime transition-colors', s.t));
       li.appendChild(a);
       var piede = el('div', 'flex flex-wrap items-center justify-between gap-2 mt-3 pt-3 border-t border-white/10');
       piede.appendChild(el('span', 'font-heavy text-sm sm:text-base text-brand-lime', s.p ? A51.euro(s.p) : ''));
       var ag = el('button', 'hover:bg-brand-lime hover:text-black font-heavy text-xs px-4 py-2.5 rounded-full border border-white/25 hover:border-brand-lime transition-colors', 'Aggiungi'); ag.type = 'button';
-      ag.addEventListener('click', function () { A51.carrello.aggiungi(s, 1); });
+      ag.addEventListener('click', function () { A51.carrello.aggiungi(s, 1); ag.textContent = 'Aggiunto ✓'; setTimeout(function () { ag.textContent = 'Aggiungi'; }, 1800); });
       piede.appendChild(ag); li.appendChild(piede);
       var tg = el('button', 'absolute top-5 right-5 z-10 w-9 h-9 rounded-full bg-[#140C2B]/85 border border-brand-lime text-brand-lime flex items-center justify-center'); tg.type = 'button'; tg.setAttribute('aria-label', 'Togli dai preferiti: ' + s.t); tg.innerHTML = CUORE;
       tg.addEventListener('click', function () { A51.pref.togli(s.k); });
       li.appendChild(tg); ul.appendChild(li);
     });
   }
-
-  /* ---------- Carrello ---------- */
-  function carrello() {
-    var l = A51.carrello.tutti(), ul = $('car-lista'); ul.textContent = ''; $('car-pieno').hidden = !l.length; $('car-vuoto').hidden = l.length > 0;
-    l.forEach(function (s) {
-      var li = el('li', 'flex items-center gap-3 sm:gap-4 rounded-2xl border border-white/10 bg-[#0e0926]/90 p-3');
-      var a = el('a', 'shrink-0'); a.href = s.l || 'catalogo.html'; a.setAttribute('aria-label', s.t); a.appendChild(copertina(s, 'w-14 h-[5.25rem] rounded-lg')); li.appendChild(a);
-      var tx = el('div', 'min-w-0 flex-1');
-      var h = el('a', 'block font-heavy text-sm sm:text-base text-white leading-snug hover:text-brand-lime', s.t); h.href = s.l || 'catalogo.html'; tx.appendChild(h);
-      if (s.e) tx.appendChild(el('p', 'text-[11px] font-bold text-brand-muted tracking-wider uppercase mt-0.5', s.e));
-      tx.appendChild(el('p', 'text-xs font-semibold text-brand-muted mt-1', A51.euro(s.p) + ' l\'uno'));
-      var st = el('div', 'inline-flex items-center gap-1 rounded-full border border-white/15 p-0.5 mt-2');
-      var meno = el('button', 'w-8 h-8 rounded-full hover:bg-white/10 hover:text-brand-lime font-heavy text-lg leading-none', '−'); meno.type = 'button'; meno.setAttribute('aria-label', 'Una in meno');
-      var q = el('span', 'w-6 text-center font-heavy text-sm', String(s.q)); q.setAttribute('aria-live', 'polite');
-      var piu = el('button', 'w-8 h-8 rounded-full hover:bg-white/10 hover:text-brand-lime font-heavy text-lg leading-none', '+'); piu.type = 'button'; piu.setAttribute('aria-label', 'Una in più');
-      meno.addEventListener('click', function () { if (s.q > 1) A51.carrello.imposta(s.k, s.q - 1); });
-      piu.addEventListener('click', function () { A51.carrello.imposta(s.k, s.q + 1); });
-      st.appendChild(meno); st.appendChild(q); st.appendChild(piu); tx.appendChild(st); li.appendChild(tx);
-      var dx = el('div', 'shrink-0 flex flex-col items-end gap-2');
-      dx.appendChild(el('span', 'font-heavy text-base sm:text-lg text-brand-lime', A51.euro(s.p * s.q)));
-      var x = el('button', 'text-xs font-heavy text-brand-muted hover:text-brand-lime py-1', 'Togli'); x.type = 'button'; x.setAttribute('aria-label', 'Togli dal carrello: ' + s.t);
-      x.addEventListener('click', function () { A51.carrello.togli(s.k); });
-      dx.appendChild(x); li.appendChild(dx); ul.appendChild(li);
-    });
-    $('car-totale').textContent = A51.euro(A51.carrello.totale());
-  }
-  function listaTesto() {
-    var l = A51.carrello.tutti();
-    return 'Lista per Area 51 Fumetteria\n' + l.map(function (s) { return s.q + ' × ' + s.t + ' — ' + A51.euro(s.p * s.q); }).join('\n') + '\nTotale: ' + A51.euro(A51.carrello.totale());
-  }
-  $('car-copia').addEventListener('click', function () {
-    var testo = listaTesto(), es = $('car-esito');
-    function ok() { es.textContent = 'Lista copiata: mostrala o mandala al negozio.'; }
-    function ripiego() {
-      var ta = document.createElement('textarea'); ta.value = testo; ta.style.position = 'fixed'; ta.style.opacity = '0'; document.body.appendChild(ta); ta.select();
-      try { document.execCommand('copy') ? ok() : (es.textContent = 'Non riesco a copiare: seleziona e copia la lista a mano.'); } catch (e) { es.textContent = 'Non riesco a copiare: scrivi la lista a mano.'; }
-      document.body.removeChild(ta);
-    }
-    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(testo).then(ok, ripiego); else ripiego();
-  });
-  $('car-svuota').addEventListener('click', function () { A51.carrello.svuota(); $('car-esito').textContent = ''; });
 
   /* ---------- Serie che segui ---------- */
   function serie() {
@@ -611,7 +588,6 @@
   }
 
   /* ---------- I miei eventi ---------- */
-  function trovaEvento(k) { for (var i = 0; i < E.length; i++) if ([E[i][3], E[i][5], E[i][6]].join('|') === k) return E[i]; return null; }
   function eventi() {
     var ul = $('ev-lista'); ul.textContent = '';
     var l = A51.iscrizioni.tutti().map(function (k) { return { k: k, r: trovaEvento(k) }; }).filter(function (x) { return x.r; })
@@ -654,13 +630,23 @@
   var armato = false, azz = $('dati-azzera');
   azz.addEventListener('click', function () {
     var es = $('azzera-esito');
-    if (!armato) { armato = true; azz.textContent = 'Sicuro? Premi ancora per cancellare tutto'; es.textContent = 'Preferiti, carrello, serie, iscrizioni e dati spariranno da questo dispositivo.'; setTimeout(function () { armato = false; azz.textContent = 'Cancella tutti i miei dati'; }, 6000); return; }
+    if (!armato) { armato = true; azz.textContent = 'Sicuro? Premi ancora per cancellare tutto'; es.textContent = 'Foto, preferiti, carrello, serie, iscrizioni e dati spariranno da questo dispositivo.'; setTimeout(function () { armato = false; azz.textContent = 'Cancella tutti i miei dati'; }, 6000); return; }
     armato = false; A51.azzera(); azz.textContent = 'Cancella tutti i miei dati'; es.textContent = 'Fatto: non è rimasto niente su questo dispositivo.';
     $('d-nome').value = ''; $('d-tel').value = ''; $('d-email').value = '';
   });
 
-  function tutto() { testa(); preferiti(); carrello(); serie(); eventi(); }
-  A51.onChange(tutto); tutto();
+  /* ---------- Sezioni: se ne vede una alla volta ---------- */
+  function mostra(s, scriviIndirizzo) {
+    if (SEZ.indexOf(s) < 0) s = 'preferiti';
+    SEZ.forEach(function (x) { $('p-' + x).hidden = x !== s; });
+    document.querySelectorAll('[data-sez]').forEach(function (b) { var on = b.dataset.sez === s; if (on) b.setAttribute('aria-current', 'true'); else b.removeAttribute('aria-current'); });
+    if (scriviIndirizzo && history.replaceState) { try { history.replaceState(null, '', '#' + s); } catch (e) {} }
+  }
+  document.querySelectorAll('[data-sez]').forEach(function (b) { b.addEventListener('click', function () { mostra(b.dataset.sez, true); }); });
+  window.addEventListener('hashchange', function () { mostra(location.hash.slice(1), false); });
+
+  function tutto() { testa(); preferiti(); serie(); eventi(); }
+  A51.onChange(tutto); tutto(); mostra(location.hash.slice(1), false);
 })();
 </script>
 <script>

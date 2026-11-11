@@ -69,9 +69,15 @@
     }
   };
 
+  // foto: immagine già ridotta (data URL), tenuta sotto i 300 mila caratteri
   var profilo = {
-    leggi: function () { return leggi(CH.prof, { nome: '', tel: '', email: '' }); },
-    salva: function (d) { scrivi(CH.prof, { nome: testo(d.nome), tel: testo(d.tel), email: testo(d.email) }); }
+    leggi: function () { var p = leggi(CH.prof, {}); return { nome: p.nome || '', tel: p.tel || '', email: p.email || '', foto: p.foto || '' }; },
+    salva: function (d) {
+      var p = leggi(CH.prof, {}), n = { nome: p.nome || '', tel: p.tel || '', email: p.email || '', foto: p.foto || '' };
+      ['nome', 'tel', 'email'].forEach(function (k) { if (d[k] !== undefined) n[k] = testo(d[k]); });
+      if (d.foto !== undefined) n.foto = /^data:image\/(jpeg|png|webp);base64,/.test(d.foto) && d.foto.length < 300000 ? d.foto : '';
+      scrivi(CH.prof, n);
+    }
   };
 
   function azzera() { Object.keys(CH).forEach(function (n) { try { localStorage.removeItem(CH[n]); } catch (e) {} delete memoria[CH[n]]; }); cambiato(); }
@@ -80,7 +86,14 @@
   function testata() {
     var n = carrello.conta(), p = pref.tutti().length;
     document.querySelectorAll('.js-carrello-n').forEach(function (s) { s.textContent = n; });
-    document.querySelectorAll('a[href$="#carrello"]').forEach(function (a) { a.setAttribute('aria-label', 'Carrello, ' + n + (n === 1 ? ' prodotto' : ' prodotti')); });
+    document.querySelectorAll('a[href="carrello.html"]').forEach(function (a) { a.setAttribute('aria-label', 'Carrello, ' + n + (n === 1 ? ' prodotto' : ' prodotti')); });
+    // l'icona dell'account mostra la foto del profilo, se c'è
+    var foto = profilo.leggi().foto;
+    document.querySelectorAll('a[href="profilo.html"][aria-label="Il tuo profilo"]').forEach(function (a) {
+      var svg = a.querySelector('svg');
+      a.style.backgroundImage = foto ? 'url("' + foto + '")' : ''; a.style.backgroundSize = 'cover'; a.style.backgroundPosition = 'center';
+      if (svg) svg.style.display = foto ? 'none' : '';
+    });
     document.querySelectorAll('.js-pref-n').forEach(function (s) { s.textContent = p; s.hidden = !p; });
     document.querySelectorAll('a[href$="#preferiti"][aria-label]').forEach(function (a) { a.setAttribute('aria-label', 'Preferiti' + (p ? ', ' + p : '')); });
   }
