@@ -343,6 +343,38 @@
         </table>
       </div>
     </section>
+
+    <section id="chiedicelo" class="mt-6 lg:mt-8 grid grid-cols-1 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] gap-6 lg:gap-10 rounded-2xl border-2 border-brand-lime/60 bg-[#0d0724]/95 p-6 sm:p-8 shadow-[6px_6px_0_#5B21B6] scroll-mt-28">
+      <div class="min-w-0">
+        <span class="-rotate-2 inline-block bg-brand-lime text-black px-3 py-1 rounded font-heavy text-[11px] uppercase tracking-wider shadow-brutal-violet mb-3">Chiedicelo</span>
+        <h2 class="font-heavy text-2xl sm:text-3xl text-white leading-tight">Non lo trovi? <span class="text-brand-lime">Chiedicelo.</span></h2>
+        <p class="mt-3 text-sm sm:text-base font-semibold text-brand-muted leading-relaxed">Dicci quale fumetto, gioco o manuale cerchi: verifichiamo se possiamo procurartelo e ti ricontattiamo.</p>
+        <p class="mt-4 text-sm font-semibold text-brand-muted leading-relaxed">Preferisci parlarne a voce? Chiamaci allo <a class="text-white underline hover:text-brand-lime" href="tel:+390883884567">0883 884567</a> negli orari di apertura.</p>
+      </div>
+      <form id="chiedicelo-form" class="min-w-0 space-y-4" novalidate>
+        <div><label for="ch-cosa" class="block font-heavy text-xs uppercase tracking-widest text-brand-lime mb-2">Cosa cerchi</label>
+          <textarea id="ch-cosa" name="cosa" rows="3" maxlength="300" required class="campo-profilo !rounded-2xl resize-y" placeholder="Titolo, gioco o manuale (anche il volume o l'edizione)"></textarea></div>
+        <div><label for="ch-cat" class="block font-heavy text-xs uppercase tracking-widest text-brand-lime mb-2">Di che categoria è <span class="normal-case tracking-normal font-semibold text-brand-muted">(facoltativo)</span></label>
+          <select id="ch-cat" name="categoria" class="campo-profilo">
+            <option value="">Non so / altro</option><option>Manga e fumetti</option><option>TCG</option><option>Giochi da tavolo</option><option>Giochi di ruolo</option><option>Figure e Funko</option><option>Warhammer</option><option>Gadget</option>
+          </select></div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div><label for="ch-nome" class="block font-heavy text-xs uppercase tracking-widest text-brand-lime mb-2">Il tuo nome</label>
+            <input id="ch-nome" name="nome" type="text" maxlength="40" autocomplete="given-name" required class="campo-profilo" placeholder="Come ti chiami"></div>
+          <div><label for="ch-contatto" class="block font-heavy text-xs uppercase tracking-widest text-brand-lime mb-2">Telefono o email</label>
+            <input id="ch-contatto" name="contatto" type="text" maxlength="80" autocomplete="tel" required class="campo-profilo" placeholder="Per risponderti"></div>
+        </div>
+        <div class="absolute -left-[9999px] w-px h-px overflow-hidden" aria-hidden="true"><label>Non compilare questo campo <input type="text" name="sito" tabindex="-1" autocomplete="off"></label></div>
+        <label class="flex items-start gap-3 text-sm font-semibold text-brand-muted leading-snug cursor-pointer">
+          <input id="ch-privacy" name="privacy" type="checkbox" required class="mt-0.5 w-5 h-5 shrink-0 rounded border-white/30 bg-[#120a2e] text-brand-lime focus:ring-brand-lime">
+          <span>Accetto che Area 51 usi questi dati solo per rispondere a questa richiesta. <a class="text-white underline hover:text-brand-lime" href="#privacy">Informativa sulla privacy</a></span>
+        </label>
+        <div class="flex flex-wrap items-center gap-3">
+          <button type="submit" class="bg-brand-lime text-black font-heavy text-sm px-6 py-3 rounded-full shadow-brutal-violet hover:bg-[#a6d420] transition-colors">Invia la richiesta</button>
+          <p id="ch-esito" role="status" class="text-sm font-bold text-brand-lime"></p>
+        </div>
+      </form>
+    </section>
   </div>
 </main>
 
@@ -361,7 +393,7 @@
         </address>
       </div>
       <nav aria-label="Area 51"><h3 class="font-heavy text-white text-xs uppercase tracking-wider mb-2">Area 51</h3>
-        <ul class="space-y-1.5 font-semibold"><li><a class="hover:text-brand-lime" href="negozio.html">Il negozio</a></li><li><a class="hover:text-brand-lime" href="index.html#club">Area 51 Club</a></li><li><a class="hover:text-brand-lime" href="eventi.html">Eventi</a></li><li><a class="hover:text-brand-lime" href="catalogo.html?stato=preordine">Preordini</a></li><li><a class="hover:text-brand-lime" href="negozio.html#contatti">Chiedicelo</a></li></ul></nav>
+        <ul class="space-y-1.5 font-semibold"><li><a class="hover:text-brand-lime" href="negozio.html">Il negozio</a></li><li><a class="hover:text-brand-lime" href="index.html#club">Area 51 Club</a></li><li><a class="hover:text-brand-lime" href="eventi.html">Eventi</a></li><li><a class="hover:text-brand-lime" href="catalogo.html?stato=preordine">Preordini</a></li><li><a class="hover:text-brand-lime" href="negozio.html#chiedicelo">Chiedicelo</a></li></ul></nav>
       <nav aria-label="Parliamone"><h3 class="font-heavy text-white text-xs uppercase tracking-wider mb-2">Parliamone</h3>
         <ul class="space-y-1.5 font-semibold"><li><a class="hover:text-brand-lime" href="profilo.html">Il tuo profilo</a></li><li><a class="hover:text-brand-lime" href="profilo.html#preferiti">Preferiti</a></li><li><a class="hover:text-brand-lime" href="#aiuto">Ritiro e domande</a></li><li><a class="hover:text-brand-lime" href="#privacy">Privacy</a></li></ul></nav>
     </div>
@@ -648,6 +680,32 @@
   inp.addEventListener('input', mostra);
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !p.hidden) chiudiP(); });
   document.addEventListener('click', function (e) { if (!p.hidden && !p.contains(e.target) && !(btn && btn.contains(e.target)) && !(btnM && btnM.contains(e.target))) chiudiP(); });
+})();
+</script>
+<script>
+/* Chiedicelo: modulo pronto ma NON collegato. Per attivarlo basta scrivere in INVIO l'indirizzo del servizio
+   (per esempio Formspree o Web3Forms, che girano le richieste all'email del negozio). Finché è vuoto non parte niente. */
+(function () {
+  var INVIO = '';
+  var f = document.getElementById('chiedicelo-form'), es = document.getElementById('ch-esito');
+  var pre = new URLSearchParams(location.search).get('cosa');
+  if (pre) document.getElementById('ch-cosa').value = pre.slice(0, 300);
+  function errore(msg, campo) { es.className = 'text-sm font-bold text-[#FB923C]'; es.textContent = msg; if (campo) campo.focus(); }
+  f.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var cosa = f.cosa, nome = f.nome, contatto = f.contatto, c = contatto.value.trim();
+    if (!cosa.value.trim()) return errore('Scrivi cosa cerchi.', cosa);
+    if (!nome.value.trim()) return errore('Scrivi il tuo nome.', nome);
+    if (!/^\+?[\d\s().-]{6,}$/.test(c) && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(c)) return errore('Scrivi un telefono o un’email per risponderti.', contatto);
+    if (!f.privacy.checked) return errore('Serve il consenso per poterti rispondere.', f.privacy);
+    if (f.sito.value) return; /* campo trappola: solo i robot lo compilano */
+    es.className = 'text-sm font-bold text-brand-lime';
+    if (!INVIO) { es.textContent = 'Modulo di prova: non è ancora collegato, nessun dato è stato inviato. Per ora chiama lo 0883 884567.'; return; }
+    es.textContent = 'Invio…';
+    fetch(INVIO, { method: 'POST', headers: { Accept: 'application/json' }, body: new FormData(f) })
+      .then(function (r) { if (!r.ok) throw 0; f.reset(); es.textContent = 'Ricevuto! Ti ricontattiamo appena sappiamo se riusciamo a procurarlo.'; })
+      .catch(function () { errore('Non sono riuscito a inviare. Riprova o chiama lo 0883 884567.'); });
+  });
 })();
 </script>
 </body>
