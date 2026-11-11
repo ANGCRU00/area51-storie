@@ -554,7 +554,7 @@
     ['pittura', 'strumenti', 'Pennello [TIPO]', 7], ['pittura', 'strumenti', 'Colla [TIPO]', 6]
   ].forEach(function (r) {
     n++;
-    var preordine = (n % 9 === 0), novita = !preordine && (n % 4 === 1), disponibile = !preordine && (n % 7 !== 3);
+    var preordine = (n % 9 === 0) || n === 8, novita = !preordine && (n % 4 === 1), disponibile = !preordine && (n % 7 !== 3);
     PRODOTTI.push({
       id: n, titolo: r[2], linea: r[0], prezzo: r[3],
       attr: { prodotto: [r[1]] },

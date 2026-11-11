@@ -553,7 +553,7 @@
     ['tappeti', 'misura', ['grande'], 'Tappeto [DISEGNO]', 110]
   ].forEach(function (r) {
     n++;
-    var preordine = (n % 9 === 0), novita = !preordine && (n % 4 === 1), disponibile = !preordine && (n % 7 !== 3);
+    var preordine = (n % 9 === 0) || n === 8, novita = !preordine && (n % 4 === 1), disponibile = !preordine && (n % 7 !== 3);
     var attr = {}; attr[r[1]] = r[2];
     PRODOTTI.push({
       id: n, titolo: r[3], linea: r[0], prezzo: r[4], attr: attr,
