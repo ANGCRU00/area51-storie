@@ -63,7 +63,7 @@
 /* Telefono: i link di testo del piede e del percorso hanno un'area di tocco più alta */
 @media (max-width:767px) {
   footer nav a, footer address a, nav[aria-label="Percorso"] a { display:inline-block; padding-block:.45rem; }
-  footer ul.space-y-3 > li + li { margin-top:0 !important; }
+  footer ul > li + li { margin-top:0 !important; }
 }
 /* Pagina prodotto: tutto al 95% (come uno zoom del browser al 95%) */
 .scala-95 { zoom:.95; }
