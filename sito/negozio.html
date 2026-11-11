@@ -8,6 +8,7 @@
 <meta name="description" content="Fumetteria Area 51 a Barletta, Viale G. Falcone e P. Borsellino 35: orari di apertura, mappa e come ritirare i tuoi ordini.">
 <link rel="stylesheet" href="css/style.css">
 <link rel="preload" href="fonts/archivo.woff2" as="font" type="font/woff2" crossorigin>
+<script src="js/area51.js"></script>
 </head>
 <body class="text-brand-text font-body overflow-x-hidden antialiased relative selection:bg-brand-lime selection:text-black">
 
@@ -249,13 +250,14 @@
       <button type="button" aria-label="Cerca prodotti" class="max-[359px]:hidden w-11 h-11 rounded-full border border-white/15 hover:border-brand-lime flex items-center justify-center hover:text-brand-lime transition-colors">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-linecap="round" stroke-width="2"/></svg>
       </button>
-      <button type="button" aria-label="Lista desideri" class="hidden sm:flex w-11 h-11 rounded-full border border-white/15 hover:border-brand-lime items-center justify-center hover:text-brand-lime transition-colors">
+      <a href="profilo.html#preferiti" aria-label="Preferiti" class="relative hidden sm:flex w-11 h-11 rounded-full border border-white/15 hover:border-brand-lime items-center justify-center hover:text-brand-lime transition-colors">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M4.3 6.3a4.5 4.5 0 000 6.4L12 20.4l7.7-7.7a4.5 4.5 0 00-6.4-6.4L12 7.6l-1.3-1.3a4.5 4.5 0 00-6.4 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/></svg>
-      </button>
-      <a href="#account" aria-label="Il tuo account" class="hidden sm:flex w-11 h-11 rounded-full border border-white/15 hover:border-brand-lime items-center justify-center hover:text-brand-lime transition-colors">
+        <span class="js-pref-n absolute -top-1 -right-1 min-w-[1.1rem] h-[1.1rem] px-1 rounded-full bg-brand-lime text-black font-heavy text-[10px] leading-[1.1rem] text-center" hidden>0</span>
+      </a>
+      <a href="profilo.html" aria-label="Il tuo profilo" class="hidden sm:flex w-11 h-11 rounded-full border border-white/15 hover:border-brand-lime items-center justify-center hover:text-brand-lime transition-colors">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 11a4 4 0 100-8 4 4 0 000 8zM4 21v-1a6 6 0 016-6h4a6 6 0 016 6v1" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/></svg>
       </a>
-      <a id="carrello" class="whitespace-nowrap bg-brand-lime text-black font-heavy text-xs px-3.5 sm:px-4 py-3 rounded-full flex items-center gap-2 shadow-brutal-violet" href="#carrello" aria-label="Carrello, 0 prodotti">
+      <a id="carrello" class="whitespace-nowrap bg-brand-lime text-black font-heavy text-xs px-3.5 sm:px-4 py-3 rounded-full flex items-center gap-2 shadow-brutal-violet" href="profilo.html#carrello" aria-label="Carrello, 0 prodotti">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"/></svg>
         <span class="hidden sm:inline">Carrello · <span class="js-carrello-n">0</span></span><span class="sm:hidden js-carrello-n">0</span>
       </a>
@@ -278,6 +280,7 @@
       <a class="px-4 py-3 rounded-xl bg-white/5" href="gadget.html">Gadget</a>
       <a class="px-4 py-3 rounded-xl bg-white/5" href="eventi.html">Eventi</a>
       <a class="px-4 py-3 rounded-xl border border-brand-lime text-brand-lime text-center" href="negozio.html">Il negozio ↗</a>
+      <a href="profilo.html" class="col-span-2 px-4 py-3 rounded-xl bg-white/5">Il tuo profilo</a>
     </div>
   </nav>
   <!-- Ricerca: si apre dalla lente; suggerisce le serie mentre si scrive, invio apre il catalogo -->
@@ -360,7 +363,7 @@
       <nav aria-label="Area 51"><h3 class="font-heavy text-white text-xs uppercase tracking-wider mb-2">Area 51</h3>
         <ul class="space-y-1.5 font-semibold"><li><a class="hover:text-brand-lime" href="negozio.html">Il negozio</a></li><li><a class="hover:text-brand-lime" href="index.html#club">Area 51 Club</a></li><li><a class="hover:text-brand-lime" href="eventi.html">Eventi</a></li><li><a class="hover:text-brand-lime" href="catalogo.html?stato=preordine">Preordini</a></li><li><a class="hover:text-brand-lime" href="negozio.html#contatti">Chiedicelo</a></li></ul></nav>
       <nav aria-label="Parliamone"><h3 class="font-heavy text-white text-xs uppercase tracking-wider mb-2">Parliamone</h3>
-        <ul class="space-y-1.5 font-semibold"><li><a class="hover:text-brand-lime" href="#account">Il tuo account</a></li><li><a class="hover:text-brand-lime" href="#wishlist">Wishlist</a></li><li><a class="hover:text-brand-lime" href="#aiuto">Ritiro e domande</a></li><li><a class="hover:text-brand-lime" href="#privacy">Privacy</a></li></ul></nav>
+        <ul class="space-y-1.5 font-semibold"><li><a class="hover:text-brand-lime" href="profilo.html">Il tuo profilo</a></li><li><a class="hover:text-brand-lime" href="profilo.html#preferiti">Preferiti</a></li><li><a class="hover:text-brand-lime" href="#aiuto">Ritiro e domande</a></li><li><a class="hover:text-brand-lime" href="#privacy">Privacy</a></li></ul></nav>
     </div>
     <div class="pt-4 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-brand-muted/80">
       <p>© 2026 Fumetteria Area 51 · Barletta</p>
@@ -530,8 +533,8 @@
     <h2 id="modale-titolo" class="font-heavy text-2xl text-white mt-3">Sei già dei nostri?</h2>
     <p id="modale-testo" class="text-brand-muted mt-3 leading-relaxed">Accedi al tuo account oppure registrati: salvi la lista desideri, prenoti le novità e ritiri in negozio senza ripetere i tuoi dati.</p>
     <div class="mt-6 grid gap-3 sm:grid-cols-2">
-      <a href="#registrati" class="bg-brand-lime text-black font-heavy text-sm px-5 py-3.5 rounded-full shadow-brutal-violet hover:bg-[#a6d420] transition-colors">Registrati</a>
-      <a href="#account" class="border-2 border-brand-violet hover:border-brand-lime text-white font-heavy text-sm px-5 py-3 rounded-full transition-colors">Accedi</a>
+      <a href="profilo.html" class="bg-brand-lime text-black font-heavy text-sm px-5 py-3.5 rounded-full shadow-brutal-violet hover:bg-[#a6d420] transition-colors">Registrati</a>
+      <a href="profilo.html" class="border-2 border-brand-violet hover:border-brand-lime text-white font-heavy text-sm px-5 py-3 rounded-full transition-colors">Accedi</a>
     </div>
   </div>
 </div>
