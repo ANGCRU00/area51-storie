@@ -293,12 +293,21 @@
         <span class="w-2 h-2 rounded-full bg-black"></span>Avvistamento confermato
       </span>
       <h1 class="font-heavy text-[2.6rem] sm:text-6xl lg:text-7xl leading-[1.02] text-white">Storie di un altro <span class="text-brand-lime">pianeta.</span></h1>
-      <p class="text-lg sm:text-xl text-brand-muted max-w-xl leading-relaxed">Manga da divorare. Mondi da esplorare. Piccole ossessioni da portare a casa.</p>
+      <ul id="hero-info" class="w-full max-w-xl space-y-2.5">
+        <li><a id="hi-orari" href="negozio.html" class="flex items-center gap-3 rounded-xl border border-white/10 bg-[#120a2e]/80 hover:border-brand-lime px-4 py-3 transition-colors">
+          <svg class="w-6 h-6 shrink-0 text-brand-lime" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+          <span class="min-w-0"><b class="block font-heavy text-sm sm:text-base text-white">Orari e mappa</b><span class="block text-xs sm:text-sm font-semibold text-brand-muted">Viale G. Falcone e P. Borsellino, 35, Barletta</span></span></a></li>
+        <li><a id="hi-evento" href="eventi.html" class="flex items-center gap-3 rounded-xl border border-white/10 bg-[#120a2e]/80 hover:border-brand-lime px-4 py-3 transition-colors">
+          <svg class="w-6 h-6 shrink-0 text-brand-lime" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M8 3v4M16 3v4M3 10h18"/></svg>
+          <span class="min-w-0"><b class="block font-heavy text-sm sm:text-base text-white">Prossimo evento</b><span class="block text-xs sm:text-sm font-semibold text-brand-muted">Tornei, serate e avventure in negozio</span></span></a></li>
+        <li><a id="hi-arrivo" href="catalogo.html" class="flex items-center gap-3 rounded-xl border border-white/10 bg-[#120a2e]/80 hover:border-brand-lime px-4 py-3 transition-colors">
+          <svg class="w-6 h-6 shrink-0 text-brand-lime" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5a2 2 0 012-2h12v18H6a2 2 0 01-2-2V5z"/><path d="M8 3v18"/></svg>
+          <span class="min-w-0"><b class="block font-heavy text-sm sm:text-base text-white">Ultimo arrivo</b><span class="block text-xs sm:text-sm font-semibold text-brand-muted">Guarda le novità del catalogo</span></span></a></li>
+      </ul>
       <div class="flex flex-wrap items-center gap-4 pt-1">
         <a class="bg-brand-lime text-black font-heavy text-sm sm:text-base px-7 py-4 rounded-full flex items-center gap-2 shadow-brutal-violet hover:bg-[#a6d420] transition-colors" href="catalogo.html">Esplora gli scaffali <span aria-hidden="true">→</span></a>
         <a class="border-2 border-brand-violet hover:border-brand-lime bg-[#130d31]/80 text-white font-heavy text-sm sm:text-base px-6 py-3.5 rounded-full transition-colors" href="negozio.html">Vieni a trovarci <span class="text-brand-lime" aria-hidden="true">↗</span></a>
       </div>
-      <p class="text-sm text-brand-muted/90">Per lettori, giocatori, collezionisti. E terrestri curiosi.</p>
     </div>
 
     <div class="lg:col-span-5 relative flex flex-col items-center">
@@ -470,7 +479,7 @@
   function scheda(r, i, tipo) {
     var pre = tipo === 'prossime', link = 'prodotto.html?cat=catalogo&ean=' + r[0];
     return '<article class="' + (i >= 4 ? 'max-sm:hidden ' : '') + 'bg-[#0e0926]/90 rounded-2xl border border-white/10 p-3 hover:border-brand-lime transition-colors flex flex-col justify-between group">' +
-      '<a href="' + link + '" class="block">' +
+      '<a href="' + link + '" data-ean="' + r[0] + '" class="block">' +
         '<div class="relative aspect-[3/4] rounded-xl overflow-hidden mb-3 bg-[#120a2e]">' +
           '<img class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" src="img/copertine/' + r[0] + '.webp" alt="Copertina di ' + esc(r[1]) + '" width="220" height="320" loading="lazy" decoding="async">' +
           '<span class="absolute top-2 left-2 ' + (pre ? 'bg-brand-violet text-white' : 'bg-brand-lime text-black') + ' font-heavy text-[10px] px-2.5 py-0.5 rounded -rotate-2">' + (pre ? 'PREORDINE' : 'NOVITÀ') + '</span>' +
@@ -480,7 +489,7 @@
         '<p class="mt-1.5 text-[11px] sm:text-xs font-semibold text-brand-muted">' + (pre ? 'Esce ' : 'Uscito ') + (r[9] ? 'il ' : 'a ') + esc(dataTesto(r)) + '</p>' +
       '</a>' +
       '<div class="flex flex-wrap items-center justify-between gap-2 mt-3 pt-3 border-t border-white/10"><span class="font-heavy text-base sm:text-lg text-brand-lime">' + euro(r[7]) + '</span>' +
-      '<a href="' + link + '" class="' + (pre ? 'bg-brand-violet hover:bg-brand-violetGlow text-white' : 'hover:bg-brand-lime hover:text-black border border-white/25 hover:border-brand-lime') + ' font-heavy text-xs px-4 py-2.5 rounded-full transition-colors">' + (pre ? 'Prenota' : 'Vedi scheda') + '</a></div>' +
+      '<a href="' + link + '" data-ean="' + r[0] + '" class="' + (pre ? 'bg-brand-violet hover:bg-brand-violetGlow text-white' : 'hover:bg-brand-lime hover:text-black border border-white/25 hover:border-brand-lime') + ' font-heavy text-xs px-4 py-2.5 rounded-full transition-colors">' + (pre ? 'Prenota' : 'Vedi scheda') + '</a></div>' +
     '</article>';
   }
   function disegna(tipo) {
@@ -520,6 +529,125 @@
       '</a></li>';
     }).join('');
   }
+})();
+</script>
+<script src="dati/trame.js"></script>
+<script>
+/* Home: le tre informazioni in alto (aperto ora, prossimo evento, ultimo arrivo) e il modale del prodotto.
+   Parte a pagina caricata: il modale sta in fondo alla pagina, dopo gli script. */
+(function () {
+  function avvia() {
+  var MESI = ['gennaio', 'febbraio', 'marzo', 'aprile', 'maggio', 'giugno', 'luglio', 'agosto', 'settembre', 'ottobre', 'novembre', 'dicembre'];
+  var GIORNI = ['domenica', 'lunedì', 'martedì', 'mercoledì', 'giovedì', 'venerdì', 'sabato'];
+  var EDITORI = { star: 'Star Comics', jpop: 'J-POP', panini: 'Panini Comics' };
+  var EDIZIONI = { standard: 'Standard', variant: 'Variant', deluxe: 'Deluxe', box: 'Cofanetto' };
+  var D = window.CATALOGO_DATI || [], E = window.EVENTI_DATI || [];
+  function $(id) { return document.getElementById(id); }
+  function el(tag, cls, testo) { var e = document.createElement(tag); if (cls) e.className = cls; if (testo != null) e.textContent = testo; return e; }
+  function euro(x) { return x.toFixed(2).replace('.', ',') + ' €'; }
+  function quando(r) { return r[8] ? new Date(r[8] + 'T00:00:00').getTime() : 0; }
+  function dataTesto(r) { var q = quando(r); if (!q) return ''; var d = new Date(q); return (r[9] ? d.getDate() + ' ' : '') + MESI[d.getMonth()] + ' ' + d.getFullYear(); }
+
+  /* ---------- Orari (gli stessi della pagina del negozio) ---------- */
+  var MS = [['09:30', '13:00'], ['17:00', '20:30']];
+  var ORARI = [null, [['17:00', '20:30']], MS, MS, MS, MS, MS];
+  function minuti(h) { var p = h.split(':'); return Number(p[0]) * 60 + Number(p[1]); }
+  function breve(h) { var p = h.split(':'); return String(Number(p[0])) + (p[1] === '00' ? '' : ':' + p[1]); }
+  function fasce(g) { return ORARI[g] ? ORARI[g].map(function (f) { return breve(f[0]) + '–' + breve(f[1]); }).join(' e ') : 'chiuso'; }
+  function stato() {
+    var d = new Date(), g = d.getDay(), m = d.getHours() * 60 + d.getMinutes(), oggi = ORARI[g] || [], i;
+    for (i = 0; i < oggi.length; i++) if (m >= minuti(oggi[i][0]) && m < minuti(oggi[i][1])) return { aperto: true, testo: 'Aperto ora, chiude alle ' + breve(oggi[i][1]) };
+    for (i = 0; i < oggi.length; i++) if (m < minuti(oggi[i][0])) return { aperto: false, testo: 'Chiuso, riapre oggi alle ' + breve(oggi[i][0]) };
+    for (var k = 1; k <= 7; k++) { var gg = (g + k) % 7; if (ORARI[gg]) return { aperto: false, testo: 'Chiuso, riapre ' + (k === 1 ? 'domani' : GIORNI[gg]) + ' alle ' + breve(ORARI[gg][0][0]) }; }
+    return { aperto: false, testo: 'Chiuso' };
+  }
+  function riga(id, titolo, sotto, puntoColore) {
+    var a = $(id); if (!a) return;
+    var b = a.querySelector('b'), s = a.querySelector('span span:last-child');
+    b.textContent = ''; if (puntoColore) { var p = el('span', 'inline-block w-2 h-2 rounded-full mr-2 align-middle ' + puntoColore); p.setAttribute('aria-hidden', 'true'); b.appendChild(p); }
+    b.appendChild(document.createTextNode(titolo)); s.textContent = sotto;
+  }
+  function orari() { var s = stato(), g = new Date().getDay(); riga('hi-orari', s.testo, GIORNI[g].charAt(0).toUpperCase() + GIORNI[g].slice(1) + ' ' + fasce(g), s.aperto ? 'bg-brand-lime' : 'bg-[#FB923C]'); }
+  orari(); setInterval(orari, 60000);
+
+  /* ---------- Prossimo evento ---------- */
+  var NM = { Gen: 0, Feb: 1, Mar: 2, Apr: 3, Mag: 4, Giu: 5, Lug: 6, Ago: 7, Set: 8, Ott: 9, Nov: 10, Dic: 11 };
+  if (E.length) {
+    var oggi0 = new Date(); oggi0.setHours(0, 0, 0, 0);
+    var ev = E.map(function (r) { return { r: r, d: new Date(2026, NM[r[6]], r[5]).getTime() }; }).sort(function (a, b) { return a.d - b.d || a.r[7].localeCompare(b.r[7]); });
+    var pross = ev.filter(function (x) { return x.d >= oggi0.getTime(); }), e = (pross[0] || ev[0]).r;
+    riga('hi-evento', e[3], e[4] + ' ' + e[5] + ' ' + e[6] + ', ore ' + e[7] + ' · ' + (e[8] ? 'quota ' + e[8] + ' €' : 'gratis'));
+  }
+
+  /* ---------- Modale del prodotto ---------- */
+  var M = $('modale-prodotto'); if (!M) return;
+  var chiudi = $('mp-chiudi'), ultimo = null, scroll = '', nCarrello = 0, tempo = 0;
+  function trova(ean) { for (var i = 0; i < D.length; i++) if (D[i][0] === ean) return D[i]; return null; }
+  function apriProdotto(ean) {
+    var r = trova(ean); if (!r) return false;
+    var q = quando(r), ora = Date.now(), pre = q > ora, nov = !pre && q > 0 && ora - q <= 60 * 864e5;
+    $('mp-editore').textContent = (EDITORI[r[4]] || r[4]) + (r[6] !== 'standard' ? ' · ' + EDIZIONI[r[6]] : '');
+    $('mp-titolo').textContent = r[2]; $('mp-volume').textContent = r[3] ? 'Volume ' + r[3] : ''; $('mp-volume').hidden = !r[3];
+    var im = $('mp-img'); im.alt = 'Copertina di ' + r[1]; im.hidden = !r[10]; if (r[10]) im.src = 'img/copertine/' + r[0] + '.webp'; else im.removeAttribute('src');
+    var et = $('mp-et'); et.textContent = pre ? 'PREORDINE' : nov ? 'NOVITÀ' : ''; et.hidden = !(pre || nov);
+    et.className = 'absolute top-2 left-2 font-heavy text-[10px] px-2.5 py-0.5 rounded -rotate-2 ' + (pre ? 'bg-brand-violet text-white' : 'bg-brand-lime text-black');
+    var dati = [['Uscita', dataTesto(r) || '—'], ['Edizione', EDIZIONI[r[6]]], ['Autore', r[11] || ''], ['Pagine', r[12] ? String(r[12]) : ''], ['EAN', r[0]]].filter(function (v) { return v[1]; });
+    var dl = $('mp-dati'); dl.textContent = '';
+    dati.forEach(function (v) { var d = el('div'); d.appendChild(el('dt', 'text-[10px] font-heavy uppercase tracking-widest text-brand-muted mb-0.5', v[0])); d.appendChild(el('dd', 'font-bold text-white', v[1])); dl.appendChild(d); });
+    $('mp-prezzo').textContent = euro(r[7]);
+    $('mp-disp').textContent = pre ? 'Preordine · esce ' + dataTesto(r) : 'Disponibile in negozio';
+    var tr = (window.TRAME || {})[r[2].toLowerCase()], bx = $('mp-trama'); bx.textContent = ''; bx.hidden = !tr;
+    if (tr) tr.slice(0, 2).forEach(function (par) { bx.appendChild(el('p', '', par)); });
+    var az = $('mp-azione'); az.textContent = pre ? 'Prenota' : 'Aggiungi al carrello';
+    az.className = 'font-heavy text-sm px-7 py-3.5 rounded-full transition-colors ' + (pre ? 'bg-brand-violet text-white hover:bg-brand-violetGlow' : 'bg-brand-lime text-black shadow-brutal-violet hover:bg-[#a6d420]');
+    az.dataset.pre = pre ? '1' : ''; $('mp-esito').textContent = '';
+    $('mp-scheda').href = 'prodotto.html?cat=catalogo&ean=' + r[0];
+    ultimo = document.activeElement; scroll = document.body.style.overflow;
+    M.hidden = false; document.body.style.overflow = 'hidden'; M.querySelector('[role=dialog]').scrollTop = 0; chiudi.focus();
+    return true;
+  }
+  function chiudiProdotto() {
+    if (M.hidden) return; M.hidden = true; document.body.style.overflow = scroll;
+    if (ultimo && ultimo.focus) ultimo.focus();
+  }
+  window.apriProdotto = apriProdotto;
+  chiudi.addEventListener('click', chiudiProdotto);
+  M.addEventListener('click', function (e) { if (e.target === M) chiudiProdotto(); });
+  document.addEventListener('keydown', function (e) {
+    if (M.hidden) return;
+    if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); chiudiProdotto(); return; }
+    if (e.key === 'Tab') {
+      var f = Array.prototype.slice.call(M.querySelectorAll('button, a[href]')).filter(function (x) { return x.offsetParent; }), a = f[0], z = f[f.length - 1];
+      if (e.shiftKey && document.activeElement === a) { e.preventDefault(); z.focus(); } else if (!e.shiftKey && document.activeElement === z) { e.preventDefault(); a.focus(); }
+    }
+  }, true);
+  $('mp-azione').addEventListener('click', function () {
+    var pre = this.dataset.pre === '1', es = $('mp-esito');
+    if (pre) { es.textContent = 'Prenotazione di esempio: il servizio vero arriverà con il negozio online.'; return; }
+    nCarrello++;
+    var c = document.querySelector('a[href="#carrello"]');
+    if (c) { c.setAttribute('aria-label', 'Carrello, ' + nCarrello + ' prodotti'); var sp = c.querySelectorAll('span'); sp.forEach(function (s) { if (/Carrello/.test(s.textContent)) s.textContent = 'Carrello · ' + nCarrello; else if (/^\d+$/.test(s.textContent)) s.textContent = nCarrello; }); }
+    this.textContent = 'Aggiunto ✓'; clearTimeout(tempo); var b = this; tempo = setTimeout(function () { b.textContent = 'Aggiungi al carrello'; }, 1800);
+    es.textContent = 'Aggiunto al carrello (dimostrazione).';
+  });
+  // clic su una scheda (o sull'ultimo arrivo): si apre il modale; con Ctrl o Cmd resta il link normale
+  document.addEventListener('click', function (e) {
+    var a = e.target.closest ? e.target.closest('a[data-ean]') : null;
+    if (!a || e.ctrlKey || e.metaKey || e.shiftKey || e.button) return;
+    if (apriProdotto(a.dataset.ean)) e.preventDefault();
+  });
+
+  /* ---------- Ultimo arrivo (apre il modale) ---------- */
+  var ora1 = Date.now(), ult = null;
+  D.forEach(function (r) { var q = quando(r); if (r[10] === 1 && q && q <= ora1 && (!ult || q > quando(ult))) ult = r; });
+  var ar = $('hi-arrivo');
+  if (ar && ult) {
+    ar.href = 'prodotto.html?cat=catalogo&ean=' + ult[0]; ar.dataset.ean = ult[0];
+    var ic = ar.querySelector('svg'); var img = el('img', 'w-9 h-[3.4rem] shrink-0 rounded object-cover'); img.src = 'img/copertine/' + ult[0] + '.webp'; img.alt = ''; img.width = 36; img.height = 54; ar.replaceChild(img, ic);
+    riga('hi-arrivo', ult[1], 'Ultimo arrivo · uscito il ' + dataTesto(ult));
+  }
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', avvia); else avvia();
 })();
 </script>
 <script>
@@ -628,6 +756,38 @@
   if (!ridotto) requestAnimationFrame(passo);
 })();
 </script>
+<!-- Modale prodotto: si apre dalle schede di Nuovi arrivi e Prossime uscite senza lasciare la home; si chiude con la X, con Esc o toccando lo sfondo -->
+<div id="modale-prodotto" hidden class="fixed inset-0 z-[85] flex items-center justify-center p-3 sm:p-4 bg-[#070514]/80 backdrop-blur-sm">
+  <div role="dialog" aria-modal="true" aria-labelledby="mp-titolo" class="animate-modale relative w-full max-w-3xl max-h-[92vh] overflow-y-auto bg-[#0d0724] border-2 border-brand-lime rounded-3xl shadow-[8px_8px_0_#5B21B6] p-5 sm:p-7">
+    <button type="button" id="mp-chiudi" aria-label="Chiudi" class="absolute top-3 right-3 z-10 w-11 h-11 rounded-full bg-[#0d0724] border border-white/15 hover:border-brand-lime hover:text-brand-lime flex items-center justify-center transition-colors">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke-linecap="round" stroke-width="2.4"/></svg>
+    </button>
+    <div class="grid sm:grid-cols-[minmax(0,13rem)_minmax(0,1fr)] gap-5 sm:gap-7">
+      <div class="relative aspect-[2/3] w-36 sm:w-full mx-auto self-start rounded-xl overflow-hidden border border-white/10 bg-[#120a2e]">
+        <img id="mp-img" alt="" width="220" height="320" class="absolute inset-0 w-full h-full object-cover">
+        <span id="mp-et" class="absolute top-2 left-2 font-heavy text-[10px] px-2.5 py-0.5 rounded -rotate-2"></span>
+      </div>
+      <div class="min-w-0 space-y-4 sm:pr-10">
+        <div>
+          <p id="mp-editore" class="text-xs font-bold text-brand-lime tracking-wider uppercase"></p>
+          <h2 id="mp-titolo" class="font-heavy text-2xl sm:text-3xl text-white leading-tight mt-1 uppercase"></h2>
+          <p id="mp-volume" class="font-heavy text-lg text-brand-lime mt-1 uppercase"></p>
+        </div>
+        <dl id="mp-dati" class="grid grid-cols-2 gap-x-5 gap-y-3 rounded-xl border border-white/10 bg-white/[0.03] p-4 text-sm"></dl>
+        <div class="flex flex-wrap items-center gap-x-5 gap-y-2">
+          <span id="mp-prezzo" class="font-heavy text-3xl text-brand-lime leading-none"></span>
+          <p id="mp-disp" class="text-sm font-heavy text-white rounded-full border border-white/15 bg-white/[0.03] px-4 py-2"></p>
+        </div>
+        <div id="mp-trama" hidden class="space-y-3 text-sm font-semibold text-brand-muted leading-relaxed"></div>
+        <div class="flex flex-wrap items-center gap-3">
+          <button type="button" id="mp-azione" class="bg-brand-lime text-black font-heavy text-sm px-7 py-3.5 rounded-full shadow-brutal-violet hover:bg-[#a6d420] transition-colors">Aggiungi al carrello</button>
+          <a id="mp-scheda" href="catalogo.html" class="text-sm font-heavy text-brand-lime hover:underline py-2">Apri la scheda completa →</a>
+        </div>
+        <p id="mp-esito" role="status" class="text-sm font-bold text-brand-lime min-h-[1.25rem]"></p>
+      </div>
+    </div>
+  </div>
+</div>
 <!-- Modale account: compare qualche secondo dopo l'arrivo, si chiude con la X, con Esc o toccando lo sfondo.
      Accedi e Registrati sono segnaposto: il sito non ha ancora un servizio per gli account. -->
 <div id="modale-account" hidden class="fixed inset-0 z-[90] flex items-center justify-center p-4 bg-[#070514]/80 backdrop-blur-sm">
@@ -662,6 +822,8 @@
   }
   function apri() {
     if (mostrata || !m.hidden || giaVisto()) return;
+    var mp = document.getElementById('modale-prodotto');
+    if (mp && !mp.hidden) { setTimeout(apri, 4000); return; }
     mostrata = true;
     precedente = document.activeElement;
     overflow = document.body.style.overflow;
