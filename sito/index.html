@@ -253,6 +253,9 @@
   <!-- Menu da telefono -->
   <nav id="menu-mobile" hidden aria-label="Menu" class="min-[1420px]:hidden border-t border-brand-violet/40 bg-[#0d0724]">
     <div class="max-w-[1440px] mx-auto px-4 py-4 grid grid-cols-2 gap-2 text-base font-semibold">
+      <button type="button" id="cerca-mobile" class="col-span-2 min-[360px]:hidden px-4 py-3 rounded-xl border border-white/15 text-left flex items-center gap-2">
+        <svg class="w-4 h-4 text-brand-lime" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-linecap="round" stroke-width="2"/></svg>Cerca
+      </button>
       <a class="px-4 py-3 rounded-xl bg-white/5" href="catalogo.html">Manga &amp; Fumetti</a>
       <a class="px-4 py-3 rounded-xl bg-white/5" href="tcg.html">TCG</a>
       <a class="px-4 py-3 rounded-xl bg-white/5" href="giochi.html">Giochi da tavolo</a>
@@ -263,6 +266,21 @@
       <a class="px-4 py-3 rounded-xl border border-brand-lime text-brand-lime text-center" href="negozio.html">Il negozio ↗</a>
     </div>
   </nav>
+  <!-- Ricerca: si apre dalla lente; suggerisce le serie mentre si scrive, invio apre il catalogo -->
+  <div id="ricerca" hidden class="absolute inset-x-0 top-full border-b border-brand-violet/40 bg-[#0d0724] shadow-[0_18px_30px_rgba(0,0,0,.45)]">
+    <div class="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-4">
+      <form id="ricerca-form" role="search" action="catalogo.html" method="get" class="flex items-center gap-2 sm:gap-3">
+        <label for="ricerca-input" class="sr-only">Cerca un titolo o un autore</label>
+        <input id="ricerca-input" name="cerca" type="search" autocomplete="off" maxlength="60" placeholder="Cerca un titolo o un autore" class="flex-1 min-w-0 bg-[#120a2e] border border-brand-violet/60 focus:border-brand-lime focus:ring-1 focus:ring-brand-lime text-white placeholder-brand-muted/70 rounded-full px-5 py-3 text-base">
+        <button type="submit" class="shrink-0 bg-brand-lime text-black font-heavy text-sm px-5 sm:px-6 py-3 rounded-full shadow-brutal-violet hover:bg-[#a6d420] transition-colors">Cerca</button>
+        <button type="button" id="ricerca-chiudi" aria-label="Chiudi la ricerca" class="shrink-0 w-11 h-11 rounded-full border border-white/15 hover:border-brand-lime hover:text-brand-lime flex items-center justify-center transition-colors">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke-linecap="round" stroke-width="2.4"/></svg>
+        </button>
+      </form>
+      <ul id="ricerca-risultati" hidden class="mt-4 grid gap-2 sm:grid-cols-2 lg:grid-cols-3"></ul>
+      <p id="ricerca-nota" role="status" class="mt-3 text-xs font-semibold text-brand-muted"></p>
+    </div>
+  </div>
 </header>
 
 <main id="main" class="relative z-10">
@@ -320,45 +338,12 @@
       <h2 class="font-heavy text-3xl sm:text-4xl lg:text-5xl text-white leading-tight">La tua prossima ossessione arriva qui.</h2>
     </div>
   </div>
-  <div class="flex flex-wrap gap-2.5 mb-10" role="group" aria-label="Filtra i nuovi arrivi">
-    <button type="button" aria-pressed="true" class="bg-brand-lime text-black font-heavy text-sm px-5 py-2.5 rounded-full shadow-brutal-violet">Nuovi arrivi</button>
-    <button type="button" aria-pressed="false" class="bg-[#120a2e] hover:text-brand-lime border border-white/15 hover:border-brand-lime font-semibold text-sm px-5 py-2.5 rounded-full transition-colors">Prossime uscite</button>
+  <div class="flex flex-wrap gap-2.5 mb-10" role="group" aria-label="Scegli cosa vedere">
+    <button type="button" id="na-nuovi" aria-pressed="true" class="bg-brand-lime text-black font-heavy text-sm px-5 py-2.5 rounded-full shadow-brutal-violet">Nuovi arrivi</button>
+    <button type="button" id="na-prossime" aria-pressed="false" class="bg-[#120a2e] hover:text-brand-lime border border-white/15 hover:border-brand-lime font-semibold text-sm px-5 py-2.5 rounded-full transition-colors">Prossime uscite</button>
   </div>
-  <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
-    <article class="bg-[#0e0926]/90 rounded-2xl border border-white/10 p-3 hover:border-brand-lime transition-colors flex flex-col justify-between group">
-      <div>
-        <div class="relative h-44 sm:h-64 rounded-xl overflow-hidden mb-3"><img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" src="img/angolo-manga.jpg" alt="Orbita, volume 01"><span class="absolute top-2 left-2 bg-brand-lime text-black font-heavy text-[10px] px-2.5 py-0.5 rounded">NOVITÀ</span></div>
-        <p class="text-[11px] font-bold text-brand-muted tracking-wider uppercase">Manga</p>
-        <h3 class="font-heavy text-sm sm:text-lg text-white mt-1 leading-snug">Orbita. Volume 01</h3>
-      </div>
-      <div class="flex flex-wrap items-center justify-between gap-2 mt-4 pt-3 border-t border-white/10"><span class="font-heavy text-base sm:text-lg text-brand-lime">6,90 €</span><button type="button" class="hover:bg-brand-lime hover:text-black font-heavy text-xs px-4 py-2.5 rounded-full border border-white/25 hover:border-brand-lime transition-colors">Aggiungi</button></div>
-    </article>
-    <article class="bg-[#0e0926]/90 rounded-2xl border border-white/10 p-3 hover:border-brand-lime transition-colors flex flex-col justify-between group">
-      <div>
-        <div class="relative h-44 sm:h-64 rounded-xl overflow-hidden mb-3"><img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" src="img/figure.jpg" alt="Robot 051, figure"><span class="absolute top-2 left-2 bg-brand-lime text-black font-heavy text-[10px] px-2.5 py-0.5 rounded">NOVITÀ</span></div>
-        <p class="text-[11px] font-bold text-brand-muted tracking-wider uppercase">Figure</p>
-        <h3 class="font-heavy text-sm sm:text-lg text-white mt-1 leading-snug">Robot 051</h3>
-      </div>
-      <div class="flex flex-wrap items-center justify-between gap-2 mt-4 pt-3 border-t border-white/10"><span class="font-heavy text-base sm:text-lg text-brand-lime">29,90 €</span><button type="button" class="hover:bg-brand-lime hover:text-black font-heavy text-xs px-4 py-2.5 rounded-full border border-white/25 hover:border-brand-lime transition-colors">Aggiungi</button></div>
-    </article>
-    <article class="bg-[#0e0926]/90 rounded-2xl border border-white/10 p-3 hover:border-brand-lime transition-colors flex flex-col justify-between group">
-      <div>
-        <div class="relative h-44 sm:h-64 rounded-xl overflow-hidden mb-3"><img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" src="img/warhammer.jpg" alt="Scaffale Warhammer"><span class="absolute top-2 left-2 bg-brand-violet text-white font-heavy text-[10px] px-2.5 py-0.5 rounded">PREORDINE</span></div>
-        <p class="text-[11px] font-bold text-brand-muted tracking-wider uppercase">Warhammer</p>
-        <h3 class="font-heavy text-sm sm:text-lg text-white mt-1 leading-snug">[Nome prodotto]</h3>
-      </div>
-      <div class="flex flex-wrap items-center justify-between gap-2 mt-4 pt-3 border-t border-white/10"><span class="font-heavy text-base sm:text-lg text-brand-lime">[Prezzo]</span><button type="button" class="bg-brand-violet hover:bg-brand-violetGlow text-white font-heavy text-xs px-4 py-2.5 rounded-full transition-colors">Prenota</button></div>
-    </article>
-    <article class="bg-[#0e0926]/90 rounded-2xl border border-white/10 p-3 hover:border-brand-lime transition-colors flex flex-col justify-between group">
-      <div>
-        <div class="relative h-44 sm:h-64 rounded-xl overflow-hidden mb-3"><img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" src="img/parete-manga.jpg" alt="Parete dei manga"><span class="absolute top-2 left-2 bg-brand-lime text-black font-heavy text-[10px] px-2.5 py-0.5 rounded">NOVITÀ</span></div>
-        <p class="text-[11px] font-bold text-brand-muted tracking-wider uppercase">Fumetti</p>
-        <h3 class="font-heavy text-sm sm:text-lg text-white mt-1 leading-snug">[Nome prodotto]</h3>
-      </div>
-      <div class="flex flex-wrap items-center justify-between gap-2 mt-4 pt-3 border-t border-white/10"><span class="font-heavy text-base sm:text-lg text-brand-lime">[Prezzo]</span><button type="button" class="hover:bg-brand-lime hover:text-black font-heavy text-xs px-4 py-2.5 rounded-full border border-white/25 hover:border-brand-lime transition-colors">Aggiungi</button></div>
-    </article>
-  </div>
-  <p class="mt-6 text-sm text-brand-muted">Prodotti e prezzi di esempio: il catalogo vero lo carica il negozio.</p>
+  <div id="na-griglia" class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 min-h-[22rem]"></div>
+  <p id="na-nota" class="mt-6 text-sm text-brand-muted">Titoli, prezzi e date dai cataloghi degli editori: la disponibilità in negozio va confermata.</p>
 </section>
 
 <!-- Club -->
@@ -396,26 +381,14 @@
     <p class="text-xs font-heavy text-brand-lime uppercase tracking-widest mb-2">Fuori dallo schermo, dentro l'avventura</p>
     <h2 class="font-heavy text-3xl sm:text-4xl lg:text-5xl text-white leading-tight">Stesso pianeta. Stesse passioni.</h2>
   </div>
-  <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-    <a href="eventi.html?linea=carte" class="bg-[#0e0926]/90 border border-brand-violet/40 hover:border-brand-lime rounded-2xl p-7 flex flex-col gap-3 transition-colors group">
-      <span class="w-12 h-12 rounded-xl bg-brand-violet/30 border border-brand-violet/60 flex items-center justify-center text-brand-lime text-2xl mb-3" aria-hidden="true">♠</span>
-      <h3 class="font-heavy text-2xl text-white">Carte in tavola</h3>
-      <p class="text-brand-muted leading-relaxed">Tornei Magic, Pokémon e Riftbound, mazzi e nuove sfide.</p>
-      <span class="text-brand-lime font-heavy text-sm mt-auto pt-3 group-hover:underline">Prossimi tornei →</span>
-    </a>
-    <a href="eventi.html?linea=serate" class="bg-[#0e0926]/90 border border-brand-violet/40 hover:border-brand-lime rounded-2xl p-7 flex flex-col gap-3 transition-colors group">
-      <span class="w-12 h-12 rounded-xl bg-brand-violet/30 border border-brand-violet/60 flex items-center justify-center text-brand-lime text-2xl mb-3" aria-hidden="true">⚄</span>
-      <h3 class="font-heavy text-2xl text-white">Una sera, mille mondi</h3>
-      <p class="text-brand-muted leading-relaxed">Giochi da tavolo da scoprire insieme.</p>
-      <span class="text-brand-lime font-heavy text-sm mt-auto pt-3 group-hover:underline">Scopri le serate →</span>
-    </a>
-    <a href="eventi.html?linea=ruolo" class="bg-[#0e0926]/90 border border-brand-violet/40 hover:border-brand-lime rounded-2xl p-7 flex flex-col gap-3 transition-colors group">
-      <span class="w-12 h-12 rounded-xl bg-brand-violet/30 border border-brand-violet/60 flex items-center justify-center text-brand-lime text-2xl mb-3" aria-hidden="true">✦</span>
-      <h3 class="font-heavy text-2xl text-white">Il party è qui</h3>
-      <p class="text-brand-muted leading-relaxed">Storie e avventure di gioco di ruolo.</p>
-      <span class="text-brand-lime font-heavy text-sm mt-auto pt-3 group-hover:underline">Unisciti al tavolo →</span>
-    </a>
+  <ul id="ev-lista" class="grid grid-cols-1 md:grid-cols-3 gap-6"></ul>
+  <div class="mt-8 flex flex-wrap items-center gap-x-6 gap-y-1 text-sm font-heavy">
+    <a class="text-brand-lime hover:underline py-2" href="eventi.html">Tutti gli eventi →</a>
+    <a class="text-brand-muted hover:text-brand-lime py-2" href="eventi.html?linea=carte">Carte in tavola</a>
+    <a class="text-brand-muted hover:text-brand-lime py-2" href="eventi.html?linea=serate">Una sera, mille mondi</a>
+    <a class="text-brand-muted hover:text-brand-lime py-2" href="eventi.html?linea=ruolo">Il party è qui</a>
   </div>
+  <p class="mt-3 text-sm text-brand-muted">Eventi, date e quote di esempio: il calendario vero lo carica il negozio.</p>
 </section>
 
 <!-- Newsletter -->
@@ -447,6 +420,7 @@
           <span class="block text-brand-lime font-bold">Viale G. Falcone e P. Borsellino, 35</span>
           <span class="block text-white">76121 Barletta (BT) · <a class="underline hover:text-brand-lime" href="tel:+390883884567">0883 884567</a></span>
           <span class="block mt-2 text-brand-muted">Mar–Sab 9:30–13 e 17–20:30 · Lun 17–20:30 · Dom chiuso</span>
+          <span class="flex flex-wrap items-center gap-x-5 gap-y-1 mt-3"><a class="inline-flex items-center gap-2 text-white hover:text-brand-lime font-semibold" href="https://www.instagram.com/fumetteriaarea51/" target="_blank" rel="noopener noreferrer"><svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>Instagram</a><a class="inline-flex items-center gap-2 text-white hover:text-brand-lime font-semibold" href="https://www.facebook.com/FumetteriaArea51" target="_blank" rel="noopener noreferrer"><svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 21v-8h3l.5-3.5H14V7.7C14 6.8 14.4 6 15.8 6H17.5V3.2C17 3.1 16 3 14.9 3 12.4 3 10.5 4.5 10.5 7.4V9.5H8V13h2.5v8"/></svg>Facebook</a></span>
         </address>
       </div>
       <nav aria-label="Area 51"><h3 class="font-heavy text-white text-xs uppercase tracking-wider mb-4">Area 51</h3>
@@ -461,6 +435,93 @@
   </div>
 </footer>
 
+<script src="dati/catalogo.js"></script>
+<script src="dati/eventi.js"></script>
+<script>
+/* Home: Nuovi arrivi e Prossime uscite dal catalogo (con copertina) e i tre prossimi eventi dal calendario */
+(function () {
+  var MESI = ['gennaio', 'febbraio', 'marzo', 'aprile', 'maggio', 'giugno', 'luglio', 'agosto', 'settembre', 'ottobre', 'novembre', 'dicembre'];
+  var EDITORI = { star: 'Star Comics', jpop: 'J-POP', panini: 'Panini Comics' };
+  var GIORNO = 864e5;
+  function esc(s) { return String(s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+  function euro(x) { return x.toFixed(2).replace('.', ',') + ' €'; }
+
+  /* ---------- Nuovi arrivi / Prossime uscite ---------- */
+  var D = window.CATALOGO_DATI || [], griglia = document.getElementById('na-griglia');
+  var bN = document.getElementById('na-nuovi'), bP = document.getElementById('na-prossime');
+  var ON = 'bg-brand-lime text-black font-heavy text-sm px-5 py-2.5 rounded-full shadow-brutal-violet';
+  var OFF = 'bg-[#120a2e] hover:text-brand-lime border border-white/15 hover:border-brand-lime font-semibold text-sm px-5 py-2.5 rounded-full transition-colors';
+  function quando(r) { return new Date(r[8] + 'T00:00:00').getTime(); }
+  function dataTesto(r) { var d = new Date(quando(r)); return (r[9] ? d.getDate() + ' ' : '') + MESI[d.getMonth()] + ' ' + d.getFullYear(); }
+  // una scheda per serie, con copertina
+  function distinte(l) { var viste = {}; return l.filter(function (r) { var k = r[2].toLowerCase() + '|' + r[4]; if (viste[k]) return false; viste[k] = 1; return true; }); }
+  function elenco(tipo) {
+    var ora = Date.now(), base = D.filter(function (r) { return r[10] === 1 && r[8]; }), l = [];
+    if (tipo === 'prossime') {
+      l = base.filter(function (r) { return quando(r) > ora; }).sort(function (a, b) { return quando(a) - quando(b) || a[0].localeCompare(b[0]); });
+    } else {
+      [60, 120, 365].some(function (giorni) {
+        l = distinte(base.filter(function (r) { var q = quando(r); return q <= ora && ora - q <= giorni * GIORNO; }).sort(function (a, b) { return quando(b) - quando(a) || a[0].localeCompare(b[0]); }));
+        return l.length >= 8;
+      });
+    }
+    return (tipo === 'prossime' ? distinte(l) : l).slice(0, 8);
+  }
+  function scheda(r, i, tipo) {
+    var pre = tipo === 'prossime', link = 'prodotto.html?cat=catalogo&ean=' + r[0];
+    return '<article class="' + (i >= 4 ? 'max-sm:hidden ' : '') + 'bg-[#0e0926]/90 rounded-2xl border border-white/10 p-3 hover:border-brand-lime transition-colors flex flex-col justify-between group">' +
+      '<a href="' + link + '" class="block">' +
+        '<div class="relative aspect-[3/4] rounded-xl overflow-hidden mb-3 bg-[#120a2e]">' +
+          '<img class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" src="img/copertine/' + r[0] + '.webp" alt="Copertina di ' + esc(r[1]) + '" width="220" height="320" loading="lazy" decoding="async">' +
+          '<span class="absolute top-2 left-2 ' + (pre ? 'bg-brand-violet text-white' : 'bg-brand-lime text-black') + ' font-heavy text-[10px] px-2.5 py-0.5 rounded -rotate-2">' + (pre ? 'PREORDINE' : 'NOVITÀ') + '</span>' +
+        '</div>' +
+        '<p class="text-[11px] font-bold text-brand-muted tracking-wider uppercase">' + esc(EDITORI[r[4]] || r[4]) + '</p>' +
+        '<h3 class="font-heavy text-sm sm:text-lg text-white mt-1 leading-snug group-hover:text-brand-lime transition-colors">' + esc(r[1]) + '</h3>' +
+        '<p class="mt-1.5 text-[11px] sm:text-xs font-semibold text-brand-muted">' + (pre ? 'Esce ' : 'Uscito ') + (r[9] ? 'il ' : 'a ') + esc(dataTesto(r)) + '</p>' +
+      '</a>' +
+      '<div class="flex flex-wrap items-center justify-between gap-2 mt-3 pt-3 border-t border-white/10"><span class="font-heavy text-base sm:text-lg text-brand-lime">' + euro(r[7]) + '</span>' +
+      '<a href="' + link + '" class="' + (pre ? 'bg-brand-violet hover:bg-brand-violetGlow text-white' : 'hover:bg-brand-lime hover:text-black border border-white/25 hover:border-brand-lime') + ' font-heavy text-xs px-4 py-2.5 rounded-full transition-colors">' + (pre ? 'Prenota' : 'Vedi scheda') + '</a></div>' +
+    '</article>';
+  }
+  function disegna(tipo) {
+    var l = elenco(tipo);
+    griglia.innerHTML = l.length ? l.map(function (r, i) { return scheda(r, i, tipo); }).join('') : '<p class="col-span-full text-brand-muted">Per ora non ci sono ' + (tipo === 'prossime' ? 'uscite annunciate' : 'novità') + ' nei cataloghi.</p>';
+    bN.className = tipo === 'nuovi' ? ON : OFF; bP.className = tipo === 'prossime' ? ON : OFF;
+    bN.setAttribute('aria-pressed', String(tipo === 'nuovi')); bP.setAttribute('aria-pressed', String(tipo === 'prossime'));
+  }
+  if (griglia && bN && bP) {
+    bN.addEventListener('click', function () { disegna('nuovi'); });
+    bP.addEventListener('click', function () { disegna('prossime'); });
+    disegna('nuovi');
+  }
+
+  /* ---------- Prossimi eventi ---------- */
+  var lista = document.getElementById('ev-lista'), E = window.EVENTI_DATI || [];
+  var NOMI_MESE = { Gen: 0, Feb: 1, Mar: 2, Apr: 3, Mag: 4, Giu: 5, Lug: 6, Ago: 7, Set: 8, Ott: 9, Nov: 10, Dic: 11 };
+  var GIOCO = { magic: 'Magic', pokemon: 'Pokémon', riftbound: 'Riftbound' }, FAMIGLIA = { serate: 'Giochi da tavolo', ruolo: 'Gioco di ruolo' };
+  if (lista && E.length) {
+    var oggi = new Date(); oggi.setHours(0, 0, 0, 0);
+    var tutti = E.map(function (r) { return { r: r, d: new Date(2026, NOMI_MESE[r[6]], r[5]).getTime() }; })
+      .sort(function (a, b) { return a.d - b.d || a.r[7].localeCompare(b.r[7]); });
+    var prossimi = tutti.filter(function (x) { return x.d >= oggi.getTime(); });
+    lista.innerHTML = (prossimi.length ? prossimi : tutti).slice(0, 3).map(function (x) {
+      var r = x.r, rim = r[10] - r[9], perc = Math.round(r[9] / r[10] * 100), urg = rim <= 2;
+      return '<li><a href="eventi.html?linea=' + r[0] + '" class="flex flex-col gap-4 h-full bg-[#0e0926]/90 border border-white/10 hover:border-brand-lime rounded-2xl p-5 transition-colors group">' +
+        '<div class="flex items-start gap-4">' +
+          '<div class="shrink-0 w-[4.5rem] rounded-xl border border-brand-lime/40 bg-[#140C2B] text-center py-2">' +
+            '<span class="block font-heavy text-[10px] tracking-widest text-brand-lime uppercase">' + esc(r[4]) + '</span>' +
+            '<span class="block font-heavy text-3xl text-white leading-none my-1">' + r[5] + '</span>' +
+            '<span class="block font-heavy text-[10px] tracking-widest text-brand-lime uppercase">' + esc(r[6]) + '</span></div>' +
+          '<div class="min-w-0"><span class="inline-block bg-brand-violet/60 border border-brand-violet text-white font-heavy text-[10px] uppercase tracking-wider px-2.5 py-1 rounded-md">' + esc(GIOCO[r[1]] || FAMIGLIA[r[0]] || r[0]) + '</span>' +
+            '<h3 class="font-heavy text-base text-white uppercase mt-2 leading-snug group-hover:text-brand-lime transition-colors">' + esc(r[3]) + '</h3>' +
+            '<p class="text-sm font-bold text-brand-muted mt-1">Ore ' + esc(r[7]) + ' · ' + (r[8] ? 'Quota ' + r[8] + ' €' : 'Gratis') + '</p></div></div>' +
+        '<div class="mt-auto space-y-2"><div class="flex items-center justify-between gap-3 text-xs font-bold"><span class="text-brand-muted">' + r[9] + ' / ' + r[10] + ' posti occupati</span><span class="text-brand-lime">' + (urg ? 'Solo ' + rim + ' rimasti!' : rim + ' rimasti') + '</span></div>' +
+        '<div class="h-2 rounded-full bg-white/10 overflow-hidden" aria-hidden="true"><div class="h-full bg-brand-lime rounded-full" style="width:' + perc + '%"></div></div></div>' +
+      '</a></li>';
+    }).join('');
+  }
+})();
+</script>
 <script>
 (function () {
   /* Menu da telefono */
@@ -628,6 +689,71 @@
     }
   }, true);
   if (!giaVisto()) setTimeout(apri, RITARDO);
+})();
+</script>
+<script>
+/* Ricerca dalla lente: suggerisce le serie del catalogo mentre si scrive; invio (o "Cerca") apre catalogo.html?cerca=...
+   Il catalogo (dati/catalogo.js) si carica solo alla prima apertura, tranne dove c'è già. */
+(function () {
+  var p = document.getElementById('ricerca'); if (!p) return;
+  var btn = document.querySelector('button[aria-label="Cerca prodotti"]'), btnM = document.getElementById('cerca-mobile');
+  var inp = document.getElementById('ricerca-input'), ris = document.getElementById('ricerca-risultati'), nota = document.getElementById('ricerca-nota');
+  var chiudi = document.getElementById('ricerca-chiudi'), menu = document.getElementById('menu-mobile'), menuBtn = document.getElementById('menu-btn');
+  var EDITORI = { star: 'Star Comics', jpop: 'J-POP', panini: 'Panini Comics' };
+  var caricando = false;
+  function semplifica(t) { return String(t).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, ''); }
+  function parole(t) { return semplifica(t).replace(/[^a-z0-9]+/g, ' ').trim(); }
+  function carica() {
+    if (window.CATALOGO_DATI || caricando) return;
+    caricando = true; nota.textContent = 'Carico il catalogo…';
+    var s = document.createElement('script'); s.src = 'dati/catalogo.js';
+    s.onload = function () { caricando = false; mostra(); };
+    s.onerror = function () { caricando = false; nota.textContent = 'Il catalogo non si carica: premi Cerca per provare lo stesso.'; };
+    document.head.appendChild(s);
+  }
+  function mostra() {
+    ris.textContent = ''; ris.hidden = true;
+    var q = parole(inp.value);
+    if (q.length < 2) { nota.textContent = 'Scrivi almeno due lettere. Premi invio per vedere tutti i risultati.'; return; }
+    var D = window.CATALOGO_DATI; if (!D) { carica(); return; }
+    var trovati = 0, serie = {}, ordine = [];
+    for (var i = 0; i < D.length; i++) {
+      var r = D[i], t = ' ' + parole(r[1] + ' ' + r[2]);
+      if (t.indexOf(' ' + q) < 0) continue;
+      trovati++;
+      var k = r[2].toLowerCase() + '|' + r[4];
+      if (!serie[k]) { serie[k] = { r: r, n: 0, cop: null }; ordine.push(k); }
+      serie[k].n++;
+      if (!serie[k].cop && r[10] === 1) serie[k].cop = r;
+    }
+    if (!trovati) { nota.textContent = 'Nessun titolo trovato per "' + inp.value.trim() + '". Premi invio per cercare ovunque, oppure chiedicelo in negozio.'; return; }
+    nota.textContent = trovati + (trovati === 1 ? ' risultato' : ' risultati') + '. Premi invio per vederli tutti.';
+    ordine.slice(0, window.innerWidth < 640 ? 4 : 6).forEach(function (k) {
+      var s = serie[k], r = s.r, li = document.createElement('li'), a = document.createElement('a');
+      a.href = 'catalogo.html?cerca=' + encodeURIComponent(r[2]);
+      a.className = 'flex items-center gap-3 rounded-xl border border-white/10 bg-[#120a2e] hover:border-brand-lime p-2 transition-colors';
+      var im = document.createElement('span'); im.className = 'shrink-0 w-12 h-[4.5rem] rounded-md overflow-hidden bg-brand-violet/30';
+      if (s.cop) { var img = document.createElement('img'); img.src = 'img/copertine/' + s.cop[0] + '.webp'; img.alt = ''; img.width = 48; img.height = 72; img.className = 'w-full h-full object-cover'; img.loading = 'lazy'; im.appendChild(img); }
+      var tx = document.createElement('span'); tx.className = 'min-w-0';
+      var b = document.createElement('span'); b.className = 'block font-heavy text-sm text-white leading-snug'; b.textContent = r[2];
+      var c = document.createElement('span'); c.className = 'block text-xs font-semibold text-brand-muted mt-0.5'; c.textContent = (EDITORI[r[4]] || r[4]) + ' · ' + s.n + (s.n === 1 ? ' prodotto' : ' prodotti');
+      tx.appendChild(b); tx.appendChild(c); a.appendChild(im); a.appendChild(tx); li.appendChild(a); ris.appendChild(li);
+    });
+    ris.hidden = false;
+  }
+  function apri() {
+    if (menu && !menu.hidden) { menu.hidden = true; if (menuBtn) menuBtn.setAttribute('aria-expanded', 'false'); }
+    p.hidden = false; if (btn) btn.setAttribute('aria-expanded', 'true');
+    inp.focus(); inp.select();
+    if (!window.CATALOGO_DATI) carica(); else mostra();
+  }
+  function chiudiP() { p.hidden = true; if (btn) { btn.setAttribute('aria-expanded', 'false'); if (btn.offsetParent) btn.focus(); } }
+  if (btn) btn.addEventListener('click', function () { if (p.hidden) apri(); else chiudiP(); });
+  if (btnM) btnM.addEventListener('click', apri);
+  chiudi.addEventListener('click', chiudiP);
+  inp.addEventListener('input', mostra);
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !p.hidden) chiudiP(); });
+  document.addEventListener('click', function (e) { if (!p.hidden && !p.contains(e.target) && !(btn && btn.contains(e.target)) && !(btnM && btnM.contains(e.target))) chiudiP(); });
 })();
 </script>
 </body>

@@ -268,6 +268,9 @@
   <!-- Menu da telefono -->
   <nav id="menu-mobile" hidden aria-label="Menu" class="min-[1420px]:hidden border-t border-brand-violet/40 bg-[#0d0724]">
     <div class="max-w-[1440px] mx-auto px-4 py-4 grid grid-cols-2 gap-2 text-base font-semibold">
+      <button type="button" id="cerca-mobile" class="col-span-2 min-[360px]:hidden px-4 py-3 rounded-xl border border-white/15 text-left flex items-center gap-2">
+        <svg class="w-4 h-4 text-brand-lime" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-linecap="round" stroke-width="2"/></svg>Cerca
+      </button>
       <a class="px-4 py-3 rounded-xl bg-brand-lime/15 text-brand-lime" href="catalogo.html" aria-current="page">Manga &amp; Fumetti</a>
       <a class="px-4 py-3 rounded-xl bg-white/5" href="tcg.html">TCG</a>
       <a class="px-4 py-3 rounded-xl bg-white/5" href="giochi.html">Giochi da tavolo</a>
@@ -278,6 +281,21 @@
       <a class="px-4 py-3 rounded-xl border border-brand-lime text-brand-lime text-center" href="negozio.html">Il negozio ↗</a>
     </div>
   </nav>
+  <!-- Ricerca: si apre dalla lente; suggerisce le serie mentre si scrive, invio apre il catalogo -->
+  <div id="ricerca" hidden class="absolute inset-x-0 top-full border-b border-brand-violet/40 bg-[#0d0724] shadow-[0_18px_30px_rgba(0,0,0,.45)]">
+    <div class="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-4">
+      <form id="ricerca-form" role="search" action="catalogo.html" method="get" class="flex items-center gap-2 sm:gap-3">
+        <label for="ricerca-input" class="sr-only">Cerca un titolo o un autore</label>
+        <input id="ricerca-input" name="cerca" type="search" autocomplete="off" maxlength="60" placeholder="Cerca un titolo o un autore" class="flex-1 min-w-0 bg-[#120a2e] border border-brand-violet/60 focus:border-brand-lime focus:ring-1 focus:ring-brand-lime text-white placeholder-brand-muted/70 rounded-full px-5 py-3 text-base">
+        <button type="submit" class="shrink-0 bg-brand-lime text-black font-heavy text-sm px-5 sm:px-6 py-3 rounded-full shadow-brutal-violet hover:bg-[#a6d420] transition-colors">Cerca</button>
+        <button type="button" id="ricerca-chiudi" aria-label="Chiudi la ricerca" class="shrink-0 w-11 h-11 rounded-full border border-white/15 hover:border-brand-lime hover:text-brand-lime flex items-center justify-center transition-colors">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke-linecap="round" stroke-width="2.4"/></svg>
+        </button>
+      </form>
+      <ul id="ricerca-risultati" hidden class="mt-4 grid gap-2 sm:grid-cols-2 lg:grid-cols-3"></ul>
+      <p id="ricerca-nota" role="status" class="mt-3 text-xs font-semibold text-brand-muted"></p>
+    </div>
+  </div>
 </header>
 
 <!-- Linguetta FILTRI fissata al bordo sinistro, con l'alieno appoggiato sopra -->
@@ -441,6 +459,7 @@
           <span class="block text-brand-lime font-bold">Viale G. Falcone e P. Borsellino, 35</span>
           <span class="block text-white">76121 Barletta (BT) · <a class="underline hover:text-brand-lime" href="tel:+390883884567">0883 884567</a></span>
           <span class="block mt-2 text-brand-muted">Mar–Sab 9:30–13 e 17–20:30 · Lun 17–20:30 · Dom chiuso</span>
+          <span class="flex flex-wrap items-center gap-x-5 gap-y-1 mt-3"><a class="inline-flex items-center gap-2 text-white hover:text-brand-lime font-semibold" href="https://www.instagram.com/fumetteriaarea51/" target="_blank" rel="noopener noreferrer"><svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>Instagram</a><a class="inline-flex items-center gap-2 text-white hover:text-brand-lime font-semibold" href="https://www.facebook.com/FumetteriaArea51" target="_blank" rel="noopener noreferrer"><svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 21v-8h3l.5-3.5H14V7.7C14 6.8 14.4 6 15.8 6H17.5V3.2C17 3.1 16 3 14.9 3 12.4 3 10.5 4.5 10.5 7.4V9.5H8V13h2.5v8"/></svg>Facebook</a></span>
         </address>
       </div>
       <nav aria-label="Area 51"><h3 class="font-heavy text-white text-xs uppercase tracking-wider mb-4">Area 51</h3>
@@ -990,6 +1009,71 @@
     }
   }, true);
   if (!giaVisto()) setTimeout(apri, RITARDO);
+})();
+</script>
+<script>
+/* Ricerca dalla lente: suggerisce le serie del catalogo mentre si scrive; invio (o "Cerca") apre catalogo.html?cerca=...
+   Il catalogo (dati/catalogo.js) si carica solo alla prima apertura, tranne dove c'è già. */
+(function () {
+  var p = document.getElementById('ricerca'); if (!p) return;
+  var btn = document.querySelector('button[aria-label="Cerca prodotti"]'), btnM = document.getElementById('cerca-mobile');
+  var inp = document.getElementById('ricerca-input'), ris = document.getElementById('ricerca-risultati'), nota = document.getElementById('ricerca-nota');
+  var chiudi = document.getElementById('ricerca-chiudi'), menu = document.getElementById('menu-mobile'), menuBtn = document.getElementById('menu-btn');
+  var EDITORI = { star: 'Star Comics', jpop: 'J-POP', panini: 'Panini Comics' };
+  var caricando = false;
+  function semplifica(t) { return String(t).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, ''); }
+  function parole(t) { return semplifica(t).replace(/[^a-z0-9]+/g, ' ').trim(); }
+  function carica() {
+    if (window.CATALOGO_DATI || caricando) return;
+    caricando = true; nota.textContent = 'Carico il catalogo…';
+    var s = document.createElement('script'); s.src = 'dati/catalogo.js';
+    s.onload = function () { caricando = false; mostra(); };
+    s.onerror = function () { caricando = false; nota.textContent = 'Il catalogo non si carica: premi Cerca per provare lo stesso.'; };
+    document.head.appendChild(s);
+  }
+  function mostra() {
+    ris.textContent = ''; ris.hidden = true;
+    var q = parole(inp.value);
+    if (q.length < 2) { nota.textContent = 'Scrivi almeno due lettere. Premi invio per vedere tutti i risultati.'; return; }
+    var D = window.CATALOGO_DATI; if (!D) { carica(); return; }
+    var trovati = 0, serie = {}, ordine = [];
+    for (var i = 0; i < D.length; i++) {
+      var r = D[i], t = ' ' + parole(r[1] + ' ' + r[2]);
+      if (t.indexOf(' ' + q) < 0) continue;
+      trovati++;
+      var k = r[2].toLowerCase() + '|' + r[4];
+      if (!serie[k]) { serie[k] = { r: r, n: 0, cop: null }; ordine.push(k); }
+      serie[k].n++;
+      if (!serie[k].cop && r[10] === 1) serie[k].cop = r;
+    }
+    if (!trovati) { nota.textContent = 'Nessun titolo trovato per "' + inp.value.trim() + '". Premi invio per cercare ovunque, oppure chiedicelo in negozio.'; return; }
+    nota.textContent = trovati + (trovati === 1 ? ' risultato' : ' risultati') + '. Premi invio per vederli tutti.';
+    ordine.slice(0, window.innerWidth < 640 ? 4 : 6).forEach(function (k) {
+      var s = serie[k], r = s.r, li = document.createElement('li'), a = document.createElement('a');
+      a.href = 'catalogo.html?cerca=' + encodeURIComponent(r[2]);
+      a.className = 'flex items-center gap-3 rounded-xl border border-white/10 bg-[#120a2e] hover:border-brand-lime p-2 transition-colors';
+      var im = document.createElement('span'); im.className = 'shrink-0 w-12 h-[4.5rem] rounded-md overflow-hidden bg-brand-violet/30';
+      if (s.cop) { var img = document.createElement('img'); img.src = 'img/copertine/' + s.cop[0] + '.webp'; img.alt = ''; img.width = 48; img.height = 72; img.className = 'w-full h-full object-cover'; img.loading = 'lazy'; im.appendChild(img); }
+      var tx = document.createElement('span'); tx.className = 'min-w-0';
+      var b = document.createElement('span'); b.className = 'block font-heavy text-sm text-white leading-snug'; b.textContent = r[2];
+      var c = document.createElement('span'); c.className = 'block text-xs font-semibold text-brand-muted mt-0.5'; c.textContent = (EDITORI[r[4]] || r[4]) + ' · ' + s.n + (s.n === 1 ? ' prodotto' : ' prodotti');
+      tx.appendChild(b); tx.appendChild(c); a.appendChild(im); a.appendChild(tx); li.appendChild(a); ris.appendChild(li);
+    });
+    ris.hidden = false;
+  }
+  function apri() {
+    if (menu && !menu.hidden) { menu.hidden = true; if (menuBtn) menuBtn.setAttribute('aria-expanded', 'false'); }
+    p.hidden = false; if (btn) btn.setAttribute('aria-expanded', 'true');
+    inp.focus(); inp.select();
+    if (!window.CATALOGO_DATI) carica(); else mostra();
+  }
+  function chiudiP() { p.hidden = true; if (btn) { btn.setAttribute('aria-expanded', 'false'); if (btn.offsetParent) btn.focus(); } }
+  if (btn) btn.addEventListener('click', function () { if (p.hidden) apri(); else chiudiP(); });
+  if (btnM) btnM.addEventListener('click', apri);
+  chiudi.addEventListener('click', chiudiP);
+  inp.addEventListener('input', mostra);
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !p.hidden) chiudiP(); });
+  document.addEventListener('click', function (e) { if (!p.hidden && !p.contains(e.target) && !(btn && btn.contains(e.target)) && !(btnM && btnM.contains(e.target))) chiudiP(); });
 })();
 </script>
 </body>
