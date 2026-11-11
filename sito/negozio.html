@@ -361,9 +361,11 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div><label for="ch-nome" class="block font-heavy text-xs uppercase tracking-widest text-brand-lime mb-2">Il tuo nome</label>
             <input id="ch-nome" name="nome" type="text" maxlength="40" autocomplete="given-name" required class="campo-profilo" placeholder="Come ti chiami"></div>
-          <div><label for="ch-contatto" class="block font-heavy text-xs uppercase tracking-widest text-brand-lime mb-2">Telefono o email</label>
-            <input id="ch-contatto" name="contatto" type="text" maxlength="80" autocomplete="tel" required class="campo-profilo" placeholder="Per risponderti"></div>
+          <div><label for="ch-tel" class="block font-heavy text-xs uppercase tracking-widest text-brand-lime mb-2">Telefono <span class="normal-case tracking-normal font-semibold text-brand-muted">(facoltativo)</span></label>
+            <input id="ch-tel" name="telefono" type="tel" maxlength="20" autocomplete="tel" class="campo-profilo" placeholder="Se preferisci una chiamata"></div>
         </div>
+        <div><label for="ch-email" class="block font-heavy text-xs uppercase tracking-widest text-brand-lime mb-2">La tua email</label>
+          <input id="ch-email" name="email" type="email" maxlength="80" autocomplete="email" required class="campo-profilo" placeholder="nome@esempio.it"></div>
         <div class="absolute -left-[9999px] w-px h-px overflow-hidden" aria-hidden="true"><label>Non compilare questo campo <input type="text" name="sito" tabindex="-1" autocomplete="off"></label></div>
         <label class="flex items-start gap-3 text-sm font-semibold text-brand-muted leading-snug cursor-pointer">
           <input id="ch-privacy" name="privacy" type="checkbox" required class="mt-0.5 w-5 h-5 shrink-0 rounded border-white/30 bg-[#120a2e] text-brand-lime focus:ring-brand-lime">
@@ -683,28 +685,35 @@
 })();
 </script>
 <script>
-/* Chiedicelo: modulo pronto ma NON collegato. Per attivarlo basta scrivere in INVIO l'indirizzo del servizio
-   (per esempio Formspree o Web3Forms, che girano le richieste all'email del negozio). Finché è vuoto non parte niente. */
+/* Chiedicelo: la richiesta arriva per email al negozio tramite Web3Forms (web3forms.com, gratuito, nessun account:
+   si inserisce l'email del negozio, il servizio manda la chiave di accesso). Il proprietario risponde con "Rispondi":
+   l'email del cliente è già il destinatario. Finché CHIAVE è vuota non parte niente (modulo di prova). */
 (function () {
-  var INVIO = '';
-  var f = document.getElementById('chiedicelo-form'), es = document.getElementById('ch-esito');
+  var CHIAVE = '';
+  var f = document.getElementById('chiedicelo-form'), es = document.getElementById('ch-esito'), bt = f.querySelector('button[type=submit]');
   var pre = new URLSearchParams(location.search).get('cosa');
   if (pre) document.getElementById('ch-cosa').value = pre.slice(0, 300);
   function errore(msg, campo) { es.className = 'text-sm font-bold text-[#FB923C]'; es.textContent = msg; if (campo) campo.focus(); }
   f.addEventListener('submit', function (e) {
     e.preventDefault();
-    var cosa = f.cosa, nome = f.nome, contatto = f.contatto, c = contatto.value.trim();
-    if (!cosa.value.trim()) return errore('Scrivi cosa cerchi.', cosa);
-    if (!nome.value.trim()) return errore('Scrivi il tuo nome.', nome);
-    if (!/^\+?[\d\s().-]{6,}$/.test(c) && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(c)) return errore('Scrivi un telefono o un’email per risponderti.', contatto);
+    var cosa = f.cosa.value.trim(), nome = f.nome.value.trim(), email = f.email.value.trim(), tel = f.telefono.value.trim();
+    if (!cosa) return errore('Scrivi cosa cerchi.', f.cosa);
+    if (!nome) return errore('Scrivi il tuo nome.', f.nome);
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return errore('Scrivi un’email valida: è lì che ti rispondiamo.', f.email);
+    if (tel && !/^\+?[\d\s().-]{6,20}$/.test(tel)) return errore('Il telefono non sembra corretto: controllalo o lascialo vuoto.', f.telefono);
     if (!f.privacy.checked) return errore('Serve il consenso per poterti rispondere.', f.privacy);
     if (f.sito.value) return; /* campo trappola: solo i robot lo compilano */
     es.className = 'text-sm font-bold text-brand-lime';
-    if (!INVIO) { es.textContent = 'Modulo di prova: non è ancora collegato, nessun dato è stato inviato. Per ora chiama lo 0883 884567.'; return; }
-    es.textContent = 'Invio…';
-    fetch(INVIO, { method: 'POST', headers: { Accept: 'application/json' }, body: new FormData(f) })
-      .then(function (r) { if (!r.ok) throw 0; f.reset(); es.textContent = 'Ricevuto! Ti ricontattiamo appena sappiamo se riusciamo a procurarlo.'; })
-      .catch(function () { errore('Non sono riuscito a inviare. Riprova o chiama lo 0883 884567.'); });
+    if (!CHIAVE) { es.textContent = 'Modulo di prova: non è ancora collegato, nessun dato è stato inviato. Per ora chiama lo 0883 884567.'; return; }
+    es.textContent = 'Invio…'; bt.disabled = true;
+    fetch('https://api.web3forms.com/submit', {
+      method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+      body: JSON.stringify({ access_key: CHIAVE, subject: 'Chiedicelo: ' + cosa.slice(0, 60), from_name: 'Sito Area 51', name: nome, email: email, telefono: tel || 'non indicato', categoria: f.categoria.value || 'non indicata', richiesta: cosa, botcheck: '' })
+    }).then(function (r) { return r.json(); }).then(function (j) {
+      if (!j.success) throw 0;
+      f.reset(); es.textContent = 'Ricevuto! Ti rispondiamo per email appena sappiamo se riusciamo a procurarlo.';
+    }).catch(function () { errore('Non sono riuscito a inviare. Riprova o chiama lo 0883 884567.'); })
+      .then(function () { bt.disabled = false; });
   });
 })();
 </script>
