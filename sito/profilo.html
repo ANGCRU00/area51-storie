@@ -309,20 +309,20 @@
     <div class="grid grid-cols-1 lg:grid-cols-[minmax(0,20rem)_minmax(0,1fr)] gap-6 lg:gap-10 items-start">
 
       <!-- Colonna del profilo: foto, nome, sezioni -->
-      <aside class="min-w-0 lg:sticky lg:top-28 rounded-3xl border-2 border-brand-lime/60 bg-[#0d0724]/95 p-5 sm:p-6 shadow-[6px_6px_0_#5B21B6]" aria-label="Il tuo profilo">
+      <aside class="scala-95 min-w-0 lg:sticky lg:top-24 rounded-3xl border-2 border-brand-lime/60 bg-[#0d0724]/95 p-4 sm:p-5 shadow-[6px_6px_0_#5B21B6]" aria-label="Il tuo profilo">
         <div class="flex lg:flex-col items-center lg:text-center gap-4 lg:gap-3">
           <div class="relative shrink-0">
-            <button type="button" id="foto-btn" class="block w-24 h-24 lg:w-32 lg:h-32 rounded-full overflow-hidden bg-brand-lime text-black font-heavy text-5xl flex items-center justify-center border-4 border-[#140C2B] shadow-brutal-violet focus-visible:outline-none" aria-label="Cambia la foto del profilo">
+            <button type="button" id="foto-btn" class="block w-20 h-20 lg:w-24 lg:h-24 rounded-full overflow-hidden bg-brand-lime text-black font-heavy text-4xl flex items-center justify-center border-4 border-[#140C2B] shadow-brutal-violet focus-visible:outline-none" aria-label="Cambia la foto del profilo">
               <span id="avatar" class="w-full h-full flex items-center justify-center"></span>
             </button>
-            <span class="pointer-events-none absolute bottom-0 right-0 w-9 h-9 rounded-full bg-[#140C2B] border-2 border-brand-lime text-brand-lime flex items-center justify-center" aria-hidden="true">
+            <span class="pointer-events-none absolute bottom-0 right-0 w-8 h-8 rounded-full bg-[#140C2B] border-2 border-brand-lime text-brand-lime flex items-center justify-center" aria-hidden="true">
               <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>
             </span>
             <input id="foto-file" type="file" accept="image/*" class="sr-only" tabindex="-1" aria-hidden="true">
           </div>
           <div class="min-w-0">
             <p class="font-heavy text-xs uppercase tracking-widest text-brand-lime">Il tuo profilo</p>
-            <h1 id="saluto" class="font-heavy text-2xl sm:text-3xl text-white leading-tight mt-1">Ciao, terrestre.</h1>
+            <h1 id="saluto" class="font-heavy text-xl sm:text-2xl text-white leading-tight mt-1">Ciao, terrestre.</h1>
             <p class="mt-1 text-xs font-semibold text-brand-muted flex flex-wrap lg:justify-center gap-x-3">
               <button type="button" id="foto-cambia" class="font-heavy text-brand-lime hover:underline py-1">Cambia foto</button>
               <button type="button" id="foto-togli" hidden class="font-heavy text-brand-muted hover:text-brand-lime py-1">Togli foto</button>
@@ -331,18 +331,18 @@
           </div>
         </div>
 
-        <nav aria-label="Sezioni del profilo" class="mt-5 lg:mt-6 -mx-1 flex lg:flex-col gap-2 overflow-x-auto lg:overflow-visible pb-1 lg:pb-0 px-1" id="sezioni">
+        <nav aria-label="Sezioni del profilo" class="mt-4 -mx-1 flex flex-wrap lg:flex-col gap-2 px-1" id="sezioni">
           <button type="button" data-sez="preferiti" class="tab-profilo">Preferiti <span id="c-pref" class="num-profilo">0</span></button>
           <button type="button" data-sez="serie" class="tab-profilo">Serie che segui <span id="c-serie" class="num-profilo">0</span></button>
           <button type="button" data-sez="eventi" class="tab-profilo">I miei eventi <span id="c-ev" class="num-profilo">0</span></button>
           <button type="button" data-sez="tessera" class="tab-profilo">Tessera Club</button>
           <button type="button" data-sez="dati" class="tab-profilo">I miei dati</button>
         </nav>
-        <p class="mt-5 text-xs font-semibold text-brand-muted leading-relaxed">Per ora tutto resta <span class="text-white">solo su questo dispositivo</span>: l'accesso con un account arriverà con il negozio online.</p>
       </aside>
 
       <!-- Pannelli: se ne vede uno alla volta -->
       <div class="min-w-0">
+        <p class="mb-5 text-xs sm:text-sm font-semibold text-brand-muted leading-relaxed">Per ora tutto resta <span class="text-white">solo su questo dispositivo</span>: l'accesso con un account arriverà con il negozio online.</p>
         <section id="p-preferiti" aria-labelledby="t-pref">
           <h2 id="t-pref" class="font-heavy text-2xl sm:text-3xl text-white uppercase mb-5">Preferiti</h2>
           <ul id="pref-lista" hidden class="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-5"></ul>

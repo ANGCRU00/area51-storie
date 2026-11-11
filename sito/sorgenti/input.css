@@ -78,7 +78,7 @@
 }
 /* Profilo: sezioni a pulsanti (a scorrimento sul telefono, in colonna da 1024 px) */
 @layer components {
-  .tab-profilo { @apply shrink-0 inline-flex items-center justify-between gap-3 rounded-full lg:rounded-xl border border-white/15 bg-[#120a2e] px-4 py-2.5 text-sm font-bold whitespace-nowrap hover:border-brand-lime hover:text-brand-lime transition-colors lg:w-full; }
+  .tab-profilo { @apply shrink-0 inline-flex items-center justify-between gap-3 rounded-full lg:rounded-xl border border-white/15 bg-[#120a2e] px-4 py-2 text-sm font-bold whitespace-nowrap hover:border-brand-lime hover:text-brand-lime transition-colors lg:w-full; }
   .tab-profilo[aria-current="true"] { @apply bg-brand-lime text-black border-brand-lime; }
   .tab-profilo[aria-current="true"] .num-profilo { @apply bg-[#140C2B] text-brand-lime; }
 }
