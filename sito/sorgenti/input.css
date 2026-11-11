@@ -67,3 +67,5 @@
 }
 /* Pagina prodotto: tutto al 95% (come uno zoom del browser al 95%) */
 .scala-95 { zoom:.95; }
+/* Intestazione della home: contenuti al 90% (le due colonne, non il contenitore, così i margini restano allineati al resto della pagina) */
+.scala-90 { zoom:.9; }
