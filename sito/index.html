@@ -314,10 +314,10 @@
     </div>
 
     <div class="scala-95 lg:col-span-5 relative flex flex-col items-center">
-      <svg class="w-64 sm:w-72 h-28 sm:h-32 relative z-30 animate-ufo drop-shadow-[0_10px_25px_rgba(185,230,46,.35)]" aria-hidden="true"><use href="#disco"/></svg>
-      <div class="tractor-beam w-80 sm:w-96 h-80 absolute top-24 z-10 animate-ufo" aria-hidden="true"></div>
+      <svg class="w-48 sm:w-72 h-20 sm:h-32 relative z-30 animate-ufo drop-shadow-[0_10px_25px_rgba(185,230,46,.35)]" aria-hidden="true"><use href="#disco"/></svg>
+      <div class="tractor-beam w-64 sm:w-96 h-56 sm:h-80 absolute top-16 sm:top-24 z-10 animate-ufo" aria-hidden="true"></div>
       <article class="relative z-20 w-72 sm:w-80 bg-gradient-to-b from-[#1b1240] to-[#0c0822] p-3 rounded-2xl border-2 border-brand-lime/80 shadow-glow-lime -rotate-2">
-        <div class="relative h-72 rounded-xl overflow-hidden">
+        <div class="relative h-40 sm:h-72 rounded-xl overflow-hidden">
           <img class="w-full h-full object-cover" src="img/angolo-manga.jpg" alt="L'angolo manga della fumetteria Area 51">
           <span class="absolute top-3 left-3 bg-brand-lime text-black font-heavy text-[11px] px-2.5 py-0.5 rounded">IN EVIDENZA</span>
         </div>
@@ -343,14 +343,14 @@
 </div>
 
 <!-- Nuovi arrivi -->
-<section id="catalogo" class="pt-20 lg:pt-28 pb-10 lg:pb-14 max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
-  <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-10">
+<section id="catalogo" class="pt-14 lg:pt-16 pb-10 lg:pb-14 max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
+  <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-6 lg:mb-8">
     <div>
       <p class="text-xs font-heavy text-brand-lime uppercase tracking-widest mb-2">Nuovi mondi · in negozio e in arrivo</p>
       <h2 class="font-heavy text-3xl sm:text-4xl lg:text-5xl text-white leading-tight">La tua prossima ossessione arriva qui.</h2>
     </div>
   </div>
-  <div id="na-banner" hidden class="mb-8 rounded-2xl border-2 border-brand-violet bg-[#140C2B] p-5 sm:p-6 flex flex-wrap items-center justify-between gap-4 shadow-[6px_6px_0_#B9E62E]">
+  <div id="na-banner" hidden class="mb-6 rounded-2xl border-2 border-brand-violet bg-[#140C2B] p-5 sm:p-6 flex flex-wrap items-center justify-between gap-4 shadow-[6px_6px_0_#B9E62E]">
     <div class="min-w-0">
       <p class="text-xs font-heavy text-brand-lime uppercase tracking-widest mb-1">Prenota le novità</p>
       <p id="na-banner-testo" class="font-heavy text-xl sm:text-2xl text-white leading-tight"></p>
@@ -358,7 +358,7 @@
     </div>
     <a href="uscite.html" class="shrink-0 bg-brand-violet hover:bg-brand-violetGlow text-white font-heavy text-sm sm:text-base px-7 py-3.5 rounded-full rounded-bl-[4px] shadow-[4px_4px_0_#B9E62E] transition-colors">Prenota le novità →</a>
   </div>
-  <div class="flex flex-wrap gap-2.5 mb-10" role="group" aria-label="Scegli cosa vedere">
+  <div class="flex flex-wrap gap-2.5 mb-6 lg:mb-8" role="group" aria-label="Scegli cosa vedere">
     <button type="button" id="na-nuovi" aria-pressed="true" class="bg-brand-lime text-black font-heavy text-sm px-5 py-2.5 rounded-full shadow-brutal-violet">Nuovi arrivi</button>
     <button type="button" id="na-prossime" aria-pressed="false" class="bg-[#120a2e] hover:text-brand-lime border border-white/15 hover:border-brand-lime font-semibold text-sm px-5 py-2.5 rounded-full transition-colors">Prossime uscite</button>
   </div>
@@ -368,7 +368,7 @@
 <!-- Club -->
 <section class="pt-9 lg:pt-12 pb-4 lg:pb-8 max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
   <div class="grid grid-cols-1 gap-8">
-    <div id="club" class="border-2 border-brand-lime rounded-3xl p-7 sm:p-10 bg-[#0d0724]/95 flex flex-col lg:flex-row lg:items-center gap-8 lg:gap-14 shadow-[0_0_30px_rgba(185,230,46,.15)]">
+    <div id="club" class="border-2 border-brand-lime rounded-3xl p-5 sm:p-10 bg-[#0d0724]/95 flex flex-col lg:flex-row lg:items-center gap-8 lg:gap-14 shadow-[0_0_30px_rgba(185,230,46,.15)]">
       <div class="lg:flex-1">
         <p class="text-brand-lime font-heavy text-xs uppercase tracking-widest mb-2">Area 51 Club</p>
         <h2 class="font-heavy text-3xl sm:text-4xl text-white mb-4 leading-tight">Più torni, più ricevi.</h2>
@@ -436,18 +436,18 @@
     if (!l.length) {
       /* Nessun livello nel database: restano i nomi scelti dal negozio, con soglie e vantaggi da definire */
       ['Avvistamento', 'Rapito dagli alieni', 'Amico degli Alieni'].forEach(function (nome, i) {
-        var li = document.createElement('li'); li.className = 'flex items-start gap-3 rounded-xl border border-white/10 bg-[#120a2e] px-4 py-3';
-        var n = document.createElement('span'); n.className = 'shrink-0 w-7 h-7 rounded-full bg-brand-lime text-black font-heavy text-xs flex items-center justify-center'; n.textContent = String(i + 1);
+        var li = document.createElement('li'); li.className = 'flex items-start gap-3 rounded-xl border border-white/10 bg-[#120a2e] px-3 py-2 sm:px-4 sm:py-3';
+        var n = document.createElement('span'); n.className = 'shrink-0 w-7 h-7 rounded-full bg-brand-lime text-black font-heavy text-xs hidden sm:flex items-center justify-center'; n.textContent = String(i + 1);
         var d = document.createElement('span'); d.className = 'min-w-0';
         var t1 = document.createElement('b'); t1.className = 'block font-heavy text-white'; t1.textContent = nome;
-        var t2 = document.createElement('span'); t2.className = 'block text-sm font-semibold text-brand-muted'; t2.textContent = '[SOGLIA DI SPESA] · [VANTAGGIO]';
+        var t2 = document.createElement('span'); t2.className = 'block text-sm font-semibold text-brand-muted'; t2.textContent = '[SOGLIA] · [VANTAGGIO]';
         d.appendChild(t1); d.appendChild(t2); li.appendChild(n); li.appendChild(d); box.appendChild(li);
       });
       return;
     }
     l.forEach(function (x, i) {
-      var li = document.createElement('li'); li.className = 'flex items-start gap-3 rounded-xl border border-white/10 bg-[#120a2e] px-4 py-3';
-      var n = document.createElement('span'); n.className = 'shrink-0 w-7 h-7 rounded-full bg-brand-lime text-black font-heavy text-xs flex items-center justify-center'; n.textContent = String(i + 1);
+      var li = document.createElement('li'); li.className = 'flex items-start gap-3 rounded-xl border border-white/10 bg-[#120a2e] px-3 py-2 sm:px-4 sm:py-3';
+      var n = document.createElement('span'); n.className = 'shrink-0 w-7 h-7 rounded-full bg-brand-lime text-black font-heavy text-xs hidden sm:flex items-center justify-center'; n.textContent = String(i + 1);
       var d = document.createElement('span'); d.className = 'min-w-0';
       var t1 = document.createElement('b'); t1.className = 'block font-heavy text-white'; t1.textContent = x.nome;
       var t2 = document.createElement('span'); t2.className = 'block text-xs font-bold text-brand-lime uppercase tracking-wider'; t2.textContent = Number(x.soglia) > 0 ? 'da ' + euroIt(x.soglia) + ' spesi' : 'dall\'iscrizione';
