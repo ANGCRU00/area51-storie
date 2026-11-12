@@ -39,6 +39,17 @@
     var sp = el('span', null, 'Accetto che Area 51 usi questi dati solo per questa prenotazione. '), lk = el('a', 'text-white underline hover:text-brand-lime', 'Informativa sulla privacy'); lk.href = 'privacy.html'; lk.target = '_blank'; lk.rel = 'noopener'; sp.appendChild(lk);
     lab.appendChild(cb); lab.appendChild(sp); f.appendChild(lab);
     f.appendChild(el('p', 'text-xs font-semibold text-brand-muted leading-snug', 'Il negozio conferma la prenotazione. Regole di ritiro: [DA DEFINIRE]. Ritiro e pagamento in negozio.'));
+    /* Pagamento della caparra online: NON ancora attivo (serve l'accordo con Nexi e la funzione sul server).
+       Il pulsante spento si vede solo con ?anteprima-pagamenti=1 nell'indirizzo, oppure se la pagina imposta
+       window.A51_PAGAMENTI = { mostra: true }. Quando i pagamenti saranno collegati, qui andrà il pulsante vero. */
+    if ((window.A51_PAGAMENTI && window.A51_PAGAMENTI.mostra) || /[?&]anteprima-pagamenti=1/.test(location.search)) {
+      var cap = el('div', 'rounded-xl border border-white/15 bg-[#120a2e] p-3');
+      cap.appendChild(el('p', 'text-xs font-bold text-brand-muted uppercase tracking-wider mb-1', 'Caparra'));
+      cap.appendChild(el('p', 'text-sm font-semibold text-brand-muted leading-snug', 'Per alcuni titoli il negozio può chiedere una caparra: [DA DEFINIRE]. Il pagamento online non è ancora attivo: il negozio ti dirà come pagarla.'));
+      var pg = el('button', 'mt-2 w-full border-2 border-white/20 text-white/50 font-heavy text-sm px-5 py-3 rounded-full rounded-bl-[4px] cursor-not-allowed', 'Paga la caparra online · non ancora attivo');
+      pg.type = 'button'; pg.disabled = true; pg.setAttribute('aria-disabled', 'true');
+      cap.appendChild(pg); f.appendChild(cap);
+    }
     var riga = el('div', 'flex flex-wrap items-center gap-3');
     var inv = el('button', 'bg-brand-violet hover:bg-brand-violetGlow text-white font-heavy text-sm px-6 py-3 rounded-full rounded-bl-[4px] shadow-[4px_4px_0_#B9E62E] transition-colors', 'Invia la prenotazione'); inv.type = 'submit';
     var es = el('p', 'text-sm font-bold text-brand-lime'); es.id = 'pren-esito'; es.setAttribute('role', 'status');

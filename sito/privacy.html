@@ -10,6 +10,7 @@
 <link rel="preload" href="fonts/archivo.woff2" as="font" type="font/woff2" crossorigin>
 <script src="js/area51.js"></script>
 <script src="js/area51-db.js"></script>
+<script src="js/negozio-dati.js"></script>
 </head>
 <body class="text-brand-text font-body overflow-x-hidden antialiased relative selection:bg-brand-lime selection:text-black">
 
@@ -317,7 +318,7 @@
 
       <section aria-labelledby="p-titolare">
         <h2 id="p-titolare" class="font-heavy text-xl text-white mb-2">Chi è il titolare</h2>
-        <p>Il titolare del trattamento è <span class="text-white">[RAGIONE SOCIALE]</span>, che gestisce la Fumetteria Area 51, Viale G. Falcone e P. Borsellino 35, 76121 Barletta (BT). Partita IVA <span class="text-white">[PARTITA IVA]</span>. Per qualsiasi domanda sui tuoi dati: <span class="text-white">[EMAIL PER LA PRIVACY]</span> oppure telefono 0883 884567.</p>
+        <p>Il titolare del trattamento è <span class="text-white" data-n="ragione_sociale">[RAGIONE SOCIALE]</span>, che gestisce la Fumetteria Area 51, Viale G. Falcone e P. Borsellino 35, 76121 Barletta (BT). Partita IVA <span class="text-white" data-n="partita_iva">[PARTITA IVA]</span>. Per qualsiasi domanda sui tuoi dati: <span class="text-white" data-n="email_privacy">[EMAIL PER LA PRIVACY]</span> oppure telefono 0883 884567.</p>
       </section>
 
       <section aria-labelledby="p-dati">
@@ -348,19 +349,19 @@
       <section aria-labelledby="p-quanto">
         <h2 id="p-quanto" class="font-heavy text-xl text-white mb-2">Per quanto tempo li conserviamo</h2>
         <ul class="space-y-2 list-disc pl-5">
-          <li>Richieste "Chiedicelo": <span class="text-white">[DA DEFINIRE, per esempio 12 mesi dall'ultima risposta]</span>.</li>
-          <li>Prenotazioni e iscrizioni agli eventi: <span class="text-white">[DA DEFINIRE]</span>.</li>
-          <li>Tessera e storico acquisti: finché la tessera è attiva e <span class="text-white">[DA DEFINIRE]</span> dopo l'ultima attività.</li>
+          <li>Richieste "Chiedicelo": <span class="text-white" data-n="conservazione_richieste">[DA DEFINIRE, per esempio 12 mesi dall'ultima risposta]</span>.</li>
+          <li>Prenotazioni e iscrizioni agli eventi: <span class="text-white" data-n="conservazione_prenotazioni">[DA DEFINIRE]</span>.</li>
+          <li>Tessera e storico acquisti: finché la tessera è attiva e <span class="text-white" data-n="conservazione_tessera">[DA DEFINIRE]</span> dopo l'ultima attività.</li>
         </ul>
         <p class="mt-3">Alcuni documenti (per esempio quelli fiscali) vanno conservati per i tempi previsti dalla legge.</p>
       </section>
 
       <section aria-labelledby="p-diritti">
         <h2 id="p-diritti" class="font-heavy text-xl text-white mb-2">I tuoi diritti</h2>
-        <p>Puoi chiederci in qualsiasi momento di sapere quali dati abbiamo su di te, correggerli, cancellarli, limitarne l'uso, riceverli in un formato leggibile e opporti al loro uso. Se ci hai dato il consenso, puoi ritirarlo quando vuoi, senza conseguenze sulle richieste già trattate. Scrivi a <span class="text-white">[EMAIL PER LA PRIVACY]</span>. Se pensi che i tuoi dati non siano trattati correttamente, puoi rivolgerti al Garante per la protezione dei dati personali (garanteprivacy.it).</p>
+        <p>Puoi chiederci in qualsiasi momento di sapere quali dati abbiamo su di te, correggerli, cancellarli, limitarne l'uso, riceverli in un formato leggibile e opporti al loro uso. Se ci hai dato il consenso, puoi ritirarlo quando vuoi, senza conseguenze sulle richieste già trattate. Scrivi a <span class="text-white" data-n="email_privacy">[EMAIL PER LA PRIVACY]</span>. Se pensi che i tuoi dati non siano trattati correttamente, puoi rivolgerti al Garante per la protezione dei dati personali (garanteprivacy.it).</p>
       </section>
 
-      <p class="text-xs text-brand-muted">Ultimo aggiornamento: <span class="text-white">[DATA]</span>. <a class="text-brand-lime underline hover:text-white" href="condizioni.html">Condizioni di vendita</a> · <a class="text-brand-lime underline hover:text-white" href="negozio.html#chiedicelo">Contattaci</a></p>
+      <p class="text-xs text-brand-muted">Ultimo aggiornamento: <span class="text-white" data-n="data_aggiornamento">[DATA]</span>. <a class="text-brand-lime underline hover:text-white" href="condizioni.html">Condizioni di vendita</a> · <a class="text-brand-lime underline hover:text-white" href="negozio.html#chiedicelo">Contattaci</a></p>
     </div>
   </div>
 </main>

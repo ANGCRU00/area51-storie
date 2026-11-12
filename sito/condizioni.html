@@ -10,6 +10,7 @@
 <link rel="preload" href="fonts/archivo.woff2" as="font" type="font/woff2" crossorigin>
 <script src="js/area51.js"></script>
 <script src="js/area51-db.js"></script>
+<script src="js/negozio-dati.js"></script>
 </head>
 <body class="text-brand-text font-body overflow-x-hidden antialiased relative selection:bg-brand-lime selection:text-black">
 
@@ -317,7 +318,7 @@
 
       <section aria-labelledby="c-chi">
         <h2 id="c-chi" class="font-heavy text-xl text-white mb-2">Chi vende</h2>
-        <p><span class="text-white">[RAGIONE SOCIALE]</span>, Fumetteria Area 51, Viale G. Falcone e P. Borsellino 35, 76121 Barletta (BT). Partita IVA <span class="text-white">[PARTITA IVA]</span>. Telefono 0883 884567. Email <span class="text-white">[EMAIL DEL NEGOZIO]</span>.</p>
+        <p><span class="text-white" data-n="ragione_sociale">[RAGIONE SOCIALE]</span>, Fumetteria Area 51, Viale G. Falcone e P. Borsellino 35, 76121 Barletta (BT). Partita IVA <span class="text-white" data-n="partita_iva">[PARTITA IVA]</span>. Telefono 0883 884567. Email <span class="text-white" data-n="email_negozio">[EMAIL DEL NEGOZIO]</span>.</p>
       </section>
 
       <section aria-labelledby="c-ritiro">
@@ -332,23 +333,23 @@
           <li>La prenotazione è una <span class="text-white">richiesta</span>: vale quando il negozio la conferma per email o per telefono.</li>
           <li><span class="text-white">Dopo l'ultimo giorno per ordinare, non è detto che il titolo arrivi.</span> Puoi comunque chiederlo: ti diciamo se riusciamo a procurartelo. In quel caso il sito te lo segnala prima di inviare la richiesta.</li>
           <li>Puoi prenotare fino a 5 copie dello stesso titolo con una richiesta.</li>
-          <li>Ritiro: il titolo prenotato ti aspetta <span class="text-white">[DA DEFINIRE: numero di giorni dopo l'uscita]</span>; dopo, torna in vendita. <span class="text-white">[DA DEFINIRE: cosa succede a chi non ritira più volte.]</span></li>
+          <li>Ritiro: il titolo prenotato ti aspetta <span class="text-white" data-n="giorni_ritiro">[DA DEFINIRE: numero di giorni dopo l'uscita]</span>; dopo, torna in vendita. <span class="text-white" data-n="ritiro_non_ritirato">[DA DEFINIRE: cosa succede a chi non ritira più volte.]</span></li>
         </ul>
       </section>
 
       <section aria-labelledby="c-caparra">
         <h2 id="c-caparra" class="font-heavy text-xl text-white mb-2">Caparra</h2>
-        <p>Per alcuni titoli il negozio può chiedere una caparra, scalata dal prezzo al ritiro. <span class="text-white">[DA DEFINIRE: per quali titoli, di quanto, e se viene restituita quando il cliente non ritira. Se si pagherà online, i pagamenti saranno gestiti da Nexi.]</span> Per ora il sito non incassa pagamenti.</p>
+        <p>Per alcuni titoli il negozio può chiedere una caparra, scalata dal prezzo al ritiro. <span class="text-white" data-n="caparra">[DA DEFINIRE: per quali titoli, di quanto, e se viene restituita quando il cliente non ritira. Se si pagherà online, i pagamenti saranno gestiti da Nexi.]</span> Per ora il sito non incassa pagamenti.</p>
       </section>
 
       <section aria-labelledby="c-recesso">
         <h2 id="c-recesso" class="font-heavy text-xl text-white mb-2">Recesso, rimborsi e garanzia</h2>
-        <p><span class="text-white">[DA DEFINIRE con il commercialista: diritto di recesso per gli acquisti a distanza, tempi e modi dei rimborsi, garanzia legale di conformità sui prodotti.]</span> Il consumatore conserva in ogni caso i diritti che la legge gli riconosce.</p>
+        <p><span class="text-white" data-n="recesso">[DA DEFINIRE con il commercialista: diritto di recesso per gli acquisti a distanza, tempi e modi dei rimborsi, garanzia legale di conformità sui prodotti.]</span> Il consumatore conserva in ogni caso i diritti che la legge gli riconosce.</p>
       </section>
 
       <section aria-labelledby="c-tessera">
         <h2 id="c-tessera" class="font-heavy text-xl text-white mb-2">Tessera Area 51 Club</h2>
-        <p>La tessera si chiede in negozio. Il livello dipende da quanto spendi in negozio nel tempo e a ogni livello corrisponde un vantaggio. <span class="text-white">[DA DEFINIRE: livelli, soglie, vantaggi, a quali prodotti si applicano, da quando valgono e se si sommano ad altri sconti.]</span></p>
+        <p>La tessera si chiede in negozio. Il livello dipende da quanto spendi in negozio nel tempo e a ogni livello corrisponde un vantaggio. <span class="text-white" data-n="livelli_regole">[DA DEFINIRE: livelli, soglie, vantaggi, a quali prodotti si applicano, da quando valgono e se si sommano ad altri sconti.]</span></p>
       </section>
 
       <section aria-labelledby="c-dati">
@@ -356,7 +357,7 @@
         <p>Come usiamo i dati che ci lasci nei moduli è spiegato nell'<a class="text-brand-lime underline hover:text-white" href="privacy.html">informativa sulla privacy</a>.</p>
       </section>
 
-      <p class="text-xs text-brand-muted">Ultimo aggiornamento: <span class="text-white">[DATA]</span>.</p>
+      <p class="text-xs text-brand-muted">Ultimo aggiornamento: <span class="text-white" data-n="data_aggiornamento">[DATA]</span>.</p>
     </div>
   </div>
 </main>
