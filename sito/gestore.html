@@ -459,6 +459,12 @@
           <div><label for="bu-fattura" class="block font-heavy text-xs uppercase tracking-widest text-brand-lime mb-2">Fattura</label>
             <input id="bu-fattura" name="fattura" maxlength="40" class="campo-profilo" placeholder="N° (facolt.)"></div>
           <button type="submit" class="col-span-2 lg:col-span-1 bg-brand-lime text-black font-heavy text-sm px-6 py-3 rounded-full rounded-bl-[4px] shadow-brutal-violet hover:bg-[#a6d420] transition-colors">Registra</button>
+          <div class="col-span-2 lg:col-span-6">
+            <label for="bu-isbn" class="block font-heavy text-xs uppercase tracking-widest text-brand-lime mb-2">Fumetti acquistati: ISBN o EAN <span class="normal-case tracking-normal font-semibold text-brand-muted">(scansiona il codice a barre e premi Invio, uno per ogni copia)</span></label>
+            <input id="bu-isbn" maxlength="20" inputmode="numeric" autocomplete="off" spellcheck="false" class="campo-profilo font-mono max-w-md" placeholder="ISBN o EAN">
+            <ul id="bu-articoli" class="mt-2 flex flex-wrap gap-2"></ul>
+            <p id="bu-articoli-nota" class="mt-1 text-xs font-bold text-brand-muted"></p>
+          </div>
           <label id="bu-tessera-l" hidden class="col-span-2 lg:col-span-6 flex items-center gap-3 text-sm font-semibold text-brand-muted cursor-pointer"><input type="checkbox" name="tessera" class="w-5 h-5 rounded border-white/30 bg-[#120a2e] text-brand-lime focus:ring-brand-lime"> Aggiungi l'importo anche alla tessera del cliente quando il buono è convalidato</label>
         </form>
         <p id="g-buo-esito" role="status" class="text-sm font-bold text-brand-lime min-h-[1.25rem] mb-4"></p>
@@ -537,7 +543,7 @@
     </div>
     <div class="pt-4 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-brand-muted/80">
       <p>© 2026 Fumetteria Area 51 · Barletta</p>
-      <p>Ritiro e pagamento in negozio, nessuna spedizione. <a class="underline hover:text-brand-lime" href="negozio.html#carta-cultura">Accettiamo Carta della Cultura e Carta del Merito</a>.</p>
+      <p>Ritiro e pagamento in negozio, nessuna spedizione. <a class="underline hover:text-brand-lime" href="negozio.html#carta-cultura">Accettiamo Carta della Cultura e Carta del Merito</a>, solo in negozio.</p>
     </div>
   </div>
 </footer>
@@ -844,6 +850,45 @@
      qui si segna "Convalidato" (e, se serve, l'importo va anche sulla tessera del cliente). Il sito non si collega al Ministero. */
   var buoni = [], filtroBuoni = 'da_convalidare', fb = $('g-buo-form');
   var STATI_BUONO = { da_convalidare: 'Da convalidare', convalidato: 'Convalidato', respinto: 'Respinto' };
+  /* ISBN/EAN dei fumetti acquistati con il buono: controllo del codice, titolo e prezzo dal catalogo (dati/catalogo.js, caricato alla prima scansione) */
+  var catalogoEan = null, caricandoCat = false, articoli = [];
+  function pulisciCodice(v) { return String(v || '').replace(/[^0-9Xx]/g, '').toUpperCase(); }
+  function codiceValido(c) {
+    var i, s = 0;
+    if (c.length === 13 && /^[0-9]{13}$/.test(c)) { for (i = 0; i < 12; i++) s += Number(c[i]) * (i % 2 ? 3 : 1); return (10 - s % 10) % 10 === Number(c[12]); }
+    if (c.length === 10 && /^[0-9]{9}[0-9X]$/.test(c)) { for (i = 0; i < 9; i++) s += Number(c[i]) * (10 - i); return (s + (c[9] === 'X' ? 10 : Number(c[9]))) % 11 === 0; }
+    return false;
+  }
+  function caricaCatalogo() {
+    if (catalogoEan || caricandoCat) return Promise.resolve();
+    caricandoCat = true;
+    return new Promise(function (ok) {
+      var sc = document.createElement('script'); sc.src = 'dati/catalogo.js';
+      sc.onload = function () { catalogoEan = {}; (window.CATALOGO_DATI || []).forEach(function (r) { catalogoEan[r[0]] = { t: r[1], p: r[7] }; }); ok(); };
+      sc.onerror = function () { catalogoEan = {}; ok(); };
+      document.head.appendChild(sc);
+    });
+  }
+  function disegnaArticoli() {
+    var ul = $('bu-articoli'); svuota(ul); var tot = 0, noti = 0;
+    articoli.forEach(function (a, i) {
+      var li = el('li', 'inline-flex items-center gap-2 rounded-full border border-white/15 bg-[#120a2e] pl-3 pr-1 py-1 text-xs font-semibold text-white');
+      li.appendChild(el('span', 'font-mono', a.e)); li.appendChild(el('span', 'text-brand-muted max-w-[16rem] truncate', (a.n > 1 ? a.n + ' × ' : '') + (a.t || 'non nel catalogo')));
+      var x = el('button', 'w-6 h-6 rounded-full hover:bg-white/10 hover:text-[#FB923C] leading-none', '×'); x.type = 'button'; x.setAttribute('aria-label', 'Togli ' + a.e);
+      x.addEventListener('click', function () { articoli.splice(i, 1); disegnaArticoli(); }); li.appendChild(x); ul.appendChild(li);
+      if (a.p != null) { tot += a.p * a.n; noti++; }
+    });
+    var n = articoli.reduce(function (s0, a) { return s0 + a.n; }, 0), imp = Number(String(fb.elements.importo.value).replace(',', '.')) || 0;
+    $('bu-articoli-nota').textContent = n ? n + (n === 1 ? ' fumetto' : ' fumetti') + (noti ? ' · totale dei prezzi di copertina ' + euro(tot) + (imp ? ' (buono ' + euro(imp) + ')' : '') : '') : '';
+  }
+  async function aggiungiCodice(grezzo, lista, dopo) {
+    var c = pulisciCodice(grezzo), es = $('g-buo-esito');
+    if (!c) return;
+    if (!codiceValido(c)) { es.className = 'text-sm font-bold text-[#FB923C] min-h-[1.25rem] mb-4'; es.textContent = 'Il codice ' + c + ' non è un ISBN o EAN valido: riscansionalo o ricontrolla le cifre.'; return; }
+    await caricaCatalogo(); var d = catalogoEan[c] || {}, e = lista.filter(function (a) { return a.e === c; })[0];
+    if (e) e.n++; else lista.push({ e: c, t: d.t || null, p: d.p != null ? d.p : null, n: 1 });
+    es.textContent = ''; dopo();
+  }
   function aMese(iso) { return String(iso).slice(0, 7); }
   function oggiLocale() { var d = new Date(); return d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2); }
   function copia(testo) {
@@ -859,6 +904,8 @@
   }
   function riempiClienti() { var dl = $('g-buo-clienti'); svuota(dl); (tessere || []).forEach(function (t) { var o = document.createElement('option'); o.value = t.nome; dl.appendChild(o); }); }
   function clienteTessera() { var v = fb.elements.cliente.value.trim().toLowerCase(); return v && (tessere || []).filter(function (t) { return t.nome.toLowerCase() === v; })[0]; }
+  $('bu-isbn').addEventListener('keydown', function (e) { if (e.key !== 'Enter') return; e.preventDefault(); var v = this.value; this.value = ''; aggiungiCodice(v, articoli, disegnaArticoli); });
+  fb.elements.importo.addEventListener('input', disegnaArticoli);
   fb.elements.cliente.addEventListener('input', function () { $('bu-tessera-l').hidden = !clienteTessera(); if ($('bu-tessera-l').hidden) fb.elements.tessera.checked = false; });
   function disegnaBuoni() {
     var oggi = oggiLocale(), mese = oggi.slice(0, 7), somma = function (l) { return l.reduce(function (a, b) { return a + Number(b.importo); }, 0); };
@@ -884,9 +931,18 @@
       li.appendChild(el('span', 'font-heavy text-brand-lime', euro(b.importo)));
       li.appendChild(el('span', 'text-xs font-bold text-brand-muted uppercase tracking-wider', [b.carta ? (b.carta === 'cultura' ? 'Cultura' : 'Merito') : '', b.cliente || '', dataIt(b.creato_il)].filter(Boolean).join(' · ')));
       li.appendChild(el('span', 'text-xs font-bold ' + (b.stato === 'convalidato' ? 'text-brand-lime' : b.stato === 'respinto' ? 'text-[#FB923C]' : 'text-white'), STATI_BUONO[b.stato] + (b.stato === 'convalidato' && b.convalidato_il ? ' il ' + dataIt(b.convalidato_il) : '') + (b.tessera_id ? ' · va sulla tessera' : '')));
+      var arts = Array.isArray(b.articoli) ? b.articoli : [];
+      if (arts.length) li.appendChild(el('span', 'basis-full text-xs font-semibold text-brand-muted', arts.map(function (a) { return (a.n > 1 ? a.n + ' × ' : '') + (a.t ? a.t + ' ' : '') + '(' + a.e + ')'; }).join(' · ')));
       var fat = el('input', CAMPO + ' w-28'); fat.placeholder = 'Fattura'; fat.maxLength = 40; fat.value = b.fattura || ''; fat.setAttribute('aria-label', 'Numero di fattura');
       fat.addEventListener('change', async function () { var x = await sb.from('buoni').update({ fattura: fat.value.trim() || null }).eq('id', b.id); if (x.error) alert(errore(x.error)); else { b.fattura = fat.value.trim() || null; } });
       var az = el('span', 'flex flex-wrap items-center gap-2 ml-auto'); az.appendChild(fat);
+      var isb = el('input', CAMPO + ' w-36 font-mono'); isb.placeholder = '+ ISBN'; isb.maxLength = 20; isb.inputMode = 'numeric'; isb.setAttribute('aria-label', 'Aggiungi un ISBN o EAN al buono');
+      isb.addEventListener('keydown', async function (e) {
+        if (e.key !== 'Enter') return; e.preventDefault(); var v = isb.value; isb.value = ''; var copia2 = arts.map(function (a) { return { e: a.e, t: a.t, p: a.p, n: a.n }; });
+        await aggiungiCodice(v, copia2, function () {}); if (copia2.length === arts.length && copia2.every(function (a, i) { return a.n === arts[i].n; })) return;
+        var x = await sb.from('buoni').update({ articoli: copia2 }).eq('id', b.id); if (x.error) alert(errore(x.error)); caricaBuoni();
+      });
+      az.appendChild(isb);
       if (b.stato === 'da_convalidare') {
         var ok = el('button', BTN_PIENO, 'Convalidato'); ok.type = 'button';
         ok.addEventListener('click', async function () {
@@ -912,10 +968,12 @@
     if (!/^[A-Za-z0-9-]{4,40}$/.test(codice)) { es.textContent = 'Il codice deve avere da 4 a 40 caratteri (lettere, numeri o trattini).'; f.codice.focus(); return; }
     if (!(importo > 0)) { es.textContent = 'Scrivi l\'importo del buono.'; f.importo.focus(); return; }
     var t = f.tessera.checked ? clienteTessera() : null;
-    var x = await sb.from('buoni').insert({ codice: codice, importo: importo, carta: f.carta.value || null, cliente: f.cliente.value.trim() || null, tessera_id: t ? t.id : null, fattura: f.fattura.value.trim() || null });
+    if ($('bu-isbn').value.trim()) await aggiungiCodice($('bu-isbn').value, articoli, disegnaArticoli);
+    $('bu-isbn').value = '';
+    var x = await sb.from('buoni').insert({ codice: codice, importo: importo, carta: f.carta.value || null, cliente: f.cliente.value.trim() || null, tessera_id: t ? t.id : null, fattura: f.fattura.value.trim() || null, articoli: articoli });
     if (x.error) { es.textContent = /duplicate|unique/i.test(x.error.message || '') ? 'Questo buono è già nel registro: controlla di non averlo già registrato.' : errore(x.error); f.codice.select(); return; }
     var copiato = await copia(codice), carta = f.carta.value;
-    fb.reset(); f.carta.value = carta; $('bu-tessera-l').hidden = true;
+    fb.reset(); f.carta.value = carta; $('bu-tessera-l').hidden = true; articoli = []; disegnaArticoli();
     es.className = 'text-sm font-bold text-brand-lime min-h-[1.25rem] mb-4'; es.textContent = 'Registrato.' + (copiato ? ' Codice copiato: incollalo nella piattaforma del Ministero e convalida.' : ' Copia il codice dalla lista.');
     f.codice.focus(); filtroBuoni = 'da_convalidare'; caricaBuoni();
   });
@@ -925,9 +983,9 @@
     var righe = buoni.filter(function (b) { return aMese(b.creato_il) === mese; }).slice().reverse();
     if (!righe.length) { es.className = 'text-sm font-bold text-[#FB923C] min-h-[1.25rem] mb-4'; es.textContent = 'Nessun buono registrato in quel mese.'; return; }
     function c(v) { return '"' + String(v == null ? '' : v).replace(/"/g, '""') + '"'; }
-    var nl = String.fromCharCode(10), testa = ['data', 'codice', 'importo', 'carta', 'cliente', 'stato', 'convalidato_il', 'fattura', 'nota'];
+    var nl = String.fromCharCode(10), testa = ['data', 'codice', 'importo', 'carta', 'cliente', 'stato', 'convalidato_il', 'fattura', 'isbn', 'titoli', 'nota'];
     var csv = String.fromCharCode(0xFEFF) + testa.join(';') + nl + righe.map(function (b) {
-      return [b.creato_il.slice(0, 10), b.codice, String(b.importo).replace('.', ','), b.carta || '', b.cliente || '', STATI_BUONO[b.stato], b.convalidato_il ? b.convalidato_il.slice(0, 10) : '', b.fattura || '', b.nota || ''].map(c).join(';');
+      return [b.creato_il.slice(0, 10), b.codice, String(b.importo).replace('.', ','), b.carta || '', b.cliente || '', STATI_BUONO[b.stato], b.convalidato_il ? b.convalidato_il.slice(0, 10) : '', b.fattura || '', (b.articoli || []).map(function (a) { return a.n > 1 ? a.e + 'x' + a.n : a.e; }).join(' '), (b.articoli || []).map(function (a) { return a.t || ''; }).join(' | '), b.nota || ''].map(c).join(';');
     }).join(nl);
     var url = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' })), a = document.createElement('a');
     a.href = url; a.download = 'buoni-' + mese + '.csv'; document.body.appendChild(a); a.click(); document.body.removeChild(a); setTimeout(function () { URL.revokeObjectURL(url); }, 1000);

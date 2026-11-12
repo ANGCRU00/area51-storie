@@ -38,7 +38,7 @@
     var cb = el('input', 'mt-0.5 w-5 h-5 shrink-0 rounded border-white/30 bg-[#120a2e] text-brand-lime focus:ring-brand-lime'); cb.type = 'checkbox'; cb.id = 'pren-privacy';
     var sp = el('span', null, 'Accetto che Area 51 usi questi dati solo per questa prenotazione. '), lk = el('a', 'text-white underline hover:text-brand-lime', 'Informativa sulla privacy'); lk.href = 'privacy.html'; lk.target = '_blank'; lk.rel = 'noopener'; sp.appendChild(lk);
     lab.appendChild(cb); lab.appendChild(sp); f.appendChild(lab);
-    f.appendChild(el('p', 'text-xs font-semibold text-brand-muted leading-snug', 'Il negozio conferma la prenotazione. Regole di ritiro: [DA DEFINIRE]. Ritiro e pagamento in negozio.'));
+    f.appendChild(el('p', 'text-xs font-semibold text-brand-muted leading-snug', 'Il negozio conferma la prenotazione. Regole di ritiro: [DA DEFINIRE]. Ritiro e pagamento in negozio. I buoni Carta della Cultura e Carta del Merito si usano solo in negozio, di persona.'));
     /* Pagamento della caparra online: NON ancora attivo (serve l'accordo con Nexi e la funzione sul server).
        Il pulsante spento si vede solo con ?anteprima-pagamenti=1 nell'indirizzo, oppure se la pagina imposta
        window.A51_PAGAMENTI = { mostra: true }. Quando i pagamenti saranno collegati, qui andrà il pulsante vero. */
