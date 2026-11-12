@@ -478,6 +478,17 @@
             <button type="button" id="g-buo-esporta" class="border border-white/25 hover:border-brand-lime hover:text-brand-lime font-heavy text-xs px-4 py-2 rounded-full transition-colors">Esporta il mese (CSV)</button>
           </div>
         </div>
+        <div class="rounded-2xl border border-white/10 bg-[#0e0926]/90 p-5 sm:p-6 mb-4">
+          <h3 class="font-heavy text-lg text-white mb-1">File per il Registro Vendite</h3>
+          <p class="text-sm font-semibold text-brand-muted mb-3 max-w-3xl">Prepara il file CSV da caricare su fatturebonus.consap.it con "Importa Registro Vendite": una riga per ogni fumetto, nel formato dell'Appendice 4 delle linee guida (campi separati da |). Prende i buoni <span class="text-white">convalidati nel mese scelto</span>; quelli a cui manca qualcosa restano fuori e ti dico cosa. Il prezzo di ogni fumetto è la parte coperta dal buono (se il cliente ha integrato in contanti, la somma torna all'importo del buono). La prima volta prova con un solo buono: il portale elenca le righe scartate.</p>
+          <div class="flex flex-wrap items-end gap-3">
+            <div><label for="g-buo-esercente" class="block font-heavy text-xs uppercase tracking-widest text-brand-lime mb-2">Codice esercente</label>
+              <input id="g-buo-esercente" maxlength="20" autocomplete="off" class="campo-profilo font-mono w-44" placeholder="5 caratteri"></div>
+            <button type="button" id="g-buo-registro" class="bg-brand-lime text-black font-heavy text-sm px-6 py-3 rounded-full rounded-bl-[4px] shadow-brutal-violet hover:bg-[#a6d420] transition-colors">Prepara il file del mese</button>
+            <p id="g-buo-registro-esito" role="status" class="text-sm font-bold text-brand-lime"></p>
+          </div>
+          <ul id="g-buo-problemi" class="mt-3 space-y-1 text-sm font-semibold text-[#FB923C]"></ul>
+        </div>
         <ul id="g-buo-lista" class="space-y-2"></ul>
         <p id="g-buo-vuoto" hidden class="vuoto-profilo !block">Nessun buono in questa categoria.</p>
       </section>
@@ -864,7 +875,8 @@
     caricandoCat = true;
     return new Promise(function (ok) {
       var sc = document.createElement('script'); sc.src = 'dati/catalogo.js';
-      sc.onload = function () { catalogoEan = {}; (window.CATALOGO_DATI || []).forEach(function (r) { catalogoEan[r[0]] = { t: r[1], p: r[7] }; }); ok(); };
+      var ED = { star: 'Star Comics', jpop: 'J-POP', panini: 'Panini Comics', planet: 'Planet Manga' };
+      sc.onload = function () { catalogoEan = {}; (window.CATALOGO_DATI || []).forEach(function (r) { catalogoEan[r[0]] = { t: r[1], p: r[7], a: r[11] || null, ed: ED[r[4]] || r[4] || null }; }); ok(); };
       sc.onerror = function () { catalogoEan = {}; ok(); };
       document.head.appendChild(sc);
     });
@@ -878,6 +890,7 @@
       x.addEventListener('click', function () { articoli.splice(i, 1); disegnaArticoli(); }); li.appendChild(x); ul.appendChild(li);
       if (a.p != null) { tot += a.p * a.n; noti++; }
     });
+    articoli.filter(function (a) { return mancanti(a).length; }).forEach(function (a) { var li2 = el('li', 'basis-full w-full'); li2.appendChild(editorArticolo(a, disegnaArticoli)); ul.appendChild(li2); });
     var n = articoli.reduce(function (s0, a) { return s0 + a.n; }, 0), imp = Number(String(fb.elements.importo.value).replace(',', '.')) || 0;
     $('bu-articoli-nota').textContent = n ? n + (n === 1 ? ' fumetto' : ' fumetti') + (noti ? ' · totale dei prezzi di copertina ' + euro(tot) + (imp ? ' (buono ' + euro(imp) + ')' : '') : '') : '';
   }
@@ -886,8 +899,22 @@
     if (!c) return;
     if (!codiceValido(c)) { es.className = 'text-sm font-bold text-[#FB923C] min-h-[1.25rem] mb-4'; es.textContent = 'Il codice ' + c + ' non è un ISBN o EAN valido: riscansionalo o ricontrolla le cifre.'; return; }
     await caricaCatalogo(); var d = catalogoEan[c] || {}, e = lista.filter(function (a) { return a.e === c; })[0];
-    if (e) e.n++; else lista.push({ e: c, t: d.t || null, p: d.p != null ? d.p : null, n: 1 });
+    if (e) e.n++; else lista.push({ e: c, t: d.t || null, a: d.a || null, ed: d.ed || null, p: d.p != null ? d.p : null, n: 1 });
     es.textContent = ''; dopo();
+  }
+  /* Il Registro Vendite chiede per ogni libro titolo, autore, casa editrice, ISBN/EAN e il prezzo: se il catalogo non li ha, si completano a mano */
+  function mancanti(a) { var m = []; if (!a.t) m.push('t'); if (!a.a) m.push('a'); if (!a.ed) m.push('ed'); if (a.p == null) m.push('p'); return m; }
+  function editorArticolo(a, salva) {
+    var box = el('div', 'basis-full flex flex-wrap items-center gap-2 rounded-lg border border-[#FB923C]/50 bg-[#FB923C]/5 px-3 py-2');
+    box.appendChild(el('span', 'font-mono text-xs font-bold text-white', a.e));
+    var NOMI = { t: ['Titolo', 'w-56'], a: ['Autore', 'w-40'], ed: ['Casa editrice', 'w-40'], p: ['Prezzo €', 'w-24'] };
+    mancanti(a).forEach(function (k) {
+      var i = el('input', CAMPO + ' ' + NOMI[k][1]); i.placeholder = NOMI[k][0]; i.setAttribute('aria-label', NOMI[k][0] + ' di ' + a.e); i.maxLength = 120;
+      if (k === 'p') { i.type = 'number'; i.min = '0'; i.step = '0.01'; }
+      i.addEventListener('change', function () { var v = i.value.trim(); if (k === 'p') a.p = v === '' ? null : Math.round(Number(v) * 100) / 100; else a[k] = v || null; salva(); });
+      box.appendChild(i);
+    });
+    return box;
   }
   function aMese(iso) { return String(iso).slice(0, 7); }
   function oggiLocale() { var d = new Date(); return d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2); }
@@ -933,6 +960,12 @@
       li.appendChild(el('span', 'text-xs font-bold ' + (b.stato === 'convalidato' ? 'text-brand-lime' : b.stato === 'respinto' ? 'text-[#FB923C]' : 'text-white'), STATI_BUONO[b.stato] + (b.stato === 'convalidato' && b.convalidato_il ? ' il ' + dataIt(b.convalidato_il) : '') + (b.tessera_id ? ' · va sulla tessera' : '')));
       var arts = Array.isArray(b.articoli) ? b.articoli : [];
       if (arts.length) li.appendChild(el('span', 'basis-full text-xs font-semibold text-brand-muted', arts.map(function (a) { return (a.n > 1 ? a.n + ' × ' : '') + (a.t ? a.t + ' ' : '') + '(' + a.e + ')'; }).join(' · ')));
+      var incompleti = arts.filter(function (a) { return mancanti(a).length; });
+      if (incompleti.length) {
+        var boxI = el('div', 'basis-full space-y-2'); boxI.appendChild(el('p', 'text-xs font-bold text-[#FB923C]', 'Completa i dati dei fumetti per il Registro Vendite:'));
+        incompleti.forEach(function (a) { boxI.appendChild(editorArticolo(a, async function () { var x = await sb.from('buoni').update({ articoli: arts }).eq('id', b.id); if (x.error) alert(errore(x.error)); else caricaBuoni(); })); });
+        li.appendChild(boxI);
+      }
       var fat = el('input', CAMPO + ' w-28'); fat.placeholder = 'Fattura'; fat.maxLength = 40; fat.value = b.fattura || ''; fat.setAttribute('aria-label', 'Numero di fattura');
       fat.addEventListener('change', async function () { var x = await sb.from('buoni').update({ fattura: fat.value.trim() || null }).eq('id', b.id); if (x.error) alert(errore(x.error)); else { b.fattura = fat.value.trim() || null; } });
       var az = el('span', 'flex flex-wrap items-center gap-2 ml-auto'); az.appendChild(fat);
@@ -958,9 +991,67 @@
       }
       var del = el('button', 'text-xs font-heavy text-brand-muted hover:text-[#FB923C] px-2 py-2', 'Elimina'); del.type = 'button';
       del.addEventListener('click', async function () { if (!confirm('Eliminare il buono ' + b.codice + ' dal registro? Se era convalidato, resta convalidato nella piattaforma del Ministero.')) return; var x = await sb.from('buoni').delete().eq('id', b.id); if (x.error) alert(errore(x.error)); caricaBuoni(); });
-      az.appendChild(del); li.appendChild(az); ul.appendChild(li);
+      az.appendChild(del); li.appendChild(az);
+      /* dati per il Registro Vendite: data della fattura e documento fiscale rilasciato al cliente */
+      var det = document.createElement('details'); det.className = 'basis-full text-sm font-semibold text-brand-muted';
+      var sm = el('summary', 'cursor-pointer font-bold text-brand-lime', 'Dati per il Registro Vendite' + (b.data_fattura ? '' : ' (manca la data della fattura)')); det.appendChild(sm);
+      var griglia2 = el('div', 'mt-2 flex flex-wrap items-end gap-3');
+      function campoD(etichetta, ctrl) { var w = el('label', 'block text-xs font-bold text-brand-muted'); w.appendChild(document.createTextNode(etichetta)); ctrl.className = CAMPO + ' block mt-1'; w.appendChild(ctrl); griglia2.appendChild(w); return ctrl; }
+      var dF = campoD('Data fattura', Object.assign(document.createElement('input'), { type: 'date', value: b.data_fattura || '' }));
+      var tD = document.createElement('select'); [[4, 'Esente'], [1, 'Scontrino'], [2, 'Ricevuta'], [3, 'Fattura']].forEach(function (o) { var op = el('option', null, o[1]); op.value = o[0]; tD.appendChild(op); }); tD.value = b.doc_tipo || 4; campoD('Documento al cliente', tD);
+      var nD = campoD('N. documento', Object.assign(document.createElement('input'), { type: 'text', maxLength: 50, value: b.doc_numero || '', placeholder: 'Facoltativo se esente' }));
+      var dD = campoD('Data documento', Object.assign(document.createElement('input'), { type: 'date', value: b.doc_data || '' }));
+      var sv = el('button', BTN, 'Salva'); sv.type = 'button'; var ev = el('span', 'text-xs font-bold text-brand-lime');
+      sv.addEventListener('click', async function () {
+        var x = await sb.from('buoni').update({ data_fattura: dF.value || null, doc_tipo: Number(tD.value), doc_numero: nD.value.trim() || null, doc_data: dD.value || null }).eq('id', b.id);
+        ev.textContent = x.error ? errore(x.error) : 'Salvato'; if (!x.error) { Object.assign(b, { data_fattura: dF.value || null, doc_tipo: Number(tD.value), doc_numero: nD.value.trim() || null, doc_data: dD.value || null }); sm.textContent = 'Dati per il Registro Vendite' + (b.data_fattura ? '' : ' (manca la data della fattura)'); }
+      });
+      griglia2.appendChild(sv); griglia2.appendChild(ev); det.appendChild(griglia2); li.appendChild(det);
+      ul.appendChild(li);
     });
   }
+  /* File per il Registro Vendite (fatturebonus.consap.it, Appendice 4): una riga per fumetto, campi separati da |, 20 campi */
+  try { $('g-buo-esercente').value = localStorage.getItem('area51-codice-esercente') || ''; } catch (e0) {}
+  $('g-buo-registro').addEventListener('click', function () {
+    var es = $('g-buo-registro-esito'), pr = $('g-buo-problemi'); svuota(pr); es.className = 'text-sm font-bold text-[#FB923C]';
+    var cod = $('g-buo-esercente').value.trim().toUpperCase(), mese = $('g-buo-mese').value;
+    if (!/^[A-Z0-9]{5}$/.test(cod)) { es.textContent = 'Il codice esercente ha 5 caratteri (lettere e numeri): lo trovi nella piattaforma del Ministero.'; return; }
+    if (!mese) { es.textContent = 'Scegli il mese (qui sopra, accanto a "Esporta il mese").'; return; }
+    try { localStorage.setItem('area51-codice-esercente', cod); } catch (e1) {}
+    var scelti = buoni.filter(function (b) { return b.stato === 'convalidato' && aMese(b.convalidato_il || b.creato_il) === mese; })
+      .sort(function (x, y) { return (x.convalidato_il || x.creato_il) < (y.convalidato_il || y.creato_il) ? -1 : 1; });
+    if (!scelti.length) { es.textContent = 'Nessun buono convalidato in quel mese.'; return; }
+    function cent(v) { return Math.round(Number(v) * 100); }
+    function ymd(iso) { return String(iso).slice(0, 10).replace(/-/g, ''); }
+    function pulito(v) { return String(v == null ? '' : v).replace(/[|]/g, '/').replace(/[\r\n]+/g, ' ').trim(); }
+    var righe = [], idr = 0, saltati = 0, nl = String.fromCharCode(13) + String.fromCharCode(10);
+    scelti.forEach(function (b) {
+      var prob = [], arts = Array.isArray(b.articoli) ? b.articoli : [];
+      if (!b.fattura) prob.push('manca il numero di fattura');
+      if (!b.data_fattura) prob.push('manca la data della fattura');
+      if (!arts.length) prob.push('non ci sono fumetti registrati (ISBN)');
+      arts.forEach(function (a) { mancanti(a).forEach(function (k) { prob.push({ t: 'titolo', a: 'autore', ed: 'casa editrice', p: 'prezzo' }[k] + ' mancante per ' + a.e); }); });
+      var tipo = b.doc_tipo || 4, num = b.doc_numero || (tipo === 4 ? 'ESENTE' : '');
+      if (!num) prob.push('manca il numero del documento fiscale');
+      var copie = []; arts.forEach(function (a) { for (var i = 0; i < a.n; i++) copie.push(a); });
+      var somma = copie.reduce(function (s0, a) { return s0 + (a.p == null ? 0 : cent(a.p)); }, 0);
+      if (copie.length && !prob.length && somma < cent(b.importo)) prob.push('i prezzi dei fumetti (' + euro(somma / 100) + ') sono inferiori al buono (' + euro(b.importo) + ')');
+      if (prob.length) { saltati++; var li = el('li', null, 'Buono ' + b.codice + ': ' + prob.join('; ') + '.'); pr.appendChild(li); return; }
+      var resto = cent(b.importo), dataDoc = b.doc_data || (b.convalidato_il || b.creato_il).slice(0, 10);
+      copie.forEach(function (a) {
+        if (resto <= 0) return;
+        var q = Math.min(cent(a.p), resto); resto -= q; if (q <= 0) return;
+        var fisso = ' - Autore: ' + pulito(a.a) + ' - Editore: ' + pulito(a.ed) + ' - ISBN/EAN: ' + a.e + ' - Cartaceo';
+        var desc = pulito(a.t).slice(0, Math.max(10, 255 - fisso.length)) + fisso;
+        idr++;
+        righe.push([idr, cod, ymd(b.data_fattura), pulito(b.fattura).slice(0, 50), pulito(b.codice), a.e, 2, desc.slice(0, 255), (q / 100).toFixed(2), tipo, pulito(num).slice(0, 50), ymd(dataDoc), 'N', '', '', '', '', '', '', ''].join('|'));
+      });
+    });
+    if (!righe.length) { es.textContent = 'Nessuna riga pronta: sistema i buoni qui sotto e riprova.'; return; }
+    var url = URL.createObjectURL(new Blob([righe.join(nl) + nl], { type: 'text/csv;charset=utf-8' })), a2 = document.createElement('a');
+    a2.href = url; a2.download = 'registro-vendite-' + mese + '.csv'; document.body.appendChild(a2); a2.click(); document.body.removeChild(a2); setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+    es.className = 'text-sm font-bold text-brand-lime'; es.textContent = 'File scaricato: ' + righe.length + (righe.length === 1 ? ' riga' : ' righe') + ' da ' + (scelti.length - saltati) + (scelti.length - saltati === 1 ? ' buono' : ' buoni') + (saltati ? ' (' + saltati + ' lasciati fuori, vedi sotto)' : '') + '.';
+  });
   fb.addEventListener('submit', async function (e) {
     e.preventDefault();
     var f = fb.elements, es = $('g-buo-esito'); es.className = 'text-sm font-bold text-[#FB923C] min-h-[1.25rem] mb-4';
