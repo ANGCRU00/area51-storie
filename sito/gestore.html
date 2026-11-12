@@ -1056,7 +1056,7 @@
     e.preventDefault();
     var f = fb.elements, es = $('g-buo-esito'); es.className = 'text-sm font-bold text-[#FB923C] min-h-[1.25rem] mb-4';
     var codice = f.codice.value.trim(), importo = Math.round(Number(String(f.importo.value).replace(',', '.')) * 100) / 100;
-    if (!/^[A-Za-z0-9-]{4,40}$/.test(codice)) { es.textContent = /\s/.test(codice) ? 'Questo non è un codice: è il codice del buono (quello del Ministero, per esempio 11aa22bb), senza spazi. Il titolo del fumetto arriva da solo scansionando l'ISBN.' : 'Il codice del buono ha da 4 a 40 caratteri (lettere, numeri o trattini).'; f.codice.focus(); return; }
+    if (!/^[A-Za-z0-9-]{4,40}$/.test(codice)) { es.textContent = /\s/.test(codice) ? 'Questo non è un codice: è il codice del buono (quello del Ministero, per esempio 11aa22bb), senza spazi. Il titolo del fumetto arriva da solo scansionando l’ISBN.' : 'Il codice del buono ha da 4 a 40 caratteri (lettere, numeri o trattini).'; f.codice.focus(); return; }
     if (!(importo > 0)) { es.textContent = 'Scrivi l\'importo del buono.'; f.importo.focus(); return; }
     var t = f.tessera.checked ? clienteTessera() : null;
     if ($('bu-isbn').value.trim()) await aggiungiCodice($('bu-isbn').value, articoli, disegnaArticoli);
