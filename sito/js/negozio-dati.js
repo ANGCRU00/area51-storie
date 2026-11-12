@@ -11,6 +11,7 @@ window.A51_NEGOZIO = {
   conservazione_richieste: '',  // per quanto tempo si tengono le richieste Chiedicelo
   conservazione_prenotazioni: '',
   conservazione_tessera: '',    // dopo l'ultima attività della tessera
+  conservazione_buoni: '',      // registro dei buoni Carta della Cultura e Merito
   giorni_ritiro: '',            // per quanti giorni dopo l'uscita si tiene un titolo prenotato
   ritiro_non_ritirato: '',      // cosa succede a chi non ritira
   caparra: '',                  // per quali titoli, quanto, e se si restituisce

@@ -337,6 +337,7 @@
         <button type="button" data-sez="richieste" class="tab-profilo !w-auto">Richieste <span id="g-n-ric" class="num-profilo">0</span></button>
         <button type="button" data-sez="eventi" class="tab-profilo !w-auto">Eventi e iscrizioni <span id="g-n-ev" class="num-profilo">0</span></button>
         <button type="button" data-sez="uscite" class="tab-profilo !w-auto">Uscite da prenotare <span id="g-n-usc" class="num-profilo">0</span></button>
+        <button type="button" data-sez="buoni" class="tab-profilo !w-auto">Buoni Carta Cultura <span id="g-n-buo" class="num-profilo">0</span></button>
         <button type="button" data-sez="tessere" class="tab-profilo !w-auto">Tessere e livelli <span id="g-n-tes" class="num-profilo">0</span></button>
       </nav>
 
@@ -438,6 +439,41 @@
         </form>
         <ul id="g-usc-lista" class="space-y-3"></ul>
         <p id="g-usc-vuoto" hidden class="vuoto-profilo !block">Nessuna uscita: aggiungine una o importa un file.</p>
+      </section>
+
+      <!-- Buoni Carta della Cultura / Carta del Merito -->
+      <section id="g-buoni" hidden aria-labelledby="g-buo-t">
+        <h2 id="g-buo-t" class="font-heavy text-2xl sm:text-3xl text-white uppercase mb-2">Buoni Carta della Cultura e Merito</h2>
+        <p class="text-sm font-semibold text-brand-muted max-w-3xl mb-5">Registra il buono appena il cliente te lo mostra: scrivi (o scansiona) il codice e l'importo, premi Invio. Il codice si copia da solo: incollalo nella piattaforma del Ministero, convalida, poi segna "Convalidato" qui. Il registro tiene i totali e si esporta per il confronto con la piattaforma e con le fatture. <span class="text-white">Controlla sempre il documento del titolare.</span></p>
+
+        <form id="g-buo-form" class="rounded-2xl border border-brand-lime/50 bg-[#0e0926]/90 p-5 sm:p-6 mb-4 grid grid-cols-2 lg:grid-cols-[2fr_1fr_1fr_2fr_1fr_auto] gap-3 items-end" novalidate>
+          <div class="col-span-2 lg:col-span-1"><label for="bu-codice" class="block font-heavy text-xs uppercase tracking-widest text-brand-lime mb-2">Codice del buono</label>
+            <input id="bu-codice" name="codice" maxlength="40" autocomplete="off" autocapitalize="characters" spellcheck="false" required class="campo-profilo font-mono" placeholder="Scrivi o scansiona"></div>
+          <div><label for="bu-importo" class="block font-heavy text-xs uppercase tracking-widest text-brand-lime mb-2">Importo (€)</label>
+            <input id="bu-importo" name="importo" type="number" min="0.01" step="0.01" inputmode="decimal" required class="campo-profilo" placeholder="0,00"></div>
+          <div><label for="bu-carta" class="block font-heavy text-xs uppercase tracking-widest text-brand-lime mb-2">Carta</label>
+            <select id="bu-carta" name="carta" class="campo-profilo"><option value="">Non so</option><option value="cultura">Cultura</option><option value="merito">Merito</option></select></div>
+          <div class="col-span-2 lg:col-span-1"><label for="bu-cliente" class="block font-heavy text-xs uppercase tracking-widest text-brand-lime mb-2">Cliente</label>
+            <input id="bu-cliente" name="cliente" maxlength="80" list="g-buo-clienti" autocomplete="off" class="campo-profilo" placeholder="Nome (facoltativo)">
+            <datalist id="g-buo-clienti"></datalist></div>
+          <div><label for="bu-fattura" class="block font-heavy text-xs uppercase tracking-widest text-brand-lime mb-2">Fattura</label>
+            <input id="bu-fattura" name="fattura" maxlength="40" class="campo-profilo" placeholder="N° (facolt.)"></div>
+          <button type="submit" class="col-span-2 lg:col-span-1 bg-brand-lime text-black font-heavy text-sm px-6 py-3 rounded-full rounded-bl-[4px] shadow-brutal-violet hover:bg-[#a6d420] transition-colors">Registra</button>
+          <label id="bu-tessera-l" hidden class="col-span-2 lg:col-span-6 flex items-center gap-3 text-sm font-semibold text-brand-muted cursor-pointer"><input type="checkbox" name="tessera" class="w-5 h-5 rounded border-white/30 bg-[#120a2e] text-brand-lime focus:ring-brand-lime"> Aggiungi l'importo anche alla tessera del cliente quando il buono è convalidato</label>
+        </form>
+        <p id="g-buo-esito" role="status" class="text-sm font-bold text-brand-lime min-h-[1.25rem] mb-4"></p>
+
+        <p id="g-buo-riepilogo" class="mb-4 text-sm font-semibold text-brand-muted"></p>
+        <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
+          <div id="g-buo-filtri" class="flex flex-wrap gap-2"></div>
+          <div class="flex flex-wrap items-center gap-2">
+            <label for="g-buo-mese" class="sr-only">Mese da esportare</label>
+            <input id="g-buo-mese" type="month" class="bg-[#120a2e] border border-white/15 text-white rounded-full px-3 py-2 text-sm">
+            <button type="button" id="g-buo-esporta" class="border border-white/25 hover:border-brand-lime hover:text-brand-lime font-heavy text-xs px-4 py-2 rounded-full transition-colors">Esporta il mese (CSV)</button>
+          </div>
+        </div>
+        <ul id="g-buo-lista" class="space-y-2"></ul>
+        <p id="g-buo-vuoto" hidden class="vuoto-profilo !block">Nessun buono in questa categoria.</p>
       </section>
 
       <!-- Tessere e livelli -->
@@ -593,14 +629,14 @@
   sb.auth.getSession().then(function (r) { if (r.data && r.data.session) verifica(r.data.session.user); });
 
   /* ---------- Sezioni ---------- */
-  var SEZ = ['richieste', 'eventi', 'uscite', 'tessere'];
+  var SEZ = ['richieste', 'eventi', 'uscite', 'buoni', 'tessere'];
   function sezione(s) {
     SEZ.forEach(function (x) { $('g-' + x).hidden = x !== s; });
     Array.prototype.forEach.call($('g-tabs').children, function (b) { if (b.dataset.sez === s) b.setAttribute('aria-current', 'true'); else b.removeAttribute('aria-current'); });
   }
   $('g-tabs').addEventListener('click', function (e) { var b = e.target.closest('[data-sez]'); if (b) sezione(b.dataset.sez); });
   sezione('richieste');
-  function carica() { caricaUscite(); caricaRichieste(); caricaEventi(); caricaTessere(); }
+  function carica() { caricaUscite(); caricaRichieste(); caricaEventi(); caricaTessere(); caricaBuoni(); }
 
   /* ---------- Richieste ---------- */
   var STATI_RIC = [['nuova', 'Nuova'], ['in_corso', 'In corso'], ['confermata', 'Confermata'], ['ritirata', 'Ritirata'], ['non_ritirata', 'Non ritirata'], ['chiusa', 'Chiusa']];
@@ -803,12 +839,107 @@
     es.textContent = 'Importate ' + buoni.length + ' righe' + (scartate ? ', scartate ' + scartate : '') + '.'; $('g-usc-file').value = ''; caricaUscite();
   });
 
+  /* ---------- Buoni Carta della Cultura / Carta del Merito ----------
+     Registro dei buoni accettati: il codice si copia da solo per incollarlo nella piattaforma del Ministero, la convalida si fa lì,
+     qui si segna "Convalidato" (e, se serve, l'importo va anche sulla tessera del cliente). Il sito non si collega al Ministero. */
+  var buoni = [], filtroBuoni = 'da_convalidare', fb = $('g-buo-form');
+  var STATI_BUONO = { da_convalidare: 'Da convalidare', convalidato: 'Convalidato', respinto: 'Respinto' };
+  function aMese(iso) { return String(iso).slice(0, 7); }
+  function oggiLocale() { var d = new Date(); return d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2); }
+  function copia(testo) {
+    if (navigator.clipboard && navigator.clipboard.writeText) return navigator.clipboard.writeText(testo).then(function () { return true; }, function () { return false; });
+    return Promise.resolve(false);
+  }
+  async function caricaBuoni() {
+    var r = await sb.from('buoni').select('*').order('creato_il', { ascending: false }).limit(1000);
+    if (r.error) { $('g-buo-vuoto').hidden = false; $('g-buo-vuoto').textContent = errore(r.error); return; }
+    buoni = r.data; $('g-n-buo').textContent = buoni.filter(function (b) { return b.stato === 'da_convalidare'; }).length;
+    if (!$('g-buo-mese').value) $('g-buo-mese').value = oggiLocale().slice(0, 7);
+    riempiClienti(); disegnaBuoni();
+  }
+  function riempiClienti() { var dl = $('g-buo-clienti'); svuota(dl); (tessere || []).forEach(function (t) { var o = document.createElement('option'); o.value = t.nome; dl.appendChild(o); }); }
+  function clienteTessera() { var v = fb.elements.cliente.value.trim().toLowerCase(); return v && (tessere || []).filter(function (t) { return t.nome.toLowerCase() === v; })[0]; }
+  fb.elements.cliente.addEventListener('input', function () { $('bu-tessera-l').hidden = !clienteTessera(); if ($('bu-tessera-l').hidden) fb.elements.tessera.checked = false; });
+  function disegnaBuoni() {
+    var oggi = oggiLocale(), mese = oggi.slice(0, 7), somma = function (l) { return l.reduce(function (a, b) { return a + Number(b.importo); }, 0); };
+    var da = buoni.filter(function (b) { return b.stato === 'da_convalidare'; });
+    var conv = buoni.filter(function (b) { return b.stato === 'convalidato'; });
+    var oggiC = conv.filter(function (b) { return (b.convalidato_il || b.creato_il).slice(0, 10) === oggi; });
+    var meseC = conv.filter(function (b) { return aMese(b.convalidato_il || b.creato_il) === mese; });
+    $('g-buo-riepilogo').textContent = 'Da convalidare: ' + da.length + ' (' + euro(somma(da)) + ') · Convalidati oggi: ' + oggiC.length + ' (' + euro(somma(oggiC)) + ') · Convalidati nel mese: ' + meseC.length + ' (' + euro(somma(meseC)) + ')';
+    var fl = $('g-buo-filtri'); svuota(fl);
+    [['da_convalidare', 'Da convalidare'], ['convalidato', 'Convalidati'], ['respinto', 'Respinti'], ['tutti', 'Tutti']].forEach(function (f) {
+      var n = f[0] === 'tutti' ? buoni.length : buoni.filter(function (b) { return b.stato === f[0]; }).length;
+      var b = el('button', 'chip text-sm font-bold px-3 py-2 rounded-full border transition-colors ' + (filtroBuoni === f[0] ? 'bg-brand-lime text-black border-brand-lime shadow-brutal-violet' : 'bg-[#120a2e] border-white/15 hover:border-brand-lime hover:text-brand-lime'), f[1] + ' (' + n + ')');
+      b.type = 'button'; b.addEventListener('click', function () { filtroBuoni = f[0]; disegnaBuoni(); }); fl.appendChild(b);
+    });
+    var ul = $('g-buo-lista'); svuota(ul);
+    var l = buoni.filter(function (b) { return filtroBuoni === 'tutti' || b.stato === filtroBuoni; });
+    $('g-buo-vuoto').hidden = l.length > 0; $('g-buo-vuoto').textContent = 'Nessun buono in questa categoria.';
+    l.forEach(function (b) {
+      var li = el('li', 'rounded-xl border border-white/10 bg-[#0e0926]/90 px-4 py-3 flex flex-wrap items-center gap-x-4 gap-y-2');
+      var cod = el('span', 'font-mono font-bold text-white break-all', b.codice); li.appendChild(cod);
+      var cp = el('button', BTN, 'Copia'); cp.type = 'button'; cp.addEventListener('click', async function () { var ok = await copia(b.codice); cp.textContent = ok ? 'Copiato ✓' : 'Non riesco'; setTimeout(function () { cp.textContent = 'Copia'; }, 1500); });
+      li.appendChild(cp);
+      li.appendChild(el('span', 'font-heavy text-brand-lime', euro(b.importo)));
+      li.appendChild(el('span', 'text-xs font-bold text-brand-muted uppercase tracking-wider', [b.carta ? (b.carta === 'cultura' ? 'Cultura' : 'Merito') : '', b.cliente || '', dataIt(b.creato_il)].filter(Boolean).join(' · ')));
+      li.appendChild(el('span', 'text-xs font-bold ' + (b.stato === 'convalidato' ? 'text-brand-lime' : b.stato === 'respinto' ? 'text-[#FB923C]' : 'text-white'), STATI_BUONO[b.stato] + (b.stato === 'convalidato' && b.convalidato_il ? ' il ' + dataIt(b.convalidato_il) : '') + (b.tessera_id ? ' · va sulla tessera' : '')));
+      var fat = el('input', CAMPO + ' w-28'); fat.placeholder = 'Fattura'; fat.maxLength = 40; fat.value = b.fattura || ''; fat.setAttribute('aria-label', 'Numero di fattura');
+      fat.addEventListener('change', async function () { var x = await sb.from('buoni').update({ fattura: fat.value.trim() || null }).eq('id', b.id); if (x.error) alert(errore(x.error)); else { b.fattura = fat.value.trim() || null; } });
+      var az = el('span', 'flex flex-wrap items-center gap-2 ml-auto'); az.appendChild(fat);
+      if (b.stato === 'da_convalidare') {
+        var ok = el('button', BTN_PIENO, 'Convalidato'); ok.type = 'button';
+        ok.addEventListener('click', async function () {
+          ok.disabled = true;
+          var x = await sb.from('buoni').update({ stato: 'convalidato', convalidato_il: new Date().toISOString() }).eq('id', b.id).eq('stato', 'da_convalidare');
+          if (x.error) { alert(errore(x.error)); ok.disabled = false; return; }
+          if (b.tessera_id) { var y = await sb.from('acquisti').insert({ tessera_id: b.tessera_id, importo: b.importo, nota: 'Buono Carta Cultura ' + b.codice }); if (y.error) alert('Buono convalidato, ma non sono riuscito a segnarlo sulla tessera: ' + errore(y.error)); else caricaTessere(); }
+          caricaBuoni();
+        });
+        var no = el('button', BTN, 'Respinto'); no.type = 'button';
+        no.addEventListener('click', async function () { var x = await sb.from('buoni').update({ stato: 'respinto' }).eq('id', b.id); if (x.error) alert(errore(x.error)); caricaBuoni(); });
+        az.appendChild(ok); az.appendChild(no);
+      }
+      var del = el('button', 'text-xs font-heavy text-brand-muted hover:text-[#FB923C] px-2 py-2', 'Elimina'); del.type = 'button';
+      del.addEventListener('click', async function () { if (!confirm('Eliminare il buono ' + b.codice + ' dal registro? Se era convalidato, resta convalidato nella piattaforma del Ministero.')) return; var x = await sb.from('buoni').delete().eq('id', b.id); if (x.error) alert(errore(x.error)); caricaBuoni(); });
+      az.appendChild(del); li.appendChild(az); ul.appendChild(li);
+    });
+  }
+  fb.addEventListener('submit', async function (e) {
+    e.preventDefault();
+    var f = fb.elements, es = $('g-buo-esito'); es.className = 'text-sm font-bold text-[#FB923C] min-h-[1.25rem] mb-4';
+    var codice = f.codice.value.trim(), importo = Math.round(Number(String(f.importo.value).replace(',', '.')) * 100) / 100;
+    if (!/^[A-Za-z0-9-]{4,40}$/.test(codice)) { es.textContent = 'Il codice deve avere da 4 a 40 caratteri (lettere, numeri o trattini).'; f.codice.focus(); return; }
+    if (!(importo > 0)) { es.textContent = 'Scrivi l\'importo del buono.'; f.importo.focus(); return; }
+    var t = f.tessera.checked ? clienteTessera() : null;
+    var x = await sb.from('buoni').insert({ codice: codice, importo: importo, carta: f.carta.value || null, cliente: f.cliente.value.trim() || null, tessera_id: t ? t.id : null, fattura: f.fattura.value.trim() || null });
+    if (x.error) { es.textContent = /duplicate|unique/i.test(x.error.message || '') ? 'Questo buono è già nel registro: controlla di non averlo già registrato.' : errore(x.error); f.codice.select(); return; }
+    var copiato = await copia(codice), carta = f.carta.value;
+    fb.reset(); f.carta.value = carta; $('bu-tessera-l').hidden = true;
+    es.className = 'text-sm font-bold text-brand-lime min-h-[1.25rem] mb-4'; es.textContent = 'Registrato.' + (copiato ? ' Codice copiato: incollalo nella piattaforma del Ministero e convalida.' : ' Copia il codice dalla lista.');
+    f.codice.focus(); filtroBuoni = 'da_convalidare'; caricaBuoni();
+  });
+  $('g-buo-esporta').addEventListener('click', function () {
+    var mese = $('g-buo-mese').value, es = $('g-buo-esito');
+    if (!mese) { es.className = 'text-sm font-bold text-[#FB923C] min-h-[1.25rem] mb-4'; es.textContent = 'Scegli il mese da esportare.'; return; }
+    var righe = buoni.filter(function (b) { return aMese(b.creato_il) === mese; }).slice().reverse();
+    if (!righe.length) { es.className = 'text-sm font-bold text-[#FB923C] min-h-[1.25rem] mb-4'; es.textContent = 'Nessun buono registrato in quel mese.'; return; }
+    function c(v) { return '"' + String(v == null ? '' : v).replace(/"/g, '""') + '"'; }
+    var nl = String.fromCharCode(10), testa = ['data', 'codice', 'importo', 'carta', 'cliente', 'stato', 'convalidato_il', 'fattura', 'nota'];
+    var csv = String.fromCharCode(0xFEFF) + testa.join(';') + nl + righe.map(function (b) {
+      return [b.creato_il.slice(0, 10), b.codice, String(b.importo).replace('.', ','), b.carta || '', b.cliente || '', STATI_BUONO[b.stato], b.convalidato_il ? b.convalidato_il.slice(0, 10) : '', b.fattura || '', b.nota || ''].map(c).join(';');
+    }).join(nl);
+    var url = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' })), a = document.createElement('a');
+    a.href = url; a.download = 'buoni-' + mese + '.csv'; document.body.appendChild(a); a.click(); document.body.removeChild(a); setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+    es.className = 'text-sm font-bold text-brand-lime min-h-[1.25rem] mb-4'; es.textContent = 'Esportati ' + righe.length + ' buoni.';
+  });
+
   /* ---------- Tessere e livelli ---------- */
   var tessere = [], livelli = [], storico = null, acquisti = [];
   async function caricaTessere() {
     var a = await sb.from('tessere_fedelta').select('*').order('nome', { ascending: true }), b = await sb.from('livelli').select('*').order('soglia', { ascending: true });
     if (a.error || b.error) { $('g-tes-vuoto').hidden = false; $('g-tes-vuoto').textContent = errore(a.error || b.error); return; }
-    tessere = a.data; livelli = b.data; $('g-n-tes').textContent = tessere.length; disegnaLivelli(); disegnaTessere();
+    tessere = a.data; livelli = b.data; $('g-n-tes').textContent = tessere.length; disegnaLivelli(); disegnaTessere(); riempiClienti();
   }
   function disegnaLivelli() {
     var ul = $('g-liv-lista'); svuota(ul);
