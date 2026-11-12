@@ -350,6 +350,14 @@
       <h2 class="font-heavy text-3xl sm:text-4xl lg:text-5xl text-white leading-tight">La tua prossima ossessione arriva qui.</h2>
     </div>
   </div>
+  <div id="na-banner" hidden class="mb-8 rounded-2xl border-2 border-brand-violet bg-[#140C2B] p-5 sm:p-6 flex flex-wrap items-center justify-between gap-4 shadow-[6px_6px_0_#B9E62E]">
+    <div class="min-w-0">
+      <p class="text-xs font-heavy text-brand-lime uppercase tracking-widest mb-1">Prenota le novità</p>
+      <p id="na-banner-testo" class="font-heavy text-xl sm:text-2xl text-white leading-tight"></p>
+      <p id="na-banner-sotto" class="mt-1 text-sm font-semibold text-brand-muted"></p>
+    </div>
+    <a href="uscite.html" class="shrink-0 bg-brand-violet hover:bg-brand-violetGlow text-white font-heavy text-sm sm:text-base px-7 py-3.5 rounded-full rounded-bl-[4px] shadow-[4px_4px_0_#B9E62E] transition-colors">Prenota le novità →</a>
+  </div>
   <div class="flex flex-wrap gap-2.5 mb-10" role="group" aria-label="Scegli cosa vedere">
     <button type="button" id="na-nuovi" aria-pressed="true" class="bg-brand-lime text-black font-heavy text-sm px-5 py-2.5 rounded-full shadow-brutal-violet">Nuovi arrivi</button>
     <button type="button" id="na-prossime" aria-pressed="false" class="bg-[#120a2e] hover:text-brand-lime border border-white/15 hover:border-brand-lime font-semibold text-sm px-5 py-2.5 rounded-full transition-colors">Prossime uscite</button>
@@ -419,6 +427,7 @@
 <script src="dati/eventi.js"></script>
 <script src="js/area51-db.js"></script>
 <script src="js/eventi-db.js"></script>
+<script src="js/prenota.js"></script>
 <script>
 (function () {
   function euroIt(n) { return Number(n).toLocaleString('it-IT', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }); }
@@ -495,16 +504,59 @@
       '<a href="' + link + '" data-ean="' + r[0] + '" class="' + (pre ? 'bg-brand-violet hover:bg-brand-violetGlow text-white rounded-bl-[4px] shadow-[3px_3px_0_#B9E62E]' : 'hover:bg-brand-lime hover:text-black border border-white/25 hover:border-brand-lime') + ' font-heavy text-xs px-4 py-2.5 rounded-full transition-colors">' + (pre ? 'Prenota' : 'Vedi scheda') + '</a></div>' +
     '</article>';
   }
+  /* Uscite prenotabili dal database (tabella "uscite"): data limite per ordinare ancora valida */
+  var USC = [], OFF_PREN = 'bg-brand-violet/40 hover:bg-brand-violet text-white border border-brand-violet font-heavy text-sm px-5 py-2.5 rounded-full transition-colors';
+  var COL = [['#22D3EE', '#5B21B6'], ['#FCD34D', '#EC4899'], ['#8B5CF6', '#1E1B4B'], ['#B9E62E', '#3D1775'], ['#F472B6', '#7C3AED'], ['#34D399', '#1E3A8A'], ['#FB923C', '#7F1D1D'], ['#60A5FA', '#312E81']];
+  function isoOggi() { var d = new Date(); return d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2); }
+  function giorniA(iso) { return Math.round((new Date(iso + 'T12:00:00') - new Date(isoOggi() + 'T12:00:00')) / 864e5); }
+  function dataLunga(iso) { var d = new Date(iso + 'T12:00:00'); return d.getDate() + ' ' + MESI[d.getMonth()] + ' ' + d.getFullYear(); }
+  function schedaUscita(u, i) {
+    var c = COL[i % COL.length], g = u.data_limite ? giorniA(u.data_limite) : null;
+    var lim = u.data_limite ? 'Prenota entro il ' + dataLunga(u.data_limite) + (g === 0 ? ' · ultimo giorno!' : g === 1 ? ' · manca 1 giorno' : ' · mancano ' + g + ' giorni') : 'Data limite: da confermare';
+    return '<article class="' + (i >= 4 ? 'max-sm:hidden ' : '') + 'bg-[#0e0926]/90 rounded-2xl border border-white/10 p-3 hover:border-brand-lime transition-colors flex flex-col justify-between">' +
+      '<div><div class="relative aspect-[3/4] rounded-xl overflow-hidden mb-3" style="background:linear-gradient(150deg,' + c[0] + ',' + c[1] + ')">' +
+        (u.copertina ? '<img class="absolute inset-0 w-full h-full object-cover" src="' + esc(u.copertina) + '" alt="Copertina di ' + esc(u.titolo) + '" width="220" height="320" loading="lazy" decoding="async">'
+          : '<div class="absolute inset-0 flex flex-col items-center justify-center p-3 text-center"><span class="font-heavy text-white text-sm sm:text-base leading-tight drop-shadow-[2px_2px_0_rgba(20,12,43,.6)]">' + esc(u.serie || u.titolo) + '</span><span class="mt-2 text-[10px] font-bold tracking-[0.2em] text-white/75">[COPERTINA]</span></div>') +
+        '<span class="absolute top-2 left-2 bg-brand-violet text-white font-heavy text-[10px] px-2.5 py-0.5 rounded -rotate-2">PREORDINE</span></div>' +
+      '<p class="text-[11px] font-bold text-brand-muted tracking-wider uppercase">' + esc(EDITORI[u.editore] || u.editore || '') + '</p>' +
+      '<h3 class="font-heavy text-sm sm:text-base text-white mt-1 leading-snug">' + esc(u.titolo) + '</h3>' +
+      (u.data_uscita ? '<p class="mt-1.5 text-[11px] sm:text-xs font-semibold text-brand-muted">Esce il ' + esc(dataLunga(u.data_uscita)) + '</p>' : '') +
+      '<p class="mt-1 text-[11px] sm:text-xs font-bold ' + (g !== null && g <= 3 ? 'text-[#FB923C]' : 'text-brand-lime') + '">' + esc(lim) + '</p></div>' +
+      '<div class="flex flex-wrap items-center justify-between gap-2 mt-3 pt-3 border-t border-white/10"><span class="font-heavy text-sm sm:text-base text-brand-lime">' + (u.prezzo != null ? euro(Number(u.prezzo)) : '[PREZZO]') + '</span>' +
+      '<button type="button" data-uscita="' + esc(u.id) + '" class="bg-brand-violet hover:bg-brand-violetGlow text-white font-heavy text-xs px-4 py-2.5 rounded-full rounded-bl-[4px] shadow-[3px_3px_0_#B9E62E] transition-colors">Prenota</button></div>' +
+    '</article>';
+  }
   function disegna(tipo) {
     var l = elenco(tipo);
+    if (tipo === 'prossime' && USC.length) {
+      griglia.innerHTML = USC.slice(0, 8).map(schedaUscita).join('');
+      bN.className = OFF; bP.className = ON; bN.setAttribute('aria-pressed', 'false'); bP.setAttribute('aria-pressed', 'true'); return;
+    }
     griglia.innerHTML = l.length ? l.map(function (r, i) { return scheda(r, i, tipo); }).join('') : '<p class="col-span-full text-brand-muted">Per ora non ci sono ' + (tipo === 'prossime' ? 'uscite annunciate' : 'novità') + ' nei cataloghi.</p>';
-    bN.className = tipo === 'nuovi' ? ON : OFF; bP.className = tipo === 'prossime' ? ON : OFF;
+    bN.className = tipo === 'nuovi' ? ON : OFF; bP.className = tipo === 'prossime' ? ON : (USC.length ? OFF_PREN : OFF);
     bN.setAttribute('aria-pressed', String(tipo === 'nuovi')); bP.setAttribute('aria-pressed', String(tipo === 'prossime'));
   }
   if (griglia && bN && bP) {
     bN.addEventListener('click', function () { disegna('nuovi'); });
     bP.addEventListener('click', function () { disegna('prossime'); });
     disegna('nuovi');
+    griglia.addEventListener('click', function (e) {
+      var b = e.target.closest('[data-uscita]'); if (!b) return;
+      var u = USC.filter(function (x) { return x.id === b.dataset.uscita; })[0];
+      if (u && window.A51Prenota) A51Prenota.apri({ id: u.id, titolo: u.titolo, data_limite: u.data_limite, scaduta: false });
+    });
+    if (window.A51DB && A51DB.uscite) A51DB.uscite().then(function (l) {
+      var oggi = isoOggi();
+      USC = l.filter(function (u) { return (!u.data_limite || u.data_limite >= oggi) && (!u.data_uscita || u.data_uscita >= oggi); })
+        .sort(function (a, b) { return (a.data_limite || '9999') < (b.data_limite || '9999') ? -1 : (a.data_limite || '9999') > (b.data_limite || '9999') ? 1 : 0; });
+      if (!USC.length) return;
+      bP.textContent = 'Prenota le novità (' + USC.length + ')';
+      var prima = USC.filter(function (u) { return u.data_limite; })[0];
+      document.getElementById('na-banner-testo').textContent = prima ? 'Il prossimo termine scade il ' + dataLunga(prima.data_limite) + '.' : 'Ci sono ' + USC.length + ' titoli da prenotare.';
+      document.getElementById('na-banner-sotto').textContent = USC.length + (USC.length === 1 ? ' titolo prenotabile' : ' titoli prenotabili') + ': dopo la data limite non è detto che arrivino.';
+      document.getElementById('na-banner').hidden = false;
+      disegna('prossime');
+    });
   }
 
   /* ---------- Prossimi eventi ---------- */
