@@ -481,7 +481,10 @@
 </script>
 <script src="dati/catalogo.js"></script>
 <script src="dati/eventi.js"></script>
+<script src="js/area51-db.js"></script>
+<script src="js/eventi-db.js"></script>
 <script>
+A51Eventi.pronti(function () {
 /* Profilo: legge da js/area51.js (preferiti, serie seguite, iscrizioni, dati, foto) e dal catalogo; tutto resta su questo dispositivo */
 (function () {
   if (location.hash === '#carrello') { location.replace('carrello.html'); return; }
@@ -587,7 +590,7 @@
   function eventi() {
     var ul = $('ev-lista'); ul.textContent = '';
     var l = A51.iscrizioni.tutti().map(function (k) { return { k: k, r: trovaEvento(k) }; }).filter(function (x) { return x.r; })
-      .sort(function (a, b) { return new Date(2026, NM[a.r[6]], a.r[5]) - new Date(2026, NM[b.r[6]], b.r[5]); });
+      .sort(function (a, b) { return A51Eventi.quando(a.r) - A51Eventi.quando(b.r); });
     ul.hidden = !l.length; $('ev-vuoto').hidden = l.length > 0;
     l.forEach(function (x) {
       var r = x.r, li = el('li', 'flex gap-4 rounded-2xl border border-white/10 bg-[#0e0926]/90 p-4');
@@ -644,6 +647,7 @@
   function tutto() { testa(); preferiti(); serie(); eventi(); }
   A51.onChange(tutto); tutto(); mostra(location.hash.slice(1), false);
 })();
+});
 </script>
 <script>
 /* Sistema solare di sfondo: ogni .corpo avanza in orizzontale (data-vel px/s, data-verso 1 o -1),

@@ -428,6 +428,8 @@
 
 <script src="dati/catalogo.js"></script>
 <script src="dati/eventi.js"></script>
+<script src="js/area51-db.js"></script>
+<script src="js/eventi-db.js"></script>
 <script>
 /* Home: Nuovi arrivi e Prossime uscite dal catalogo (con copertina) e i tre prossimi eventi dal calendario */
 (function () {
@@ -487,16 +489,18 @@
   }
 
   /* ---------- Prossimi eventi ---------- */
-  var lista = document.getElementById('ev-lista'), E = window.EVENTI_DATI || [];
+  var lista = document.getElementById('ev-lista'), E = [];
   var NOMI_MESE = { Gen: 0, Feb: 1, Mar: 2, Apr: 3, Mag: 4, Giu: 5, Lug: 6, Ago: 7, Set: 8, Ott: 9, Nov: 10, Dic: 11 };
   var GIOCO = { magic: 'Magic', pokemon: 'Pokémon', riftbound: 'Riftbound' }, FAMIGLIA = { serate: 'Giochi da tavolo', ruolo: 'Gioco di ruolo' };
+  A51Eventi.pronti(function () {
+  E = window.EVENTI_DATI || [];
   if (lista && E.length) {
     var oggi = new Date(); oggi.setHours(0, 0, 0, 0);
-    var tutti = E.map(function (r) { return { r: r, d: new Date(2026, NOMI_MESE[r[6]], r[5]).getTime() }; })
+    var tutti = E.map(function (r) { return { r: r, d: A51Eventi.quando(r) }; })
       .sort(function (a, b) { return a.d - b.d || a.r[7].localeCompare(b.r[7]); });
     var prossimi = tutti.filter(function (x) { return x.d >= oggi.getTime(); });
     lista.innerHTML = (prossimi.length ? prossimi : tutti).slice(0, 3).map(function (x) {
-      var r = x.r, rim = r[10] - r[9], perc = Math.round(r[9] / r[10] * 100), urg = rim <= 2;
+      var r = x.r, noto = r[9] != null, rim = r[10] - (noto ? r[9] : 0), perc = r[10] ? Math.round((noto ? r[9] : 0) / r[10] * 100) : 0, urg = noto && r[10] > 0 && rim <= 2;
       return '<li><a href="eventi.html?linea=' + r[0] + '" class="flex flex-col gap-4 h-full bg-[#0e0926]/90 border border-white/10 hover:border-brand-lime rounded-2xl p-5 transition-colors group">' +
         '<div class="flex items-start gap-4">' +
           '<div class="shrink-0 w-[4.5rem] rounded-xl border border-brand-lime/40 bg-[#140C2B] text-center py-2">' +
@@ -506,11 +510,12 @@
           '<div class="min-w-0"><span class="inline-block bg-brand-violet/60 border border-brand-violet text-white font-heavy text-[10px] uppercase tracking-wider px-2.5 py-1 rounded-md">' + esc(GIOCO[r[1]] || FAMIGLIA[r[0]] || r[0]) + '</span>' +
             '<h3 class="font-heavy text-base text-white uppercase mt-2 leading-snug group-hover:text-brand-lime transition-colors">' + esc(r[3]) + '</h3>' +
             '<p class="text-sm font-bold text-brand-muted mt-1">Ore ' + esc(r[7]) + ' · ' + (r[8] ? 'Quota ' + r[8] + ' €' : 'Gratis') + '</p></div></div>' +
-        '<div class="mt-auto space-y-2"><div class="flex items-center justify-between gap-3 text-xs font-bold"><span class="text-brand-muted">' + r[9] + ' / ' + r[10] + ' posti occupati</span><span class="text-brand-lime">' + (urg ? 'Solo ' + rim + ' rimasti!' : rim + ' rimasti') + '</span></div>' +
-        '<div class="h-2 rounded-full bg-white/10 overflow-hidden" aria-hidden="true"><div class="h-full bg-brand-lime rounded-full" style="width:' + perc + '%"></div></div></div>' +
+        '<div class="mt-auto space-y-2"><div class="flex items-center justify-between gap-3 text-xs font-bold"><span class="text-brand-muted">' + (noto ? r[9] + ' / ' + r[10] + ' posti occupati' : (r[10] ? r[10] + ' posti' : 'Posti da definire')) + '</span>' + (noto ? '<span class="text-brand-lime">' + (urg ? 'Solo ' + rim + ' rimasti!' : rim + ' rimasti') + '</span>' : '') + '</div>' +
+        (noto ? '<div class="h-2 rounded-full bg-white/10 overflow-hidden" aria-hidden="true"><div class="h-full bg-brand-lime rounded-full" style="width:' + perc + '%"></div></div>' : '') + '</div>' +
       '</a></li>';
     }).join('');
   }
+  });
 })();
 </script>
 <script src="dati/trame.js"></script>
@@ -556,7 +561,7 @@
   var NM = { Gen: 0, Feb: 1, Mar: 2, Apr: 3, Mag: 4, Giu: 5, Lug: 6, Ago: 7, Set: 8, Ott: 9, Nov: 10, Dic: 11 };
   if (E.length) {
     var oggi0 = new Date(); oggi0.setHours(0, 0, 0, 0);
-    var ev = E.map(function (r) { return { r: r, d: new Date(2026, NM[r[6]], r[5]).getTime() }; }).sort(function (a, b) { return a.d - b.d || a.r[7].localeCompare(b.r[7]); });
+    var ev = E.map(function (r) { return { r: r, d: A51Eventi.quando(r) }; }).sort(function (a, b) { return a.d - b.d || a.r[7].localeCompare(b.r[7]); });
     var pross = ev.filter(function (x) { return x.d >= oggi0.getTime(); }), e = (pross[0] || ev[0]).r;
     riga('hi-evento', e[3], e[4] + ' ' + e[5] + ' ' + e[6] + ', ore ' + e[7] + ' · ' + (e[8] ? 'quota ' + e[8] + ' €' : 'gratis'));
   }
@@ -637,7 +642,9 @@
     riga('hi-arrivo', ult[1], 'Ultimo arrivo · uscito il ' + dataTesto(ult));
   }
   }
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', avvia); else avvia();
+  A51Eventi.pronti(function () {
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', avvia); else avvia();
+  });
 })();
 </script>
 <script>

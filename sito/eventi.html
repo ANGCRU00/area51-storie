@@ -453,7 +453,10 @@
 </footer>
 
 <script src="dati/eventi.js"></script>
+<script src="js/area51-db.js"></script>
+<script src="js/eventi-db.js"></script>
 <script>
+A51Eventi.pronti(function () {
 (function () {
   /* ---------- Testata: menu da telefono e disco che segue il menu (come la home) ---------- */
   var btn = document.getElementById('menu-btn'), menu = document.getElementById('menu-mobile');
@@ -539,7 +542,7 @@
     if (r[1]) attr.gioco = [r[1]];
     if (r[2]) attr.evento = [r[2]];
     EVENTI.push({
-      id: n, titolo: r[3], linea: r[0], attr: attr,
+      id: n, dbid: r[14] || '', titolo: r[3], linea: r[0], attr: attr,
       gioco: r[1] ? etichettaVoce('carte', 'gioco', r[1]) : '',
       giorno: r[4], num: r[5], mese: r[6], ora: r[7], quota: r[8], occ: r[9], tot: r[10],
       formato: r[11], palio: r[12], descr: r[13]
@@ -628,8 +631,8 @@
   var ICONA_ORA = '<svg class="w-5 h-5 shrink-0 text-brand-lime" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>';
   var ICONA_QUOTA = '<svg class="w-5 h-5 shrink-0 text-brand-lime" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="3"/><path d="M6 12h.01M18 12h.01"/></svg>';
   function scheda(p) {
-    var rimasti = p.tot - p.occ, perc = Math.round(p.occ / p.tot * 100);
-    var urgente = rimasti <= 2;
+    var noto = p.occ != null, rimasti = p.tot - (noto ? p.occ : 0), perc = p.tot ? Math.round((noto ? p.occ : 0) / p.tot * 100) : 0;
+    var urgente = noto && p.tot > 0 && rimasti <= 2;
     var etichette = '<span class="inline-block bg-brand-violet/60 border border-brand-violet text-white font-heavy text-[10px] uppercase tracking-wider px-2.5 py-1 rounded-md">' + esc(p.gioco || nome('linea', p.linea)) + '</span>' +
       '<span class="inline-block bg-white/10 text-white font-bold text-[11px] px-2.5 py-1 rounded-md">' + esc(p.formato) + '</span>' +
       (urgente ? '<span class="inline-block bg-red-800 text-white font-heavy text-[10px] uppercase tracking-wider px-2.5 py-1 rounded-md">Ultimi posti</span>' : '');
@@ -653,11 +656,11 @@
       '</div>' +
       '<div class="md:w-72 shrink-0 space-y-3">' +
         '<div class="flex items-center justify-between gap-3 text-xs font-bold">' +
-          '<span class="text-brand-muted">' + p.occ + ' / ' + p.tot + ' posti occupati</span>' +
-          '<span class="text-brand-lime">' + (urgente ? 'Solo ' + rimasti + ' rimasti!' : rimasti + ' rimasti') + '</span>' +
+          '<span class="text-brand-muted">' + (noto ? p.occ + ' / ' + p.tot + ' posti occupati' : (p.tot ? p.tot + ' posti' : 'Posti da definire')) + '</span>' +
+          (noto ? '<span class="text-brand-lime">' + (urgente ? 'Solo ' + rimasti + ' rimasti!' : rimasti + ' rimasti') + '</span>' : '') +
         '</div>' +
-        '<div class="h-2 rounded-full bg-white/10 overflow-hidden" role="progressbar" aria-valuemin="0" aria-valuemax="' + p.tot + '" aria-valuenow="' + p.occ + '" aria-label="Posti occupati"><div class="h-full bg-brand-lime rounded-full" style="width:' + perc + '%"></div></div>' +
-        '<a href="profilo.html#eventi" data-ev="' + esc([p.titolo, p.num, p.mese].join('|')) + '" aria-pressed="false" class="ev-iscriviti block text-center bg-brand-lime text-black font-heavy text-xs tracking-wider uppercase px-5 py-3.5 rounded-xl hover:bg-[#a6d420] transition-colors">Iscriviti</a>' +
+        (noto ? '<div class="h-2 rounded-full bg-white/10 overflow-hidden" role="progressbar" aria-valuemin="0" aria-valuemax="' + p.tot + '" aria-valuenow="' + p.occ + '" aria-label="Posti occupati"><div class="h-full bg-brand-lime rounded-full" style="width:' + perc + '%"></div></div>' : '') +
+        '<a href="profilo.html#eventi" data-ev="' + esc([p.titolo, p.num, p.mese].join('|')) + '"' + (p.dbid ? ' data-evdb="' + esc(p.dbid) + '"' : '') + ' aria-pressed="false" class="ev-iscriviti block text-center bg-brand-lime text-black font-heavy text-xs tracking-wider uppercase px-5 py-3.5 rounded-xl hover:bg-[#a6d420] transition-colors">Iscriviti</a>' +
       '</div></li>';
   }
 
@@ -817,6 +820,7 @@
 
   disegna();
 })();
+});
 </script>
 <script>
 /* Sistema solare di sfondo: ogni .corpo avanza in orizzontale (data-vel px/s, data-verso 1 o -1),
@@ -873,7 +877,7 @@
 })();
 </script>
 <script>
-/* "Iscriviti": per ora salva l'iscrizione solo su questo dispositivo (la vedi nel profilo); il servizio vero arriverà con il negozio online */
+/* "Iscriviti": per gli eventi del database apre un modulo e invia l'iscrizione al negozio; per quelli di esempio salva solo su questo dispositivo (la vedi nel profilo) */
 (function () {
   var g = document.getElementById('griglia');
   if (!g || !window.A51) return;
@@ -885,9 +889,71 @@
       a.setAttribute('aria-pressed', String(on)); a.className = on ? ON : OFF; a.textContent = on ? 'Iscritto ✓ (annulla)' : 'Iscriviti';
     });
   }
+  /* Eventi del database: "Iscriviti" apre un modulo e l'iscrizione arriva al negozio (tabella "iscrizioni").
+     Per gli eventi di esempio resta il vecchio comportamento, solo su questo dispositivo. */
+  var modulo = null, evAperto = null;
+  function el(tag, cls, testo) { var x = document.createElement(tag); if (cls) x.className = cls; if (testo != null) x.textContent = testo; return x; }
+  function campo(id, etichetta, tipo, max, ph) {
+    var d = el('div'), l = el('label', 'block font-heavy text-xs uppercase tracking-widest text-brand-lime mb-2', etichetta); l.htmlFor = id;
+    var i = el('input', 'campo-profilo'); i.id = id; i.type = tipo; i.maxLength = max; i.placeholder = ph; d.appendChild(l); d.appendChild(i); return d;
+  }
+  function chiudiModulo() { if (modulo) modulo.hidden = true; }
+  function costruisci() {
+    modulo = el('div', 'fixed inset-0 z-[88] flex items-center justify-center p-4 bg-[#070514]/80 backdrop-blur-sm'); modulo.hidden = true;
+    var box = el('div', 'relative w-full max-w-md max-h-[92vh] overflow-y-auto bg-[#0d0724] border-2 border-brand-lime rounded-3xl shadow-[8px_8px_0_#5B21B6] p-6 sm:p-7');
+    box.setAttribute('role', 'dialog'); box.setAttribute('aria-modal', 'true'); box.setAttribute('aria-labelledby', 'iscr-titolo');
+    var x = el('button', 'absolute top-3 right-3 w-11 h-11 rounded-full border border-white/15 hover:border-brand-lime hover:text-brand-lime text-xl leading-none', '×'); x.type = 'button'; x.setAttribute('aria-label', 'Chiudi'); x.addEventListener('click', chiudiModulo);
+    var h = el('h2', 'font-heavy text-xl text-white pr-10', 'Iscriviti'); h.id = 'iscr-titolo';
+    var sott = el('p', 'text-sm font-semibold text-brand-muted mt-1 mb-5'); sott.id = 'iscr-evento';
+    var f = el('form', 'space-y-4'); f.noValidate = true;
+    f.appendChild(campo('iscr-nome', 'Il tuo nome', 'text', 40, 'Come ti chiami'));
+    f.appendChild(campo('iscr-email', 'La tua email', 'email', 80, 'nome@esempio.it'));
+    f.appendChild(campo('iscr-tel', 'Telefono (facoltativo)', 'tel', 20, 'Se preferisci una chiamata'));
+    var lab = el('label', 'flex items-start gap-3 text-sm font-semibold text-brand-muted leading-snug cursor-pointer');
+    var cb = el('input', 'mt-0.5 w-5 h-5 shrink-0 rounded border-white/30 bg-[#120a2e] text-brand-lime focus:ring-brand-lime'); cb.type = 'checkbox'; cb.id = 'iscr-privacy';
+    lab.appendChild(cb); lab.appendChild(el('span', null, 'Accetto che Area 51 usi questi dati solo per questa iscrizione.'));
+    f.appendChild(lab);
+    var riga = el('div', 'flex flex-wrap items-center gap-3');
+    var inv = el('button', 'bg-brand-lime text-black font-heavy text-sm px-6 py-3 rounded-full rounded-bl-[4px] shadow-brutal-violet hover:bg-[#a6d420] transition-colors', 'Invia l\'iscrizione'); inv.type = 'submit';
+    var es = el('p', 'text-sm font-bold text-brand-lime'); es.id = 'iscr-esito'; es.setAttribute('role', 'status');
+    riga.appendChild(inv); riga.appendChild(es); f.appendChild(riga);
+    f.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var nome = document.getElementById('iscr-nome').value.trim(), email = document.getElementById('iscr-email').value.trim(), tel = document.getElementById('iscr-tel').value.trim();
+      function err(m) { es.className = 'text-sm font-bold text-[#FB923C]'; es.textContent = m; }
+      if (!nome) return err('Scrivi il tuo nome.');
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return err('Scrivi un’email valida: è lì che ti rispondiamo.');
+      if (tel && !/^\+?[\d\s().-]{6,20}$/.test(tel)) return err('Il telefono non sembra corretto: controllalo o lascialo vuoto.');
+      if (!cb.checked) return err('Serve il consenso per iscriverti.');
+      es.className = 'text-sm font-bold text-brand-lime'; es.textContent = 'Invio…'; inv.disabled = true;
+      fetch(A51DB.url + '/rest/v1/iscrizioni', {
+        method: 'POST',
+        headers: { apikey: A51DB.chiave, Authorization: 'Bearer ' + A51DB.chiave, 'Content-Type': 'application/json', Prefer: 'return=minimal' },
+        body: JSON.stringify({ evento_id: evAperto.dataset.evdb, nome: nome, email: email, telefono: tel || null })
+      }).then(function (r) {
+        if (!r.ok) throw 0;
+        if (!A51.iscrizioni.ha(evAperto.dataset.ev)) A51.iscrizioni.toggle(evAperto.dataset.ev);
+        f.reset(); es.textContent = ''; chiudiModulo(); sincronizza();
+      }).catch(function () { err('Non sono riuscito a inviare. Riprova o chiama lo 0883 884567.'); })
+        .then(function () { inv.disabled = false; });
+    });
+    box.appendChild(x); box.appendChild(h); box.appendChild(sott); box.appendChild(f); modulo.appendChild(box);
+    modulo.addEventListener('click', function (e) { if (e.target === modulo) chiudiModulo(); });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') chiudiModulo(); });
+    document.body.appendChild(modulo);
+  }
+  function apriModulo(a) {
+    if (!modulo) costruisci();
+    evAperto = a; var li = a.closest('li'), t = li && li.querySelector('h3');
+    document.getElementById('iscr-evento').textContent = t ? t.textContent : '';
+    document.getElementById('iscr-esito').textContent = ''; modulo.hidden = false; document.getElementById('iscr-nome').focus();
+  }
   g.addEventListener('click', function (e) {
     var a = e.target.closest('.ev-iscriviti'); if (!a) return;
-    e.preventDefault(); A51.iscrizioni.toggle(a.dataset.ev); sincronizza();
+    e.preventDefault();
+    if (a.dataset.evdb && !A51.iscrizioni.ha(a.dataset.ev)) { apriModulo(a); return; }
+    if (a.dataset.evdb && !confirm('Annullare? L\'iscrizione già inviata al negozio resta: per cancellarla chiama lo 0883 884567.')) return;
+    A51.iscrizioni.toggle(a.dataset.ev); sincronizza();
   });
   new MutationObserver(sincronizza).observe(g, { childList: true });
   A51.onChange(sincronizza);
