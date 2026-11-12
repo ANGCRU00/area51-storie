@@ -9,6 +9,8 @@
 <link rel="stylesheet" href="css/style.css">
 <link rel="preload" href="fonts/archivo.woff2" as="font" type="font/woff2" crossorigin>
 <script src="js/area51.js"></script>
+<script src="js/area51-db.js"></script>
+<script src="js/prenota.js"></script>
 </head>
 <body class="text-brand-text font-body overflow-x-hidden antialiased relative selection:bg-brand-lime selection:text-black">
 
@@ -466,7 +468,7 @@
         </address>
       </div>
       <nav aria-label="Area 51"><h3 class="font-heavy text-white text-xs uppercase tracking-wider mb-2">Area 51</h3>
-        <ul class="space-y-1.5 font-semibold"><li><a class="hover:text-brand-lime" href="negozio.html">Il negozio</a></li><li><a class="hover:text-brand-lime" href="index.html#club">Area 51 Club</a></li><li><a class="hover:text-brand-lime" href="eventi.html">Eventi</a></li><li><a class="hover:text-brand-lime" href="catalogo.html?stato=preordine">Preordini</a></li><li><a class="hover:text-brand-lime" href="negozio.html#chiedicelo">Chiedicelo</a></li></ul></nav>
+        <ul class="space-y-1.5 font-semibold"><li><a class="hover:text-brand-lime" href="negozio.html">Il negozio</a></li><li><a class="hover:text-brand-lime" href="index.html#club">Area 51 Club</a></li><li><a class="hover:text-brand-lime" href="eventi.html">Eventi</a></li><li><a class="hover:text-brand-lime" href="uscite.html">Preordini</a></li><li><a class="hover:text-brand-lime" href="negozio.html#chiedicelo">Chiedicelo</a></li></ul></nav>
       <nav aria-label="Parliamone"><h3 class="font-heavy text-white text-xs uppercase tracking-wider mb-2">Parliamone</h3>
         <ul class="space-y-1.5 font-semibold"><li><a class="hover:text-brand-lime" href="profilo.html">Il tuo profilo</a></li><li><a class="hover:text-brand-lime" href="profilo.html#preferiti">Preferiti</a></li><li><a class="hover:text-brand-lime" href="#aiuto">Ritiro e domande</a></li><li><a class="hover:text-brand-lime" href="#privacy">Privacy</a></li></ul></nav>
     </div>
@@ -660,18 +662,22 @@
   }
 
   function scheda(p) {
-    var etichetta = p.preordine ? '<span class="absolute top-2 left-2 bg-brand-violet text-white font-heavy text-[10px] px-2.5 py-0.5 rounded -rotate-2">PREORDINE</span>'
+    var etichetta = p.scaduto ? '<span class="absolute top-2 left-2 bg-[#FB923C] text-black font-heavy text-[10px] px-2.5 py-0.5 rounded -rotate-2">TERMINE SCADUTO</span>'
+      : p.preordine ? '<span class="absolute top-2 left-2 bg-brand-violet text-white font-heavy text-[10px] px-2.5 py-0.5 rounded -rotate-2">PREORDINE</span>'
       : p.novita ? '<span class="absolute top-2 left-2 bg-brand-lime text-black font-heavy text-[10px] px-2.5 py-0.5 rounded -rotate-2">NOVITÀ</span>' : '';
     var edizione = p.edizione !== 'standard' ? '<span class="absolute bottom-2 right-2 bg-[#140C2B]/85 text-brand-lime border border-brand-lime/60 font-heavy text-[10px] px-2 py-0.5 rounded">' + nome('edizione', p.edizione).toUpperCase() + '</span>' : '';
-    var disp = p.preordine ? '<span class="text-brand-violetGlow">●</span> Preordine · esce ' + esc(p.uscitaTesto || '[DATA]')
+    var disp = p.scaduto ? '<span class="text-[#FB923C]">●</span> Termine per ordinare scaduto · non è detto che arrivi' + (p.uscitaTesto ? ' · esce ' + esc(p.uscitaTesto) : '')
+      : p.preordine ? '<span class="text-brand-violetGlow">●</span> Preordine · esce ' + esc(p.uscitaTesto || '[DATA]')
       : p.disponibile ? '<span class="text-brand-lime">●</span> Disponibile in negozio' : '<span class="text-[#FB923C]">●</span> Esaurito, ordinabile';
-    var azione = p.preordine
+    var azione = p.scaduto
+      ? '<button type="button" data-scaduta="' + esc(p.uscitaId) + '" class="border-2 border-[#FB923C] hover:bg-[#FB923C] hover:text-black text-white font-heavy text-xs px-4 py-2 rounded-full rounded-bl-[4px] shadow-[3px_3px_0_#5B21B6] transition-colors">Prenota</button>'
+      : p.preordine
       ? '<a href="prodotto.html?id=' + p.id + '" class="bg-brand-violet hover:bg-brand-violetGlow text-white font-heavy text-xs px-4 py-2.5 rounded-full rounded-bl-[4px] shadow-[3px_3px_0_#B9E62E] transition-colors">Prenota</a>'
       : p.disponibile
         ? '<button type="button" data-aggiungi="' + p.id + '" class="min-w-[7.5rem] text-center hover:bg-brand-lime hover:text-black font-heavy text-xs px-4 py-2.5 rounded-full rounded-bl-[4px] shadow-[3px_3px_0_#5B21B6] border border-white/25 hover:border-brand-lime transition-colors">Aggiungi</button>'
         : '<a href="prodotto.html?id=' + p.id + '" class="hover:bg-brand-lime hover:text-black font-heavy text-xs px-4 py-2.5 rounded-full rounded-bl-[4px] shadow-[3px_3px_0_#5B21B6] border border-white/25 hover:border-brand-lime transition-colors">Ordina</a>';
-    return '<li data-ean="' + esc(p.ean || '') + '" class="bg-[#0e0926]/90 rounded-2xl border border-white/10 p-3 hover:border-brand-lime transition-colors flex flex-col justify-between group">' +
-      '<a href="prodotto.html?id=' + p.id + '" class="block">' +
+    return '<li data-ean="' + esc(p.ean || '') + '"' + (p.scaduto ? ' data-scaduta-li="1"' : '') + ' class="bg-[#0e0926]/90 rounded-2xl border border-white/10 p-3 hover:border-brand-lime transition-colors flex flex-col justify-between group">' +
+      '<a href="' + (p.scaduto ? '#prenota' : 'prodotto.html?id=' + p.id) + '"' + (p.scaduto ? ' data-scaduta="' + esc(p.uscitaId) + '"' : '') + ' class="block">' +
         '<div class="relative aspect-[3/4] rounded-xl overflow-hidden mb-3" style="background:linear-gradient(150deg,' + p.colori[0] + ',' + p.colori[1] + ')">' +
           (p.copertina
             ? '<img src="' + esc(p.copertina) + '" alt="Copertina di ' + esc(p.titolo) + '" width="220" height="320" loading="lazy" decoding="async" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">'
@@ -685,7 +691,7 @@
         '<p class="mt-1.5 text-[11px] sm:text-xs font-semibold text-brand-muted">' + disp + '</p>' +
       '</a>' +
       '<div class="flex flex-wrap items-center justify-between gap-2 mt-3 pt-3 border-t border-white/10">' +
-        '<span class="font-heavy text-base sm:text-lg text-brand-lime">' + euro(p.prezzo) + '</span>' + azione +
+        '<span class="font-heavy text-base sm:text-lg text-brand-lime">' + (p.prezzo ? euro(p.prezzo) : '[PREZZO]') + '</span>' + azione +
       '</div></li>';
   }
 
@@ -849,6 +855,32 @@
   });
 
   disegna();
+
+  /* ---------- Uscite con il termine per ordinare scaduto (tabella "uscite" del database) ----------
+     Finite le date utili per ordinare, un titolo prenotabile in "Prossime uscite" passa qui, con l'avviso che non è detto che arrivi.
+     Si mostrano solo quelli non ancora usciti e non già presenti nei cataloghi degli editori (stesso EAN). */
+  var uscite = {};
+  if (window.A51DB && A51DB.uscite) {
+    A51DB.uscite().then(function (l) {
+      var d0 = new Date(), oggi = d0.getFullYear() + '-' + ('0' + (d0.getMonth() + 1)).slice(-2) + '-' + ('0' + d0.getDate()).slice(-2);
+      var eans = {}; PRODOTTI.forEach(function (p) { if (p.ean) eans[p.ean] = 1; });
+      var scad = l.filter(function (u) { return u.data_limite && u.data_limite < oggi && (!u.data_uscita || u.data_uscita >= oggi) && !(u.ean && eans[u.ean]); });
+      if (!scad.length) return;
+      scad.forEach(function (u, i) {
+        uscite[u.id] = u; var q = u.data_uscita ? new Date(u.data_uscita + 'T12:00:00') : null;
+        PRODOTTI.push({
+          id: 900000 + i, ean: '', titolo: u.titolo, serie: u.serie || u.titolo, tipo: '', genere: '', avanzamento: '', editore: u.editore || '', eta: '', edizione: 'standard',
+          prezzo: u.prezzo || 0, novita: false, preordine: true, disponibile: false, scaduto: true, uscitaId: u.id, copertina: u.copertina || '',
+          uscitaTesto: q ? q.getDate() + ' ' + MESI_IT[q.getMonth()] + ' ' + q.getFullYear() : '', ordineNovita: q ? Math.round(q.getTime() / 864e5) : 0, colori: COLORI[i % COLORI.length]
+        });
+      });
+      disegna();
+    });
+    griglia.addEventListener('click', function (e) {
+      var a = e.target.closest('[data-scaduta]'); if (!a) return;
+      e.preventDefault(); var u = uscite[a.dataset.scaduta]; if (u && window.A51Prenota) A51Prenota.apri({ id: u.id, titolo: u.titolo, data_limite: u.data_limite, scaduta: true });
+    });
+  }
 })();
 </script>
 <script>
@@ -963,7 +995,7 @@
   function sincronizza() { g.querySelectorAll('.cuore-scheda').forEach(function (b) { stato(b, A51.pref.ha(b.dataset.k)); }); }
   function aggiorna() {
     g.querySelectorAll('li').forEach(function (li) {
-      if (li.querySelector('.cuore-scheda') || !li.querySelector('h3')) return;
+      if (li.querySelector('.cuore-scheda') || !li.querySelector('h3') || li.dataset.scadutaLi) return;
       var s = istantanea(li), b = document.createElement('button');
       li.classList.add('relative');
       b.type = 'button'; b.className = 'cuore-scheda group absolute top-5 right-5 z-10 w-9 h-9 rounded-full bg-[#140C2B]/85 border border-white/25 hover:border-brand-lime hover:text-brand-lime aria-pressed:border-brand-lime aria-pressed:text-brand-lime flex items-center justify-center transition-colors';

@@ -13,3 +13,10 @@ window.A51DB.livelli = function () {
   return fetch(A51DB.url + '/rest/v1/livelli?select=nome,soglia,vantaggio&order=soglia.asc', { headers: { apikey: A51DB.chiave, Authorization: 'Bearer ' + A51DB.chiave } })
     .then(function (r) { return r.ok ? r.json() : []; }).catch(function () { return []; });
 };
+
+/* Prossime uscite prenotabili (tabella "uscite", visibili a tutti): data di uscita e data limite per ordinare. Risolve con un elenco, vuoto se non ce ne sono o se il database non risponde. */
+window.A51DB.uscite = function () {
+  if (!window.fetch) return Promise.resolve([]);
+  return fetch(A51DB.url + '/rest/v1/uscite?select=*&order=data_uscita.asc.nullslast,titolo.asc', { headers: { apikey: A51DB.chiave, Authorization: 'Bearer ' + A51DB.chiave } })
+    .then(function (r) { return r.ok ? r.json() : []; }).catch(function () { return []; });
+};

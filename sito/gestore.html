@@ -336,6 +336,7 @@
       <nav aria-label="Sezioni dell'area del gestore" class="flex flex-wrap gap-2 mb-8" id="g-tabs">
         <button type="button" data-sez="richieste" class="tab-profilo !w-auto">Richieste <span id="g-n-ric" class="num-profilo">0</span></button>
         <button type="button" data-sez="eventi" class="tab-profilo !w-auto">Eventi e iscrizioni <span id="g-n-ev" class="num-profilo">0</span></button>
+        <button type="button" data-sez="uscite" class="tab-profilo !w-auto">Uscite da prenotare <span id="g-n-usc" class="num-profilo">0</span></button>
         <button type="button" data-sez="tessere" class="tab-profilo !w-auto">Tessere e livelli <span id="g-n-tes" class="num-profilo">0</span></button>
       </nav>
 
@@ -388,6 +389,55 @@
         </form>
         <ul id="g-ev-lista" class="space-y-3"></ul>
         <p id="g-ev-vuoto" hidden class="vuoto-profilo !block">Nessun evento: premi "Nuovo evento" per aggiungerne uno.</p>
+      </section>
+
+      <!-- Uscite da prenotare -->
+      <section id="g-uscite" hidden aria-labelledby="g-usc-t">
+        <div class="flex flex-wrap items-end justify-between gap-3 mb-5">
+          <div><h2 id="g-usc-t" class="font-heavy text-2xl sm:text-3xl text-white uppercase mb-2">Uscite da prenotare</h2>
+            <p class="text-sm font-semibold text-brand-muted max-w-3xl">Un titolo compare in "Prossime uscite" fino alla sua data limite per ordinare; poi passa in Manga e fumetti con l'avviso che non è detto che arrivi. Per ora li inserisci a mano o con un file; quando Starshop darà l'accesso, arriveranno da lì.</p></div>
+          <button type="button" id="g-usc-nuovo" class="bg-brand-lime text-black font-heavy text-sm px-5 py-3 rounded-full rounded-bl-[4px] shadow-brutal-violet hover:bg-[#a6d420] transition-colors">Nuova uscita</button>
+        </div>
+
+        <div class="rounded-2xl border border-white/10 bg-[#0e0926]/90 p-5 sm:p-6 mb-6">
+          <h3 class="font-heavy text-lg text-white mb-1">Importa da file</h3>
+          <p class="text-sm font-semibold text-brand-muted mb-3">File CSV con intestazione. Colonne: <span class="text-white">ean, titolo, serie, numero, editore, prezzo, data_uscita, data_limite</span> (date come 2026-12-15 o 15/12/2026, separatore ; o ,). I titoli con lo stesso EAN si aggiornano, gli altri si aggiungono.</p>
+          <div class="flex flex-wrap items-center gap-3">
+            <input id="g-usc-file" type="file" accept=".csv,text/csv,text/plain" class="text-sm font-semibold text-brand-muted file:mr-3 file:rounded-full file:border-0 file:bg-brand-lime file:text-black file:font-heavy file:text-xs file:px-4 file:py-2">
+            <button type="button" id="g-usc-importa" class="border border-white/25 hover:border-brand-lime hover:text-brand-lime font-heavy text-xs px-4 py-2 rounded-full transition-colors">Importa</button>
+            <p id="g-usc-imp-esito" role="status" class="text-sm font-bold text-brand-lime"></p>
+          </div>
+        </div>
+
+        <form id="g-usc-form" hidden class="rounded-2xl border border-brand-lime/50 bg-[#0e0926]/90 p-5 sm:p-6 mb-6 grid grid-cols-1 sm:grid-cols-2 gap-4" novalidate>
+          <input type="hidden" name="id">
+          <div class="sm:col-span-2"><label for="us-titolo" class="block font-heavy text-xs uppercase tracking-widest text-brand-lime mb-2">Titolo</label>
+            <input id="us-titolo" name="titolo" maxlength="120" required class="campo-profilo" placeholder="Titolo completo, con il numero del volume"></div>
+          <div><label for="us-serie" class="block font-heavy text-xs uppercase tracking-widest text-brand-lime mb-2">Serie</label>
+            <input id="us-serie" name="serie" maxlength="100" class="campo-profilo"></div>
+          <div><label for="us-numero" class="block font-heavy text-xs uppercase tracking-widest text-brand-lime mb-2">Numero</label>
+            <input id="us-numero" name="numero" maxlength="10" class="campo-profilo"></div>
+          <div><label for="us-editore" class="block font-heavy text-xs uppercase tracking-widest text-brand-lime mb-2">Editore</label>
+            <input id="us-editore" name="editore" maxlength="40" class="campo-profilo" placeholder="Star Comics, J-POP, Panini…"></div>
+          <div><label for="us-ean" class="block font-heavy text-xs uppercase tracking-widest text-brand-lime mb-2">EAN</label>
+            <input id="us-ean" name="ean" maxlength="14" inputmode="numeric" class="campo-profilo" placeholder="Facoltativo"></div>
+          <div><label for="us-prezzo" class="block font-heavy text-xs uppercase tracking-widest text-brand-lime mb-2">Prezzo (€)</label>
+            <input id="us-prezzo" name="prezzo" type="number" min="0" step="0.01" class="campo-profilo"></div>
+          <div><label for="us-copertina" class="block font-heavy text-xs uppercase tracking-widest text-brand-lime mb-2">Copertina (indirizzo)</label>
+            <input id="us-copertina" name="copertina" maxlength="300" class="campo-profilo" placeholder="Facoltativo"></div>
+          <div><label for="us-uscita" class="block font-heavy text-xs uppercase tracking-widest text-brand-lime mb-2">Data di uscita</label>
+            <input id="us-uscita" name="data_uscita" type="date" class="campo-profilo"></div>
+          <div><label for="us-limite" class="block font-heavy text-xs uppercase tracking-widest text-brand-lime mb-2">Ultimo giorno per ordinare</label>
+            <input id="us-limite" name="data_limite" type="date" class="campo-profilo"></div>
+          <label class="sm:col-span-2 flex items-center gap-3 text-sm font-semibold text-brand-muted cursor-pointer"><input type="checkbox" name="visibile" checked class="w-5 h-5 rounded border-white/30 bg-[#120a2e] text-brand-lime focus:ring-brand-lime"> Visibile ai visitatori</label>
+          <div class="sm:col-span-2 flex flex-wrap items-center gap-3">
+            <button type="submit" class="bg-brand-lime text-black font-heavy text-sm px-6 py-3 rounded-full rounded-bl-[4px] shadow-brutal-violet hover:bg-[#a6d420] transition-colors">Salva</button>
+            <button type="button" id="g-usc-annulla" class="border-2 border-brand-violet hover:border-brand-lime text-white font-heavy text-sm px-5 py-2.5 rounded-full transition-colors">Annulla</button>
+            <p id="g-usc-esito" role="status" class="text-sm font-bold text-brand-lime"></p>
+          </div>
+        </form>
+        <ul id="g-usc-lista" class="space-y-3"></ul>
+        <p id="g-usc-vuoto" hidden class="vuoto-profilo !block">Nessuna uscita: aggiungine una o importa un file.</p>
       </section>
 
       <!-- Tessere e livelli -->
@@ -445,7 +495,7 @@
         </address>
       </div>
       <nav aria-label="Area 51"><h3 class="font-heavy text-white text-xs uppercase tracking-wider mb-2">Area 51</h3>
-        <ul class="space-y-1.5 font-semibold"><li><a class="hover:text-brand-lime" href="negozio.html">Il negozio</a></li><li><a class="hover:text-brand-lime" href="index.html#club">Area 51 Club</a></li><li><a class="hover:text-brand-lime" href="eventi.html">Eventi</a></li><li><a class="hover:text-brand-lime" href="catalogo.html?stato=preordine">Preordini</a></li><li><a class="hover:text-brand-lime" href="negozio.html#chiedicelo">Chiedicelo</a></li></ul></nav>
+        <ul class="space-y-1.5 font-semibold"><li><a class="hover:text-brand-lime" href="negozio.html">Il negozio</a></li><li><a class="hover:text-brand-lime" href="index.html#club">Area 51 Club</a></li><li><a class="hover:text-brand-lime" href="eventi.html">Eventi</a></li><li><a class="hover:text-brand-lime" href="uscite.html">Preordini</a></li><li><a class="hover:text-brand-lime" href="negozio.html#chiedicelo">Chiedicelo</a></li></ul></nav>
       <nav aria-label="Parliamone"><h3 class="font-heavy text-white text-xs uppercase tracking-wider mb-2">Parliamone</h3>
         <ul class="space-y-1.5 font-semibold"><li><a class="hover:text-brand-lime" href="profilo.html">Il tuo profilo</a></li><li><a class="hover:text-brand-lime" href="profilo.html#preferiti">Preferiti</a></li><li><a class="hover:text-brand-lime" href="#aiuto">Ritiro e domande</a></li><li><a class="hover:text-brand-lime" href="#privacy">Privacy</a></li></ul></nav>
     </div>
@@ -543,14 +593,14 @@
   sb.auth.getSession().then(function (r) { if (r.data && r.data.session) verifica(r.data.session.user); });
 
   /* ---------- Sezioni ---------- */
-  var SEZ = ['richieste', 'eventi', 'tessere'];
+  var SEZ = ['richieste', 'eventi', 'uscite', 'tessere'];
   function sezione(s) {
     SEZ.forEach(function (x) { $('g-' + x).hidden = x !== s; });
     Array.prototype.forEach.call($('g-tabs').children, function (b) { if (b.dataset.sez === s) b.setAttribute('aria-current', 'true'); else b.removeAttribute('aria-current'); });
   }
   $('g-tabs').addEventListener('click', function (e) { var b = e.target.closest('[data-sez]'); if (b) sezione(b.dataset.sez); });
   sezione('richieste');
-  function carica() { caricaRichieste(); caricaEventi(); caricaTessere(); }
+  function carica() { caricaUscite(); caricaRichieste(); caricaEventi(); caricaTessere(); }
 
   /* ---------- Richieste ---------- */
   var STATI_RIC = [['nuova', 'Nuova'], ['in_corso', 'In corso'], ['confermata', 'Confermata'], ['ritirata', 'Ritirata'], ['non_ritirata', 'Non ritirata'], ['chiusa', 'Chiusa']];
@@ -577,6 +627,11 @@
       var a = el('div', 'min-w-0');
       var t = el('p', 'text-[11px] font-bold text-brand-muted tracking-wider uppercase', (r.tipo === 'prenotazione' ? 'Prenotazione' : 'Chiedicelo') + (r.categoria ? ' · ' + r.categoria : '') + ' · ' + dataIt(r.creato_il));
       a.appendChild(t); a.appendChild(el('p', 'font-heavy text-lg text-white mt-1 break-words', r.cosa));
+      if (r.uscita_id) {
+        var us = usciteMappa[r.uscita_id], tardi = us && us.data_limite && r.creato_il.slice(0, 10) > us.data_limite;
+        var pr = el('p', 'mt-1 text-xs font-bold ' + (tardi ? 'text-[#FB923C]' : 'text-brand-lime'), 'Copie: ' + r.copie + (us && us.data_limite ? ' · ordinabile entro il ' + giornoIt(us.data_limite) : '') + (tardi ? ' · FATTA DOPO LA SCADENZA: non è sicuro che arrivi' : ''));
+        a.appendChild(pr);
+      }
       var c = el('p', 'mt-2 text-sm font-semibold text-brand-muted flex flex-wrap gap-x-4 gap-y-1'); c.appendChild(el('span', 'text-white', r.nome));
       var m = el('a', 'underline hover:text-brand-lime', r.email); m.href = 'mailto:' + encodeURIComponent(r.email).replace('%40', '@') + '?subject=' + encodeURIComponent('La tua richiesta ad Area 51: ' + r.cosa.slice(0, 60)); c.appendChild(m);
       if (r.telefono) { var tl = el('a', 'underline hover:text-brand-lime', r.telefono); tl.href = 'tel:' + r.telefono.replace(/[^+\d]/g, ''); c.appendChild(tl); }
@@ -662,6 +717,90 @@
     var x = f.id.value ? await sb.from('eventi').update(p).eq('id', f.id.value) : await sb.from('eventi').insert(p);
     if (x.error) { es.textContent = errore(x.error); return; }
     fe.hidden = true; caricaEventi();
+  });
+
+  /* ---------- Uscite da prenotare ---------- */
+  var uscite = [], usciteMappa = {}, fu = $('g-usc-form');
+  function oggiIso() { var d = new Date(); return d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2); }
+  async function caricaUscite() {
+    var r = await sb.from('uscite').select('*').order('data_uscita', { ascending: true, nullsFirst: false });
+    if (r.error) { $('g-usc-vuoto').hidden = false; $('g-usc-vuoto').textContent = errore(r.error); return; }
+    uscite = r.data; usciteMappa = {}; uscite.forEach(function (u) { usciteMappa[u.id] = u; });
+    $('g-n-usc').textContent = uscite.length; disegnaUscite(); if (richieste.length) disegnaRichieste();
+  }
+  function statoUscita(u) {
+    var o = oggiIso();
+    if (u.data_uscita && u.data_uscita < o) return ['Già uscito', 'text-brand-muted'];
+    if (u.data_limite && u.data_limite < o) return ['Termine scaduto (è in Manga e fumetti con l\'avviso)', 'text-[#FB923C]'];
+    return ['Prenotabile' + (u.data_limite ? ' fino al ' + giornoIt(u.data_limite) : ' (data limite da confermare)'), 'text-brand-lime'];
+  }
+  function disegnaUscite() {
+    var ul = $('g-usc-lista'); svuota(ul); $('g-usc-vuoto').hidden = uscite.length > 0; $('g-usc-vuoto').textContent = 'Nessuna uscita: aggiungine una o importa un file.';
+    uscite.forEach(function (u) {
+      var li = el('li', 'rounded-2xl border border-white/10 bg-[#0e0926]/90 p-4 sm:p-5 flex flex-wrap items-start justify-between gap-3');
+      var tx = el('div', 'min-w-0');
+      tx.appendChild(el('p', 'text-[11px] font-bold text-brand-muted tracking-wider uppercase', [u.editore, u.ean, u.fonte === 'starshop' ? 'Starshop' : 'inserita a mano', u.visibile ? '' : 'NON VISIBILE'].filter(Boolean).join(' · ')));
+      tx.appendChild(el('p', 'font-heavy text-lg text-white mt-1 break-words', u.titolo));
+      tx.appendChild(el('p', 'text-sm font-semibold text-brand-muted mt-1', (u.data_uscita ? 'Esce il ' + giornoIt(u.data_uscita) : 'Data di uscita da definire') + (u.prezzo != null ? ' · ' + euro(u.prezzo) : '')));
+      var st = statoUscita(u); tx.appendChild(el('p', 'text-xs font-bold mt-1 ' + st[1], st[0]));
+      var n = richieste.filter(function (r) { return r.uscita_id === u.id; }).reduce(function (a, r) { return a + (r.copie || 1); }, 0);
+      if (n) tx.appendChild(el('p', 'text-xs font-bold text-white mt-1', 'Prenotazioni: ' + n + (n === 1 ? ' copia' : ' copie')));
+      li.appendChild(tx);
+      var az = el('div', 'flex flex-wrap gap-2');
+      var bm = el('button', BTN, 'Modifica'); bm.type = 'button'; bm.addEventListener('click', function () { apriUscita(u); });
+      var bd = el('button', 'text-xs font-heavy text-brand-muted hover:text-[#FB923C] px-2 py-2', 'Elimina'); bd.type = 'button';
+      bd.addEventListener('click', async function () { if (!confirm('Eliminare questa uscita? Le prenotazioni già ricevute restano, senza il collegamento al titolo.')) return; var x = await sb.from('uscite').delete().eq('id', u.id); if (x.error) alert(errore(x.error)); caricaUscite(); });
+      az.appendChild(bm); az.appendChild(bd); li.appendChild(az); ul.appendChild(li);
+    });
+  }
+  function apriUscita(u) {
+    fu.reset(); fu.hidden = false; $('g-usc-esito').textContent = ''; fu.elements.id.value = u ? u.id : '';
+    if (u) { ['titolo', 'serie', 'numero', 'editore', 'ean', 'prezzo', 'copertina', 'data_uscita', 'data_limite'].forEach(function (k) { fu.elements[k].value = u[k] == null ? '' : u[k]; }); fu.elements.visibile.checked = !!u.visibile; }
+    fu.scrollIntoView({ block: 'center' });
+  }
+  $('g-usc-nuovo').addEventListener('click', function () { apriUscita(null); });
+  $('g-usc-annulla').addEventListener('click', function () { fu.hidden = true; });
+  fu.addEventListener('submit', async function (e) {
+    e.preventDefault();
+    var f = fu.elements, es = $('g-usc-esito'); es.className = 'text-sm font-bold text-[#FB923C]';
+    if (!f.titolo.value.trim()) { es.textContent = 'Scrivi il titolo.'; return; }
+    var ean = f.ean.value.replace(/\s/g, ''); if (ean && !/^[0-9]{8,14}$/.test(ean)) { es.textContent = 'L\'EAN deve avere da 8 a 14 cifre.'; return; }
+    if (f.data_uscita.value && f.data_limite.value && f.data_limite.value > f.data_uscita.value) { es.textContent = 'L\'ultimo giorno per ordinare non può essere dopo l\'uscita.'; return; }
+    var p = { titolo: f.titolo.value.trim(), serie: f.serie.value.trim() || null, numero: f.numero.value.trim() || null, editore: f.editore.value.trim() || null, ean: ean || null,
+      prezzo: f.prezzo.value === '' ? null : Number(f.prezzo.value), copertina: f.copertina.value.trim() || null, data_uscita: f.data_uscita.value || null, data_limite: f.data_limite.value || null,
+      visibile: f.visibile.checked, aggiornato_il: new Date().toISOString() };
+    var x = f.id.value ? await sb.from('uscite').update(p).eq('id', f.id.value) : await sb.from('uscite').insert(p);
+    if (x.error) { es.textContent = /duplicate|unique/i.test(x.error.message || '') ? 'C\'è già un\'uscita con questo EAN.' : errore(x.error); return; }
+    fu.hidden = true; caricaUscite();
+  });
+  /* Importazione da file CSV */
+  function righeCsv(testo) {
+    var righe = testo.replace(/^\uFEFF/, '').split(/\r?\n/).filter(function (r) { return r.trim(); });
+    if (!righe.length) return [];
+    var sep = (righe[0].match(/;/g) || []).length >= (righe[0].match(/,/g) || []).length ? ';' : ',';
+    function celle(r) { var o = [], c = '', q = false; for (var i = 0; i < r.length; i++) { var ch = r[i]; if (ch === '"') { if (q && r[i + 1] === '"') { c += '"'; i++; } else q = !q; } else if (ch === sep && !q) { o.push(c); c = ''; } else c += ch; } o.push(c); return o.map(function (x) { return x.trim(); }); }
+    var testa = celle(righe[0]).map(function (x) { return x.toLowerCase().replace(/[^a-z_]/g, ''); });
+    return righe.slice(1).map(function (r) { var c = celle(r), o = {}; testa.forEach(function (h, i) { o[h] = c[i] || ''; }); return o; });
+  }
+  function dataCsv(s) { s = (s || '').trim(); if (!s) return null; var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(s); if (m) return s; m = /^(\d{1,2})\/(\d{1,2})\/(\d{4})$/.exec(s); return m ? m[3] + '-' + ('0' + m[2]).slice(-2) + '-' + ('0' + m[1]).slice(-2) : undefined; }
+  $('g-usc-importa').addEventListener('click', async function () {
+    var es = $('g-usc-imp-esito'), file = $('g-usc-file').files[0]; es.className = 'text-sm font-bold text-[#FB923C]';
+    if (!file) { es.textContent = 'Scegli prima un file.'; return; }
+    var righe = righeCsv(await file.text()), buoni = [], scartate = 0;
+    righe.forEach(function (r) {
+      var titolo = (r.titolo || r.title || '').trim(), ean = (r.ean || r.isbn || '').replace(/\s/g, ''), prezzo = (r.prezzo || '').replace(',', '.');
+      var du = dataCsv(r.data_uscita || r.uscita), dl = dataCsv(r.data_limite || r.limite || r.scadenza);
+      if (!titolo || titolo.length > 120 || (ean && !/^[0-9]{8,14}$/.test(ean)) || du === undefined || dl === undefined || (prezzo && !(Number(prezzo) >= 0))) { scartate++; return; }
+      buoni.push({ titolo: titolo, ean: ean || null, serie: (r.serie || '').slice(0, 100) || null, numero: (r.numero || r.volume || '').slice(0, 10) || null, editore: (r.editore || '').slice(0, 40) || null,
+        prezzo: prezzo ? Number(prezzo) : null, data_uscita: du, data_limite: dl, fonte: 'manuale', visibile: true, aggiornato_il: new Date().toISOString() });
+    });
+    if (!buoni.length) { es.textContent = 'Nessuna riga valida' + (scartate ? ' (' + scartate + ' scartate: controlla titolo, EAN e date)' : '') + '.'; return; }
+    es.className = 'text-sm font-bold text-brand-lime'; es.textContent = 'Importo…';
+    var conEan = buoni.filter(function (b) { return b.ean; }), senza = buoni.filter(function (b) { return !b.ean; }), errore1 = null;
+    if (conEan.length) { var a = await sb.from('uscite').upsert(conEan, { onConflict: 'ean' }); errore1 = a.error; }
+    if (!errore1 && senza.length) { var b = await sb.from('uscite').insert(senza); errore1 = b.error; }
+    if (errore1) { es.className = 'text-sm font-bold text-[#FB923C]'; es.textContent = errore(errore1); return; }
+    es.textContent = 'Importate ' + buoni.length + ' righe' + (scartate ? ', scartate ' + scartate : '') + '.'; $('g-usc-file').value = ''; caricaUscite();
   });
 
   /* ---------- Tessere e livelli ---------- */
