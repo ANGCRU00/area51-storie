@@ -36,7 +36,8 @@
     capito.appendChild(cc); capito.appendChild(el('span', null, 'Ho capito che il titolo potrebbe non arrivare.')); f.appendChild(capito);
     var lab = el('label', 'flex items-start gap-3 text-sm font-semibold text-brand-muted leading-snug cursor-pointer');
     var cb = el('input', 'mt-0.5 w-5 h-5 shrink-0 rounded border-white/30 bg-[#120a2e] text-brand-lime focus:ring-brand-lime'); cb.type = 'checkbox'; cb.id = 'pren-privacy';
-    lab.appendChild(cb); lab.appendChild(el('span', null, 'Accetto che Area 51 usi questi dati solo per questa prenotazione.')); f.appendChild(lab);
+    var sp = el('span', null, 'Accetto che Area 51 usi questi dati solo per questa prenotazione. '), lk = el('a', 'text-white underline hover:text-brand-lime', 'Informativa sulla privacy'); lk.href = 'privacy.html'; lk.target = '_blank'; lk.rel = 'noopener'; sp.appendChild(lk);
+    lab.appendChild(cb); lab.appendChild(sp); f.appendChild(lab);
     f.appendChild(el('p', 'text-xs font-semibold text-brand-muted leading-snug', 'Il negozio conferma la prenotazione. Regole di ritiro: [DA DEFINIRE]. Ritiro e pagamento in negozio.'));
     var riga = el('div', 'flex flex-wrap items-center gap-3');
     var inv = el('button', 'bg-brand-violet hover:bg-brand-violetGlow text-white font-heavy text-sm px-6 py-3 rounded-full rounded-bl-[4px] shadow-[4px_4px_0_#B9E62E] transition-colors', 'Invia la prenotazione'); inv.type = 'submit';

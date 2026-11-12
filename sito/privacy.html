@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html class="scroll-smooth" lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Informativa sulla privacy | Area 51 Fumetteria, Barletta</title>
+<meta name="description" content="Quali dati raccoglie il sito della Fumetteria Area 51, perché e per quanto tempo li conserviamo.">
+<link rel="stylesheet" href="css/style.css">
+<link rel="preload" href="fonts/archivo.woff2" as="font" type="font/woff2" crossorigin>
+<script src="js/area51.js"></script>
+<script src="js/area51-db.js"></script>
+</head>
+<body class="text-brand-text font-body overflow-x-hidden antialiased relative selection:bg-brand-lime selection:text-black">
+
+<!-- Simboli disegnati una volta e riusati: alieno e disco volante (uguali alla home) -->
+<svg aria-hidden="true" style="position:absolute;width:0;height:0;overflow:hidden">
+  <defs>
+    <symbol id="alieno" viewBox="0 0 220 220">
+      <path transform="translate(9 9)" d="M100 10 C152 10 188 46 188 88 C188 128 148 170 112 184 C102 188 92 186 82 180 L30 200 L46 158 C26 138 12 114 12 88 C12 46 48 10 100 10 Z" fill="#140C2B"/>
+      <path d="M100 10 C152 10 188 46 188 88 C188 128 148 170 112 184 C102 188 92 186 82 180 L30 200 L46 158 C26 138 12 114 12 88 C12 46 48 10 100 10 Z" fill="#B9E62E" stroke="#140C2B" stroke-width="6" stroke-linejoin="round"/>
+      <ellipse cx="64" cy="92" rx="27" ry="40" transform="rotate(28 64 92)" fill="#140C2B"/>
+      <ellipse cx="136" cy="92" rx="27" ry="40" transform="rotate(-28 136 92)" fill="#140C2B"/>
+      <circle cx="74" cy="76" r="8" fill="#fff"/><circle cx="146" cy="76" r="8" fill="#fff"/>
+    </symbol>
+    <symbol id="carico-gadget" viewBox="0 0 100 100">
+      <path d="M30 14 L43 9 Q50 24 57 9 L70 14 L91 30 L81 44 L72 38 L72 90 L28 90 L28 38 L19 44 L9 30 Z" fill="#5B21B6" stroke="#140C2B" stroke-width="3.5" stroke-linejoin="round"/>
+      <path d="M43 10 Q50 24 57 10" fill="none" stroke="#B9E62E" stroke-width="4" stroke-linecap="round"/>
+      <path d="M50 44 C60 44 68 52 68 60 C68 68 60 76 54 80 C52 82 48 82 46 80 L36 84 L38 74 C34 70 32 66 32 60 C32 52 40 44 50 44 Z" fill="#B9E62E" stroke="#140C2B" stroke-width="2.5" stroke-linejoin="round"/>
+      <ellipse cx="43" cy="60" rx="4" ry="6" transform="rotate(28 43 60)" fill="#140C2B"/><ellipse cx="57" cy="60" rx="4" ry="6" transform="rotate(-28 57 60)" fill="#140C2B"/>
+    </symbol>
+    <symbol id="radar" viewBox="0 0 60 60">
+      <circle cx="30" cy="30" r="26" fill="#140C2B" stroke="#B9E62E" stroke-width="3"/>
+      <circle cx="30" cy="30" r="16" fill="none" stroke="#B9E62E" stroke-width="1.5" stroke-opacity=".6"/>
+      <circle cx="30" cy="30" r="7" fill="none" stroke="#B9E62E" stroke-width="1.5" stroke-opacity=".6"/>
+      <path d="M30 30 L30 4 A26 26 0 0 1 52.5 17 Z" fill="#B9E62E" fill-opacity=".45"/>
+      <line x1="30" y1="30" x2="30" y2="4" stroke="#B9E62E" stroke-width="3" stroke-linecap="round"/>
+      <circle cx="19" cy="39" r="3" fill="#FFE45C"/>
+    </symbol>
+    <symbol id="disco" viewBox="-345 -175 690 290">
+      <ellipse cx="0" cy="-60" rx="130" ry="100" fill="#DCEFA0" stroke="#140C2B" stroke-width="10"/>
+      <g transform="translate(-58 -150) scale(.58)">
+        <path d="M100 10 C152 10 188 46 188 88 C188 128 148 170 112 184 C102 188 92 186 82 180 L30 200 L46 158 C26 138 12 114 12 88 C12 46 48 10 100 10 Z" fill="#B9E62E" stroke="#140C2B" stroke-width="6"/>
+        <ellipse cx="64" cy="92" rx="27" ry="40" transform="rotate(28 64 92)" fill="#140C2B"/>
+        <ellipse cx="136" cy="92" rx="27" ry="40" transform="rotate(-28 136 92)" fill="#140C2B"/>
+        <circle cx="74" cy="76" r="8" fill="#fff"/><circle cx="146" cy="76" r="8" fill="#fff"/>
+      </g>
+      <ellipse cx="0" cy="10" rx="310" ry="86" fill="#8D99AE" stroke="#140C2B" stroke-width="10"/>
+      <ellipse cx="0" cy="-6" rx="300" ry="44" fill="#C9D3DE"/>
+      <ellipse cx="0" cy="54" rx="150" ry="26" fill="#5C677D" stroke="#140C2B" stroke-width="8"/>
+      <g stroke="#140C2B" stroke-width="6">
+        <circle cx="-230" cy="28" r="18" fill="#B9E62E"/><circle cx="-120" cy="46" r="18" fill="#FFE45C"/><circle cx="0" cy="52" r="18" fill="#B9E62E"/><circle cx="120" cy="46" r="18" fill="#FFE45C"/><circle cx="230" cy="28" r="18" fill="#B9E62E"/>
+      </g>
+    </symbol>
+    <!-- Sistema solare di sfondo: pianeti che attraversano lo schermo, sempre dietro i contenuti -->
+    <radialGradient id="g-luna" cx="35%" cy="30%" r="75%"><stop offset="0" stop-color="#5B4A9E"/><stop offset=".55" stop-color="#2A1A5E"/><stop offset="1" stop-color="#120A2E"/></radialGradient>
+    <radialGradient id="g-gioviano" cx="35%" cy="30%" r="75%"><stop offset="0" stop-color="#FFC266"/><stop offset=".5" stop-color="#E8711C"/><stop offset="1" stop-color="#7A2E08"/></radialGradient>
+    <radialGradient id="g-terra" cx="35%" cy="30%" r="75%"><stop offset="0" stop-color="#5FD0FF"/><stop offset=".55" stop-color="#1E73D8"/><stop offset="1" stop-color="#0B2E6B"/></radialGradient>
+    <radialGradient id="g-marte" cx="35%" cy="30%" r="75%"><stop offset="0" stop-color="#FF6B6B"/><stop offset=".55" stop-color="#C81E3A"/><stop offset="1" stop-color="#5E0B1E"/></radialGradient>
+    <radialGradient id="g-fasce" cx="35%" cy="30%" r="75%"><stop offset="0" stop-color="#FFA94D"/><stop offset=".5" stop-color="#D9531E"/><stop offset="1" stop-color="#3D1775"/></radialGradient>
+    <radialGradient id="g-saturno" cx="35%" cy="30%" r="75%"><stop offset="0" stop-color="#FFC266"/><stop offset=".5" stop-color="#C0588F"/><stop offset="1" stop-color="#3D1775"/></radialGradient>
+    <radialGradient id="g-urano" cx="35%" cy="30%" r="75%"><stop offset="0" stop-color="#6EF0DC"/><stop offset=".55" stop-color="#0E9F9A"/><stop offset="1" stop-color="#0B3B57"/></radialGradient>
+    <radialGradient id="g-nettuno" cx="35%" cy="30%" r="75%"><stop offset="0" stop-color="#8FB2FF"/><stop offset=".55" stop-color="#3056D3"/><stop offset="1" stop-color="#172A6E"/></radialGradient>
+    <linearGradient id="g-ombra" x1="0" y1="0" x2="1" y2="1"><stop offset=".45" stop-color="#070514" stop-opacity="0"/><stop offset="1" stop-color="#070514" stop-opacity=".6"/></linearGradient>
+    <clipPath id="c-sfera"><circle cx="60" cy="60" r="38"/></clipPath>
+
+    <symbol id="p-luna" viewBox="0 0 120 120">
+      <circle cx="60" cy="60" r="36" fill="url(#g-luna)"/>
+      <circle cx="47" cy="48" r="8" fill="none" stroke="#8B5CF6" stroke-width="3"/>
+      <circle cx="70" cy="64" r="10" fill="none" stroke="#B9E62E" stroke-width="3"/>
+      <circle cx="48" cy="77" r="5" fill="none" stroke="#8B5CF6" stroke-width="2.5"/>
+      <circle cx="60" cy="60" r="36" fill="url(#g-ombra)"/>
+        <ellipse cx="46" cy="44" rx="12" ry="7" transform="rotate(-30 46 44)" fill="#fff" opacity=".22"/>
+      <path d="M86 24 A44 44 0 1 1 26 92" fill="none" stroke="#B9E62E" stroke-width="3" stroke-linecap="round"/>
+      <circle cx="62" cy="8" r="3" fill="#B9E62E" opacity=".7"/>
+    </symbol>
+    <symbol id="p-gioviano" viewBox="0 0 160 120">
+      <path d="M6 40 L38 26 M38 26 L64 34" stroke="#B9E62E" stroke-width="2" stroke-dasharray="3 4" opacity=".6"/>
+      <circle cx="6" cy="40" r="3.5" fill="#B9E62E"/><circle cx="38" cy="26" r="4.5" fill="#E5E7EB"/>
+      <path d="M136 46 L132 92 L100 106" fill="none" stroke="#B9E62E" stroke-width="2" stroke-dasharray="3 4" opacity=".6"/>
+      <g transform="translate(26 0)">
+        <circle cx="60" cy="60" r="38" fill="url(#g-gioviano)"/>
+        <g clip-path="url(#c-sfera)" fill="none" stroke-linecap="round">
+          <path d="M18 46 Q60 34 104 46" stroke="#B9E62E" stroke-width="3.5" opacity=".85"/>
+          <path d="M18 62 Q60 52 104 64" stroke="#B9E62E" stroke-width="3" opacity=".75"/>
+          <path d="M22 78 Q60 70 100 80" stroke="#FCD34D" stroke-width="2.5" opacity=".7"/>
+        </g>
+        <circle cx="50" cy="68" r="3" fill="#B9E62E"/>
+        <circle cx="60" cy="60" r="38" fill="url(#g-ombra)"/>
+        <ellipse cx="46" cy="43" rx="13" ry="8" transform="rotate(-30 46 43)" fill="#fff" opacity=".22"/>
+      </g>
+      <circle cx="136" cy="46" r="6" fill="#8B5CF6" stroke="#C4B5FD" stroke-width="1.5"/>
+    </symbol>
+    <symbol id="p-terra" viewBox="0 0 140 120">
+      <ellipse cx="62" cy="64" rx="58" ry="19" transform="rotate(-10 62 64)" fill="none" stroke="#B9E62E" stroke-width="2.5" stroke-dasharray="4 5" opacity=".75"/>
+      <circle cx="60" cy="60" r="38" fill="url(#g-terra)"/>
+      <g clip-path="url(#c-sfera)" fill="#B9E62E">
+        <path d="M36 44 q8 -12 22 -6 q8 8 -2 16 q-14 6 -20 -10z"/>
+        <path d="M64 58 q14 -8 20 4 q2 14 -12 16 q-12 -2 -8 -20z"/>
+        <path d="M42 80 q8 -3 10 4 q-5 6 -10 -4z"/>
+      </g>
+      <g clip-path="url(#c-sfera)" fill="none" stroke="#fff" stroke-width="2" opacity=".55" stroke-linecap="round">
+        <path d="M28 60 Q60 50 96 58"/><path d="M34 72 Q62 64 92 70"/>
+      </g>
+      <circle cx="60" cy="60" r="38" fill="url(#g-ombra)"/>
+        <ellipse cx="46" cy="43" rx="13" ry="8" transform="rotate(-30 46 43)" fill="#fff" opacity=".22"/>
+      <path d="M4 64 A58 19 0 0 0 120 64" transform="rotate(-10 62 64)" fill="none" stroke="#B9E62E" stroke-width="2.5" stroke-dasharray="4 5" opacity=".9"/>
+      <circle cx="122" cy="46" r="8" fill="#E5E7EB" stroke="#9CA3AF" stroke-width="1.5"/>
+      <circle cx="120" cy="44" r="2" fill="#9CA3AF"/><circle cx="125" cy="49" r="1.5" fill="#9CA3AF"/>
+    </symbol>
+    <symbol id="p-marte" viewBox="0 0 120 120">
+      <circle cx="60" cy="60" r="38" fill="url(#g-marte)"/>
+      <g clip-path="url(#c-sfera)"><ellipse cx="60" cy="24" rx="16" ry="7" fill="#FFF4E0"/></g>
+      <path d="M36 44 Q60 56 86 42" fill="none" stroke="#5E0B1E" stroke-width="3.5" stroke-linecap="round"/>
+      <circle cx="47" cy="64" r="8" fill="#3D0A14" opacity=".8"/>
+      
+      <circle cx="76" cy="72" r="5" fill="none" stroke="#B9E62E" stroke-width="2.5"/>
+      <circle cx="60" cy="60" r="38" fill="url(#g-ombra)"/>
+        <ellipse cx="46" cy="43" rx="13" ry="8" transform="rotate(-30 46 43)" fill="#fff" opacity=".22"/>
+    </symbol>
+    <symbol id="p-fasce" viewBox="0 0 120 120">
+      <circle cx="60" cy="60" r="38" fill="url(#g-fasce)"/>
+      <g clip-path="url(#c-sfera)" fill="none" stroke-linecap="round">
+        <path d="M16 42 Q60 32 104 44" stroke="#6D28D9" stroke-width="6"/>
+        <path d="M16 56 Q60 48 104 58" stroke="#B9E62E" stroke-width="2.5"/>
+        <path d="M16 72 Q60 64 104 74" stroke="#6D28D9" stroke-width="7"/>
+        <path d="M20 86 Q60 80 100 88" stroke="#FCD34D" stroke-width="2.5"/>
+      </g>
+      <ellipse cx="76" cy="64" rx="9" ry="5.5" fill="#E11D48" stroke="#FCD34D" stroke-width="2"/>
+      <circle cx="60" cy="60" r="38" fill="url(#g-ombra)"/>
+        <ellipse cx="46" cy="43" rx="13" ry="8" transform="rotate(-30 46 43)" fill="#fff" opacity=".22"/>
+    </symbol>
+    <symbol id="p-saturno" viewBox="0 0 180 120">
+      <ellipse cx="90" cy="62" rx="80" ry="20" transform="rotate(-16 90 62)" fill="none" stroke="#7C3AED" stroke-width="6"/>
+      <g transform="translate(30 0)">
+        <circle cx="60" cy="60" r="36" fill="url(#g-saturno)"/>
+        <g clip-path="url(#c-sfera)" fill="none" stroke-linecap="round">
+          <path d="M20 50 Q60 42 100 52" stroke="#FCD34D" stroke-width="3" opacity=".7"/>
+          <path d="M20 70 Q60 62 100 72" stroke="#6D28D9" stroke-width="4" opacity=".7"/>
+        </g>
+        <circle cx="60" cy="60" r="36" fill="url(#g-ombra)"/>
+        <ellipse cx="46" cy="44" rx="12" ry="7" transform="rotate(-30 46 44)" fill="#fff" opacity=".22"/>
+      </g>
+      <path d="M10 62 A80 20 0 0 0 170 62" transform="rotate(-16 90 62)" fill="none" stroke="#B9E62E" stroke-width="6" stroke-linecap="round"/>
+      <path d="M22 66 A68 15 0 0 0 158 66" transform="rotate(-16 90 62)" fill="none" stroke="#DCEFA0" stroke-width="2" opacity=".8"/>
+    </symbol>
+    <symbol id="p-urano" viewBox="0 0 120 140">
+      <ellipse cx="60" cy="70" rx="14" ry="58" transform="rotate(14 60 70)" fill="none" stroke="#7C3AED" stroke-width="3.5"/>
+      <g transform="translate(0 10)">
+        <circle cx="60" cy="60" r="36" fill="url(#g-urano)"/>
+        <g clip-path="url(#c-sfera)" fill="none" stroke="#99F6E4" stroke-width="2.5" opacity=".5"><path d="M20 50 Q60 44 100 52"/><path d="M20 70 Q60 64 100 72"/></g>
+        <circle cx="60" cy="60" r="36" fill="url(#g-ombra)"/>
+        <ellipse cx="46" cy="44" rx="12" ry="7" transform="rotate(-30 46 44)" fill="#fff" opacity=".22"/>
+      </g>
+      <path d="M60 12 A14 58 0 0 1 60 128" transform="rotate(14 60 70)" fill="none" stroke="#B9E62E" stroke-width="3.5" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="p-nettuno" viewBox="0 0 120 120">
+      <circle cx="60" cy="60" r="38" fill="url(#g-nettuno)"/>
+      <g clip-path="url(#c-sfera)" fill="none" stroke-linecap="round">
+        <path d="M18 44 Q60 36 102 46" stroke="#B9E62E" stroke-width="2.5"/>
+        <path d="M18 60 Q60 54 102 62" stroke="#C7D2FE" stroke-width="2" opacity=".6"/>
+        <path d="M20 84 Q60 78 100 86" stroke="#B9E62E" stroke-width="2.5"/>
+      </g>
+      <ellipse cx="54" cy="72" rx="8" ry="4" fill="none" stroke="#B9E62E" stroke-width="2.5"/>
+      <circle cx="60" cy="60" r="38" fill="url(#g-ombra)"/>
+        <ellipse cx="46" cy="43" rx="13" ry="8" transform="rotate(-30 46 43)" fill="#fff" opacity=".22"/>
+    </symbol>
+    <linearGradient id="g-ast" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7A4BE0"/><stop offset=".55" stop-color="#4C1D95"/><stop offset="1" stop-color="#26105C"/></linearGradient>
+    <symbol id="p-ast1" viewBox="0 0 48 40">
+      <polygon points="8,14 18,5 34,6 43,17 37,32 18,35 6,26" fill="url(#g-ast)" stroke="#B9E62E" stroke-width="1.8" stroke-linejoin="round"/>
+      <ellipse cx="23" cy="19" rx="4.5" ry="3.5" fill="#1A0B40"/>
+    </symbol>
+    <symbol id="p-ast2" viewBox="0 0 60 44">
+      <polygon points="6,16 16,6 40,4 54,14 52,30 38,40 14,39 4,28" fill="url(#g-ast)" stroke="#B9E62E" stroke-width="1.8" stroke-linejoin="round"/>
+      <path d="M20 12 Q30 7 38 12" fill="none" stroke="#F1ECFB" stroke-width="1.6" stroke-linecap="round" opacity=".8"/>
+      <ellipse cx="35" cy="20" rx="5" ry="3.8" fill="none" stroke="#DCEFA0" stroke-width="1.6"/>
+    </symbol>
+    <symbol id="p-ast3" viewBox="0 0 32 26">
+      <polygon points="4,12 14,3 28,8 25,21 9,23" fill="#6D3FD1" stroke="#8B5CF6" stroke-width="1" stroke-linejoin="round"/>
+      <polygon points="14,3 28,8 18,13" fill="#9F7AEA" opacity=".6"/>
+    </symbol>
+    <symbol id="p-ast4" viewBox="0 0 50 38">
+      <polygon points="6,18 14,7 32,4 44,12 45,26 32,34 12,33" fill="url(#g-ast)" stroke="#B9E62E" stroke-width="1.8" stroke-linejoin="round"/>
+      <ellipse cx="21" cy="17" rx="4" ry="3.2" fill="#3730A3" stroke="#1A0B40" stroke-width="1"/>
+    </symbol>
+    <symbol id="p-ast5" viewBox="0 0 26 22">
+      <polygon points="3,11 11,3 23,7 20,18 8,19" fill="#7C4DDB" stroke="#C4B5FD" stroke-width="1" stroke-linejoin="round"/>
+    </symbol>
+  </defs>
+</svg>
+
+<!-- Sfondo: nebulose, sistema solare in movimento e due stelle cadenti, tutto dietro i contenuti -->
+<div aria-hidden="true" class="pointer-events-none absolute inset-0 z-0 overflow-hidden">
+  <div class="absolute -top-40 -left-40 w-[600px] h-[600px] rounded-full bg-brand-violet/20 blur-[130px]"></div>
+  <div class="absolute top-[30%] -right-48 w-[620px] h-[620px] rounded-full bg-[#7C3AED]/15 blur-[150px]"></div>
+  <div class="absolute top-[70%] -left-32 w-[560px] h-[560px] rounded-full bg-[#5B21B6]/15 blur-[140px]"></div>
+  <!-- Sistema solare: i corpi viaggiano lungo curve ondulate, escono da un lato e rientrano dall'altro.
+       Il moto lo calcola lo script "sistema solare" in fondo alla pagina; tutto sta dietro ai contenuti (z-0). -->
+  <div class="corpo" style="top:2%" data-vel="9" data-x="0.06" data-amp="26" data-onde="0.8" data-fase="0.1" data-giro="0" data-verso="1" data-inclina="4"><svg class="pianeta w-14 h-14 lg:w-20 lg:h-20" style="--glow:rgba(139,92,246,.5)"><use href="#p-luna"/></svg></div>
+  <div class="corpo" style="top:1.5%" data-vel="7" data-x="0.8" data-amp="30" data-onde="0.6" data-fase="0.55" data-giro="0" data-verso="-1" data-inclina="4"><svg class="pianeta w-24 h-[4.5rem] lg:w-40 lg:h-[7.5rem]" style="--glow:rgba(232,113,28,.5)"><use href="#p-gioviano"/></svg></div>
+  <div class="corpo" style="top:35%" data-vel="8" data-x="0.86" data-amp="34" data-onde="0.7" data-fase="0.3" data-giro="0" data-verso="1" data-inclina="4"><svg class="pianeta w-20 h-[4.3rem] lg:w-36 lg:h-[7.7rem]" style="--glow:rgba(30,115,216,.5)"><use href="#p-terra"/></svg></div>
+  <div class="corpo" style="top:42%" data-vel="11" data-x="0.04" data-amp="22" data-onde="1.1" data-fase="0.8" data-giro="0" data-verso="-1" data-inclina="4"><svg class="pianeta w-14 h-14 lg:w-[5.5rem] lg:h-[5.5rem]" style="--glow:rgba(200,30,58,.5)"><use href="#p-marte"/></svg></div>
+  <svg class="fascia absolute left-0 top-[47%] w-full h-24 -translate-y-1/2 overflow-visible" data-amp="16" data-onde="1.6" data-fase="0.2" aria-hidden="true"><path class="fascia-a" fill="none" stroke="#B9E62E" stroke-width="1.5" stroke-dasharray="5 6" opacity=".55"/><path class="fascia-b" fill="none" stroke="#8B5CF6" stroke-width="1.5" stroke-dasharray="1.5 6" stroke-linecap="round" opacity=".6"/></svg>
+  <div class="corpo" style="top:47%" data-vel="16" data-x="0.04" data-amp="16" data-onde="1.6" data-fase="0.2" data-giro="14" data-verso="1" data-inclina="4"><svg class="pianeta w-7 h-6 lg:w-10 lg:h-8" style="--glow:rgba(185,230,46,.35)"><use href="#p-ast1"/></svg></div>
+  <div class="corpo" style="top:calc(47% - 10px)" data-vel="18" data-x="0.13" data-amp="16" data-onde="1.6" data-fase="0.2" data-giro="-30" data-verso="1" data-inclina="4"><svg class="pianeta w-4 h-3 lg:w-6 lg:h-5" style="--glow:rgba(139,92,246,.45)"><use href="#p-ast3"/></svg></div>
+  <div class="corpo" style="top:47%" data-vel="15" data-x="0.25" data-amp="16" data-onde="1.6" data-fase="0.2" data-giro="-10" data-verso="1" data-inclina="4"><svg class="pianeta w-7 h-6 lg:w-11 lg:h-8" style="--glow:rgba(185,230,46,.35)"><use href="#p-ast4"/></svg></div>
+  <div class="corpo" style="top:calc(47% - 4px)" data-vel="13" data-x="0.4" data-amp="16" data-onde="1.6" data-fase="0.2" data-giro="8" data-verso="1" data-inclina="4"><svg class="pianeta w-9 h-7 lg:w-14 lg:h-10" style="--glow:rgba(185,230,46,.35)"><use href="#p-ast2"/></svg></div>
+  <div class="corpo" style="top:calc(47% + 6px)" data-vel="17" data-x="0.58" data-amp="16" data-onde="1.6" data-fase="0.2" data-giro="-16" data-verso="1" data-inclina="4"><svg class="pianeta w-7 h-6 lg:w-10 lg:h-8" style="--glow:rgba(185,230,46,.35)"><use href="#p-ast1"/></svg></div>
+  <div class="corpo" style="top:calc(47% - 2px)" data-vel="14" data-x="0.79" data-amp="16" data-onde="1.6" data-fase="0.2" data-giro="11" data-verso="1" data-inclina="4"><svg class="pianeta w-7 h-6 lg:w-11 lg:h-8" style="--glow:rgba(185,230,46,.35)"><use href="#p-ast4"/></svg></div>
+  <div class="corpo" style="top:calc(47% - 14px)" data-vel="19" data-x="0.9" data-amp="16" data-onde="1.6" data-fase="0.2" data-giro="24" data-verso="1" data-inclina="4"><svg class="pianeta w-4 h-3 lg:w-6 lg:h-5" style="--glow:rgba(139,92,246,.45)"><use href="#p-ast5"/></svg></div>
+  <div class="corpo" style="top:52%" data-vel="6" data-x="0.88" data-amp="28" data-onde="0.7" data-fase="0.65" data-giro="0" data-verso="1" data-inclina="4"><svg class="pianeta w-20 h-20 lg:w-32 lg:h-32" style="--glow:rgba(217,83,30,.5)"><use href="#p-fasce"/></svg></div>
+  <div class="corpo" style="top:61%" data-vel="7" data-x="0.02" data-amp="32" data-onde="0.5" data-fase="0.15" data-giro="0" data-verso="-1" data-inclina="4"><svg class="pianeta w-28 h-[4.7rem] lg:w-44 lg:h-[7.3rem]" style="--glow:rgba(185,230,46,.4)"><use href="#p-saturno"/></svg></div>
+  <div class="corpo" style="top:76%" data-vel="9" data-x="0.88" data-amp="26" data-onde="0.9" data-fase="0.4" data-giro="0" data-verso="1" data-inclina="4"><svg class="pianeta w-16 h-[4.7rem] lg:w-24 lg:h-28" style="--glow:rgba(14,159,154,.5)"><use href="#p-urano"/></svg></div>
+  <div class="corpo" style="top:89%" data-vel="8" data-x="0.05" data-amp="24" data-onde="0.8" data-fase="0.9" data-giro="0" data-verso="-1" data-inclina="4"><svg class="pianeta w-16 h-16 lg:w-24 lg:h-24" style="--glow:rgba(48,86,211,.5)"><use href="#p-nettuno"/></svg></div>
+</div>
+<div aria-hidden="true" class="pointer-events-none fixed inset-0 z-[1] overflow-hidden">
+  <div class="shooting s1"></div><div class="shooting s2"></div>
+</div>
+
+<!-- Testata -->
+<header class="sticky top-0 z-50 bg-[#070514]/90 backdrop-blur-md border-b border-brand-violet/40">
+  <div class="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-4">
+    <a class="flex items-center gap-2 sm:gap-3 group shrink-0" href="index.html" aria-label="Area 51 Fumetteria, home">
+      <svg class="w-11 h-11 group-hover:rotate-12 transition-transform" aria-hidden="true"><use href="#alieno"/></svg>
+      <span class="flex flex-col leading-none">
+        <span class="font-heavy text-xl sm:text-2xl text-white">AREA 51</span>
+        <span class="text-[10px] tracking-[0.3em] text-brand-lime font-bold">FUMETTERIA</span>
+      </span>
+    </a>
+
+    <nav class="hidden min-[1420px]:flex items-center gap-2 relative text-sm font-semibold" id="main-nav" aria-label="Categorie">
+      <div class="pointer-events-none absolute -top-4 left-0 z-30" id="nav-ufo-follower" aria-hidden="true">
+        <div class="ufo-bobbing flex flex-col items-center drop-shadow-[0_2px_10px_rgba(185,230,46,.65)]">
+          <svg class="w-10 h-5" id="nav-ufo-ship"><use href="#disco"/></svg>
+          <div class="nav-tractor-light w-8 h-4 -mt-0.5"></div>
+        </div>
+      </div>
+      <div class="flex items-center bg-[#0d0724] border border-brand-violet/60 rounded-full p-1 gap-0.5">
+        <a class="nav-link whitespace-nowrap px-2.5 py-2 rounded-full hover:text-brand-lime hover:bg-[#180e3e] transition-colors" href="catalogo.html">Manga &amp; Fumetti</a>
+        <a class="nav-link whitespace-nowrap px-2.5 py-2 rounded-full hover:text-brand-lime hover:bg-[#180e3e] transition-colors" href="tcg.html">TCG</a>
+        <a class="nav-link whitespace-nowrap px-2.5 py-2 rounded-full hover:text-brand-lime hover:bg-[#180e3e] transition-colors" href="giochi.html">Giochi da tavolo</a>
+        <a class="nav-link whitespace-nowrap px-2.5 py-2 rounded-full hover:text-brand-lime hover:bg-[#180e3e] transition-colors" href="figure.html">Figure &amp; Funko</a>
+        <a class="nav-link whitespace-nowrap px-2.5 py-2 rounded-full hover:text-brand-lime hover:bg-[#180e3e] transition-colors" href="warhammer.html">Warhammer</a>
+        <a class="nav-link whitespace-nowrap px-2.5 py-2 rounded-full hover:text-brand-lime hover:bg-[#180e3e] transition-colors" href="gadget.html">Gadget</a>
+        <a class="nav-link whitespace-nowrap px-2.5 py-2 rounded-full hover:text-brand-lime hover:bg-[#180e3e] transition-colors" href="eventi.html">Eventi</a>
+      </div>
+      <a class="nav-link ml-1 border border-brand-lime/60 hover:bg-brand-lime text-brand-lime hover:text-black font-bold text-xs uppercase tracking-wider whitespace-nowrap px-3 py-2.5 rounded-full transition-colors" href="negozio.html">Il negozio ↗</a>
+    </nav>
+
+    <div class="flex items-center gap-2 sm:gap-3">
+      <button type="button" aria-label="Cerca prodotti" class="max-[359px]:hidden w-11 h-11 rounded-full border border-white/15 hover:border-brand-lime flex items-center justify-center hover:text-brand-lime transition-colors">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-linecap="round" stroke-width="2"/></svg>
+      </button>
+      <a href="profilo.html#preferiti" aria-label="Preferiti" class="relative hidden sm:flex w-11 h-11 rounded-full border border-white/15 hover:border-brand-lime items-center justify-center hover:text-brand-lime transition-colors">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M4.3 6.3a4.5 4.5 0 000 6.4L12 20.4l7.7-7.7a4.5 4.5 0 00-6.4-6.4L12 7.6l-1.3-1.3a4.5 4.5 0 00-6.4 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/></svg>
+        <span class="js-pref-n absolute -top-1 -right-1 min-w-[1.1rem] h-[1.1rem] px-1 rounded-full bg-brand-lime text-black font-heavy text-[10px] leading-[1.1rem] text-center" hidden>0</span>
+      </a>
+      <a href="profilo.html" aria-label="Il tuo profilo" class="hidden sm:flex w-11 h-11 rounded-full border border-white/15 hover:border-brand-lime items-center justify-center hover:text-brand-lime transition-colors">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 11a4 4 0 100-8 4 4 0 000 8zM4 21v-1a6 6 0 016-6h4a6 6 0 016 6v1" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/></svg>
+      </a>
+      <a id="carrello" class="whitespace-nowrap bg-brand-lime text-black font-heavy text-xs px-3.5 sm:px-4 py-3 rounded-full flex items-center gap-2 shadow-brutal-violet" href="carrello.html" aria-label="Carrello, 0 prodotti">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"/></svg>
+        <span class="hidden sm:inline">Carrello · <span class="js-carrello-n">0</span></span><span class="sm:hidden js-carrello-n">0</span>
+      </a>
+      <button type="button" id="menu-btn" aria-label="Apri il menu" aria-expanded="false" aria-controls="menu-mobile" class="min-[1420px]:hidden w-11 h-11 rounded-full border border-white/15 flex items-center justify-center">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" stroke-linecap="round" stroke-width="2.2"/></svg>
+      </button>
+    </div>
+  </div>
+  <!-- Menu da telefono -->
+  <nav id="menu-mobile" hidden aria-label="Menu" class="min-[1420px]:hidden border-t border-brand-violet/40 bg-[#0d0724]">
+    <div class="max-w-[1440px] mx-auto px-4 py-4 grid grid-cols-2 gap-2 text-base font-semibold">
+      <button type="button" id="cerca-mobile" class="col-span-2 min-[360px]:hidden px-4 py-3 rounded-xl border border-white/15 text-left flex items-center gap-2">
+        <svg class="w-4 h-4 text-brand-lime" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-linecap="round" stroke-width="2"/></svg>Cerca
+      </button>
+      <a class="px-4 py-3 rounded-xl bg-white/5" href="catalogo.html">Manga &amp; Fumetti</a>
+      <a class="px-4 py-3 rounded-xl bg-white/5" href="tcg.html">TCG</a>
+      <a class="px-4 py-3 rounded-xl bg-white/5" href="giochi.html">Giochi da tavolo</a>
+      <a class="px-4 py-3 rounded-xl bg-white/5" href="figure.html">Figure &amp; Funko</a>
+      <a class="px-4 py-3 rounded-xl bg-white/5" href="warhammer.html">Warhammer</a>
+      <a class="px-4 py-3 rounded-xl bg-white/5" href="gadget.html">Gadget</a>
+      <a class="px-4 py-3 rounded-xl bg-white/5" href="eventi.html">Eventi</a>
+      <a class="px-4 py-3 rounded-xl border border-brand-lime text-brand-lime text-center" href="negozio.html">Il negozio ↗</a>
+      <a href="profilo.html" class="col-span-2 px-4 py-3 rounded-xl bg-white/5">Il tuo profilo</a>
+    </div>
+  </nav>
+  <!-- Ricerca: si apre dalla lente; suggerisce le serie mentre si scrive, invio apre il catalogo -->
+  <div id="ricerca" hidden class="absolute inset-x-0 top-full border-b border-brand-violet/40 bg-[#0d0724] shadow-[0_18px_30px_rgba(0,0,0,.45)]">
+    <div class="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-4">
+      <form id="ricerca-form" role="search" action="catalogo.html" method="get" class="flex items-center gap-2 sm:gap-3">
+        <label for="ricerca-input" class="sr-only">Cerca un titolo o un autore</label>
+        <input id="ricerca-input" name="cerca" type="search" autocomplete="off" maxlength="60" placeholder="Cerca un titolo o un autore" class="flex-1 min-w-0 bg-[#120a2e] border border-brand-violet/60 focus:border-brand-lime focus:ring-1 focus:ring-brand-lime text-white placeholder-brand-muted/70 rounded-full px-5 py-3 text-base">
+        <button type="submit" class="shrink-0 bg-brand-lime text-black font-heavy text-sm px-5 sm:px-6 py-3 rounded-full shadow-brutal-violet hover:bg-[#a6d420] transition-colors">Cerca</button>
+        <button type="button" id="ricerca-chiudi" aria-label="Chiudi la ricerca" class="shrink-0 w-11 h-11 rounded-full border border-white/15 hover:border-brand-lime hover:text-brand-lime flex items-center justify-center transition-colors">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke-linecap="round" stroke-width="2.4"/></svg>
+        </button>
+      </form>
+      <ul id="ricerca-risultati" hidden class="mt-4 grid gap-2 sm:grid-cols-2 lg:grid-cols-3"></ul>
+      <p id="ricerca-nota" role="status" class="mt-3 text-xs font-semibold text-brand-muted"></p>
+    </div>
+  </div>
+</header>
+
+<main id="main" class="relative z-10">
+  <div class="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 pt-8 lg:pt-14 pb-16">
+    <div class="mb-8">
+      <span class="-rotate-2 inline-block bg-brand-lime text-black px-3 py-1 rounded font-heavy text-[11px] uppercase tracking-wider shadow-brutal-violet mb-3">I tuoi dati</span>
+      <h1 class="font-heavy text-3xl sm:text-5xl text-white leading-tight">Informativa sulla <span class="text-brand-lime">privacy</span></h1>
+      <p class="mt-3 max-w-3xl text-sm sm:text-base font-semibold text-brand-muted leading-relaxed">Qui spieghiamo quali dati personali raccoglie questo sito, perché e per quanto tempo li conserviamo. Le parti tra parentesi quadre le completa il negozio.</p>
+    </div>
+
+    <p class="mb-8 max-w-3xl rounded-xl border-2 border-[#FB923C] bg-[#FB923C]/10 px-4 py-3 text-sm font-semibold text-white leading-relaxed">
+      <b class="font-heavy text-[#FB923C]">Testo provvisorio.</b> Va letto e completato dal titolare e fatto rivedere da un professionista (commercialista o consulente privacy) prima di far usare il sito ai clienti.
+    </p>
+
+    <div class="max-w-3xl space-y-8 text-sm sm:text-base font-semibold text-brand-muted leading-relaxed">
+
+      <section aria-labelledby="p-titolare">
+        <h2 id="p-titolare" class="font-heavy text-xl text-white mb-2">Chi è il titolare</h2>
+        <p>Il titolare del trattamento è <span class="text-white">[RAGIONE SOCIALE]</span>, che gestisce la Fumetteria Area 51, Viale G. Falcone e P. Borsellino 35, 76121 Barletta (BT). Partita IVA <span class="text-white">[PARTITA IVA]</span>. Per qualsiasi domanda sui tuoi dati: <span class="text-white">[EMAIL PER LA PRIVACY]</span> oppure telefono 0883 884567.</p>
+      </section>
+
+      <section aria-labelledby="p-dati">
+        <h2 id="p-dati" class="font-heavy text-xl text-white mb-2">Quali dati raccogliamo e perché</h2>
+        <ul class="space-y-3 list-disc pl-5">
+          <li><span class="text-white">Richieste "Chiedicelo"</span>: nome, email, telefono (facoltativo), il titolo o il prodotto che cerchi e la categoria. Servono a rispondere alla tua richiesta. Base: la tua richiesta e il tuo consenso.</li>
+          <li><span class="text-white">Prenotazioni delle prossime uscite</span>: nome, email, telefono (facoltativo), il titolo prenotato e le copie. Servono a gestire la prenotazione e a ricontattarti. Base: la tua richiesta (misure precontrattuali) e il tuo consenso.</li>
+          <li><span class="text-white">Iscrizioni agli eventi</span>: nome, email, telefono (facoltativo) e l'evento scelto. Servono a gestire i posti e a ricontattarti. Base: la tua richiesta e il tuo consenso.</li>
+          <li><span class="text-white">Tessera Area 51 Club</span> (se la chiedi in negozio): nome, telefono ed email (facoltativi) e lo storico degli acquisti registrati sulla tessera, che serve a calcolare il tuo livello e i vantaggi. Base: la tua adesione al programma. <span class="text-white">[DA CONFERMARE: se il negozio usa questi dati per altri scopi, per esempio comunicazioni commerciali, serve un consenso a parte.]</span></li>
+        </ul>
+        <p class="mt-3">Non usiamo i dati per decisioni automatiche né per profilarti. Non vendiamo i tuoi dati.</p>
+      </section>
+
+      <section aria-labelledby="p-dispositivo">
+        <h2 id="p-dispositivo" class="font-heavy text-xl text-white mb-2">Cosa resta solo sul tuo dispositivo</h2>
+        <p>Preferiti, carrello, serie che segui, foto e dati del profilo e le iscrizioni agli eventi che segni nella pagina Profilo restano solo nel tuo browser: non arrivano a noi. Si cancellano dalla pagina Profilo (I miei dati, "Cancella tutti i miei dati") o svuotando i dati del sito dal browser. Il sito non usa cookie di tracciamento né di pubblicità.</p>
+      </section>
+
+      <section aria-labelledby="p-dove">
+        <h2 id="p-dove" class="font-heavy text-xl text-white mb-2">Dove sono conservati i dati e chi li vede</h2>
+        <ul class="space-y-3 list-disc pl-5">
+          <li>Richieste, prenotazioni, iscrizioni e tessere sono salvate in un database ospitato da <span class="text-white">Supabase</span> (server in Irlanda, Unione Europea), che agisce per nostro conto. Li legge solo il gestore del negozio, dopo l'accesso con le sue credenziali.</li>
+          <li>Il sito è ospitato su <span class="text-white">GitHub Pages</span> e alcune librerie del sito si caricano da <span class="text-white">jsDelivr</span>: come per qualsiasi sito, questi servizi vedono l'indirizzo IP di chi visita le pagine. <span class="text-white">[DA VERIFICARE con il consulente, anche per i trasferimenti di dati fuori dall'Unione Europea.]</span></li>
+          <li>Se in futuro attiveremo i pagamenti online con <span class="text-white">Nexi</span>, i dati della carta li tratta Nexi: noi non li vediamo né li conserviamo.</li>
+        </ul>
+      </section>
+
+      <section aria-labelledby="p-quanto">
+        <h2 id="p-quanto" class="font-heavy text-xl text-white mb-2">Per quanto tempo li conserviamo</h2>
+        <ul class="space-y-2 list-disc pl-5">
+          <li>Richieste "Chiedicelo": <span class="text-white">[DA DEFINIRE, per esempio 12 mesi dall'ultima risposta]</span>.</li>
+          <li>Prenotazioni e iscrizioni agli eventi: <span class="text-white">[DA DEFINIRE]</span>.</li>
+          <li>Tessera e storico acquisti: finché la tessera è attiva e <span class="text-white">[DA DEFINIRE]</span> dopo l'ultima attività.</li>
+        </ul>
+        <p class="mt-3">Alcuni documenti (per esempio quelli fiscali) vanno conservati per i tempi previsti dalla legge.</p>
+      </section>
+
+      <section aria-labelledby="p-diritti">
+        <h2 id="p-diritti" class="font-heavy text-xl text-white mb-2">I tuoi diritti</h2>
+        <p>Puoi chiederci in qualsiasi momento di sapere quali dati abbiamo su di te, correggerli, cancellarli, limitarne l'uso, riceverli in un formato leggibile e opporti al loro uso. Se ci hai dato il consenso, puoi ritirarlo quando vuoi, senza conseguenze sulle richieste già trattate. Scrivi a <span class="text-white">[EMAIL PER LA PRIVACY]</span>. Se pensi che i tuoi dati non siano trattati correttamente, puoi rivolgerti al Garante per la protezione dei dati personali (garanteprivacy.it).</p>
+      </section>
+
+      <p class="text-xs text-brand-muted">Ultimo aggiornamento: <span class="text-white">[DATA]</span>. <a class="text-brand-lime underline hover:text-white" href="condizioni.html">Condizioni di vendita</a> · <a class="text-brand-lime underline hover:text-white" href="negozio.html#chiedicelo">Contattaci</a></p>
+    </div>
+  </div>
+</main>
+
+<!-- Piede -->
+<footer id="negozio" class="border-t-2 border-brand-lime bg-[#05030f] pt-8 pb-5 text-sm text-brand-muted relative z-10">
+  <div class="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-x-4 gap-y-6 lg:gap-8 mb-6">
+      <div class="col-span-2 space-y-2.5">
+        <div class="flex items-center gap-3"><svg class="w-9 h-9" aria-hidden="true"><use href="#alieno"/></svg><span class="font-heavy text-2xl text-white">AREA 51</span></div>
+        <p class="max-w-sm">Manga, fumetti, giochi, carte. E un posto dove parlarne.</p>
+        <address class="not-italic leading-relaxed">
+          <span class="block text-brand-lime font-bold">Viale G. Falcone e P. Borsellino, 35</span>
+          <span class="block text-white">76121 Barletta (BT) · <a class="underline hover:text-brand-lime" href="tel:+390883884567">0883 884567</a></span>
+          <span class="block mt-1.5 text-brand-muted">Mar–Sab 9:30–13 e 17–20:30 · Lun 17–20:30 · Dom chiuso</span>
+          <span class="flex flex-wrap items-center gap-x-5 gap-y-1 mt-2"><a class="inline-flex items-center gap-2 text-white hover:text-brand-lime font-semibold" href="https://www.instagram.com/fumetteriaarea51/" target="_blank" rel="noopener noreferrer"><svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>Instagram</a><a class="inline-flex items-center gap-2 text-white hover:text-brand-lime font-semibold" href="https://www.facebook.com/FumetteriaArea51" target="_blank" rel="noopener noreferrer"><svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 21v-8h3l.5-3.5H14V7.7C14 6.8 14.4 6 15.8 6H17.5V3.2C17 3.1 16 3 14.9 3 12.4 3 10.5 4.5 10.5 7.4V9.5H8V13h2.5v8"/></svg>Facebook</a></span>
+        </address>
+      </div>
+      <nav aria-label="Area 51"><h3 class="font-heavy text-white text-xs uppercase tracking-wider mb-2">Area 51</h3>
+        <ul class="space-y-1.5 font-semibold"><li><a class="hover:text-brand-lime" href="negozio.html">Il negozio</a></li><li><a class="hover:text-brand-lime" href="index.html#club">Area 51 Club</a></li><li><a class="hover:text-brand-lime" href="eventi.html">Eventi</a></li><li><a class="hover:text-brand-lime" href="uscite.html">Preordini</a></li><li><a class="hover:text-brand-lime" href="negozio.html#chiedicelo">Chiedicelo</a></li></ul></nav>
+      <nav aria-label="Parliamone"><h3 class="font-heavy text-white text-xs uppercase tracking-wider mb-2">Parliamone</h3>
+        <ul class="space-y-1.5 font-semibold"><li><a class="hover:text-brand-lime" href="profilo.html">Il tuo profilo</a></li><li><a class="hover:text-brand-lime" href="profilo.html#preferiti">Preferiti</a></li><li><a class="hover:text-brand-lime" href="condizioni.html">Condizioni di vendita</a></li><li><a class="hover:text-brand-lime" href="privacy.html">Privacy</a></li></ul></nav>
+    </div>
+    <div class="pt-4 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-brand-muted/80">
+      <p>© 2026 Fumetteria Area 51 · Barletta</p>
+      <p>Ritiro e pagamento in negozio, nessuna spedizione.</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function () {
+  /* ---------- Testata: menu da telefono e disco che segue il menu (come la home) ---------- */
+  var btn = document.getElementById('menu-btn'), menu = document.getElementById('menu-mobile');
+  btn.addEventListener('click', function () {
+    var aperto = menu.hidden;
+    menu.hidden = !aperto;
+    btn.setAttribute('aria-expanded', String(aperto));
+    btn.setAttribute('aria-label', aperto ? 'Chiudi il menu' : 'Apri il menu');
+  });
+  var nav = document.getElementById('main-nav'), ufo = document.getElementById('nav-ufo-follower');
+  if (nav && ufo) {
+    var links = Array.from(nav.querySelectorAll('.nav-link')), attivo = nav.querySelector('[aria-current="page"]') || links[0];
+    /* Molla con inerzia: la navicella accelera, si inclina nel verso in cui va,
+       e quando cambia direzione frena, oscilla e si raddrizza */
+    var ridotto = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var px = 0, vel = 0, meta = 0, giro = 0;
+    ufo.style.transformOrigin = '50% 35%';
+    function disegnaUfo(incl) { ufo.style.transform = 'translateX(' + px.toFixed(2) + 'px) rotate(' + incl.toFixed(2) + 'deg)'; }
+    function passo() {
+      vel = (vel + (meta - px) * 0.045) * 0.80;   // forza della molla, poi attrito
+      px += vel;
+      if (Math.abs(meta - px) < 0.3 && Math.abs(vel) < 0.05) { px = meta; vel = 0; disegnaUfo(0); giro = 0; return; }
+      disegnaUfo(Math.max(-15, Math.min(15, vel * 2.2)));
+      giro = requestAnimationFrame(passo);
+    }
+    function vai(el, subito) {
+      var n = nav.getBoundingClientRect(), r = el.getBoundingClientRect();
+      meta = r.left - n.left + r.width / 2 - (ufo.offsetWidth || 40) / 2;
+      if (subito || ridotto) { cancelAnimationFrame(giro); giro = 0; px = meta; vel = 0; disegnaUfo(0); return; }
+      if (!giro) giro = requestAnimationFrame(passo);
+    }
+    vai(attivo, true);  // subito, senza aspettare immagini e risorse: così la navicella non parte dal bordo e poi salta
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { vai(attivo, true); });  // i caratteri cambiano le larghezze del menu
+    window.addEventListener('load', function () { vai(attivo, true); });
+    window.addEventListener('resize', function () { vai(attivo, true); });
+    links.forEach(function (l) { l.addEventListener('mouseenter', function () { vai(l); }); l.addEventListener('focus', function () { vai(l); }); });
+    nav.addEventListener('mouseleave', function () { vai(attivo); });
+  }
+})();
+</script>
+<script>
+/* Sistema solare di sfondo: ogni .corpo avanza in orizzontale (data-vel px/s, data-verso 1 o -1),
+   sale e scende lungo un'onda (data-amp px, data-onde onde per larghezza schermo, data-fase),
+   si inclina seguendo la curva e, per gli asteroidi, ruota su se stesso (data-giro gradi/s).
+   Uscito da un lato rientra dall'altro. Con "riduci movimento" resta fermo in data-x. */
+(function () {
+  var corpi = Array.from(document.querySelectorAll('.corpo')), fascia = document.querySelector('.fascia');
+  if (!corpi.length) return;
+  var ridotto = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var W = 0;
+  function onda(x, amp, onde, fase) { return amp * Math.sin((x / W * onde + fase) * Math.PI * 2); }
+  function pendenza(x, amp, onde, fase) { return amp * Math.cos((x / W * onde + fase) * Math.PI * 2) * (onde / W) * Math.PI * 2; }
+  var stato = corpi.map(function (el) {
+    var d = el.dataset;
+    return { el: el, vel: +d.vel, verso: +d.verso || 1, x0: +d.x, amp: +d.amp, onde: +d.onde, fase: +d.fase, giro: +d.giro || 0, inclina: +d.inclina || 0, x: 0, r: Math.random() * 360, w: 0 };
+  });
+  function misura() {
+    W = document.documentElement.clientWidth || window.innerWidth || 1024;
+    stato.forEach(function (s) { var b = s.el.firstElementChild.getBoundingClientRect(); s.w = b.width || 80; s.h = b.height || s.w; if (!s.pronto) { s.x = s.x0 * W; s.pronto = true; } });
+    if (fascia) {
+      var a = +fascia.dataset.amp, o = +fascia.dataset.onde, f = +fascia.dataset.fase, pa = '', pb = '';
+      for (var x = -20; x <= W + 20; x += 12) {
+        var y = 48 + onda(x, a, o, f);
+        pa += (pa ? ' L' : 'M') + x + ' ' + y.toFixed(1);
+        pb += (pb ? ' L' : 'M') + x + ' ' + (y + 12 + 4 * Math.sin(x / W * 9)).toFixed(1);
+      }
+      fascia.querySelector('.fascia-a').setAttribute('d', pa);
+      fascia.querySelector('.fascia-b').setAttribute('d', pb);
+    }
+  }
+  function posa(s) {
+    var y = onda(s.x, s.amp, s.onde, s.fase), incl = Math.atan(pendenza(s.x, s.amp, s.onde, s.fase)) * 180 / Math.PI;
+    var rot = s.giro ? s.r : Math.max(-s.inclina, Math.min(s.inclina, incl));
+    s.el.style.transform = 'translate(' + (s.x - s.w / 2).toFixed(1) + 'px,' + (y - s.h / 2).toFixed(1) + 'px) rotate(' + rot.toFixed(1) + 'deg)';
+  }
+  var prima = 0;
+  function passo(t) {
+    var dt = prima ? Math.min(0.05, (t - prima) / 1000) : 0; prima = t;
+    stato.forEach(function (s) {
+      s.x += s.vel * s.verso * dt;
+      var m = s.w / 2 + 30;
+      if (s.verso > 0 && s.x > W + m) s.x = -m;
+      if (s.verso < 0 && s.x < -m) s.x = W + m;
+      s.r += s.giro * dt;
+      posa(s);
+    });
+    requestAnimationFrame(passo);
+  }
+  misura();
+  window.addEventListener('resize', misura);
+  stato.forEach(function (s) { posa(s); s.el.classList.add('pronto'); });
+  if (!ridotto) requestAnimationFrame(passo);
+})();
+</script>
+<!-- Modale account: compare qualche secondo dopo l'arrivo, si chiude con la X, con Esc o toccando lo sfondo.
+     Accedi e Registrati sono segnaposto: il sito non ha ancora un servizio per gli account. -->
+<div id="modale-account" hidden class="fixed inset-0 z-[90] flex items-center justify-center p-4 bg-[#070514]/80 backdrop-blur-sm">
+  <div role="dialog" aria-modal="true" aria-labelledby="modale-titolo" aria-describedby="modale-testo" class="animate-modale relative w-full max-w-md bg-[#0d0724] border-2 border-brand-lime rounded-3xl shadow-[8px_8px_0_#5B21B6] px-6 pt-9 pb-7 text-center">
+    <button type="button" id="modale-chiudi" aria-label="Chiudi" class="absolute top-3 right-3 w-11 h-11 rounded-full border border-white/15 hover:border-brand-lime hover:text-brand-lime flex items-center justify-center transition-colors">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke-linecap="round" stroke-width="2.4"/></svg>
+    </button>
+    <svg class="w-16 h-16 mx-auto -rotate-6" aria-hidden="true"><use href="#alieno"/></svg>
+    <h2 id="modale-titolo" class="font-heavy text-2xl text-white mt-3">Sei già dei nostri?</h2>
+    <p id="modale-testo" class="text-brand-muted mt-3 leading-relaxed">Accedi al tuo account oppure registrati: salvi la lista desideri, prenoti le novità e ritiri in negozio senza ripetere i tuoi dati.</p>
+    <div class="mt-6 grid gap-3 sm:grid-cols-2">
+      <a href="profilo.html" class="bg-brand-lime text-black font-heavy text-sm px-5 py-3.5 rounded-full shadow-brutal-violet hover:bg-[#a6d420] transition-colors">Registrati</a>
+      <a href="profilo.html" class="border-2 border-brand-violet hover:border-brand-lime text-white font-heavy text-sm px-5 py-3 rounded-full transition-colors">Accedi</a>
+    </div>
+  </div>
+</div>
+<script>
+(function () {
+  /* Modale account: dopo RITARDO millisecondi dall'arrivo, se non è già stato chiuso negli ultimi GIORNI giorni.
+     La chiusura si ricorda nel browser (localStorage; se è bloccato, solo per la sessione). */
+  var CHIAVE = 'area51-modale-account', GIORNI = 7, RITARDO = 6000;
+  var m = document.getElementById('modale-account');
+  if (!m) return;
+  var chiudi = document.getElementById('modale-chiudi'), precedente = null, overflow = '', mostrata = false;
+  function giaVisto() {
+    try { var v = localStorage.getItem(CHIAVE); return !!v && (Date.now() - Number(v) < GIORNI * 864e5); }
+    catch (e) { try { return sessionStorage.getItem(CHIAVE) === '1'; } catch (e2) { return false; } }
+  }
+  function ricorda() {
+    try { localStorage.setItem(CHIAVE, String(Date.now())); }
+    catch (e) { try { sessionStorage.setItem(CHIAVE, '1'); } catch (e2) {} }
+  }
+  function apri() {
+    if (mostrata || !m.hidden || giaVisto()) return;
+    mostrata = true;
+    precedente = document.activeElement;
+    overflow = document.body.style.overflow;
+    m.hidden = false;
+    document.body.style.overflow = 'hidden';
+    chiudi.focus();
+  }
+  function chiudiModale() {
+    if (m.hidden) return;
+    m.hidden = true;
+    document.body.style.overflow = overflow;
+    ricorda();
+    if (precedente && precedente.focus) precedente.focus();
+  }
+  chiudi.addEventListener('click', chiudiModale);
+  m.addEventListener('click', function (e) { if (e.target === m) chiudiModale(); });
+  m.querySelectorAll('a').forEach(function (a) { a.addEventListener('click', chiudiModale); });
+  document.addEventListener('keydown', function (e) {
+    if (m.hidden) return;
+    if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); chiudiModale(); return; }
+    if (e.key === 'Tab') {
+      var f = Array.from(m.querySelectorAll('button, a[href]')), primo = f[0], ultimo = f[f.length - 1];
+      if (e.shiftKey && document.activeElement === primo) { e.preventDefault(); ultimo.focus(); }
+      else if (!e.shiftKey && document.activeElement === ultimo) { e.preventDefault(); primo.focus(); }
+    }
+  }, true);
+  if (!giaVisto()) setTimeout(apri, RITARDO);
+})();
+</script>
+<script>
+/* Ricerca dalla lente: suggerisce le serie del catalogo mentre si scrive; invio (o "Cerca") apre catalogo.html?cerca=...
+   Il catalogo (dati/catalogo.js) si carica solo alla prima apertura, tranne dove c'è già. */
+(function () {
+  var p = document.getElementById('ricerca'); if (!p) return;
+  var btn = document.querySelector('button[aria-label="Cerca prodotti"]'), btnM = document.getElementById('cerca-mobile');
+  var inp = document.getElementById('ricerca-input'), ris = document.getElementById('ricerca-risultati'), nota = document.getElementById('ricerca-nota');
+  var chiudi = document.getElementById('ricerca-chiudi'), menu = document.getElementById('menu-mobile'), menuBtn = document.getElementById('menu-btn');
+  var EDITORI = { star: 'Star Comics', jpop: 'J-POP', panini: 'Panini Comics' };
+  var caricando = false;
+  function semplifica(t) { return String(t).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, ''); }
+  function parole(t) { return semplifica(t).replace(/[^a-z0-9]+/g, ' ').trim(); }
+  function carica() {
+    if (window.CATALOGO_DATI || caricando) return;
+    caricando = true; nota.textContent = 'Carico il catalogo…';
+    var s = document.createElement('script'); s.src = 'dati/catalogo.js';
+    s.onload = function () { caricando = false; mostra(); };
+    s.onerror = function () { caricando = false; nota.textContent = 'Il catalogo non si carica: premi Cerca per provare lo stesso.'; };
+    document.head.appendChild(s);
+  }
+  function mostra() {
+    ris.textContent = ''; ris.hidden = true;
+    var q = parole(inp.value);
+    if (q.length < 2) { nota.textContent = 'Scrivi almeno due lettere. Premi invio per vedere tutti i risultati.'; return; }
+    var D = window.CATALOGO_DATI; if (!D) { carica(); return; }
+    var trovati = 0, serie = {}, ordine = [];
+    for (var i = 0; i < D.length; i++) {
+      var r = D[i], t = ' ' + parole(r[1] + ' ' + r[2]);
+      if (t.indexOf(' ' + q) < 0) continue;
+      trovati++;
+      var k = r[2].toLowerCase() + '|' + r[4];
+      if (!serie[k]) { serie[k] = { r: r, n: 0, cop: null }; ordine.push(k); }
+      serie[k].n++;
+      if (!serie[k].cop && r[10] === 1) serie[k].cop = r;
+    }
+    if (!trovati) { nota.textContent = 'Nessun titolo trovato per "' + inp.value.trim() + '". Premi invio per cercare ovunque, oppure chiedicelo in negozio.'; return; }
+    nota.textContent = trovati + (trovati === 1 ? ' risultato' : ' risultati') + '. Premi invio per vederli tutti.';
+    ordine.slice(0, window.innerWidth < 640 ? 4 : 6).forEach(function (k) {
+      var s = serie[k], r = s.r, li = document.createElement('li'), a = document.createElement('a');
+      a.href = 'catalogo.html?cerca=' + encodeURIComponent(r[2]);
+      a.className = 'flex items-center gap-3 rounded-xl border border-white/10 bg-[#120a2e] hover:border-brand-lime p-2 transition-colors';
+      var im = document.createElement('span'); im.className = 'shrink-0 w-12 h-[4.5rem] rounded-md overflow-hidden bg-brand-violet/30';
+      if (s.cop) { var img = document.createElement('img'); img.src = 'img/copertine/' + s.cop[0] + '.webp'; img.alt = ''; img.width = 48; img.height = 72; img.className = 'w-full h-full object-cover'; img.loading = 'lazy'; im.appendChild(img); }
+      var tx = document.createElement('span'); tx.className = 'min-w-0';
+      var b = document.createElement('span'); b.className = 'block font-heavy text-sm text-white leading-snug'; b.textContent = r[2];
+      var c = document.createElement('span'); c.className = 'block text-xs font-semibold text-brand-muted mt-0.5'; c.textContent = (EDITORI[r[4]] || r[4]) + ' · ' + s.n + (s.n === 1 ? ' prodotto' : ' prodotti');
+      tx.appendChild(b); tx.appendChild(c); a.appendChild(im); a.appendChild(tx); li.appendChild(a); ris.appendChild(li);
+    });
+    ris.hidden = false;
+  }
+  function apri() {
+    if (menu && !menu.hidden) { menu.hidden = true; if (menuBtn) menuBtn.setAttribute('aria-expanded', 'false'); }
+    p.hidden = false; if (btn) btn.setAttribute('aria-expanded', 'true');
+    inp.focus(); inp.select();
+    if (!window.CATALOGO_DATI) carica(); else mostra();
+  }
+  function chiudiP() { p.hidden = true; if (btn) { btn.setAttribute('aria-expanded', 'false'); if (btn.offsetParent) btn.focus(); } }
+  if (btn) btn.addEventListener('click', function () { if (p.hidden) apri(); else chiudiP(); });
+  if (btnM) btnM.addEventListener('click', apri);
+  chiudi.addEventListener('click', chiudiP);
+  inp.addEventListener('input', mostra);
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !p.hidden) chiudiP(); });
+  document.addEventListener('click', function (e) { if (!p.hidden && !p.contains(e.target) && !(btn && btn.contains(e.target)) && !(btnM && btnM.contains(e.target))) chiudiP(); });
+})();
+</script>
+</body>
+</html>
