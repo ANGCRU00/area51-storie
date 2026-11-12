@@ -615,8 +615,16 @@ A51Eventi.pronti(function () {
   function disegnaLivelli(box, l) {
     box.textContent = '';
     if (!l.length) {
-      var p = document.createElement('p'); p.className = 'text-sm font-semibold text-brand-muted leading-relaxed';
-      p.textContent = 'I livelli e i vantaggi li sceglie il negozio: [DA DEFINIRE].'; box.appendChild(p); return;
+      /* Nessun livello nel database: restano i nomi scelti dal negozio, con soglie e vantaggi da definire */
+      ['Avvistamento', 'Rapito dagli alieni', 'Amico degli Alieni'].forEach(function (nome, i) {
+        var li = document.createElement('li'); li.className = 'flex items-start gap-3 rounded-xl border border-white/10 bg-[#120a2e] px-4 py-3';
+        var n = document.createElement('span'); n.className = 'shrink-0 w-7 h-7 rounded-full bg-brand-lime text-black font-heavy text-xs flex items-center justify-center'; n.textContent = String(i + 1);
+        var d = document.createElement('span'); d.className = 'min-w-0';
+        var t1 = document.createElement('b'); t1.className = 'block font-heavy text-white'; t1.textContent = nome;
+        var t2 = document.createElement('span'); t2.className = 'block text-sm font-semibold text-brand-muted'; t2.textContent = '[SOGLIA DI SPESA] · [VANTAGGIO]';
+        d.appendChild(t1); d.appendChild(t2); li.appendChild(n); li.appendChild(d); box.appendChild(li);
+      });
+      return;
     }
     l.forEach(function (x, i) {
       var li = document.createElement('li'); li.className = 'flex items-start gap-3 rounded-xl border border-white/10 bg-[#120a2e] px-4 py-3';
