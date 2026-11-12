@@ -448,7 +448,7 @@
 
         <form id="g-buo-form" class="rounded-2xl border border-brand-lime/50 bg-[#0e0926]/90 p-5 sm:p-6 mb-4 grid grid-cols-2 lg:grid-cols-[2fr_1fr_1fr_2fr_1fr_auto] gap-3 items-end" novalidate>
           <div class="col-span-2 lg:col-span-1"><label for="bu-codice" class="block font-heavy text-xs uppercase tracking-widest text-brand-lime mb-2">Codice del buono</label>
-            <input id="bu-codice" name="codice" maxlength="40" autocomplete="off" autocapitalize="characters" spellcheck="false" required class="campo-profilo font-mono" placeholder="Scrivi o scansiona"></div>
+            <input id="bu-codice" name="codice" maxlength="40" autocomplete="off" autocapitalize="characters" spellcheck="false" required class="campo-profilo font-mono" placeholder="Es. 11aa22bb (dal buono)"></div>
           <div><label for="bu-importo" class="block font-heavy text-xs uppercase tracking-widest text-brand-lime mb-2">Importo (€)</label>
             <input id="bu-importo" name="importo" type="number" min="0.01" step="0.01" inputmode="decimal" required class="campo-profilo" placeholder="0,00"></div>
           <div><label for="bu-carta" class="block font-heavy text-xs uppercase tracking-widest text-brand-lime mb-2">Carta</label>
@@ -1056,7 +1056,7 @@
     e.preventDefault();
     var f = fb.elements, es = $('g-buo-esito'); es.className = 'text-sm font-bold text-[#FB923C] min-h-[1.25rem] mb-4';
     var codice = f.codice.value.trim(), importo = Math.round(Number(String(f.importo.value).replace(',', '.')) * 100) / 100;
-    if (!/^[A-Za-z0-9-]{4,40}$/.test(codice)) { es.textContent = 'Il codice deve avere da 4 a 40 caratteri (lettere, numeri o trattini).'; f.codice.focus(); return; }
+    if (!/^[A-Za-z0-9-]{4,40}$/.test(codice)) { es.textContent = /\s/.test(codice) ? 'Questo non è un codice: è il codice del buono (quello del Ministero, per esempio 11aa22bb), senza spazi. Il titolo del fumetto arriva da solo scansionando l'ISBN.' : 'Il codice del buono ha da 4 a 40 caratteri (lettere, numeri o trattini).'; f.codice.focus(); return; }
     if (!(importo > 0)) { es.textContent = 'Scrivi l\'importo del buono.'; f.importo.focus(); return; }
     var t = f.tessera.checked ? clienteTessera() : null;
     if ($('bu-isbn').value.trim()) await aggiungiCodice($('bu-isbn').value, articoli, disegnaArticoli);
