@@ -9,6 +9,7 @@
 <link rel="stylesheet" href="css/style.css">
 <link rel="preload" href="fonts/archivo.woff2" as="font" type="font/woff2" crossorigin>
 <script src="js/area51.js"></script>
+<script src="js/area51-db.js"></script>
 </head>
 <body class="text-brand-text font-body overflow-x-hidden antialiased relative selection:bg-brand-lime selection:text-black">
 
@@ -685,11 +686,9 @@
 })();
 </script>
 <script>
-/* Chiedicelo: la richiesta arriva per email al negozio tramite Web3Forms (web3forms.com, gratuito, nessun account:
-   si inserisce l'email del negozio, il servizio manda la chiave di accesso). Il proprietario risponde con "Rispondi":
-   l'email del cliente è già il destinatario. Finché CHIAVE è vuota non parte niente (modulo di prova). */
+/* Chiedicelo: la richiesta viene salvata nel database del negozio (tabella "richieste" di Supabase, vedi js/area51-db.js)
+   e il gestore la legge nella sua area riservata. I visitatori possono solo scrivere, non leggere. */
 (function () {
-  var CHIAVE = '';
   var f = document.getElementById('chiedicelo-form'), es = document.getElementById('ch-esito'), bt = f.querySelector('button[type=submit]');
   var pre = new URLSearchParams(location.search).get('cosa');
   if (pre) document.getElementById('ch-cosa').value = pre.slice(0, 300);
@@ -703,14 +702,13 @@
     if (tel && !/^\+?[\d\s().-]{6,20}$/.test(tel)) return errore('Il telefono non sembra corretto: controllalo o lascialo vuoto.', f.telefono);
     if (!f.privacy.checked) return errore('Serve il consenso per poterti rispondere.', f.privacy);
     if (f.sito.value) return; /* campo trappola: solo i robot lo compilano */
-    es.className = 'text-sm font-bold text-brand-lime';
-    if (!CHIAVE) { es.textContent = 'Modulo di prova: non è ancora collegato, nessun dato è stato inviato. Per ora chiama lo 0883 884567.'; return; }
-    es.textContent = 'Invio…'; bt.disabled = true;
-    fetch('https://api.web3forms.com/submit', {
-      method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-      body: JSON.stringify({ access_key: CHIAVE, subject: 'Chiedicelo: ' + cosa.slice(0, 60), from_name: 'Sito Area 51', name: nome, email: email, telefono: tel || 'non indicato', categoria: f.categoria.value || 'non indicata', richiesta: cosa, botcheck: '' })
-    }).then(function (r) { return r.json(); }).then(function (j) {
-      if (!j.success) throw 0;
+    es.className = 'text-sm font-bold text-brand-lime'; es.textContent = 'Invio…'; bt.disabled = true;
+    fetch(A51DB.url + '/rest/v1/richieste', {
+      method: 'POST',
+      headers: { apikey: A51DB.chiave, Authorization: 'Bearer ' + A51DB.chiave, 'Content-Type': 'application/json', Prefer: 'return=minimal' },
+      body: JSON.stringify({ tipo: 'chiedicelo', cosa: cosa, categoria: f.categoria.value || null, nome: nome, email: email, telefono: tel || null })
+    }).then(function (r) {
+      if (!r.ok) throw 0;
       f.reset(); es.textContent = 'Ricevuto! Ti rispondiamo per email appena sappiamo se riusciamo a procurarlo.';
     }).catch(function () { errore('Non sono riuscito a inviare. Riprova o chiama lo 0883 884567.'); })
       .then(function () { bt.disabled = false; });
