@@ -336,7 +336,7 @@
       <nav aria-label="Sezioni dell'area del gestore" class="flex flex-wrap gap-2 mb-8" id="g-tabs">
         <button type="button" data-sez="richieste" class="tab-profilo !w-auto">Richieste <span id="g-n-ric" class="num-profilo">0</span></button>
         <button type="button" data-sez="eventi" class="tab-profilo !w-auto">Eventi e iscrizioni <span id="g-n-ev" class="num-profilo">0</span></button>
-        <button type="button" data-sez="tessere" class="tab-profilo !w-auto">Tessere e timbri <span id="g-n-tes" class="num-profilo">0</span></button>
+        <button type="button" data-sez="tessere" class="tab-profilo !w-auto">Tessere e livelli <span id="g-n-tes" class="num-profilo">0</span></button>
       </nav>
 
       <!-- Richieste e prenotazioni -->
@@ -390,10 +390,27 @@
         <p id="g-ev-vuoto" hidden class="vuoto-profilo !block">Nessun evento: premi "Nuovo evento" per aggiungerne uno.</p>
       </section>
 
-      <!-- Tessere -->
+      <!-- Tessere e livelli -->
       <section id="g-tessere" hidden aria-labelledby="g-tes-t">
-        <h2 id="g-tes-t" class="font-heavy text-2xl sm:text-3xl text-white uppercase mb-2">Tessere e timbri</h2>
-        <p class="text-sm font-semibold text-brand-muted mb-5">Un timbro ogni 10 € di spesa. Con 10 timbri la tessera dà 10 € di sconto sul prossimo acquisto.</p>
+        <h2 id="g-tes-t" class="font-heavy text-2xl sm:text-3xl text-white uppercase mb-2">Tessere e livelli</h2>
+        <p class="text-sm font-semibold text-brand-muted mb-6">Premiamo i clienti fedeli: il livello di ogni cliente dipende da quanto ha speso in negozio in tutto, senza scadenza. Registra ogni acquisto sulla sua tessera.</p>
+
+        <div class="rounded-2xl border border-white/10 bg-[#0e0926]/90 p-5 sm:p-6 mb-6">
+          <h3 class="font-heavy text-lg text-white mb-1">Livelli e vantaggi</h3>
+          <p class="text-sm font-semibold text-brand-muted mb-4">Si vedono anche nel sito, nella sezione Club. Un cliente passa al livello quando il totale speso raggiunge la soglia.</p>
+          <ul id="g-liv-lista" class="space-y-2 mb-4"></ul>
+          <form id="g-liv-form" class="grid grid-cols-1 sm:grid-cols-[1fr_9rem_2fr_auto] gap-3 items-end" novalidate>
+            <div><label for="liv-nome" class="block font-heavy text-xs uppercase tracking-widest text-brand-lime mb-2">Nome del livello</label>
+              <input id="liv-nome" name="nome" maxlength="40" required class="campo-profilo" placeholder="Per esempio Argento"></div>
+            <div><label for="liv-soglia" class="block font-heavy text-xs uppercase tracking-widest text-brand-lime mb-2">Da (€ spesi)</label>
+              <input id="liv-soglia" name="soglia" type="number" min="0" step="1" required class="campo-profilo" placeholder="0"></div>
+            <div><label for="liv-vantaggio" class="block font-heavy text-xs uppercase tracking-widest text-brand-lime mb-2">Vantaggio</label>
+              <input id="liv-vantaggio" name="vantaggio" maxlength="300" required class="campo-profilo" placeholder="Cosa ottiene il cliente"></div>
+            <button type="submit" class="bg-brand-lime text-black font-heavy text-sm px-6 py-3 rounded-full rounded-bl-[4px] shadow-brutal-violet hover:bg-[#a6d420] transition-colors">Aggiungi</button>
+          </form>
+          <p id="g-liv-esito" role="status" class="text-sm font-bold text-brand-lime min-h-[1.25rem] mt-3"></p>
+        </div>
+
         <form id="g-tes-form" class="rounded-2xl border border-white/10 bg-[#0e0926]/90 p-5 sm:p-6 mb-6 grid grid-cols-1 sm:grid-cols-[1fr_1fr_1fr_auto] gap-3 items-end" novalidate>
           <div><label for="tes-nome" class="block font-heavy text-xs uppercase tracking-widest text-brand-lime mb-2">Nome del cliente</label>
             <input id="tes-nome" name="nome" maxlength="60" required class="campo-profilo" placeholder="Nome e cognome"></div>
@@ -647,18 +664,36 @@
     fe.hidden = true; caricaEventi();
   });
 
-  /* ---------- Tessere e timbri ---------- */
-  var tessere = [];
+  /* ---------- Tessere e livelli ---------- */
+  var tessere = [], livelli = [], storico = null, acquisti = [];
   async function caricaTessere() {
-    var r = await sb.from('tessere_riepilogo').select('*').order('nome', { ascending: true });
-    if (r.error) { $('g-tes-vuoto').hidden = false; $('g-tes-vuoto').textContent = errore(r.error); return; }
-    tessere = r.data; $('g-n-tes').textContent = tessere.length; disegnaTessere();
+    var a = await sb.from('tessere_fedelta').select('*').order('nome', { ascending: true }), b = await sb.from('livelli').select('*').order('soglia', { ascending: true });
+    if (a.error || b.error) { $('g-tes-vuoto').hidden = false; $('g-tes-vuoto').textContent = errore(a.error || b.error); return; }
+    tessere = a.data; livelli = b.data; $('g-n-tes').textContent = tessere.length; disegnaLivelli(); disegnaTessere();
   }
-  async function aggiungiTimbri(id, numero, importo) {
-    var righe = [], resto = numero;
-    while (resto > 0) { var n = Math.min(10, resto); righe.push({ tessera_id: id, numero: n, importo: righe.length ? null : importo }); resto -= n; }
-    var x = await sb.from('timbri').insert(righe); return x.error;
+  function disegnaLivelli() {
+    var ul = $('g-liv-lista'); svuota(ul);
+    if (!livelli.length) ul.appendChild(el('li', 'text-sm font-semibold text-brand-muted', 'Nessun livello: aggiungine uno qui sotto. Finché non ce ne sono, il sito mostra "livelli da definire".'));
+    livelli.forEach(function (l) {
+      var li = el('li', 'flex flex-wrap items-center gap-x-4 gap-y-1 rounded-xl border border-white/10 bg-[#120a2e] px-4 py-3');
+      li.appendChild(el('span', 'font-heavy text-white', l.nome)); li.appendChild(el('span', 'text-sm font-bold text-brand-lime', 'da ' + euro(l.soglia)));
+      li.appendChild(el('span', 'text-sm font-semibold text-brand-muted flex-1 min-w-[10rem]', l.vantaggio));
+      var d = el('button', 'text-xs font-heavy text-brand-muted hover:text-[#FB923C] px-2 py-2', 'Elimina'); d.type = 'button';
+      d.addEventListener('click', async function () { if (!confirm('Eliminare il livello ' + l.nome + '?')) return; var x = await sb.from('livelli').delete().eq('id', l.id); if (x.error) alert(errore(x.error)); caricaTessere(); });
+      li.appendChild(d); ul.appendChild(li);
+    });
   }
+  $('g-liv-form').addEventListener('submit', async function (e) {
+    e.preventDefault();
+    var f = e.target.elements, es = $('g-liv-esito'); es.className = 'text-sm font-bold text-[#FB923C] min-h-[1.25rem] mt-3';
+    var soglia = Number(f.soglia.value);
+    if (!f.nome.value.trim()) { es.textContent = 'Scrivi il nome del livello.'; return; }
+    if (f.soglia.value === '' || !(soglia >= 0)) { es.textContent = 'Scrivi da quanti euro spesi parte il livello.'; return; }
+    if (!f.vantaggio.value.trim()) { es.textContent = 'Scrivi il vantaggio del livello.'; return; }
+    var x = await sb.from('livelli').insert({ nome: f.nome.value.trim(), soglia: soglia, vantaggio: f.vantaggio.value.trim() });
+    if (x.error) { es.textContent = /duplicate|unique/i.test(x.error.message || '') ? 'Esiste già un livello con questa soglia.' : errore(x.error); return; }
+    e.target.reset(); es.className = 'text-sm font-bold text-brand-lime min-h-[1.25rem] mt-3'; es.textContent = 'Livello aggiunto.'; caricaTessere();
+  });
   function disegnaTessere() {
     var q = $('g-tes-cerca').value.trim().toLowerCase(), ul = $('g-tes-lista'); svuota(ul);
     var l = tessere.filter(function (t) { return !q || t.nome.toLowerCase().indexOf(q) >= 0 || (t.telefono || '').replace(/\s/g, '').indexOf(q.replace(/\s/g, '')) >= 0; });
@@ -670,26 +705,50 @@
       tx.appendChild(el('p', 'text-sm font-semibold text-brand-muted', [t.telefono, t.email].filter(Boolean).join(' · ') || 'Nessun contatto'));
       top.appendChild(tx);
       var del = el('button', 'text-xs font-heavy text-brand-muted hover:text-[#FB923C] px-2 py-2', 'Elimina'); del.type = 'button';
-      del.addEventListener('click', async function () { if (!confirm('Eliminare la tessera di ' + t.nome + ' e tutti i suoi timbri? Non si può annullare.')) return; var x = await sb.from('tessere').delete().eq('id', t.id); if (x.error) alert(errore(x.error)); caricaTessere(); });
+      del.addEventListener('click', async function () { if (!confirm('Eliminare la tessera di ' + t.nome + ' e tutto il suo storico di acquisti? Non si può annullare.')) return; var x = await sb.from('tessere').delete().eq('id', t.id); if (x.error) alert(errore(x.error)); caricaTessere(); });
       top.appendChild(del); li.appendChild(top);
-      var caselle = el('div', 'grid grid-cols-5 gap-2 max-w-xs'); caselle.setAttribute('role', 'img'); caselle.setAttribute('aria-label', t.timbri_correnti + ' timbri su 10');
-      for (var k = 0; k < 10; k++) caselle.appendChild(el('span', 'aspect-square rounded-full border-2 ' + (k < t.timbri_correnti ? 'bg-brand-lime border-brand-lime' : 'border-white/20 bg-[#120a2e]')));
-      li.appendChild(caselle);
-      li.appendChild(el('p', 'text-xs font-bold text-brand-muted tracking-wider uppercase', t.timbri_correnti + ' di 10 timbri · tessere complete: ' + t.completate));
+      var tot = el('div', 'flex flex-wrap items-baseline gap-x-4 gap-y-1');
+      tot.appendChild(el('span', 'font-heavy text-2xl text-brand-lime', euro(t.totale_speso))); tot.appendChild(el('span', 'text-xs font-bold text-brand-muted tracking-wider uppercase', 'speso in tutto'));
+      li.appendChild(tot);
+      var liv = el('p', 'text-sm font-bold'); var nl = el('span', t.livello ? 'inline-block bg-brand-violet/60 border border-brand-violet text-white font-heavy text-[11px] uppercase tracking-wider px-2.5 py-1 rounded-md' : 'text-brand-muted', t.livello || 'Nessun livello ancora'); liv.appendChild(nl);
+      if (t.vantaggio) liv.appendChild(el('span', 'ml-3 font-semibold text-brand-muted', t.vantaggio));
+      li.appendChild(liv);
+      if (t.prossimo_livello) {
+        var manca = Number(t.prossima_soglia) - Number(t.totale_speso), da = 0;
+        var base = livelli.filter(function (x) { return Number(x.soglia) <= Number(t.totale_speso); }).pop(); da = base ? Number(base.soglia) : 0;
+        var perc = Math.max(0, Math.min(100, Math.round((Number(t.totale_speso) - da) / (Number(t.prossima_soglia) - da) * 100)));
+        var bl = el('div'); bl.appendChild(el('p', 'text-xs font-semibold text-brand-muted mb-1', 'Mancano ' + euro(manca) + ' per ' + t.prossimo_livello));
+        var barra = el('div', 'h-2 rounded-full bg-white/10 overflow-hidden'); barra.setAttribute('role', 'progressbar'); barra.setAttribute('aria-valuemin', '0'); barra.setAttribute('aria-valuemax', '100'); barra.setAttribute('aria-valuenow', String(perc));
+        var riemp = el('div', 'h-full bg-brand-lime rounded-full'); riemp.style.width = perc + '%'; barra.appendChild(riemp); bl.appendChild(barra); li.appendChild(bl);
+      } else if (t.livello) li.appendChild(el('p', 'text-xs font-semibold text-brand-muted', 'Ha raggiunto il livello più alto.'));
       var riga = el('div', 'flex flex-wrap items-center gap-2');
-      var imp = el('input', CAMPO + ' w-32'); imp.type = 'number'; imp.min = '0'; imp.step = '0.01'; imp.placeholder = 'Spesa in €'; imp.setAttribute('aria-label', 'Importo della spesa in euro');
-      var reg = el('button', BTN_PIENO, 'Registra'); reg.type = 'button';
-      var piu = el('button', BTN, '+1 timbro'); piu.type = 'button'; var es = el('span', 'text-xs font-bold text-brand-lime');
+      var imp = el('input', CAMPO + ' w-32'); imp.type = 'number'; imp.min = '0.01'; imp.step = '0.01'; imp.placeholder = 'Spesa in €'; imp.setAttribute('aria-label', 'Importo della spesa in euro');
+      var reg = el('button', BTN_PIENO, 'Registra acquisto'); reg.type = 'button';
+      var sto = el('button', BTN, storico === t.id ? 'Nascondi storico' : 'Storico'); sto.type = 'button'; var es = el('span', 'text-xs font-bold text-brand-lime');
       reg.addEventListener('click', async function () {
-        var v = Number(imp.value); es.className = 'text-xs font-bold text-[#FB923C]';
-        if (!(v >= 10)) { es.textContent = 'Servono almeno 10 € per un timbro.'; return; }
-        var n = Math.floor(v / 10); reg.disabled = true; var e = await aggiungiTimbri(t.id, n, v); reg.disabled = false;
-        if (e) { es.textContent = errore(e); return; } caricaTessere();
+        var v = Math.round(Number(imp.value) * 100) / 100; es.className = 'text-xs font-bold text-[#FB923C]';
+        if (!(v > 0)) { es.textContent = 'Scrivi l\'importo della spesa.'; return; }
+        reg.disabled = true; var x = await sb.from('acquisti').insert({ tessera_id: t.id, importo: v }); reg.disabled = false;
+        if (x.error) { es.textContent = errore(x.error); return; } if (storico === t.id) await caricaStorico(t.id); caricaTessere();
       });
-      piu.addEventListener('click', async function () { var e = await aggiungiTimbri(t.id, 1, null); if (e) { es.className = 'text-xs font-bold text-[#FB923C]'; es.textContent = errore(e); return; } caricaTessere(); });
-      riga.appendChild(imp); riga.appendChild(reg); riga.appendChild(piu); riga.appendChild(es); li.appendChild(riga); ul.appendChild(li);
+      sto.addEventListener('click', async function () { if (storico === t.id) { storico = null; disegnaTessere(); return; } storico = t.id; await caricaStorico(t.id); disegnaTessere(); });
+      riga.appendChild(imp); riga.appendChild(reg); riga.appendChild(sto); riga.appendChild(es); li.appendChild(riga);
+      if (storico === t.id) {
+        var st = el('ul', 'border-t border-white/10 pt-3 space-y-1');
+        if (!acquisti.length) st.appendChild(el('li', 'text-sm font-semibold text-brand-muted', 'Nessun acquisto registrato.'));
+        acquisti.forEach(function (a) {
+          var r = el('li', 'flex items-center gap-3 text-sm font-semibold');
+          r.appendChild(el('span', 'text-brand-muted', dataIt(a.creato_il))); r.appendChild(el('span', 'text-white font-bold', euro(a.importo)));
+          var d = el('button', 'ml-auto text-xs font-heavy text-brand-muted hover:text-[#FB923C] px-2 py-1', 'Elimina'); d.type = 'button';
+          d.addEventListener('click', async function () { if (!confirm('Eliminare questo acquisto da ' + euro(a.importo) + '? Il totale si ricalcola.')) return; var x = await sb.from('acquisti').delete().eq('id', a.id); if (x.error) alert(errore(x.error)); await caricaStorico(t.id); caricaTessere(); });
+          r.appendChild(d); st.appendChild(r);
+        });
+        li.appendChild(st);
+      }
+      ul.appendChild(li);
     });
   }
+  async function caricaStorico(id) { var r = await sb.from('acquisti').select('*').eq('tessera_id', id).order('creato_il', { ascending: false }).limit(20); acquisti = r.error ? [] : r.data; }
   $('g-tes-cerca').addEventListener('input', disegnaTessere);
   $('g-tes-form').addEventListener('submit', async function (e) {
     e.preventDefault();

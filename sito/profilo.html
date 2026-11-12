@@ -375,12 +375,13 @@
           <h2 id="t-tessera" class="font-heavy text-2xl sm:text-3xl text-white uppercase mb-5">Tessera Area 51 Club</h2>
           <div class="rounded-3xl border-2 border-brand-lime bg-[#0d0724]/95 p-6 sm:p-8 grid grid-cols-1 xl:grid-cols-2 gap-8 items-center shadow-[0_0_30px_rgba(185,230,46,.15)]">
             <div>
-              <p class="text-brand-lime font-heavy text-xs uppercase tracking-widest mb-2">Raccogli 10 avvistamenti</p>
-              <p class="font-heavy text-2xl sm:text-3xl text-white leading-tight mb-3">Un timbro ogni 10 € di spesa. Con 10 timbri, 10 € di sconto.</p>
-              <p class="text-sm sm:text-base font-semibold text-brand-muted leading-relaxed">La tessera si ritira in negozio e i timbri li mette il negozio al bancone. Quando gli account saranno attivi, i tuoi timbri compariranno qui.</p>
+              <p class="text-brand-lime font-heavy text-xs uppercase tracking-widest mb-2">Più torni, più ricevi</p>
+              <p class="font-heavy text-2xl sm:text-3xl text-white leading-tight mb-3">Il tuo livello cresce con quanto spendi in negozio nel tempo.</p>
+              <p class="text-sm sm:text-base font-semibold text-brand-muted leading-relaxed">La tessera si ritira in negozio e il negozio registra le tue spese al bancone. Per ora il tuo livello lo vedi in negozio; quando gli account saranno attivi lo vedrai anche qui.</p>
             </div>
-            <div class="bg-[#180e3e] border border-white/10 rounded-2xl p-4 sm:p-5" role="img" aria-label="Tessera punti: 10 caselle, un timbro ogni 10 euro di spesa; con tutte piene, 10 euro di sconto">
-              <div id="tessera-caselle" class="grid grid-cols-5 gap-3"></div>
+            <div class="bg-[#180e3e] border border-white/10 rounded-2xl p-4 sm:p-5">
+              <p class="text-[11px] font-heavy text-brand-muted uppercase mb-3">Livelli del Club</p>
+              <ul id="club-livelli" class="space-y-2"></ul>
             </div>
           </div>
         </section>
@@ -609,13 +610,25 @@ A51Eventi.pronti(function () {
     });
   }
 
-  /* ---------- Tessera: dieci caselle, l'ultima è il premio ---------- */
-  var cs = $('tessera-caselle');
-  for (var i = 0; i < 10; i++) {
-    var c = el('span', i < 9 ? 'aspect-square rounded-full bg-[#F1ECFB] border-2 border-brand-lime flex items-center justify-center' : 'aspect-square rounded-full bg-brand-lime border-2 border-[#140C2B] flex items-center justify-center');
-    c.innerHTML = i < 9 ? '<svg class="w-1/2 h-1/2 opacity-20"><use href="#alieno"/></svg>' : '<svg class="w-4/5 h-2/5"><use href="#disco"/></svg>';
-    cs.appendChild(c);
+  /* ---------- Tessera: livelli del Club dal database ---------- */
+  function euroIt(n) { return Number(n).toLocaleString('it-IT', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }); }
+  function disegnaLivelli(box, l) {
+    box.textContent = '';
+    if (!l.length) {
+      var p = document.createElement('p'); p.className = 'text-sm font-semibold text-brand-muted leading-relaxed';
+      p.textContent = 'I livelli e i vantaggi li sceglie il negozio: [DA DEFINIRE].'; box.appendChild(p); return;
+    }
+    l.forEach(function (x, i) {
+      var li = document.createElement('li'); li.className = 'flex items-start gap-3 rounded-xl border border-white/10 bg-[#120a2e] px-4 py-3';
+      var n = document.createElement('span'); n.className = 'shrink-0 w-7 h-7 rounded-full bg-brand-lime text-black font-heavy text-xs flex items-center justify-center'; n.textContent = String(i + 1);
+      var d = document.createElement('span'); d.className = 'min-w-0';
+      var t1 = document.createElement('b'); t1.className = 'block font-heavy text-white'; t1.textContent = x.nome;
+      var t2 = document.createElement('span'); t2.className = 'block text-xs font-bold text-brand-lime uppercase tracking-wider'; t2.textContent = Number(x.soglia) > 0 ? 'da ' + euroIt(x.soglia) + ' spesi' : 'dall\'iscrizione';
+      var t3 = document.createElement('span'); t3.className = 'block text-sm font-semibold text-brand-muted mt-0.5'; t3.textContent = x.vantaggio;
+      d.appendChild(t1); d.appendChild(t2); d.appendChild(t3); li.appendChild(n); li.appendChild(d); box.appendChild(li);
+    });
   }
+  A51DB.livelli().then(function (l) { disegnaLivelli($('club-livelli'), l); });
 
   /* ---------- Dati ---------- */
   var d0 = A51.profilo.leggi(); $('d-nome').value = d0.nome; $('d-tel').value = d0.tel; $('d-email').value = d0.email;

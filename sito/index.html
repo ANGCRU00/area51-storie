@@ -363,24 +363,13 @@
     <div id="club" class="border-2 border-brand-lime rounded-3xl p-7 sm:p-10 bg-[#0d0724]/95 flex flex-col lg:flex-row lg:items-center gap-8 lg:gap-14 shadow-[0_0_30px_rgba(185,230,46,.15)]">
       <div class="lg:flex-1">
         <p class="text-brand-lime font-heavy text-xs uppercase tracking-widest mb-2">Area 51 Club</p>
-        <h2 class="font-heavy text-3xl sm:text-4xl text-white mb-4 leading-tight">Raccogli 10 avvistamenti.</h2>
-        <p class="text-brand-muted text-base leading-relaxed mb-6">Un timbro ogni 10 € di spesa. Con 10 timbri, 10 € di sconto sul prossimo acquisto. Chiedi la tessera in negozio.</p>
+        <h2 class="font-heavy text-3xl sm:text-4xl text-white mb-4 leading-tight">Più torni, più ricevi.</h2>
+        <p class="text-brand-muted text-base leading-relaxed mb-6">Con la tessera Area 51 Club il tuo livello cresce con quanto spendi in negozio nel tempo, e a ogni livello c'è un vantaggio. Chiedi la tessera in negozio.</p>
         <a class="inline-flex items-center gap-2 bg-brand-lime text-black font-heavy text-sm px-6 py-3.5 rounded-full shadow-brutal-violet hover:bg-[#a6d420] transition-colors mb-8" href="#club">Scopri il club →</a>
       </div>
-      <div class="lg:flex-1 bg-[#180e3e] border border-white/10 rounded-2xl p-4 sm:p-5" role="img" aria-label="Tessera punti: 10 caselle, un timbro ogni 10 euro di spesa; con tutte piene, 10 euro di sconto">
-        <p class="text-[11px] font-heavy text-brand-muted uppercase mb-3 flex justify-between"><span>Tessera avvistamenti</span><span class="text-brand-lime">10 timbri = 10 € di sconto</span></p>
-        <div class="grid grid-cols-5 gap-3">
-          <span class="aspect-square rounded-full bg-[#F1ECFB] border-2 border-brand-lime flex items-center justify-center"><svg class="w-1/2 h-1/2 opacity-20"><use href="#alieno"/></svg></span>
-          <span class="aspect-square rounded-full bg-[#F1ECFB] border-2 border-brand-lime flex items-center justify-center"><svg class="w-1/2 h-1/2 opacity-20"><use href="#alieno"/></svg></span>
-          <span class="aspect-square rounded-full bg-[#F1ECFB] border-2 border-brand-lime flex items-center justify-center"><svg class="w-1/2 h-1/2 opacity-20"><use href="#alieno"/></svg></span>
-          <span class="aspect-square rounded-full bg-[#F1ECFB] border-2 border-brand-lime flex items-center justify-center"><svg class="w-1/2 h-1/2 opacity-20"><use href="#alieno"/></svg></span>
-          <span class="aspect-square rounded-full bg-[#F1ECFB] border-2 border-brand-lime flex items-center justify-center"><svg class="w-1/2 h-1/2 opacity-20"><use href="#alieno"/></svg></span>
-          <span class="aspect-square rounded-full bg-[#F1ECFB] border-2 border-brand-lime flex items-center justify-center"><svg class="w-1/2 h-1/2 opacity-20"><use href="#alieno"/></svg></span>
-          <span class="aspect-square rounded-full bg-[#F1ECFB] border-2 border-brand-lime flex items-center justify-center"><svg class="w-1/2 h-1/2 opacity-20"><use href="#alieno"/></svg></span>
-          <span class="aspect-square rounded-full bg-[#F1ECFB] border-2 border-brand-lime flex items-center justify-center"><svg class="w-1/2 h-1/2 opacity-20"><use href="#alieno"/></svg></span>
-          <span class="aspect-square rounded-full bg-[#F1ECFB] border-2 border-brand-lime flex items-center justify-center"><svg class="w-1/2 h-1/2 opacity-20"><use href="#alieno"/></svg></span>
-          <span class="aspect-square rounded-full bg-brand-lime border-2 border-[#140C2B] flex items-center justify-center"><svg class="w-4/5 h-2/5"><use href="#disco"/></svg></span>
-        </div>
+      <div class="lg:flex-1 bg-[#180e3e] border border-white/10 rounded-2xl p-4 sm:p-5">
+        <p class="text-[11px] font-heavy text-brand-muted uppercase mb-3 flex justify-between"><span>Livelli del Club</span><span class="text-brand-lime">più spendi, più ricevi</span></p>
+        <ul id="club-livelli" class="space-y-2"></ul>
       </div>
     </div>
   </div>
@@ -430,6 +419,28 @@
 <script src="dati/eventi.js"></script>
 <script src="js/area51-db.js"></script>
 <script src="js/eventi-db.js"></script>
+<script>
+(function () {
+  function euroIt(n) { return Number(n).toLocaleString('it-IT', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }); }
+  function disegnaLivelli(box, l) {
+    box.textContent = '';
+    if (!l.length) {
+      var p = document.createElement('p'); p.className = 'text-sm font-semibold text-brand-muted leading-relaxed';
+      p.textContent = 'I livelli e i vantaggi li sceglie il negozio: [DA DEFINIRE].'; box.appendChild(p); return;
+    }
+    l.forEach(function (x, i) {
+      var li = document.createElement('li'); li.className = 'flex items-start gap-3 rounded-xl border border-white/10 bg-[#120a2e] px-4 py-3';
+      var n = document.createElement('span'); n.className = 'shrink-0 w-7 h-7 rounded-full bg-brand-lime text-black font-heavy text-xs flex items-center justify-center'; n.textContent = String(i + 1);
+      var d = document.createElement('span'); d.className = 'min-w-0';
+      var t1 = document.createElement('b'); t1.className = 'block font-heavy text-white'; t1.textContent = x.nome;
+      var t2 = document.createElement('span'); t2.className = 'block text-xs font-bold text-brand-lime uppercase tracking-wider'; t2.textContent = Number(x.soglia) > 0 ? 'da ' + euroIt(x.soglia) + ' spesi' : 'dall\'iscrizione';
+      var t3 = document.createElement('span'); t3.className = 'block text-sm font-semibold text-brand-muted mt-0.5'; t3.textContent = x.vantaggio;
+      d.appendChild(t1); d.appendChild(t2); d.appendChild(t3); li.appendChild(n); li.appendChild(d); box.appendChild(li);
+    });
+  }
+  var box = document.getElementById('club-livelli'); if (box) A51DB.livelli().then(function (l) { disegnaLivelli(box, l); });
+})();
+</script>
 <script>
 /* Home: Nuovi arrivi e Prossime uscite dal catalogo (con copertina) e i tre prossimi eventi dal calendario */
 (function () {
