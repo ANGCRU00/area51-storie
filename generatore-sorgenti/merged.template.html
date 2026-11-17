@@ -307,8 +307,14 @@ legend { display: block; margin-bottom: 6px; padding: 0; font-family: "Archivo-B
             <option value="magic">Magic: The Gathering</option>
             <option value="pokemon">Pokémon</option>
             <option value="riftbound">Riftbound</option>
+            <option value="warhammer">Warhammer</option>
             <option value="altro">Altro</option>
           </select>
+        </div>
+        <div class="campo">
+          <label for="t-simbolo">Simbolo ufficiale del gioco (facoltativo)</label>
+          <p class="aiuto" id="aiuto-simbolo">PNG con sfondo trasparente preso dal kit grafico ufficiale per i negozi. Prende il posto del simbolo disegnato.</p>
+          <input type="file" id="t-simbolo" accept="image/*" aria-describedby="aiuto-simbolo">
         </div>
         <div class="campo coppia">
           <div class="campo">
@@ -427,7 +433,16 @@ legend { display: block; margin-bottom: 6px; padding: 0; font-family: "Archivo-B
     magic: ['MAGIC', 'THE GATHERING'],
     pokemon: ['POKÉMON', 'GIOCO DI CARTE COLLEZIONABILI'],
     riftbound: ['RIFTBOUND', 'LEAGUE OF LEGENDS TCG'],
+    warhammer: ['WARHAMMER', 'TORNEO DI MINIATURE'],
     altro: ['', '']
+  };
+  /* Colori e simbolo (originale, niente loghi ufficiali) per ogni gioco */
+  var TEMI = {
+    magic:     { primario: '#7A2E0E', secondario: '#F2A33A', corpo: '#FBE9D2', simbolo: 'mana' },
+    pokemon:   { primario: '#1F4FC9', secondario: '#FFCB05', corpo: '#E3ECFF', simbolo: 'fulmine' },
+    riftbound: { primario: '#0E5D6B', secondario: '#E8C35A', corpo: '#DDF3F3', simbolo: 'pietra' },
+    warhammer: { primario: '#7D1220', secondario: '#D9A441', corpo: '#F1E6D6', simbolo: 'miniatura' },
+    altro:     { primario: '#5B21B6', secondario: '#B9E62E', corpo: '#E4DDF3', simbolo: 'alieno' }
   };
   var NOMI_TAB = { uscite: 'post uscite', post: 'nuovo post', torneo: 'torneo', chiusura: 'chiusura', evento: 'evento' };
   var COLORI_TAB = { uscite: '#5B21B6', post: '#5B21B6', torneo: '#140C2B', chiusura: '#9C94B8', evento: '#1A0E3D' };
@@ -436,6 +451,7 @@ legend { display: block; margin-bottom: 6px; padding: 0; font-family: "Archivo-B
   var tela = el('storia'), esito = el('s-esito'), bottoneSalva = el('salva');
   var linguetta = 'uscite';
   var foto = null;            /* mai salvata */
+  var simboloGioco = null;    /* PNG ufficiale caricato dal negozio, mai salvato */
   var fontPronti = false;
 
   /* Il testo scritto o, se vuoto, l'esempio grigio del campo */
@@ -640,47 +656,312 @@ legend { display: block; margin-bottom: 6px; padding: 0; font-family: "Archivo-B
     freccia(500, 1502, LIME);
   }
 
-  /* ---------- Storia: torneo (scuro) ---------- */
+  /* Simboli dei giochi, disegnati in un quadrato 200x200 */
+  var FULMINE = new Path2D('M120 4 L36 114 L90 114 L70 196 L164 78 L108 78 L134 4 Z');
+  var CRISTALLO = new Path2D('M100 2 L152 58 L126 198 L74 198 L48 58 Z');
+  var CREPA = new Path2D('M100 2 L88 66 L112 112 L94 198');
+  var LAMA = new Path2D('M90 14 L100 0 L110 14 L110 136 L90 136 Z M64 136 H136 V152 H64 Z M93 152 H107 V182 H93 Z');
+  function runa() {
+    var r = new Path2D();
+    r.arc(100, 100, 96, 0, Math.PI * 2);
+    r.moveTo(178, 100);
+    r.arc(100, 100, 78, 0, Math.PI * 2, true);
+    for (var i = 0; i < 16; i++) {
+      var a = -Math.PI / 2 + i * Math.PI / 8, rr = i % 2 ? 26 : 66;
+      var x = 100 + rr * Math.cos(a), y = 100 + rr * Math.sin(a);
+      if (i === 0) { r.moveTo(x, y); } else { r.lineTo(x, y); }
+    }
+    r.closePath();
+    return r;
+  }
+  var RUNA = null;
+  function formaSimbolo(tipo, colore) {
+    ctx.fillStyle = colore;
+    if (tipo === 'fulmine') { ctx.fill(FULMINE); }
+    else if (tipo === 'runa') { RUNA = RUNA || runa(); ctx.fill(RUNA, 'evenodd'); }
+    else if (tipo === 'cristallo') { ctx.fill(CRISTALLO); }
+    else if (tipo === 'spade') {
+      [-40, 40].forEach(function (g) { ruota(100, 100, g, function () { ctx.fill(LAMA); ctx.beginPath(); ctx.arc(100, 190, 10, 0, Math.PI * 2); ctx.fill(); }); });
+    }
+  }
+  var MANA = ['#F6EFD6', '#2F7FD1', '#2B2430', '#D8402F', '#2E8B4A'];
+  var PIETRA = new Path2D('M62 18 L140 12 L184 68 L172 160 L100 192 L28 158 L16 70 Z');
+  var GLIFI = [new Path2D('M100 48 V152 M100 80 L134 58 M100 112 L66 90 M100 146 L132 160'),
+               new Path2D('M66 60 L134 140 M134 60 L66 140 M100 46 V154'),
+               new Path2D('M70 150 L100 50 L130 150 M80 116 H120')];
+  var FIGURA = new Path2D('M82 166 L86 120 L98 120 L96 166 Z M104 166 L102 120 L114 120 L118 166 Z M76 124 L80 78 Q100 66 120 78 L124 124 Z M118 84 L134 96 L129 104 L113 92 Z M86 56 Q100 26 114 56 Z M127 22 H134 V166 H127 Z M130.5 4 L141 26 L120 26 Z');
+  function figura(lato, colore) {
+    ctx.translate(100, 196); ctx.scale(1.55, 1.25); ctx.translate(-100, -194);
+    ovale(100, 176, 70, 18, '#1E1A22', SCURO, 6);
+    ovale(100, 168, 70, 16, '#4A4550');
+    ctx.fillStyle = colore; ctx.strokeStyle = SCURO; ctx.lineWidth = 6; ctx.lineJoin = 'round';
+    ctx.fill(FIGURA); ctx.stroke(FIGURA);
+    ctx.beginPath(); ctx.arc(100, 60, 15, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+    ctx.beginPath(); ctx.arc(70, 102, 27, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+    ctx.beginPath(); ctx.arc(70, 102, 9, 0, Math.PI * 2); ctx.fillStyle = SCURO; ctx.fill();
+  }
+  function orbiMana(r) {
+    MANA.forEach(function (c, i) {
+      var t = i - 2, cx = 100 + t * 42, cy = 86 + t * t * 10;
+      ovale(cx, cy, r, r, c, SCURO, 6);
+      ctx.globalAlpha = .55; cerchio(cx - r * .35, cy - r * .35, r * .3, BIANCO); ctx.globalAlpha = 1;
+    });
+  }
+  function simbolo(tipo, x, y, lato, colore, ombra, scarto) {
+    if (tipo === 'alieno') { alieno(x, y, lato, ombra ? { ombra: ombra, scarto: 9 } : null); return; }
+    if (tipo === 'immagine' && simboloGioco) {
+      var k = Math.min(lato / simboloGioco.width, lato / simboloGioco.height), iw = simboloGioco.width * k, ih = simboloGioco.height * k;
+      ctx.drawImage(simboloGioco, x + (lato - iw) / 2, y + (lato - ih) / 2, iw, ih); return;
+    }
+    if (tipo === 'mana' || tipo === 'pietra' || tipo === 'miniatura' || tipo.indexOf('pietra') === 0) {
+      ctx.save(); ctx.translate(x, y); ctx.scale(lato / 200, lato / 200);
+      if (tipo === 'mana') { orbiMana(25); }
+      else if (tipo === 'miniatura') { figura(lato, colore); }
+      else {
+        ctx.fillStyle = '#3E4A52'; ctx.strokeStyle = SCURO; ctx.lineWidth = 8; ctx.lineJoin = 'round';
+        if (ombra) { ctx.save(); ctx.translate(10, 10); ctx.fillStyle = SCURO; ctx.fill(PIETRA); ctx.restore(); }
+        ctx.fill(PIETRA); ctx.stroke(PIETRA);
+        ctx.strokeStyle = colore; ctx.lineWidth = 12; ctx.lineCap = 'round'; ctx.shadowColor = colore; ctx.shadowBlur = 24;
+        ctx.stroke(GLIFI[+(tipo.slice(6) || 0) % 3]);
+      }
+      ctx.restore(); return;
+    }
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.scale(lato / 200, lato / 200);
+    if (ombra) { ctx.save(); ctx.translate(scarto || 12, scarto || 12); formaSimbolo(tipo, ombra); ctx.restore(); }
+    formaSimbolo(tipo, colore);
+    if (tipo === 'cristallo') { ctx.strokeStyle = SCURO; ctx.lineWidth = 8; ctx.lineJoin = 'round'; ctx.stroke(CREPA); }
+    ctx.restore();
+  }
+
+  /* ---------- Storia: torneo (scena Area 51 fusa con il gioco scelto) ---------- */
+  var CIELI = {
+    magic:     ['#07040F', '#2A1206', '#6B3410'],
+    pokemon:   ['#050B2E', '#0F2F86', '#2459D6'],
+    riftbound: ['#02100F', '#083A40', '#0F6670'],
+    warhammer: ['#080104', '#33050C', '#7D1220'],
+    altro:     ['#070514', '#1A0E3D', '#4A1C8C']
+  };
+  function casuale(seme) { var x = seme; return function () { x = (x * 9301 + 49297) % 233280; return x / 233280; }; }
+  function stelleGioco(seme, n, colore) {
+    var r = casuale(seme);
+    for (var i = 0; i < n; i++) { ctx.globalAlpha = r() * .6 + .25; cerchio(r() * W, r() * 1500, r() * 2.6 + .8, colore || BIANCO); }
+    ctx.globalAlpha = 1;
+  }
+  /* Motivo di sfondo diverso per ogni gioco */
+  function motivoGioco(g, S) {
+    var r = casuale(31), i;
+    ctx.save();
+    if (g === 'magic') {
+      stelleGioco(11, 120, '#FFE7C2');
+      ctx.strokeStyle = S; ctx.lineWidth = 3;
+      [[150, 760, 120], [960, 1000, 170], [120, 1500, 90]].forEach(function (c) {
+        ctx.globalAlpha = .16;
+        ctx.beginPath(); ctx.arc(c[0], c[1], c[2], 0, Math.PI * 2); ctx.stroke();
+        ctx.beginPath(); ctx.arc(c[0], c[1], c[2] * .78, 0, Math.PI * 2); ctx.stroke();
+        for (var k = 0; k < 12; k++) {
+          var a = k * Math.PI / 6;
+          ctx.beginPath(); ctx.moveTo(c[0] + Math.cos(a) * c[2] * .78, c[1] + Math.sin(a) * c[2] * .78);
+          ctx.lineTo(c[0] + Math.cos(a) * c[2], c[1] + Math.sin(a) * c[2]); ctx.stroke();
+        }
+      });
+    } else if (g === 'pokemon') {
+      ctx.globalAlpha = .10;
+      for (var y = 0; y < 1920; y += 36) { for (var x = (y / 36) % 2 ? 18 : 0; x < W; x += 36) { cerchio(x, y, 5 + 5 * (y / 1920), BIANCO); } }
+      ctx.globalAlpha = .35; ctx.strokeStyle = S; ctx.lineWidth = 7; ctx.lineJoin = 'miter';
+      [[0, 700, 1], [1080, 1180, -1], [0, 1560, 1]].forEach(function (z) {
+        ctx.beginPath(); ctx.moveTo(z[0], z[1]);
+        for (var k = 1; k <= 6; k++) { ctx.lineTo(z[0] + z[2] * k * 70, z[1] + (k % 2 ? -46 : 18)); }
+        ctx.stroke();
+      });
+    } else if (g === 'riftbound') {
+      stelleGioco(5, 90, '#CFF7F2');
+      ctx.globalAlpha = .13; ctx.strokeStyle = '#7FE3DA'; ctx.lineWidth = 2;
+      var lato = 46, hx = lato * Math.sqrt(3);
+      for (var row = 0; row * lato * 1.5 < 1920; row++) {
+        for (var col = -1; col * hx < W + hx; col++) {
+          var cx = col * hx + (row % 2 ? hx / 2 : 0), cy = row * lato * 1.5;
+          ctx.beginPath();
+          for (var k = 0; k < 6; k++) { var a = Math.PI / 6 + k * Math.PI / 3; ctx[k ? 'lineTo' : 'moveTo'](cx + lato * Math.cos(a), cy + lato * Math.sin(a)); }
+          ctx.closePath(); ctx.stroke();
+        }
+      }
+    } else if (g === 'warhammer') {
+      for (i = 0; i < 70; i++) { ctx.globalAlpha = r() * .7 + .2; cerchio(r() * W, 600 + r() * 1300, r() * 4 + 1.5, r() > .5 ? '#FF8A2A' : S); }
+      ctx.globalAlpha = .18;
+      for (i = 0; i < 9; i++) { ctx.save(); ctx.translate(-200 + i * 170, 1700); ctx.rotate(-Math.PI / 5); rettangolo(0, -400, 60, 900, '#000'); ctx.restore(); }
+    } else {
+      stelleUfo();
+    }
+    ctx.restore();
+  }
+  /* Raggio del disco volante, con il carattere del gioco */
+  function raggioGioco(g, S) {
+    var top = 640, fondo = 950, a = [[545, top], [735, top], [990, fondo], [290, fondo]];
+    var rg = ctx.createLinearGradient(0, top, 0, fondo);
+    rg.addColorStop(0, S); rg.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.save(); ctx.globalAlpha = .75; poligono(a); ctx.fillStyle = rg; ctx.fill(); ctx.restore();
+    ctx.save(); poligono(a); ctx.clip();
+    ctx.globalAlpha = .16; for (var y = top; y < fondo; y += 22) { rettangolo(0, y, W, 6, BIANCO); }
+    ctx.restore();
+    if (g === 'pokemon') {
+      ctx.save(); ctx.strokeStyle = '#FFF6B0'; ctx.lineWidth = 6; ctx.lineJoin = 'miter'; ctx.globalAlpha = .9;
+      [[-1, 545, 290], [1, 735, 990]].forEach(function (l) {
+        ctx.beginPath(); ctx.moveTo(l[1], top);
+        for (var k = 1; k <= 6; k++) { var t = k / 6; ctx.lineTo(l[1] + (l[2] - l[1]) * t + (k % 2 ? 22 : -22) * l[0], top + (fondo - top) * t); }
+        ctx.stroke();
+      });
+      ctx.restore();
+    }
+  }
+  /* Rift: squarcio luminoso nel cielo da cui esce il disco */
+  function squarcio(S) {
+    var p = [[250, 380], [430, 450], [380, 520], [560, 470], [540, 560], [760, 500], [700, 600], [860, 560], [820, 650], [560, 700], [600, 620], [380, 680], [420, 600], [230, 640], [330, 540], [190, 500]];
+    ctx.save();
+    ctx.shadowColor = S; ctx.shadowBlur = 60;
+    poligono(p); ctx.fillStyle = '#9FF5EA'; ctx.fill();
+    ctx.shadowBlur = 0; ctx.lineWidth = 8; ctx.strokeStyle = S; ctx.stroke();
+    ctx.globalAlpha = .7; ctx.scale(1, 1); poligono(p.map(function (q) { return [540 + (q[0] - 540) * .6, 560 + (q[1] - 560) * .5]; })); ctx.fillStyle = BIANCO; ctx.fill();
+    ctx.restore();
+  }
+  /* Costume dell'alieno nella cupola (coordinate del disco a scala 1, centro 0,0) */
+  function costume(g, P, S) {
+    ctx.lineJoin = 'round'; ctx.strokeStyle = SCURO; ctx.lineWidth = 7;
+    if (g === 'magic') {
+      ctx.beginPath(); ctx.moveTo(-62, -128); ctx.quadraticCurveTo(-10, -170, 6, -232); ctx.quadraticCurveTo(30, -260, 70, -240);
+      ctx.quadraticCurveTo(36, -238, 30, -210); ctx.quadraticCurveTo(40, -160, 62, -128); ctx.closePath();
+      ctx.fillStyle = '#3B1C7A'; ctx.fill(); ctx.stroke();
+      ovale(0, -128, 86, 20, '#3B1C7A', SCURO, 7);
+      ctx.save(); ctx.translate(-6, -176); ctx.scale(.16, .16); ctx.translate(-100, -100); ctx.fillStyle = S; ctx.fill(RUNA || (RUNA = runa()), 'evenodd'); ctx.restore();
+      cerchio(26, -150, 6, S); cerchio(-30, -150, 4, S);
+    } else if (g === 'pokemon') {
+      ctx.beginPath(); ctx.moveTo(-62, -122); ctx.quadraticCurveTo(-60, -192, 0, -194); ctx.quadraticCurveTo(60, -192, 62, -122); ctx.closePath();
+      ctx.fillStyle = P; ctx.fill(); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(-10, -126); ctx.quadraticCurveTo(70, -140, 112, -116); ctx.quadraticCurveTo(70, -110, 0, -116); ctx.closePath();
+      ctx.fillStyle = S; ctx.fill(); ctx.stroke();
+      ctx.save(); ctx.translate(-30, -186); ctx.scale(.28, .28); ctx.fillStyle = S; ctx.fill(FULMINE); ctx.restore();
+    } else if (g === 'riftbound') {
+      ctx.beginPath(); ctx.moveTo(-60, -124); ctx.lineTo(-60, -150); ctx.lineTo(-34, -136); ctx.lineTo(-16, -168); ctx.lineTo(0, -140); ctx.lineTo(16, -168); ctx.lineTo(34, -136); ctx.lineTo(60, -150); ctx.lineTo(60, -124); ctx.closePath();
+      ctx.fillStyle = S; ctx.fill(); ctx.stroke();
+      ctx.save(); ctx.translate(-12, -162); ctx.scale(.12, .12); ctx.fillStyle = '#3DE0D0'; ctx.fill(CRISTALLO); ctx.restore();
+    } else if (g === 'warhammer') {
+      [-1, 1].forEach(function (s) {
+        ctx.beginPath(); ctx.moveTo(s * 50, -150); ctx.quadraticCurveTo(s * 110, -160, s * 104, -230); ctx.quadraticCurveTo(s * 90, -186, s * 40, -176); ctx.closePath();
+        ctx.fillStyle = '#EFE3C8'; ctx.fill(); ctx.stroke();
+      });
+      ctx.beginPath(); ctx.moveTo(-62, -124); ctx.quadraticCurveTo(-62, -196, 0, -198); ctx.quadraticCurveTo(62, -196, 62, -124); ctx.closePath();
+      ctx.fillStyle = S; ctx.fill(); ctx.stroke();
+      rettangolo(-6, -196, 12, 70, '#8A5A1E');
+      ctx.beginPath(); ctx.moveTo(-62, -124); ctx.lineTo(62, -124); ctx.stroke();
+    }
+  }
+  function discoGioco(cx, cy, k, g, P, S) {
+    ctx.save(); ctx.translate(cx, cy); ctx.scale(k, k);
+    discoVolante(0, 0);
+    costume(g, P, S);
+    ctx.restore();
+  }
+  function cartaGioco(x, y, gradi, P, S, simb) {
+    ruota(x, y, gradi, function () {
+      ctx.save(); ctx.translate(x, y);
+      ctx.fillStyle = SCURO; ctx.beginPath(); ctx.roundRect ? ctx.roundRect(-46, -62, 104, 144, 12) : ctx.rect(-46, -62, 104, 144); ctx.fill();
+      ctx.beginPath(); ctx.roundRect ? ctx.roundRect(-52, -72, 104, 144, 12) : ctx.rect(-52, -72, 104, 144);
+      ctx.fillStyle = BIANCO; ctx.fill(); ctx.strokeStyle = SCURO; ctx.lineWidth = 6; ctx.stroke();
+      rettangolo(-42, -62, 84, 124, P);
+      simbolo(simb, -30, -30, 60, S);
+      ctx.restore();
+    });
+  }
+  function dado(x, y, gradi, lato, colore) {
+    ruota(x, y, gradi, function () {
+      ctx.save(); ctx.translate(x, y);
+      ctx.fillStyle = SCURO; ctx.beginPath(); ctx.roundRect ? ctx.roundRect(-lato / 2 + 8, -lato / 2 + 8, lato, lato, lato * .18) : ctx.rect(-lato / 2 + 8, -lato / 2 + 8, lato, lato); ctx.fill();
+      ctx.beginPath(); ctx.roundRect ? ctx.roundRect(-lato / 2, -lato / 2, lato, lato, lato * .18) : ctx.rect(-lato / 2, -lato / 2, lato, lato);
+      ctx.fillStyle = colore; ctx.fill(); ctx.strokeStyle = SCURO; ctx.lineWidth = 6; ctx.stroke();
+      var q = lato * .26;
+      [[-q, -q], [q, -q], [-q, 0], [q, 0], [-q, q], [q, q]].forEach(function (p) { cerchio(p[0], p[1], lato * .08, BIANCO); });
+      ctx.restore();
+    });
+  }
+  /* Oggetti risucchiati dal raggio */
+  function bottino(g, P, S) {
+    if (simboloGioco) {
+      cartaGioco(540, 860, -14, P, S, 'immagine'); cartaGioco(760, 860, 14, P, S, 'immagine');
+      ruota(650, 770, -6, function () { simbolo('immagine', 570, 690, 160); });
+    } else if (g === 'magic') {
+      MANA.forEach(function (c, i) {
+        var t = i - 2, cx = 650 + t * 96, cy = 770 + t * t * 18 + (i % 2 ? 26 : 0), r = 44;
+        ctx.save(); ctx.shadowColor = c === '#2B2430' ? '#9B7BD8' : c; ctx.shadowBlur = 26; ovale(cx, cy, r, r, c, SCURO, 7); ctx.restore();
+        ctx.globalAlpha = .55; cerchio(cx - 15, cy - 15, 12, BIANCO); ctx.globalAlpha = 1;
+      });
+    } else if (g === 'pokemon') {
+      cartaGioco(550, 840, -14, P, S, 'fulmine'); cartaGioco(760, 820, 12, P, S, 'fulmine');
+      ruota(650, 760, -6, function () { simbolo('fulmine', 598, 704, 110, S, SCURO, 8); });
+    } else if (g === 'riftbound') {
+      ruota(510, 850, -16, function () { simbolo('pietra1', 440, 780, 140, '#3DE0D0', true); });
+      ruota(655, 760, 6, function () { simbolo('pietra0', 565, 670, 180, S, true); });
+      ruota(800, 860, 18, function () { simbolo('pietra2', 740, 800, 120, '#E2557A', true); });
+    } else if (g === 'warhammer') {
+      ruota(470, 860, -12, function () { simbolo('miniatura', 395, 790, 150, '#9AA3AD'); });
+      ruota(655, 770, 6, function () { simbolo('miniatura', 570, 690, 170, S); });
+      ruota(845, 860, 14, function () { simbolo('miniatura', 770, 790, 150, '#C8473E'); });
+      dado(560, 700, 24, 54, P);
+    } else {
+      fumettoVolante(540, 840, -18, '#FF2E88', .8); cartaVolante(770, 830, 16);
+    }
+  }
+
   function disegnaTorneo() {
-    rettangolo(0, 0, W, H, SCURO);
-    ruota(550, 1100, -14, function () { rettangolo(-300, 1040, 1700, 120, VIOLA); });
-    ruota(550, 1207, -14, function () { rettangolo(-300, 1190, 1700, 34, LIME); });
-    marchio(60, 280, Object.assign({ ruota: -2, contorno: LIME, ombra: VIOLA, scarto: 18 }, MARCHIO_GRANDE));
+    var g = TEMI[el('t-gioco').value] ? el('t-gioco').value : 'altro';
+    var tema = TEMI[g], P = tema.primario, S = tema.secondario, c = CIELI[g];
+    var cielo = ctx.createLinearGradient(0, 0, 0, H);
+    cielo.addColorStop(0, c[0]); cielo.addColorStop(.45, c[1]); cielo.addColorStop(1, c[2]);
+    rettangolo(0, 0, W, H, cielo);
+    motivoGioco(g, S);
+    if (g === 'riftbound') { squarcio(S); }
+    if (g === 'warhammer') { ctx.save(); ctx.globalAlpha = .25; ruota(540, 600, 0, function () { simbolo('spade', 290, 330, 500, S); }); ctx.restore(); }
+    raggioGioco(g, S);
+    bottino(g, P, S);
+    discoGioco(640, 585, .9, g, P, S);
+    marchio(60, 270, Object.assign({ ruota: -2, ombra: P, scarto: 12 }, MARCHIO_MEDIO));
 
     var righe = [['FORMATO', valore('t-formato')], ['QUANDO', quandoTorneo()], ['PREMI', valore('t-premi')]];
-    var X = 90, Y = 640, LARGA = 900, TESTA = 220, RIGA = 154, ALTA = 10 + TESTA + RIGA * 3 + 12 + 10;
+    var X = 90, Y = 990, LARGA = 900, TESTA = 180, RIGA = 116, ALTA = 10 + TESTA + RIGA * 3 + 12 + 10;
     ruota(X + LARGA / 2, Y + ALTA / 2, -2, function () {
-      rettangolo(X + 22, Y + 22, LARGA, ALTA, VIOLA);
+      rettangolo(X + 22, Y + 22, LARGA, ALTA, P);
       rettangolo(X, Y, LARGA, ALTA, LIME);
-      rettangolo(X + 10, Y + 10, LARGA - 20, ALTA - 20, LILLA);
-      rettangolo(X + 10, Y + 10, LARGA - 20, TESTA, VIOLA);
+      rettangolo(X + 10, Y + 10, LARGA - 20, ALTA - 20, tema.corpo);
+      rettangolo(X + 10, Y + 10, LARGA - 20, TESTA, P);
       rettangolo(X + 10, Y + TESTA, LARGA - 20, 10, SCURO);
+      simbolo(simboloGioco ? 'immagine' : tema.simbolo, X + LARGA - 160, Y + 10 + (TESTA - 110) / 2, 110, S);
       var nome = valore('t-nome') || 'GIOCO', sotto = valore('t-sub');
-      adatta(nome, LARGA - 108, BLACK, 104);
-      scrivi(nome, X + 54, sotto ? Y + 92 : Y + 115, LIME, 'sinistra');
-      if (sotto) { adatta(sotto, LARGA - 108, BOLD, 34, 4); scrivi(sotto, X + 54, Y + 170, CHIARO, 'sinistra', 4); }
+      adatta(nome, LARGA - 260, BLACK, 100);
+      scrivi(nome, X + 54, sotto ? Y + 82 : Y + 100, S, 'sinistra');
+      if (sotto) { adatta(sotto, LARGA - 260, BOLD, 32, 4); scrivi(sotto, X + 54, Y + 148, CHIARO, 'sinistra', 4); }
       var y = Y + 10 + TESTA;
       righe.forEach(function (r, i) {
         if (i > 0) { rettangolo(X + 10, y, LARGA - 20, 6, SCURO); y += 6; }
-        usa(BOLD, 30); scrivi(r[0], X + 54, y + 40, VIOLA, 'sinistra', 6);
-        adatta(r[1], LARGA - 108, BLACK, 62);
-        scrivi(r[1], X + 54, y + 97, SCURO, 'sinistra');
+        usa(BOLD, 28); scrivi(r[0], X + 54, y + 32, P, 'sinistra', 6);
+        adatta(r[1], LARGA - 108, BLACK, 58);
+        scrivi(r[1], X + 54, y + 80, SCURO, 'sinistra');
         y += RIGA;
       });
     });
 
-    usa(BLACK, 84);
-    var pw = larghezza('TORNEO!') + 96, ph = 144, px = Math.min(560, W - 50 - pw);
-    ruota(px + pw / 2, 540 + ph / 2, 4, function () {
-      rettangolo(px, 540, pw, ph, LIME);
-      rettangolo(px + 8, 548, pw - 16, ph - 16, VIOLA);
-      usa(BLACK, 84); scrivi('TORNEO!', px + 48, 540 + ph / 2 + 4, LIME, 'sinistra');
+    usa(BLACK, 76);
+    var pw = larghezza('TORNEO!') + 84, ph = 128, px = 60, py = Y - 104;
+    ruota(px + pw / 2, py + ph / 2, -5, function () {
+      rettangolo(px + 10, py + 10, pw, ph, SCURO);
+      rettangolo(px, py, pw, ph, LIME);
+      rettangolo(px + 8, py + 8, pw - 16, ph - 16, P);
+      usa(BLACK, 76); scrivi('TORNEO!', px + 42, py + ph / 2 + 4, S, 'sinistra');
     });
 
     var invito = valore('t-invito');
-    adatta(invito, 780, BOLD, 46, 8);
-    scrivi(invito, 540, 1478, LIME, 'centro', 8);
-    freccia(500, 1512, LIME);
+    adatta(invito, 780, BOLD, 44, 8);
+    scrivi(invito, 540, 1600, S, 'centro', 8);
+    freccia(500, 1628, S);
   }
 
   /* ---------- Storia: chiusura (grigio lilla) ---------- */
@@ -799,8 +1080,8 @@ legend { display: block; margin-bottom: 6px; padding: 0; font-family: "Archivo-B
     ovale(0, 10, 310, 86, '#8D99AE', SCURO, 10);
     ovale(0, -6, 300, 44, '#C9D3DE');
     ovale(0, 54, 150, 26, '#5C677D', SCURO, 8);
-    [[-230, 28, LIME], [-120, 46, '#FFE45C'], [0, 52, LIME], [120, 46, '#FFE45C'], [230, 28, LIME]].forEach(function (l) {
-      ovale(l[0], l[1], 18, 18, l[2], SCURO, 6);
+    [[-230, 0, LIME, 18], [-120, -18, '#FFE45C', 18], [0, -24, LIME, 18], [120, -18, '#FFE45C', 18], [230, 0, LIME, 18]].forEach(function (l) {
+      ovale(l[0], l[1], l[3], l[3], l[2], SCURO, 6);
     });
     ctx.restore();
   }
@@ -1069,7 +1350,16 @@ legend { display: block; margin-bottom: 6px; padding: 0; font-family: "Archivo-B
     var g = GIOCHI[this.value];
     el('t-nome').value = g[0];
     el('t-sub').value = g[1];
+    simboloGioco = null; el('t-simbolo').value = '';
     pianifica();
+  });
+  el('t-simbolo').addEventListener('change', function () {
+    var file = this.files && this.files[0];
+    if (!file) { simboloGioco = null; aggiorna(); return; }
+    var url = URL.createObjectURL(file), img = new Image();
+    img.onload = function () { URL.revokeObjectURL(url); simboloGioco = img; esito.textContent = 'Simbolo scelto: ' + (file.name || 'immagine') + '.'; aggiorna(); };
+    img.onerror = function () { URL.revokeObjectURL(url); esito.textContent = 'Non riesco a leggere il simbolo: prova con un file PNG.'; };
+    img.src = url;
   });
   el('post-scatta').addEventListener('click', function () { el('post-foto-camera').click(); });
   el('post-foto-camera').addEventListener('change', caricaFotoPost);
@@ -1405,8 +1695,8 @@ legend { display: block; margin-bottom: 6px; padding: 0; font-family: "Archivo-B
     ovaleUfo(ctx, 0, 10, 310, 86, '#8D99AE', 10);
     ovaleUfo(ctx, 0, -6, 300, 44, '#C9D3DE', 0);
     ovaleUfo(ctx, 0, 54, 150, 26, '#5C677D', 8);
-    [[-230, 28, LIME], [-120, 46, '#FFE45C'], [0, 52, LIME], [120, 46, '#FFE45C'], [230, 28, LIME]].forEach(function (l) {
-      ovaleUfo(ctx, l[0], l[1], 18, 18, l[2], 6);
+    [[-230, 0, LIME, 18], [-120, -18, '#FFE45C', 18], [0, -24, LIME, 18], [120, -18, '#FFE45C', 18], [230, 0, LIME, 18]].forEach(function (l) {
+      ovaleUfo(ctx, l[0], l[1], l[3], l[3], l[2], 6);
     });
     ctx.restore();
   }

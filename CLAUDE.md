@@ -59,6 +59,8 @@ Si parla in italiano. Tutti i testi visibili sono in italiano.
 ## Generatore: note
 
 - Linguette: uscite (post carosello 1080×1350, layout "Raggio e schermo"), nuovo post, torneo, chiusura, evento (stile "Rapimento UFO", sottotitolo facoltativo).
+- Torneo: ogni gioco è una scena Area 51 (oggetti `TEMI` + `CIELI`): Magic = alieno mago e cinque sfere di mana colorate (senza i simboli ufficiali), Pokémon = cappellino da allenatore e raggio elettrico, Riftbound = squarcio nel cielo e pietre runiche con glifi inventati, Warhammer = elmo con corna e miniature generiche su basetta. **Mai disegnare loghi o simboli ufficiali** (Poké Ball, simboli di mana, rune di Riftbound): per quelli c'è il campo "Simbolo ufficiale del gioco", dove il negozio carica un PNG dal kit grafico ufficiale per negozi (non salvato, si azzera cambiando gioco). Altro = scena UFO viola generica.
+- Disco volante (ovunque: generatore, sito, banner, tessera): piatto scuro `ellipse 0,54 rx150 ry26`; le cinque luci stanno SOPRA il piatto, curva verso l'alto: (-230,0) lime, (-120,-18) giallo, (0,-24) lime, (120,-18) giallo, (230,0) lime, raggio 18 (approvato da Angelo il 17/11/2026). Non rimetterle sul piatto.
 - Liste titoli: va a destra solo ciò che sta dopo `|`. Numeri dopo la barra: 3+ consecutivi → "DAL 3 AL 6", altri → "1-3-5" (funzione `sistemaNumeri`).
 - Le foto non vengono mai tagliate. I testi si salvano in localStorage, le foto no.
 - Per pubblicare: caricare `index.html` aggiornato nel repo `ANGCRU00/area51-uscite`.
