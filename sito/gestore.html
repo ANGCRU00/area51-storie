@@ -915,20 +915,21 @@
     else { esitoMag('Codice non riconosciuto: usa il codice a barre (ISBN/EAN) o il codice Starshop.', false); return; }
     esitoMag('Cerco ' + codice + '…');
     var r = await sb.from('articoli').select('*').or('ean.eq.' + codice + ',codice_starshop.eq.' + codice + ',ean_alt.cs.{' + codice + '}').limit(1);
-    var a = r.data && r.data[0], nuovo = false;
-    if (!a) {
+    var a = r.data && r.data[0], nuovo = false, copEsito = '';
+    /* Articolo nuovo, oppure già noto ma senza copertina (si riprova a scaricarla da Starshop) */
+    if (!a || (!a.copertina && a.fonte === 'starshop')) {
       var sess = await sb.auth.getSession(); if (!sess.data.session) { esitoMag('La sessione è scaduta: esci e rientra.', false); return; }
       try {
         var f = await fetch(A51DB.url + '/functions/v1/starshop', { method: 'POST', headers: { 'Content-Type': 'application/json', apikey: A51DB.chiave, Authorization: 'Bearer ' + sess.data.session.access_token }, body: JSON.stringify({ azione: 'articolo_salva', codice: codice }) });
         var j = await f.json();
-        if (!f.ok || j.ok === false) { esitoMag('Starshop: ' + (j.errore || 'errore ' + f.status), false); return; }
-        if (!j.trovato) { esitoMag('Non trovato su Starshop.', false); formManuale(codice); return; }
-        a = j.articolo; nuovo = !!j.nuovo;
-      } catch (e) { esitoMag('Non riesco a raggiungere Starshop: ' + (e && e.message ? e.message : 'errore'), false); return; }
+        if (!f.ok || j.ok === false) { if (!a) { esitoMag('Starshop: ' + (j.errore || 'errore ' + f.status), false); return; } copEsito = j.errore || 'errore ' + f.status; }
+        else if (!j.trovato) { if (!a) { esitoMag('Non trovato su Starshop.', false); formManuale(codice); return; } }
+        else { a = j.articolo; nuovo = !!j.nuovo; copEsito = j.copertina_esito || ''; }
+      } catch (e) { if (!a) { esitoMag('Non riesco a raggiungere Starshop: ' + (e && e.message ? e.message : 'errore'), false); return; } copEsito = e && e.message ? e.message : 'errore'; }
     }
     if (mgModo !== 'cerca' && a.stato !== mgModo) { var x = await aggiornaArticolo(a, Object.assign({ stato: mgModo }, mgModo === 'appena_arrivato' ? { data_arrivo: oggiLocale() } : {})); if (x) a = x; }
     mostraScheda(a); caricaMagazzino();
-    esitoMag((nuovo ? 'Nuovo articolo: ' : '') + a.titolo + (mgModo === 'cerca' ? '' : ' → ' + STATI_MAG[a.stato]));
+    esitoMag((nuovo ? 'Nuovo articolo: ' : '') + a.titolo + (mgModo === 'cerca' ? '' : ' → ' + STATI_MAG[a.stato]) + (copEsito ? ' · Copertina non salvata: ' + copEsito : ''), !copEsito);
   }
   $('mg-scan').addEventListener('keydown', function (e) { if (e.key !== 'Enter') return; e.preventDefault(); var v = this.value; this.value = ''; scansiona(v).then(function () { $('mg-scan').focus(); }); });
   $('mg-cerca').addEventListener('click', function () { var v = $('mg-scan').value; $('mg-scan').value = ''; scansiona(v).then(function () { $('mg-scan').focus(); }); });
