@@ -704,19 +704,6 @@ legend { display: block; margin-bottom: 6px; padding: 0; font-family: "Archivo-B
     }
   }
   function sfondoGioco() {
-    if (sfondoImg) {
-      /* illustrazione a tutta storia, spostata in su così il soggetto resta sopra la scheda; sotto sfuma nel fondo scuro */
-      var sc = Math.max(W / sfondoImg.width, H / sfondoImg.height) * 1.1, iw = sfondoImg.width * sc, ih = sfondoImg.height * sc;
-      var dy = -Math.min(ih - H * 0.6, H * 0.21);   /* il soggetto sale sopra la scheda, che copre la parte centrale */
-      ctx.imageSmoothingEnabled = true; ctx.imageSmoothingQuality = 'high';
-      ctx.drawImage(sfondoImg, (W - iw) / 2, dy, iw, ih);
-      var f = ctx.createLinearGradient(0, dy + ih - 520, 0, dy + ih);
-      f.addColorStop(0, 'rgba(20,12,43,0)'); f.addColorStop(1, SCURO);
-      ctx.fillStyle = f; ctx.fillRect(0, dy + ih - 520, W, 520);
-      if (dy + ih < H) { rettangolo(0, dy + ih, W, H - (dy + ih), SCURO); }
-      ctx.fillStyle = 'rgba(20,12,43,0.32)'; ctx.fillRect(0, 0, W, H);
-      return;
-    }
     var g = el('t-gioco').value;
     var grande = { magic: motivoMana, pokemon: motivoPalla, riftbound: motivoVarco, onepiece: motivoTimone }[g] || motivoCarte;
     ctx.save();
@@ -726,8 +713,58 @@ legend { display: block; margin-bottom: 6px; padding: 0; font-family: "Archivo-B
     ctx.restore();
   }
 
+  /* ---------- Storia: torneo con illustrazione ("locandina"): l'immagine sta in alto, le informazioni in una fascia compatta sotto ---------- */
+  function disegnaTorneoLocandina() {
+    rettangolo(0, 0, W, H, SCURO);
+    var AL = 1080;                                  /* altezza della zona illustrata */
+    var sc = Math.max(W / sfondoImg.width, AL / sfondoImg.height), iw = sfondoImg.width * sc, ih = sfondoImg.height * sc;
+    ctx.save(); ctx.beginPath(); ctx.rect(0, 0, W, AL); ctx.clip();
+    ctx.imageSmoothingEnabled = true; ctx.imageSmoothingQuality = 'high';
+    ctx.drawImage(sfondoImg, (W - iw) / 2, 0, iw, ih);   /* allineata in alto: la testa del soggetto resta visibile */
+    ctx.restore();
+    var f = ctx.createLinearGradient(0, AL - 330, 0, AL);
+    f.addColorStop(0, 'rgba(20,12,43,0)'); f.addColorStop(1, SCURO);
+    ctx.fillStyle = f; ctx.fillRect(0, AL - 330, W, 330);
+    ruota(550, 1000, -6, function () { rettangolo(-200, 988, 1500, 24, LIME); });
+    marchio(48, 60, Object.assign({ ruota: -2, contorno: LIME, ombra: VIOLA, scarto: 14 }, MARCHIO_MEDIO));
+
+    var righe = [['FORMATO', valore('t-formato')], ['QUANDO', quandoTorneo()], ['PREMI', valore('t-premi')]];
+    var X = 70, Y = 1040, LARGA = 940, TESTA = 170, RIGA = 112, ALTA = 10 + TESTA + RIGA * 3 + 12 + 10;
+    ruota(X + LARGA / 2, Y + ALTA / 2, -1.5, function () {
+      rettangolo(X + 18, Y + 18, LARGA, ALTA, VIOLA);
+      rettangolo(X, Y, LARGA, ALTA, LIME);
+      rettangolo(X + 8, Y + 8, LARGA - 16, ALTA - 16, LILLA);
+      rettangolo(X + 8, Y + 8, LARGA - 16, TESTA, VIOLA);
+      rettangolo(X + 8, Y + TESTA, LARGA - 16, 8, SCURO);
+      var nome = valore('t-nome') || 'GIOCO', sotto = valore('t-sub');
+      adatta(nome, LARGA - 100, BLACK, 84);
+      scrivi(nome, X + 50, sotto ? Y + 74 : Y + 90, LIME, 'sinistra');
+      if (sotto) { adatta(sotto, LARGA - 100, BOLD, 30, 4); scrivi(sotto, X + 50, Y + 130, CHIARO, 'sinistra', 4); }
+      var y = Y + 8 + TESTA;
+      righe.forEach(function (r, i) {
+        if (i > 0) { rettangolo(X + 8, y, LARGA - 16, 5, SCURO); y += 5; }
+        usa(BOLD, 24); scrivi(r[0], X + 50, y + 32, VIOLA, 'sinistra', 5);
+        adatta(r[1], LARGA - 100, BLACK, 52);
+        scrivi(r[1], X + 50, y + 78, SCURO, 'sinistra');
+        y += RIGA;
+      });
+    });
+    usa(BLACK, 66);
+    var pw = larghezza('TORNEO!') + 76, ph = 112, px = W - 50 - pw;
+    ruota(px + pw / 2, 900 + ph / 2, 4, function () {
+      rettangolo(px, 900, pw, ph, LIME);
+      rettangolo(px + 7, 907, pw - 14, ph - 14, VIOLA);
+      usa(BLACK, 66); scrivi('TORNEO!', px + 38, 900 + ph / 2 + 3, LIME, 'sinistra');
+    });
+    var invito = valore('t-invito');
+    adatta(invito, 780, BOLD, 44, 8);
+    scrivi(invito, 540, 1660, LIME, 'centro', 8);
+    freccia(500, 1692, LIME);
+  }
+
   /* ---------- Storia: torneo (scuro) ---------- */
   function disegnaTorneo() {
+    if (sfondoImg) { disegnaTorneoLocandina(); return; }
     rettangolo(0, 0, W, H, SCURO);
     sfondoGioco();
     ruota(550, 1100, -14, function () { rettangolo(-300, 1040, 1700, 120, VIOLA); });
