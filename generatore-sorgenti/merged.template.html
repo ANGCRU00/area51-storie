@@ -368,7 +368,7 @@ legend { display: block; margin-bottom: 6px; padding: 0; font-family: "Archivo-B
       <!-- Evento -->
       <fieldset id="p-evento" role="tabpanel" aria-labelledby="tab-evento" hidden>
         <div class="campo">
-          <label for="e-sopra">Riga sopra il titolo</label>
+          <label for="e-sopra">Riga sopra il titolo (facoltativa)</label>
           <input type="text" id="e-sopra" placeholder="AVVISTAMENTO IN NEGOZIO" autocapitalize="characters">
         </div>
         <div class="campo">
@@ -921,10 +921,12 @@ legend { display: block; margin-bottom: 6px; padding: 0; font-family: "Archivo-B
     var testoEv = grezzo('e-testo'), haTesto = !!testoEv, TY = haTesto ? 790 : 860;
 
     /* riga sopra il titolo */
-    var sopra = valore('e-sopra');
-    adatta(sopra, 900, BOLD, 34, 10);
-    scrivi(sopra, 543, TY - 47, SCURO, 'centro', 10);
-    scrivi(sopra, 540, TY - 50, BIANCO, 'centro', 10);
+    var sopra = grezzo('e-sopra').toLocaleUpperCase('it');   /* facoltativa, colore #C22670 */
+    if (sopra) {
+      adatta(sopra, 900, BOLD, 34, 10);
+      scrivi(sopra, 543, TY - 47, SCURO, 'centro', 10);
+      scrivi(sopra, 540, TY - 50, '#C22670', 'centro', 10);
+    }
 
     /* quando: data e ora sono facoltative (senza nessuna delle due il riquadro non compare) */
     var dEv = leggiData(grezzo('e-data')), oEv = grezzo('e-ora');
