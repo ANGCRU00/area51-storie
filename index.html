@@ -980,8 +980,6 @@ legend { display: block; margin-bottom: 6px; padding: 0; font-family: "Archivo-B
         yT += pxT * 0.65;
         ctx.save(); ctx.font = font(BOLD, pxT); ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.lineJoin = 'round';
         ctx.lineWidth = Math.max(8, pxT * 0.26); ctx.strokeStyle = SCURO; ctx.strokeText(r, 540, yT);
-        ctx.strokeStyle = '#C22670'; ctx.lineWidth = Math.max(4, pxT * 0.1); ctx.strokeText(r, 544, yT + 4);
-        ctx.fillStyle = '#C22670'; ctx.fillText(r, 544, yT + 4);   /* ombra magenta #C22670, ben visibile */
         ctx.fillStyle = BIANCO; ctx.fillText(r, 540, yT);
         ctx.restore();
         yT += pxT * 0.65;
