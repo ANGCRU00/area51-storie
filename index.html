@@ -642,6 +642,7 @@ legend { display: block; margin-bottom: 6px; padding: 0; font-family: "Archivo-B
       rettangolo(90, 400, 880, 10, SCURO);       /* bordo in alto */
       rettangolo(90, 410, 10, 730, SCURO);       /* bordo a sinistra */
       rettangolo(960, 410, 10, 730, SCURO);      /* bordo a destra */
+      if (!foto) { ctx.clearRect(100, 410, 860, 730); }   /* riquadro centrale TRASPARENTE: il file è un PNG, il post condiviso si vede da sotto */
       marchio(132, 442, MARCHIO_PICCOLO);
       rettangolo(100, 1140, 860, 180, SCURO);
       var fascia = valore('post-fascia');
@@ -1054,7 +1055,7 @@ legend { display: block; margin-bottom: 6px; padding: 0; font-family: "Archivo-B
     }
     if (linguetta === 'evento') { return 'area51-storia-evento' + (grezzo('e-data') ? '-' + grezzo('e-data') : '') + '.jpg'; }
     if (linguetta === 'chiusura') { return 'area51-storia-chiusura' + (grezzo('c-dal') ? '-' + grezzo('c-dal') : '') + '.jpg'; }
-    return 'area51-storia-nuovo-post-' + iso(new Date()) + '.jpg';
+    return 'area51-storia-nuovo-post-' + iso(new Date()) + '.png';   /* PNG: il riquadro centrale è trasparente */
   }
 
   function creaJpeg() {
@@ -1067,7 +1068,7 @@ legend { display: block; margin-bottom: 6px; padding: 0; font-family: "Archivo-B
         cv.width = 0;
         cv.height = 0;
         if (b) { ok(b); } else { no(new Error('jpeg')); }
-      }, 'image/jpeg', 0.92);
+      }, linguetta === 'post' ? 'image/png' : 'image/jpeg', 0.92);
     });
   }
 
@@ -1091,7 +1092,7 @@ legend { display: block; margin-bottom: 6px; padding: 0; font-family: "Archivo-B
   function preparaFile() {
     var v = versione;
     if (pronto && pronto.v === v) { return pronto.promessa; }
-    var promessa = creaJpeg().then(function (b) { return new File([b], nomeFile(), { type: 'image/jpeg' }); });
+    var promessa = creaJpeg().then(function (b) { return new File([b], nomeFile(), { type: b.type || 'image/jpeg' }); });
     pronto = { v: v, promessa: promessa, file: null };
     var questo = pronto;
     promessa.then(function (f) { questo.file = f; }, function () { if (pronto === questo) { pronto = null; } });
