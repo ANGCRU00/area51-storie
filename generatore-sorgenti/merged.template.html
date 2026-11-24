@@ -302,6 +302,26 @@ legend { display: block; margin-bottom: 6px; padding: 0; font-family: "Archivo-B
       <!-- Torneo -->
       <fieldset id="p-torneo" role="tabpanel" aria-labelledby="tab-torneo" hidden>
         <div class="campo">
+          <label for="t-modello">Modello</label>
+          <select id="t-modello">
+            <option value="">Nessuno: compilo io</option>
+            <optgroup label="Magic: The Gathering">
+              <option value="magic-draft">Draft</option>
+              <option value="magic-prerelease">Prerelease</option>
+              <option value="magic-commander">Torneo Commander</option>
+              <option value="magic-standard">Torneo Standard</option>
+            </optgroup>
+            <optgroup label="Pokémon">
+              <option value="pokemon-prerelease">Prerelease</option>
+              <option value="pokemon-torneo">Torneo</option>
+            </optgroup>
+            <optgroup label="Riftbound">
+              <option value="riftbound-prerift">Pre-Rift</option>
+              <option value="riftbound-torneo">Torneo</option>
+            </optgroup>
+          </select>
+        </div>
+        <div class="campo">
           <label for="t-gioco">Gioco</label>
           <select id="t-gioco">
             <option value="magic">Magic: The Gathering</option>
@@ -1069,6 +1089,30 @@ legend { display: block; margin-bottom: 6px; padding: 0; font-family: "Archivo-B
     var g = GIOCHI[this.value];
     el('t-nome').value = g[0];
     el('t-sub').value = g[1];
+    el('t-modello').value = '';
+    pianifica();
+  });
+  /* Modelli di torneo: precompilano gioco, nome, sottotitolo, formato e invito. Data, ora e premi restano da scrivere
+     (non sono dati noti): chi ha già scritto i premi li ritrova. Formati e tipi di evento da confermare con il negozio. */
+  var MODELLI = {
+    'magic-draft': ['magic', 'DRAFT', 'TOCCA E ISCRIVITI'],
+    'magic-prerelease': ['magic', 'PRERELEASE', 'TOCCA E ISCRIVITI'],
+    'magic-commander': ['magic', 'COMMANDER', 'TOCCA E ISCRIVITI'],
+    'magic-standard': ['magic', 'STANDARD', 'TOCCA E ISCRIVITI'],
+    'pokemon-prerelease': ['pokemon', 'PRERELEASE', 'TOCCA E ISCRIVITI'],
+    'pokemon-torneo': ['pokemon', 'TORNEO', 'TOCCA E ISCRIVITI'],
+    'riftbound-prerift': ['riftbound', 'PRE-RIFT', 'TOCCA E ISCRIVITI'],
+    'riftbound-torneo': ['riftbound', 'TORNEO', 'TOCCA E ISCRIVITI']
+  };
+  el('t-modello').addEventListener('change', function () {
+    var m = MODELLI[this.value];
+    if (!m) { return; }
+    var g = GIOCHI[m[0]];
+    el('t-gioco').value = m[0];
+    el('t-nome').value = g[0];
+    el('t-sub').value = g[1];
+    el('t-formato').value = m[1];
+    el('t-invito').value = m[2];
     pianifica();
   });
   el('post-scatta').addEventListener('click', function () { el('post-foto-camera').click(); });
