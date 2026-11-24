@@ -921,13 +921,11 @@ legend { display: block; margin-bottom: 6px; padding: 0; font-family: "Archivo-B
     var testoEv = grezzo('e-testo'), haTesto = !!testoEv, TY = haTesto ? 790 : 860;
 
     /* riga sopra il titolo */
-    var sopra = grezzo('e-sopra').toLocaleUpperCase('it');   /* facoltativa, colore #C22670 */
+    var sopra = grezzo('e-sopra').toLocaleUpperCase('it');   /* facoltativa */
     if (sopra) {
-      /* etichetta chiara con il testo #C22670: sul fondo scuro il magenta da solo non si legge */
-      var spx = adatta(sopra, 820, BLACK, 40, 8), sw0 = larghezza(sopra, 8) + 64, sh0 = spx + 36;
-      rettangolo(540 - sw0 / 2 + 8, TY - 50 - sh0 / 2 + 8, sw0, sh0, SCURO);
-      rettangolo(540 - sw0 / 2, TY - 50 - sh0 / 2, sw0, sh0, BIANCO);
-      scrivi(sopra, 540, TY - 50 + 2, '#C22670', 'centro', 8);
+      adatta(sopra, 900, BOLD, 34, 10);
+      scrivi(sopra, 543, TY - 47, SCURO, 'centro', 10);
+      scrivi(sopra, 540, TY - 50, BIANCO, 'centro', 10);
     }
 
     /* quando: data e ora sono facoltative (senza nessuna delle due il riquadro non compare) */
