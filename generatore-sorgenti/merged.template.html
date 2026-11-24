@@ -923,9 +923,9 @@ legend { display: block; margin-bottom: 6px; padding: 0; font-family: "Archivo-B
     /* riga sopra il titolo */
     var sopra = grezzo('e-sopra').toLocaleUpperCase('it');   /* facoltativa */
     if (sopra) {
-      adatta(sopra, 900, BOLD, 34, 10);
+      adatta(sopra, 900, BOLD, 40, 10);
       scrivi(sopra, 543, TY - 47, SCURO, 'centro', 10);
-      scrivi(sopra, 540, TY - 50, BIANCO, 'centro', 10);
+      scrivi(sopra, 540, TY - 50, LIME, 'centro', 10);
     }
 
     /* quando: data e ora sono facoltative (senza nessuna delle due il riquadro non compare) */
@@ -973,12 +973,17 @@ legend { display: block; margin-bottom: 6px; padding: 0; font-family: "Archivo-B
       var y0 = fondo + 10;
       usa(BOLD, pxT);
       var maxR = rT.reduce(function (m, r) { return Math.max(m, larghezza(r)); }, 0), bw = Math.min(W, Math.round(maxR + 80));   /* la banda segue la larghezza del testo */
-      ctx.save(); ctx.fillStyle = 'rgba(20, 12, 43, 0.8)'; ctx.fillRect(540 - bw / 2, y0, bw, hT + 48); ctx.restore();   /* trasparente al 20% */
+      ctx.save();
+      ctx.beginPath();
+      if (ctx.roundRect) { ctx.roundRect(540 - bw / 2, y0, bw, hT + 48, 28); } else { ctx.rect(540 - bw / 2, y0, bw, hT + 48); }
+      ctx.fillStyle = 'rgba(20, 12, 43, 0.8)'; ctx.fill();   /* trasparente al 20% */
+      ctx.lineWidth = 4; ctx.strokeStyle = LIME; ctx.stroke();   /* bordo lime sottile */
+      ctx.restore();
       var yT = y0 + 24;
       usa(BOLD, pxT);
       rT.forEach(function (r) {
         if (!r) { yT += pxT * 0.6; return; }
-        scrivi(r, 540, yT + pxT * 0.65, LIME, 'centro');
+        scrivi(r, 540, yT + pxT * 0.65, BIANCO, 'centro');
         yT += pxT * 1.3;
       });
       fondo = y0 + hT + 48 + 10;
