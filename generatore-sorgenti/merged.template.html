@@ -304,7 +304,11 @@ legend { display: block; margin-bottom: 6px; padding: 0; font-family: "Archivo-B
         <div class="campo">
           <label for="t-sfondo">Immagine di sfondo (facoltativa)</label>
           <input type="file" id="t-sfondo" accept="image/*">
-          <p class="aiuto" id="aiuto-sfondo">Un'illustrazione del gioco al posto dei disegni di sfondo. Meglio verticale. Non viene salvata: va ricaricata ogni volta.</p>
+          <p class="aiuto" id="aiuto-sfondo">Un'illustrazione del gioco al posto dei disegni di sfondo: la storia passa al layout con l'immagine in alto. Meglio verticale e alta almeno 1080 px. Non viene salvata: va ricaricata ogni volta.</p>
+        </div>
+        <div class="campo">
+          <label for="t-sfondo-x">Taglio dell'immagine: sposta a sinistra o a destra</label>
+          <input type="range" id="t-sfondo-x" min="0" max="100" value="50" aria-describedby="aiuto-sfondo">
         </div>
         <div class="campo">
           <label for="t-gioco">Gioco</label>
@@ -428,7 +432,7 @@ legend { display: block; margin-bottom: 6px; padding: 0; font-family: "Archivo-B
   var VIOLA = '#5B21B6', LIME = '#B9E62E', SCURO = '#140C2B', BIANCO = '#FFFFFF', LILLA = '#E4DDF3', GRIGIO = '#9C94B8', CHIARO = '#F1ECFB';
   var BLACK = '"Archivo-Black-Expanded"', BOLD = '"Archivo-Bold"';
   var CHIAVE = 'area51-storie-v1';
-  var CAMPI = ['post-titolo', 'post-fascia', 'post-invito', 't-gioco', 't-nome', 't-sub', 't-formato', 't-data', 't-ora', 't-premi', 't-invito', 'c-dal', 'c-al', 'c-riga1', 'c-riga2', 'c-saluto', 'e-sopra', 'e-titolo', 'e-sotto', 'e-data', 'e-ora', 'e-saluto'];
+  var CAMPI = ['post-titolo', 'post-fascia', 'post-invito', 't-gioco', 't-sfondo-x', 't-nome', 't-sub', 't-formato', 't-data', 't-ora', 't-premi', 't-invito', 'c-dal', 'c-al', 'c-riga1', 'c-riga2', 'c-saluto', 'e-sopra', 'e-titolo', 'e-sotto', 'e-data', 'e-ora', 'e-saluto'];
   var GIOCHI = {
     magic: ['MAGIC', 'THE GATHERING'],
     pokemon: ['POKÉMON', 'GIOCO DI CARTE COLLEZIONABILI'],
@@ -720,7 +724,8 @@ legend { display: block; margin-bottom: 6px; padding: 0; font-family: "Archivo-B
     var sc = Math.max(W / sfondoImg.width, AL / sfondoImg.height), iw = sfondoImg.width * sc, ih = sfondoImg.height * sc;
     ctx.save(); ctx.beginPath(); ctx.rect(0, 0, W, AL); ctx.clip();
     ctx.imageSmoothingEnabled = true; ctx.imageSmoothingQuality = 'high';
-    ctx.drawImage(sfondoImg, (W - iw) / 2, 0, iw, ih);   /* allineata in alto: la testa del soggetto resta visibile */
+    var pos = (parseInt(el('t-sfondo-x').value, 10) || 0) / 100;   /* 0 = bordo sinistro dell'immagine, 100 = destro (conta se è più larga della storia) */
+    ctx.drawImage(sfondoImg, -(iw - W) * pos, 0, iw, ih);   /* allineata in alto: la testa del soggetto resta visibile */
     ctx.restore();
     var f = ctx.createLinearGradient(0, AL - 330, 0, AL);
     f.addColorStop(0, 'rgba(20,12,43,0)'); f.addColorStop(1, SCURO);
@@ -1077,7 +1082,7 @@ legend { display: block; margin-bottom: 6px; padding: 0; font-family: "Archivo-B
     return Array.from(el('p-' + linguetta).querySelectorAll('input, select'));
   }
   function schedaHaContenuto() {
-    return campiScheda().some(function (c) { return c.type === 'file' ? (c.id === 't-sfondo' ? !!sfondoImg : !!foto) : c.tagName !== 'SELECT' && c.value.trim(); });
+    return campiScheda().some(function (c) { return c.type === 'file' ? (c.id === 't-sfondo' ? !!sfondoImg : !!foto) : c.tagName !== 'SELECT' && c.type !== 'range' && c.value.trim(); });
   }
 
   /* ---------- Esempi ---------- */
