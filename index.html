@@ -635,13 +635,13 @@ legend { display: block; margin-bottom: 6px; padding: 0; font-family: "Archivo-B
   function disegnaPost() {
     rettangolo(0, 0, W, H, VIOLA);
     ruota(530, 865, -3, function () {
-      rettangolo(112, 422, 880, 930, SCURO);
-      rettangolo(90, 400, 880, 930, SCURO);
+      /* cornice scura con il riquadro centrale vuoto (si vede lo sfondo viola); la foto, se c'è, lo riempie */
       if (foto) { fotoRiempie(foto, 100, 410, 860, 730); }
-      else {
-        rettangolo(100, 410, 860, 730, LILLA);
-        usa(BOLD, 56); scrivi('[FOTO DEL BANCO]', 530, 795, VIOLA, 'centro');
-      }
+      rettangolo(970, 422, 22, 930, SCURO);      /* ombra a destra e in basso */
+      rettangolo(112, 1330, 880, 22, SCURO);
+      rettangolo(90, 400, 880, 10, SCURO);       /* bordo in alto */
+      rettangolo(90, 410, 10, 730, SCURO);       /* bordo a sinistra */
+      rettangolo(960, 410, 10, 730, SCURO);      /* bordo a destra */
       marchio(132, 442, MARCHIO_PICCOLO);
       rettangolo(100, 1140, 860, 180, SCURO);
       var fascia = valore('post-fascia');
@@ -660,7 +660,6 @@ legend { display: block; margin-bottom: 6px; padding: 0; font-family: "Archivo-B
     var invito = valore('post-invito');
     adatta(invito, 780, BOLD, 46, 8);
     scrivi(invito, 540, 1458, BIANCO, 'centro', 8);
-    freccia(500, 1502, LIME);
   }
 
   /* ---------- Storia: torneo con illustrazione ("locandina"): l'immagine sta in alto, le informazioni in una fascia compatta sotto ---------- */
