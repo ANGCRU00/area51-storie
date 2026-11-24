@@ -373,7 +373,7 @@ legend { display: block; margin-bottom: 6px; padding: 0; font-family: "Archivo-B
         </div>
         <div class="campo">
           <label for="e-titolo">Titolo</label>
-          <p class="aiuto">Scrivi / dove vuoi andare a capo, per esempio FIRMA/COPIE.</p>
+          <p class="aiuto">Scrivi / dove vuoi andare a capo, per esempio FIRMA/COPIE. Se il testo supera i 40 caratteri va a capo da solo su un pannello scuro, più leggibile.</p>
           <input type="text" id="e-titolo" placeholder="FIRMACOPIE" autocapitalize="characters">
         </div>
         <div class="campo">
@@ -382,11 +382,11 @@ legend { display: block; margin-bottom: 6px; padding: 0; font-family: "Archivo-B
         </div>
         <div class="campo coppia">
           <div class="campo">
-            <label for="e-data">Data</label>
+            <label for="e-data">Data (facoltativa)</label>
             <input type="date" id="e-data">
           </div>
           <div class="campo">
-            <label for="e-ora">Ora</label>
+            <label for="e-ora">Ora (facoltativa)</label>
             <input type="time" id="e-ora">
           </div>
         </div>
@@ -918,16 +918,38 @@ legend { display: block; margin-bottom: 6px; padding: 0; font-family: "Archivo-B
     scrivi(sopra, 543, 813, SCURO, 'centro', 10);
     scrivi(sopra, 540, 810, BIANCO, 'centro', 10);
 
-    /* titolo luminoso */
-    var t = righeTitolo(valore('e-titolo'), 900, 150, 100), passo = Math.round(t.px * 1.0);
-    var alto = passo * t.righe.length, cy = 860 + alto / 2;
-    ruota(540, cy, -3, function () {
-      usa(BLACK, t.px);
-      t.righe.forEach(function (r, i) { scrivi(r, 548, 860 + passo / 2 + passo * i + 8, SCURO, 'centro'); });
-      ctx.save(); ctx.shadowColor = LIME; ctx.shadowBlur = 34;
-      t.righe.forEach(function (r, i) { scrivi(r, 540, 860 + passo / 2 + passo * i, BIANCO, 'centro'); });
-      ctx.restore();
-    });
+    /* quando: data e ora sono facoltative (senza nessuna delle due il riquadro non compare) */
+    var dEv = leggiData(grezzo('e-data')), oEv = grezzo('e-ora');
+    var q = [dEv ? GIORNI[dEv.getDay()] + ' ' + gm(dEv) : '', oEv ? 'ORE ' + oEv : ''].filter(Boolean).join(' · ').replace(' · ORE ', ' · ');
+    var haSotto = !!grezzo('e-sotto');
+
+    /* titolo: breve = scritta luminosa (come sempre); lungo (più di 40 caratteri) = testo su un pannello scuro, a capo e con la dimensione che ci sta */
+    var titoloTesto = valore('e-titolo'), alto;
+    if (titoloTesto.length > 40 && titoloTesto.indexOf('/') < 0) {
+      var spazio = (q ? 1450 : 1570) - (haSotto ? 100 : 0) - 860 - 80, px = 52, righe = [];
+      for (; px >= 26; px -= 2) {
+        usa(BOLD, px); righe = aCapoLargo(titoloTesto, 800, 0);
+        if (righe.length * px * 1.28 <= spazio) { break; }
+      }
+      var passoP = px * 1.28, hh = Math.round(righe.length * passoP + 80);
+      rettangolo(80 + 16, 860 + 16, 920, hh, VIOLA);
+      rettangolo(80, 860, 920, hh, SCURO);
+      rettangolo(80, 860, 920, 8, LIME);
+      usa(BOLD, px);
+      righe.forEach(function (r, i) { scrivi(r, 540, 860 + 44 + passoP * (i + 0.5), BIANCO, 'centro'); });
+      alto = hh;
+    } else {
+      var t = righeTitolo(titoloTesto, 900, 150, 100), passo = Math.round(t.px * 1.0);
+      alto = passo * t.righe.length;
+      var cy = 860 + alto / 2;
+      ruota(540, cy, -3, function () {
+        usa(BLACK, t.px);
+        t.righe.forEach(function (r, i) { scrivi(r, 548, 860 + passo / 2 + passo * i + 8, SCURO, 'centro'); });
+        ctx.save(); ctx.shadowColor = LIME; ctx.shadowBlur = 34;
+        t.righe.forEach(function (r, i) { scrivi(r, 540, 860 + passo / 2 + passo * i, BIANCO, 'centro'); });
+        ctx.restore();
+      });
+    }
 
     var sotto = grezzo('e-sotto').toLocaleUpperCase('it'), yb = 860 + alto + 40;
     if (sotto) {
@@ -936,12 +958,13 @@ legend { display: block; margin-bottom: 6px; padding: 0; font-family: "Archivo-B
       scrivi(sotto, 540, yb + sh / 2 + 2, LIME, 'centro', 4);
     }
 
-    /* data */
-    var q = quando('e-data', 'e-ora').replace(' · ORE ', ' · ');
-    var qpx = adatta(q, 820, BLACK, 60), qw = larghezza(q) + 80, qh = qpx + 40, qy = 1480;
-    rettangolo(540 - qw / 2 + 10, qy + 10, qw, qh, VIOLA);
-    rettangolo(540 - qw / 2, qy, qw, qh, LIME);
-    usa(BLACK, qpx); scrivi(q, 540, qy + qh / 2 + 3, SCURO, 'centro');
+    /* data e ora */
+    if (q) {
+      var qpx = adatta(q, 820, BLACK, 60), qw = larghezza(q) + 80, qh = qpx + 40, qy = 1480;
+      rettangolo(540 - qw / 2 + 10, qy + 10, qw, qh, VIOLA);
+      rettangolo(540 - qw / 2, qy, qw, qh, LIME);
+      usa(BLACK, qpx); scrivi(q, 540, qy + qh / 2 + 3, SCURO, 'centro');
+    }
 
     var saluto = valore('e-saluto');
     adatta(saluto, 900, BOLD, 34, 8);
