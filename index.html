@@ -373,7 +373,7 @@ legend { display: block; margin-bottom: 6px; padding: 0; font-family: "Archivo-B
         </div>
         <div class="campo">
           <label for="e-titolo">Titolo</label>
-          <p class="aiuto">Scrivi / dove vuoi andare a capo, per esempio FIRMA/COPIE. Se il testo supera i 40 caratteri va a capo da solo su un pannello scuro, più leggibile.</p>
+          <p class="aiuto">Scrivi / dove vuoi andare a capo, per esempio FIRMA/COPIE. Se il testo supera i 40 caratteri va a capo da solo e si rimpicciolisce per starci.</p>
           <input type="text" id="e-titolo" placeholder="FIRMACOPIE" autocapitalize="characters">
         </div>
         <div class="campo">
@@ -923,33 +923,28 @@ legend { display: block; margin-bottom: 6px; padding: 0; font-family: "Archivo-B
     var q = [dEv ? GIORNI[dEv.getDay()] + ' ' + gm(dEv) : '', oEv ? 'ORE ' + oEv : ''].filter(Boolean).join(' · ').replace(' · ORE ', ' · ');
     var haSotto = !!grezzo('e-sotto');
 
-    /* titolo: breve = scritta luminosa (come sempre); lungo (più di 40 caratteri) = testo su un pannello scuro, a capo e con la dimensione che ci sta */
-    var titoloTesto = valore('e-titolo'), alto;
+    /* titolo luminoso (sempre lo stesso stile); se è lungo (più di 40 caratteri, senza "/") va a capo da solo e si rimpicciolisce fino a starci */
+    var titoloTesto = valore('e-titolo'), alto, t;
     if (titoloTesto.length > 40 && titoloTesto.indexOf('/') < 0) {
-      var spazio = (q ? 1450 : 1570) - (haSotto ? 100 : 0) - 860 - 80, px = 52, righe = [];
-      for (; px >= 26; px -= 2) {
-        usa(BOLD, px); righe = aCapoLargo(titoloTesto, 800, 0);
-        if (righe.length * px * 1.28 <= spazio) { break; }
+      var spazio = (q ? 1450 : 1570) - (haSotto ? 100 : 0) - 860 - 20, px = 100, righe = [];
+      for (; px >= 28; px -= 2) {
+        usa(BLACK, px); righe = aCapoLargo(titoloTesto, 900, 0);
+        if (righe.length * px * 1.06 <= spazio) { break; }
       }
-      var passoP = px * 1.28, hh = Math.round(righe.length * passoP + 80);
-      rettangolo(80 + 16, 860 + 16, 920, hh, VIOLA);
-      rettangolo(80, 860, 920, hh, SCURO);
-      rettangolo(80, 860, 920, 8, LIME);
-      usa(BOLD, px);
-      righe.forEach(function (r, i) { scrivi(r, 540, 860 + 44 + passoP * (i + 0.5), BIANCO, 'centro'); });
-      alto = hh;
+      t = { righe: righe, px: px };
     } else {
-      var t = righeTitolo(titoloTesto, 900, 150, 100), passo = Math.round(t.px * 1.0);
-      alto = passo * t.righe.length;
-      var cy = 860 + alto / 2;
-      ruota(540, cy, -3, function () {
-        usa(BLACK, t.px);
-        t.righe.forEach(function (r, i) { scrivi(r, 548, 860 + passo / 2 + passo * i + 8, SCURO, 'centro'); });
-        ctx.save(); ctx.shadowColor = LIME; ctx.shadowBlur = 34;
-        t.righe.forEach(function (r, i) { scrivi(r, 540, 860 + passo / 2 + passo * i, BIANCO, 'centro'); });
-        ctx.restore();
-      });
+      t = righeTitolo(titoloTesto, 900, 150, 100);
     }
+    var passo = Math.round(t.px * (t.righe.length > 2 ? 1.06 : 1.0));
+    alto = passo * t.righe.length;
+    var cy = 860 + alto / 2;
+    ruota(540, cy, -3, function () {
+      usa(BLACK, t.px);
+      t.righe.forEach(function (r, i) { scrivi(r, 548, 860 + passo / 2 + passo * i + 8, SCURO, 'centro'); });
+      ctx.save(); ctx.shadowColor = LIME; ctx.shadowBlur = 34;
+      t.righe.forEach(function (r, i) { scrivi(r, 540, 860 + passo / 2 + passo * i, BIANCO, 'centro'); });
+      ctx.restore();
+    });
 
     var sotto = grezzo('e-sotto').toLocaleUpperCase('it'), yb = 860 + alto + 40;
     if (sotto) {
