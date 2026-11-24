@@ -708,6 +708,7 @@ legend { display: block; margin-bottom: 6px; padding: 0; font-family: "Archivo-B
       /* illustrazione a tutta storia, spostata in su così il soggetto resta sopra la scheda; sotto sfuma nel fondo scuro */
       var sc = Math.max(W / sfondoImg.width, H / sfondoImg.height) * 1.1, iw = sfondoImg.width * sc, ih = sfondoImg.height * sc;
       var dy = -Math.min(ih - H * 0.6, H * 0.21);   /* il soggetto sale sopra la scheda, che copre la parte centrale */
+      ctx.imageSmoothingEnabled = true; ctx.imageSmoothingQuality = 'high';
       ctx.drawImage(sfondoImg, (W - iw) / 2, dy, iw, ih);
       var f = ctx.createLinearGradient(0, dy + ih - 520, 0, dy + ih);
       f.addColorStop(0, 'rgba(20,12,43,0)'); f.addColorStop(1, SCURO);
