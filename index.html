@@ -959,32 +959,26 @@ legend { display: block; margin-bottom: 6px; padding: 0; font-family: "Archivo-B
     });
     var fondo = TY + alto + (alto ? 30 : 10);
 
-    /* testo: Archivo Bold bianco con contorno scuro (si legge sul raggio chiaro), a capo da solo, dimensione adattata */
+    /* testo: banda scura a tutta larghezza con scritte lime in maiuscolo spaziato (come il sottotitolo), a capo da solo, dimensione adattata */
     if (haTesto) {
-      var limite = (q ? 1450 : 1570) - (haSotto ? 100 : 0), spT = limite - fondo, pxT = 50, rT = [];
-      var parT = testoEv.split(/\n+/).filter(Boolean);
-      for (; pxT >= 26; pxT -= 2) {
+      var limite = (q ? 1450 : 1570) - (haSotto ? 100 : 0), spT = limite - fondo - 20 - 64, pxT = 46, rT = [];
+      var parT = testoEv.toLocaleUpperCase('it').split(/\n+/).filter(Boolean);
+      for (; pxT >= 24; pxT -= 2) {
         usa(BOLD, pxT); rT = [];
-        parT.forEach(function (pp, i) { aCapoLargo(pp, 860, 0).forEach(function (r) { rT.push(r); }); if (i < parT.length - 1) { rT.push(''); } });
-        var hT = rT.reduce(function (s, r) { return s + (r ? pxT * 1.3 : pxT * 0.6); }, 0);
+        parT.forEach(function (pp, i) { aCapoLargo(pp, 900, 4).forEach(function (r) { rT.push(r); }); if (i < parT.length - 1) { rT.push(''); } });
+        var hT = rT.reduce(function (s, r) { return s + (r ? pxT * 1.5 : pxT * 0.7); }, 0);
         if (hT <= spT) { break; }
       }
+      var y0 = fondo + 20;
+      rettangolo(0, y0, W, hT + 64, SCURO);
+      var yT = y0 + 32;
       usa(BOLD, pxT);
-      var yT = fondo;
-      /* rettangolo semitrasparente sotto il testo */
-      ctx.save(); ctx.fillStyle = 'rgba(20, 12, 43, 0.55)';
-      ctx.fillRect(70, fondo - 18, 940, hT + 36);
-      ctx.restore();
       rT.forEach(function (r) {
-        if (!r) { yT += pxT * 0.6; return; }
-        yT += pxT * 0.65;
-        ctx.save(); ctx.font = font(BOLD, pxT); ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.lineJoin = 'round';
-        ctx.lineWidth = Math.max(8, pxT * 0.26); ctx.strokeStyle = SCURO; ctx.strokeText(r, 540, yT);
-        ctx.fillStyle = BIANCO; ctx.fillText(r, 540, yT);
-        ctx.restore();
-        yT += pxT * 0.65;
+        if (!r) { yT += pxT * 0.7; return; }
+        scrivi(r, 540, yT + pxT * 0.75, LIME, 'centro', 4);
+        yT += pxT * 1.5;
       });
-      fondo = yT + 10;
+      fondo = y0 + hT + 64 + 10;
     }
 
     var sotto = grezzo('e-sotto').toLocaleUpperCase('it'), yb = fondo + 10;
