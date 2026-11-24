@@ -345,6 +345,10 @@ legend { display: block; margin-bottom: 6px; padding: 0; font-family: "Archivo-B
           </div>
         </div>
         <div class="campo">
+          <label for="t-posti">Partecipanti</label>
+          <input type="text" id="t-posti" placeholder="MAX 16 GIOCATORI" autocapitalize="characters">
+        </div>
+        <div class="campo">
           <label for="t-premi">Premi</label>
           <input type="text" id="t-premi" placeholder="1 BUSTINA FOIL" autocapitalize="characters">
         </div>
@@ -432,7 +436,7 @@ legend { display: block; margin-bottom: 6px; padding: 0; font-family: "Archivo-B
   var VIOLA = '#5B21B6', LIME = '#B9E62E', SCURO = '#140C2B', BIANCO = '#FFFFFF', LILLA = '#E4DDF3', GRIGIO = '#9C94B8', CHIARO = '#F1ECFB';
   var BLACK = '"Archivo-Black-Expanded"', BOLD = '"Archivo-Bold"';
   var CHIAVE = 'area51-storie-v1';
-  var CAMPI = ['post-titolo', 'post-fascia', 'post-invito', 't-gioco', 't-sfondo-x', 't-nome', 't-sub', 't-formato', 't-data', 't-ora', 't-premi', 't-invito', 'c-dal', 'c-al', 'c-riga1', 'c-riga2', 'c-saluto', 'e-sopra', 'e-titolo', 'e-sotto', 'e-data', 'e-ora', 'e-saluto'];
+  var CAMPI = ['post-titolo', 'post-fascia', 'post-invito', 't-gioco', 't-sfondo-x', 't-nome', 't-sub', 't-formato', 't-data', 't-ora', 't-posti', 't-premi', 't-invito', 'c-dal', 'c-al', 'c-riga1', 'c-riga2', 'c-saluto', 'e-sopra', 'e-titolo', 'e-sotto', 'e-data', 'e-ora', 'e-saluto'];
   var GIOCHI = {
     magic: ['MAGIC', 'THE GATHERING'],
     pokemon: ['POKÉMON', 'GIOCO DI CARTE COLLEZIONABILI'],
@@ -733,8 +737,8 @@ legend { display: block; margin-bottom: 6px; padding: 0; font-family: "Archivo-B
     ruota(550, 1000, -6, function () { rettangolo(-200, 988, 1500, 24, LIME); });
     marchio(48, 60, Object.assign({ ruota: -2, contorno: LIME, ombra: VIOLA, scarto: 14 }, MARCHIO_MEDIO));
 
-    var righe = [['FORMATO', valore('t-formato')], ['QUANDO', quandoTorneo()], ['PREMI', valore('t-premi')]];
-    var X = 70, Y = 1040, LARGA = 940, TESTA = 170, RIGA = 112, ALTA = 10 + TESTA + RIGA * 3 + 12 + 10;
+    var righe = [['FORMATO', valore('t-formato')], ['QUANDO', quandoTorneo()], ['PARTECIPANTI', valore('t-posti')], ['PREMI', valore('t-premi')]];
+    var X = 70, Y = 1040, LARGA = 940, TESTA = 170, RIGA = 96, ALTA = 10 + TESTA + RIGA * 4 + 15 + 10;
     ruota(X + LARGA / 2, Y + ALTA / 2, -1.5, function () {
       rettangolo(X + 18, Y + 18, LARGA, ALTA, VIOLA);
       rettangolo(X, Y, LARGA, ALTA, LIME);
@@ -748,9 +752,9 @@ legend { display: block; margin-bottom: 6px; padding: 0; font-family: "Archivo-B
       var y = Y + 8 + TESTA;
       righe.forEach(function (r, i) {
         if (i > 0) { rettangolo(X + 8, y, LARGA - 16, 5, SCURO); y += 5; }
-        usa(BOLD, 24); scrivi(r[0], X + 50, y + 32, VIOLA, 'sinistra', 5);
-        adatta(r[1], LARGA - 100, BLACK, 52);
-        scrivi(r[1], X + 50, y + 78, SCURO, 'sinistra');
+        usa(BOLD, 22); scrivi(r[0], X + 50, y + 28, VIOLA, 'sinistra', 5);
+        adatta(r[1], LARGA - 100, BLACK, 46);
+        scrivi(r[1], X + 50, y + 68, SCURO, 'sinistra');
         y += RIGA;
       });
     });
@@ -763,8 +767,8 @@ legend { display: block; margin-bottom: 6px; padding: 0; font-family: "Archivo-B
     });
     var invito = valore('t-invito');
     adatta(invito, 780, BOLD, 44, 8);
-    scrivi(invito, 540, 1660, LIME, 'centro', 8);
-    freccia(500, 1692, LIME);
+    scrivi(invito, 540, 1690, LIME, 'centro', 8);
+    freccia(500, 1722, LIME);
   }
 
   /* ---------- Storia: torneo (scuro) ---------- */
@@ -776,8 +780,8 @@ legend { display: block; margin-bottom: 6px; padding: 0; font-family: "Archivo-B
     ruota(550, 1207, -14, function () { rettangolo(-300, 1190, 1700, 34, LIME); });
     marchio(60, 280, Object.assign({ ruota: -2, contorno: LIME, ombra: VIOLA, scarto: 18 }, MARCHIO_GRANDE));
 
-    var righe = [['FORMATO', valore('t-formato')], ['QUANDO', quandoTorneo()], ['PREMI', valore('t-premi')]];
-    var X = 90, Y = 640, LARGA = 900, TESTA = 220, RIGA = 154, ALTA = 10 + TESTA + RIGA * 3 + 12 + 10;
+    var righe = [['FORMATO', valore('t-formato')], ['QUANDO', quandoTorneo()], ['PARTECIPANTI', valore('t-posti')], ['PREMI', valore('t-premi')]];
+    var X = 90, Y = 640, LARGA = 900, TESTA = 220, RIGA = 128, ALTA = 10 + TESTA + RIGA * 4 + 18 + 10;
     ruota(X + LARGA / 2, Y + ALTA / 2, -2, function () {
       rettangolo(X + 22, Y + 22, LARGA, ALTA, VIOLA);
       rettangolo(X, Y, LARGA, ALTA, LIME);
@@ -791,9 +795,9 @@ legend { display: block; margin-bottom: 6px; padding: 0; font-family: "Archivo-B
       var y = Y + 10 + TESTA;
       righe.forEach(function (r, i) {
         if (i > 0) { rettangolo(X + 10, y, LARGA - 20, 6, SCURO); y += 6; }
-        usa(BOLD, 30); scrivi(r[0], X + 54, y + 40, VIOLA, 'sinistra', 6);
-        adatta(r[1], LARGA - 108, BLACK, 62);
-        scrivi(r[1], X + 54, y + 97, SCURO, 'sinistra');
+        usa(BOLD, 28); scrivi(r[0], X + 54, y + 34, VIOLA, 'sinistra', 6);
+        adatta(r[1], LARGA - 108, BLACK, 54);
+        scrivi(r[1], X + 54, y + 82, SCURO, 'sinistra');
         y += RIGA;
       });
     });
@@ -1090,7 +1094,7 @@ legend { display: block; margin-bottom: 6px; padding: 0; font-family: "Archivo-B
   var ESEMPI = {
     post: function () { return { 'post-titolo': 'NUOVO POST!', 'post-fascia': 'NUOVI ARRIVI', 'post-invito': 'TOCCA E SCOPRILO' }; },
     torneo: function () {
-      return { 't-gioco': 'magic', 't-nome': 'MAGIC', 't-sub': 'THE GATHERING', 't-formato': 'COMMANDER', 't-data': iso(prossimoSabato()), 't-ora': '17:30', 't-premi': '1 BUSTINA FOIL', 't-invito': 'TOCCA E ISCRIVITI' };
+      return { 't-gioco': 'magic', 't-nome': 'MAGIC', 't-sub': 'THE GATHERING', 't-formato': 'COMMANDER', 't-data': iso(prossimoSabato()), 't-ora': '17:30', 't-posti': 'MAX 16 GIOCATORI', 't-premi': '1 BUSTINA FOIL', 't-invito': 'TOCCA E ISCRIVITI' };
     },
     evento: function () {
       return { 'e-sopra': 'AVVISTAMENTO IN NEGOZIO', 'e-titolo': 'FIRMA/COPIE', 'e-sotto': 'CON [OSPITE]', 'e-data': iso(prossimoSabato()), 'e-ora': '17:00', 'e-saluto': 'VI ASPETTIAMO IN NEGOZIO' };
