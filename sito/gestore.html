@@ -336,6 +336,7 @@
       <nav aria-label="Sezioni dell'area del gestore" class="flex flex-wrap gap-2 mb-8" id="g-tabs">
         <button type="button" data-sez="richieste" class="tab-profilo !w-auto">Richieste <span id="g-n-ric" class="num-profilo">0</span></button>
         <button type="button" data-sez="eventi" class="tab-profilo !w-auto">Eventi e iscrizioni <span id="g-n-ev" class="num-profilo">0</span></button>
+        <button type="button" data-sez="magazzino" class="tab-profilo !w-auto">Magazzino <span id="g-n-mag" class="num-profilo">0</span></button>
         <button type="button" data-sez="uscite" class="tab-profilo !w-auto">Uscite da prenotare <span id="g-n-usc" class="num-profilo">0</span></button>
         <button type="button" data-sez="buoni" class="tab-profilo !w-auto">Buoni Carta Cultura <span id="g-n-buo" class="num-profilo">0</span></button>
         <button type="button" data-sez="tessere" class="tab-profilo !w-auto">Tessere e livelli <span id="g-n-tes" class="num-profilo">0</span></button>
@@ -390,6 +391,33 @@
         </form>
         <ul id="g-ev-lista" class="space-y-3"></ul>
         <p id="g-ev-vuoto" hidden class="vuoto-profilo !block">Nessun evento: premi "Nuovo evento" per aggiungerne uno.</p>
+      </section>
+
+      <!-- Magazzino: scansione dei fumetti con la pistola barcode o la fotocamera -->
+      <section id="g-magazzino" hidden aria-labelledby="g-mag-t">
+        <h2 id="g-mag-t" class="font-heavy text-2xl sm:text-3xl text-white uppercase mb-2">Magazzino</h2>
+        <p class="text-sm font-semibold text-brand-muted max-w-3xl mb-5">Scansiona il codice a barre di un fumetto: compaiono subito copertina e dati, presi da Starshop la prima volta. Scegli cosa fare a ogni scansione, poi passa la pistola sui volumi uno dopo l'altro. Non si contano le copie: ogni articolo ha uno stato.</p>
+
+        <div class="flex flex-wrap items-center gap-2 mb-4" id="mg-modi" role="group" aria-label="Cosa fare a ogni scansione"></div>
+
+        <div class="flex flex-wrap items-end gap-3 mb-2">
+          <div class="grow max-w-xl"><label for="mg-scan" class="block font-heavy text-xs uppercase tracking-widest text-brand-lime mb-2">Codice a barre (ISBN o EAN)</label>
+            <input id="mg-scan" maxlength="40" autocomplete="off" spellcheck="false" inputmode="numeric" class="campo-profilo font-mono" placeholder="Scansiona e premi Invio"></div>
+          <button type="button" id="mg-cerca" class="bg-brand-lime text-black font-heavy text-sm px-6 py-3 rounded-full rounded-bl-[4px] shadow-brutal-violet hover:bg-[#a6d420] transition-colors">Cerca</button>
+          <button type="button" id="mg-cam" class="border-2 border-brand-violet hover:border-brand-lime text-white font-heavy text-sm px-5 py-2.5 rounded-full transition-colors">Fotocamera</button>
+        </div>
+        <div id="mg-cam-box" hidden class="mb-3 max-w-md rounded-2xl border border-brand-lime/50 bg-[#0e0926]/90 p-3">
+          <video id="mg-video" playsinline muted class="w-full rounded-xl bg-black"></video>
+          <div class="mt-2 flex items-center justify-between gap-3"><p class="text-xs font-semibold text-brand-muted">Inquadra il codice a barre del retro del volume.</p>
+            <button type="button" id="mg-cam-stop" class="border border-white/25 hover:border-brand-lime hover:text-brand-lime font-heavy text-xs px-4 py-2 rounded-full transition-colors">Chiudi</button></div>
+        </div>
+        <p id="mg-esito" role="status" aria-live="polite" class="text-sm font-bold text-brand-lime min-h-[1.5rem] mb-4"></p>
+
+        <div id="mg-scheda" hidden class="rounded-2xl border-2 border-brand-lime/60 bg-[#0d0724]/95 p-4 sm:p-5 mb-6"></div>
+
+        <p id="mg-riepilogo" class="mb-3 text-sm font-semibold text-brand-muted"></p>
+        <h3 class="font-heavy text-lg text-white mb-3">Ultimi articoli</h3>
+        <ul id="mg-recenti" class="grid grid-cols-1 lg:grid-cols-2 gap-2"></ul>
       </section>
 
       <!-- Uscite da prenotare -->
@@ -646,14 +674,15 @@
   sb.auth.getSession().then(function (r) { if (r.data && r.data.session) verifica(r.data.session.user); });
 
   /* ---------- Sezioni ---------- */
-  var SEZ = ['richieste', 'eventi', 'uscite', 'buoni', 'tessere'];
+  var SEZ = ['richieste', 'eventi', 'magazzino', 'uscite', 'buoni', 'tessere'];
   function sezione(s) {
     SEZ.forEach(function (x) { $('g-' + x).hidden = x !== s; });
+    if (s === 'magazzino' && $('mg-scan')) setTimeout(function () { $('mg-scan').focus(); }, 50);
     Array.prototype.forEach.call($('g-tabs').children, function (b) { if (b.dataset.sez === s) b.setAttribute('aria-current', 'true'); else b.removeAttribute('aria-current'); });
   }
   $('g-tabs').addEventListener('click', function (e) { var b = e.target.closest('[data-sez]'); if (b) sezione(b.dataset.sez); });
   sezione('richieste');
-  function carica() { caricaUscite(); caricaRichieste(); caricaEventi(); caricaTessere(); caricaBuoni(); }
+  function carica() { caricaUscite(); caricaRichieste(); caricaEventi(); caricaTessere(); caricaBuoni(); caricaMagazzino(); }
 
   /* ---------- Richieste ---------- */
   var STATI_RIC = [['nuova', 'Nuova'], ['in_corso', 'In corso'], ['confermata', 'Confermata'], ['ritirata', 'Ritirata'], ['non_ritirata', 'Non ritirata'], ['chiusa', 'Chiusa']];
@@ -771,6 +800,150 @@
     if (x.error) { es.textContent = errore(x.error); return; }
     fe.hidden = true; caricaEventi();
   });
+
+  /* ---------- Magazzino: pistola barcode e fotocamera ---------- */
+  var mgModo = 'cerca', mgCorrente = null, mgFlusso = null, mgTimer = null;
+  var MODI = [['cerca', 'Solo cerca'], ['appena_arrivato', 'Segna arrivato'], ['disponibile', 'Segna disponibile'], ['esaurito', 'Segna esaurito']];
+  var STATI_MAG = { annunciato: 'Annunciato', appena_arrivato: 'Appena arrivato', disponibile: 'Disponibile', esaurito: 'Esaurito', da_verificare: 'Da verificare' };
+  var COL_STATO = { annunciato: 'text-brand-violetGlow', appena_arrivato: 'text-brand-lime', disponibile: 'text-brand-lime', esaurito: 'text-[#FB923C]', da_verificare: 'text-brand-muted' };
+  function urlCopertina(a) { return a.copertina ? A51DB.url + '/storage/v1/object/public/copertine-articoli/' + encodeURIComponent(a.copertina) : null; }
+  function esitoMag(msg, ok) { var e = $('mg-esito'); e.className = 'text-sm font-bold min-h-[1.5rem] mb-4 ' + (ok === false ? 'text-[#FB923C]' : 'text-brand-lime'); e.textContent = msg; }
+  function disegnaModi() {
+    var box = $('mg-modi'); svuota(box);
+    MODI.forEach(function (m) {
+      var b = el('button', 'chip text-sm font-bold px-4 py-2 rounded-full border transition-colors ' + (mgModo === m[0] ? 'bg-brand-lime text-black border-brand-lime shadow-brutal-violet' : 'bg-[#120a2e] border-white/15 hover:border-brand-lime hover:text-brand-lime'), m[1]);
+      b.type = 'button'; b.setAttribute('aria-pressed', String(mgModo === m[0]));
+      b.addEventListener('click', function () { mgModo = m[0]; disegnaModi(); $('mg-scan').focus(); }); box.appendChild(b);
+    });
+  }
+  async function caricaMagazzino() {
+    var r = await sb.from('articoli').select('*').order('aggiornato_il', { ascending: false }).limit(30);
+    var ul = $('mg-recenti'); svuota(ul);
+    if (r.error) { ul.appendChild(el('li', 'text-sm font-bold text-[#FB923C]', errore(r.error))); return; }
+    if (!r.data.length) ul.appendChild(el('li', 'text-sm font-semibold text-brand-muted', 'Nessun articolo: scansiona il primo fumetto.'));
+    r.data.forEach(function (a) {
+      var li = el('li', 'flex items-center gap-3 rounded-xl border border-white/10 bg-[#0e0926]/90 p-2 cursor-pointer hover:border-brand-lime transition-colors');
+      var u = urlCopertina(a), im;
+      if (u) { im = el('img', 'w-10 h-14 rounded object-cover shrink-0'); im.src = u; im.alt = ''; im.loading = 'lazy'; } else { im = el('span', 'w-10 h-14 rounded bg-brand-violet/30 shrink-0'); }
+      li.appendChild(im); var tx = el('span', 'min-w-0 flex-1');
+      tx.appendChild(el('b', 'block text-sm font-heavy text-white truncate', a.titolo));
+      tx.appendChild(el('span', 'block text-xs font-semibold text-brand-muted truncate', [a.ean || a.codice_starshop, a.editore].filter(Boolean).join(' · ')));
+      li.appendChild(tx); li.appendChild(el('span', 'text-xs font-bold shrink-0 ' + COL_STATO[a.stato], STATI_MAG[a.stato] + (a.visibile ? '' : ' · nascosto')));
+      li.addEventListener('click', function () { mostraScheda(a); }); ul.appendChild(li);
+    });
+    var conta = {}; await Promise.all(Object.keys(STATI_MAG).map(async function (k) { var c = await sb.from('articoli').select('id', { count: 'exact', head: true }).eq('stato', k); conta[k] = c.error ? 0 : c.count; }));
+    $('g-n-mag').textContent = conta.appena_arrivato || 0;
+    $('mg-riepilogo').textContent = Object.keys(STATI_MAG).map(function (k) { return STATI_MAG[k] + ': ' + (conta[k] || 0); }).join(' · ');
+  }
+  async function aggiornaArticolo(a, campi) {
+    var x = await sb.from('articoli').update(Object.assign({ aggiornato_il: new Date().toISOString() }, campi)).eq('id', a.id).select('*').single();
+    if (x.error) { esitoMag(errore(x.error), false); return null; }
+    Object.assign(a, x.data); return a;
+  }
+  async function impostaStato(a, stato) {
+    var campi = { stato: stato }; if (stato === 'appena_arrivato') campi.data_arrivo = oggiLocale();
+    var r = await aggiornaArticolo(a, campi); if (r) { mostraScheda(r); caricaMagazzino(); }
+    return r;
+  }
+  function riga(etichetta, valore) { var d = el('div', 'flex gap-2 text-sm'); d.appendChild(el('span', 'text-brand-muted font-semibold w-24 shrink-0', etichetta)); d.appendChild(el('span', 'text-white font-semibold break-words min-w-0', valore)); return d; }
+  function mostraScheda(a) {
+    mgCorrente = a; var box = $('mg-scheda'); box.hidden = false; svuota(box);
+    var g = el('div', 'flex flex-col sm:flex-row gap-4'), u = urlCopertina(a), cop;
+    if (u) { cop = el('img', 'w-32 h-48 sm:w-40 sm:h-60 rounded-xl object-cover shrink-0 self-start'); cop.src = u; cop.alt = 'Copertina di ' + a.titolo; }
+    else { cop = el('div', 'w-32 h-48 sm:w-40 sm:h-60 rounded-xl shrink-0 self-start flex items-center justify-center text-center p-2 font-heavy text-xs text-white/80'); cop.style.background = 'linear-gradient(150deg,#7C3AED,#1E1B4B)'; cop.textContent = 'Nessuna copertina'; }
+    g.appendChild(cop);
+    var d = el('div', 'min-w-0 flex-1 space-y-1.5');
+    d.appendChild(el('p', 'text-xs font-bold uppercase tracking-wider ' + COL_STATO[a.stato], STATI_MAG[a.stato] + (a.data_arrivo ? ' · arrivato il ' + giornoIt(a.data_arrivo) : '') + (a.visibile ? ' · visibile sul sito' : ' · nascosto sul sito')));
+    d.appendChild(el('h3', 'font-heavy text-xl text-white leading-snug', a.titolo));
+    if (a.autore) d.appendChild(riga('Autore', a.autore)); if (a.editore) d.appendChild(riga('Editore', a.editore));
+    d.appendChild(riga('ISBN/EAN', a.ean || 'non indicato')); d.appendChild(riga('Codice', a.codice_starshop));
+    if (a.prezzo_listino != null) d.appendChild(riga('Prezzo', euro(a.prezzo_listino)));
+    if (a.data_uscita) d.appendChild(riga('Uscita', giornoIt(a.data_uscita)));
+    if (a.sotto_categoria || a.categoria) d.appendChild(riga('Tipo', [a.categoria, a.sotto_categoria].filter(Boolean).join(' · ')));
+    if (a.pagine) d.appendChild(riga('Pagine', String(a.pagine)));
+    if (a.esaurito_fornitore) d.appendChild(el('p', 'text-xs font-bold text-[#FB923C]', 'Starshop lo segna esaurito presso di loro.'));
+    var az = el('div', 'flex flex-wrap gap-2 pt-2');
+    [['appena_arrivato', 'Arrivato'], ['disponibile', 'Disponibile'], ['esaurito', 'Esaurito'], ['da_verificare', 'Da verificare']].forEach(function (s0) {
+      var b = el('button', a.stato === s0[0] ? BTN_PIENO : BTN, s0[1]); b.type = 'button'; b.addEventListener('click', function () { impostaStato(a, s0[0]); }); az.appendChild(b);
+    });
+    var vis = el('button', BTN, a.visibile ? 'Nascondi dal sito' : 'Mostra sul sito'); vis.type = 'button';
+    vis.addEventListener('click', async function () { var r = await aggiornaArticolo(a, { visibile: !a.visibile }); if (r) { mostraScheda(r); caricaMagazzino(); } }); az.appendChild(vis);
+    var mod = el('button', BTN, 'Modifica'); mod.type = 'button'; az.appendChild(mod);
+    var lab = el('label', BTN + ' cursor-pointer', 'Cambia foto'); var fi = el('input'); fi.type = 'file'; fi.accept = 'image/jpeg,image/png,image/webp'; fi.className = 'sr-only';
+    fi.addEventListener('change', async function () {
+      var f = fi.files[0]; if (!f) return; if (f.size > 2000000) { esitoMag('La foto pesa più di 2 MB: scegline una più leggera.', false); return; }
+      var est = f.type === 'image/png' ? 'png' : f.type === 'image/webp' ? 'webp' : 'jpg', nome = a.codice_starshop + '-' + Date.now() + '.' + est;
+      var up = await sb.storage.from('copertine-articoli').upload(nome, f, { contentType: f.type, upsert: false });
+      if (up.error) { esitoMag(errore(up.error), false); return; }
+      var r = await aggiornaArticolo(a, { copertina: nome }); if (r) { mostraScheda(r); caricaMagazzino(); esitoMag('Foto cambiata.'); }
+    });
+    lab.appendChild(fi); az.appendChild(lab); d.appendChild(az);
+    var ed = el('form', 'hidden mt-3 grid grid-cols-1 sm:grid-cols-2 gap-3'); ed.noValidate = true;
+    function campoE(nome, etichetta, tipo, val, extra) { var w = el('label', 'block text-xs font-bold text-brand-muted'); w.appendChild(document.createTextNode(etichetta)); var i = el('input', CAMPO + ' block mt-1 w-full'); i.type = tipo; i.value = val == null ? '' : val; i.name = nome; if (extra) Object.assign(i, extra); w.appendChild(i); ed.appendChild(w); return i; }
+    var eT = campoE('titolo', 'Titolo', 'text', a.titolo, { maxLength: 200 }), eA = campoE('autore', 'Autore', 'text', a.autore, { maxLength: 200 }), eE = campoE('editore', 'Editore', 'text', a.editore, { maxLength: 100 });
+    var eP = campoE('prezzo', 'Prezzo di copertina (€)', 'number', a.prezzo_listino, { min: '0', step: '0.01' }), eU = campoE('uscita', 'Data di uscita', 'date', a.data_uscita);
+    var sv = el('button', BTN_PIENO, 'Salva'); sv.type = 'submit'; ed.appendChild(sv);
+    ed.addEventListener('submit', async function (e) { e.preventDefault(); if (!eT.value.trim()) { esitoMag('Il titolo non può essere vuoto.', false); return; }
+      var r = await aggiornaArticolo(a, { titolo: eT.value.trim(), autore: eA.value.trim() || null, editore: eE.value.trim() || null, prezzo_listino: eP.value === '' ? null : Number(eP.value), data_uscita: eU.value || null });
+      if (r) { mostraScheda(r); caricaMagazzino(); esitoMag('Salvato.'); } });
+    mod.addEventListener('click', function () { ed.classList.toggle('hidden'); });
+    d.appendChild(ed); g.appendChild(d); box.appendChild(g);
+  }
+  function formManuale(codice) {
+    var box = $('mg-scheda'); box.hidden = false; svuota(box);
+    box.appendChild(el('p', 'font-heavy text-white mb-1', 'Non l\u2019ho trovato su Starshop.'));
+    box.appendChild(el('p', 'text-sm font-semibold text-brand-muted mb-3', 'Puoi crearlo a mano: serve almeno il titolo. Codice ' + codice + '.'));
+    var f = el('form', 'grid grid-cols-1 sm:grid-cols-2 gap-3'); f.noValidate = true;
+    function c(n, et, tipo, extra) { var w = el('label', 'block text-xs font-bold text-brand-muted'); w.appendChild(document.createTextNode(et)); var i = el('input', CAMPO + ' block mt-1 w-full'); i.type = tipo; i.name = n; if (extra) Object.assign(i, extra); w.appendChild(i); f.appendChild(w); return i; }
+    var t1 = c('titolo', 'Titolo', 'text', { maxLength: 200 }), a1 = c('autore', 'Autore', 'text', { maxLength: 200 }), e1 = c('editore', 'Editore', 'text', { maxLength: 100 }), p1 = c('prezzo', 'Prezzo di copertina (€)', 'number', { min: '0', step: '0.01' });
+    var sv = el('button', BTN_PIENO, 'Crea articolo'); sv.type = 'submit'; f.appendChild(sv);
+    f.addEventListener('submit', async function (e) {
+      e.preventDefault(); if (!t1.value.trim()) { esitoMag('Scrivi il titolo.', false); return; }
+      var isIsbn = /^([0-9X]{10}|[0-9]{13})$/.test(codice);
+      var x = await sb.from('articoli').insert({ codice_starshop: 'MAN-' + codice.toUpperCase(), ean: isIsbn ? codice : null, titolo: t1.value.trim(), autore: a1.value.trim() || null, editore: e1.value.trim() || null,
+        prezzo_listino: p1.value === '' ? null : Number(p1.value), fonte: 'manuale', stato: mgModo === 'cerca' ? 'da_verificare' : mgModo, data_arrivo: mgModo === 'appena_arrivato' ? oggiLocale() : null }).select('*').single();
+      if (x.error) { esitoMag(errore(x.error), false); return; } mostraScheda(x.data); caricaMagazzino(); esitoMag('Creato a mano.');
+    });
+    box.appendChild(f);
+  }
+  async function scansiona(grezzo) {
+    var testo = String(grezzo || '').trim(); if (!testo) return;
+    var senza = testo.split(' ').join('').split('-').join('').toUpperCase(), codice;
+    if (/^[0-9X]{10,13}$/.test(senza)) {
+      if (!codiceValido(senza)) { esitoMag('Il codice ' + senza + ' non è un ISBN o EAN valido: riscansiona.', false); return; } codice = senza;
+    } else if (/^[A-Za-z0-9._]{3,40}$/.test(testo)) codice = testo.toUpperCase();
+    else { esitoMag('Codice non riconosciuto: usa il codice a barre (ISBN/EAN) o il codice Starshop.', false); return; }
+    esitoMag('Cerco ' + codice + '…');
+    var r = await sb.from('articoli').select('*').or('ean.eq.' + codice + ',codice_starshop.eq.' + codice + ',ean_alt.cs.{' + codice + '}').limit(1);
+    var a = r.data && r.data[0], nuovo = false;
+    if (!a) {
+      var sess = await sb.auth.getSession(); if (!sess.data.session) { esitoMag('La sessione è scaduta: esci e rientra.', false); return; }
+      try {
+        var f = await fetch(A51DB.url + '/functions/v1/starshop', { method: 'POST', headers: { 'Content-Type': 'application/json', apikey: A51DB.chiave, Authorization: 'Bearer ' + sess.data.session.access_token }, body: JSON.stringify({ azione: 'articolo_salva', codice: codice }) });
+        var j = await f.json();
+        if (!f.ok || j.ok === false) { esitoMag('Starshop: ' + (j.errore || 'errore ' + f.status), false); return; }
+        if (!j.trovato) { esitoMag('Non trovato su Starshop.', false); formManuale(codice); return; }
+        a = j.articolo; nuovo = !!j.nuovo;
+      } catch (e) { esitoMag('Non riesco a raggiungere Starshop: ' + (e && e.message ? e.message : 'errore'), false); return; }
+    }
+    if (mgModo !== 'cerca' && a.stato !== mgModo) { var x = await aggiornaArticolo(a, Object.assign({ stato: mgModo }, mgModo === 'appena_arrivato' ? { data_arrivo: oggiLocale() } : {})); if (x) a = x; }
+    mostraScheda(a); caricaMagazzino();
+    esitoMag((nuovo ? 'Nuovo articolo: ' : '') + a.titolo + (mgModo === 'cerca' ? '' : ' → ' + STATI_MAG[a.stato]));
+  }
+  $('mg-scan').addEventListener('keydown', function (e) { if (e.key !== 'Enter') return; e.preventDefault(); var v = this.value; this.value = ''; scansiona(v).then(function () { $('mg-scan').focus(); }); });
+  $('mg-cerca').addEventListener('click', function () { var v = $('mg-scan').value; $('mg-scan').value = ''; scansiona(v).then(function () { $('mg-scan').focus(); }); });
+  function fermaCamera() { if (mgTimer) { clearInterval(mgTimer); mgTimer = null; } if (mgFlusso) { mgFlusso.getTracks().forEach(function (t0) { t0.stop(); }); mgFlusso = null; } $('mg-cam-box').hidden = true; }
+  $('mg-cam-stop').addEventListener('click', fermaCamera);
+  $('mg-cam').addEventListener('click', async function () {
+    if (!('BarcodeDetector' in window)) { esitoMag('Questo browser non legge i codici a barre con la fotocamera (funziona con Chrome su Android). Usa la pistola o scrivi il codice.', false); return; }
+    try {
+      var det = new window.BarcodeDetector({ formats: ['ean_13', 'ean_8'] });
+      mgFlusso = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
+      var v = $('mg-video'); v.srcObject = mgFlusso; await v.play(); $('mg-cam-box').hidden = false;
+      mgTimer = setInterval(async function () { try { var r = await det.detect(v); if (r.length) { fermaCamera(); scansiona(r[0].rawValue); } } catch (e1) { /* fotogramma non leggibile */ } }, 300);
+    } catch (e) { fermaCamera(); esitoMag('Non riesco ad aprire la fotocamera: ' + (e && e.message ? e.message : 'permesso negato') + '.', false); }
+  });
+  disegnaModi();
 
   /* ---------- Uscite da prenotare ---------- */
   var uscite = [], usciteMappa = {}, fu = $('g-usc-form');
