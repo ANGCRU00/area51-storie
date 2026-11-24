@@ -302,24 +302,9 @@ legend { display: block; margin-bottom: 6px; padding: 0; font-family: "Archivo-B
       <!-- Torneo -->
       <fieldset id="p-torneo" role="tabpanel" aria-labelledby="tab-torneo" hidden>
         <div class="campo">
-          <label for="t-modello">Modello</label>
-          <select id="t-modello">
-            <option value="">Nessuno: compilo io</option>
-            <optgroup label="Magic: The Gathering">
-              <option value="magic-draft">Draft</option>
-              <option value="magic-prerelease">Prerelease</option>
-              <option value="magic-commander">Torneo Commander</option>
-              <option value="magic-standard">Torneo Standard</option>
-            </optgroup>
-            <optgroup label="Pokémon">
-              <option value="pokemon-prerelease">Prerelease</option>
-              <option value="pokemon-torneo">Torneo</option>
-            </optgroup>
-            <optgroup label="Riftbound">
-              <option value="riftbound-prerift">Pre-Rift</option>
-              <option value="riftbound-torneo">Torneo</option>
-            </optgroup>
-          </select>
+          <label for="t-logo">Logo del gioco (facoltativo)</label>
+          <input type="file" id="t-logo" accept="image/*">
+          <p class="aiuto" id="aiuto-logo">Se carichi il logo (JPG o PNG), prende il posto di nome e sottotitolo. Non viene salvato: va ricaricato ogni volta.</p>
         </div>
         <div class="campo">
           <label for="t-gioco">Gioco</label>
@@ -456,6 +441,7 @@ legend { display: block; margin-bottom: 6px; padding: 0; font-family: "Archivo-B
   var tela = el('storia'), esito = el('s-esito'), bottoneSalva = el('salva');
   var linguetta = 'uscite';
   var foto = null;            /* mai salvata */
+  var logoGioco = null;       /* logo del torneo, mai salvato */
   var fontPronti = false;
 
   /* Il testo scritto o, se vuoto, l'esempio grigio del campo */
@@ -675,10 +661,21 @@ legend { display: block; margin-bottom: 6px; padding: 0; font-family: "Archivo-B
       rettangolo(X + 10, Y + 10, LARGA - 20, ALTA - 20, LILLA);
       rettangolo(X + 10, Y + 10, LARGA - 20, TESTA, VIOLA);
       rettangolo(X + 10, Y + TESTA, LARGA - 20, 10, SCURO);
-      var nome = valore('t-nome') || 'GIOCO', sotto = valore('t-sub');
-      adatta(nome, LARGA - 108, BLACK, 104);
-      scrivi(nome, X + 54, sotto ? Y + 92 : Y + 115, LIME, 'sinistra');
-      if (sotto) { adatta(sotto, LARGA - 108, BOLD, 34, 4); scrivi(sotto, X + 54, Y + 170, CHIARO, 'sinistra', 4); }
+      if (logoGioco) {
+        /* logo su un riquadro bianco nella testata (il fondo chiaro del logo si fonde con il bianco) */
+        var PX = X + 34, PY = Y + 30, PW = LARGA - 68, PH = TESTA - 52, pad = 16;
+        rettangolo(PX, PY, PW, PH, BIANCO);
+        var sc = Math.min((PW - pad * 2) / logoGioco.width, (PH - pad * 2) / logoGioco.height);
+        var lw = logoGioco.width * sc, lh = logoGioco.height * sc;
+        ctx.save(); ctx.globalCompositeOperation = 'multiply';
+        ctx.drawImage(logoGioco, PX + (PW - lw) / 2, PY + (PH - lh) / 2, lw, lh);
+        ctx.restore();
+      } else {
+        var nome = valore('t-nome') || 'GIOCO', sotto = valore('t-sub');
+        adatta(nome, LARGA - 108, BLACK, 104);
+        scrivi(nome, X + 54, sotto ? Y + 92 : Y + 115, LIME, 'sinistra');
+        if (sotto) { adatta(sotto, LARGA - 108, BOLD, 34, 4); scrivi(sotto, X + 54, Y + 170, CHIARO, 'sinistra', 4); }
+      }
       var y = Y + 10 + TESTA;
       righe.forEach(function (r, i) {
         if (i > 0) { rettangolo(X + 10, y, LARGA - 20, 6, SCURO); y += 6; }
@@ -973,7 +970,7 @@ legend { display: block; margin-bottom: 6px; padding: 0; font-family: "Archivo-B
     return Array.from(el('p-' + linguetta).querySelectorAll('input, select'));
   }
   function schedaHaContenuto() {
-    return campiScheda().some(function (c) { return c.type === 'file' ? !!foto : c.tagName !== 'SELECT' && c.value.trim(); });
+    return campiScheda().some(function (c) { return c.type === 'file' ? (c.id === 't-logo' ? !!logoGioco : !!foto) : c.tagName !== 'SELECT' && c.value.trim(); });
   }
 
   /* ---------- Esempi ---------- */
@@ -1089,31 +1086,16 @@ legend { display: block; margin-bottom: 6px; padding: 0; font-family: "Archivo-B
     var g = GIOCHI[this.value];
     el('t-nome').value = g[0];
     el('t-sub').value = g[1];
-    el('t-modello').value = '';
     pianifica();
   });
-  /* Modelli di torneo: precompilano gioco, nome, sottotitolo, formato e invito. Data, ora e premi restano da scrivere
-     (non sono dati noti): chi ha già scritto i premi li ritrova. Formati e tipi di evento da confermare con il negozio. */
-  var MODELLI = {
-    'magic-draft': ['magic', 'DRAFT', 'TOCCA E ISCRIVITI'],
-    'magic-prerelease': ['magic', 'PRERELEASE', 'TOCCA E ISCRIVITI'],
-    'magic-commander': ['magic', 'COMMANDER', 'TOCCA E ISCRIVITI'],
-    'magic-standard': ['magic', 'STANDARD', 'TOCCA E ISCRIVITI'],
-    'pokemon-prerelease': ['pokemon', 'PRERELEASE', 'TOCCA E ISCRIVITI'],
-    'pokemon-torneo': ['pokemon', 'TORNEO', 'TOCCA E ISCRIVITI'],
-    'riftbound-prerift': ['riftbound', 'PRE-RIFT', 'TOCCA E ISCRIVITI'],
-    'riftbound-torneo': ['riftbound', 'TORNEO', 'TOCCA E ISCRIVITI']
-  };
-  el('t-modello').addEventListener('change', function () {
-    var m = MODELLI[this.value];
-    if (!m) { return; }
-    var g = GIOCHI[m[0]];
-    el('t-gioco').value = m[0];
-    el('t-nome').value = g[0];
-    el('t-sub').value = g[1];
-    el('t-formato').value = m[1];
-    el('t-invito').value = m[2];
-    pianifica();
+  /* Logo del gioco: immagine scelta dal gestore, mai salvata */
+  el('t-logo').addEventListener('change', function () {
+    var file = this.files && this.files[0];
+    if (!file) { logoGioco = null; aggiorna(); return; }
+    var url = URL.createObjectURL(file), img = new Image();
+    img.onload = function () { URL.revokeObjectURL(url); logoGioco = img; esito.textContent = 'Logo scelto: ' + (file.name || 'logo') + '.'; aggiorna(); };
+    img.onerror = function () { URL.revokeObjectURL(url); esito.textContent = 'Non riesco a leggere il logo: prova con un file JPG o PNG.'; };
+    img.src = url;
   });
   el('post-scatta').addEventListener('click', function () { el('post-foto-camera').click(); });
   el('post-foto-camera').addEventListener('change', caricaFotoPost);
@@ -1148,7 +1130,7 @@ legend { display: block; margin-bottom: 6px; padding: 0; font-family: "Archivo-B
   el('s-svuota').addEventListener('click', function () {
     if (schedaHaContenuto() && !window.confirm('Cancellare i campi di questa storia?')) { return; }
     campiScheda().forEach(function (c) {
-      if (c.type === 'file') { c.value = ''; foto = null; }
+      if (c.type === 'file') { c.value = ''; if (c.id === 't-logo') { logoGioco = null; } else { foto = null; } }
       else if (c.tagName === 'SELECT') { c.selectedIndex = 0; }
       else { c.value = ''; }
     });
