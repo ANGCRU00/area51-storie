@@ -226,7 +226,6 @@ legend { display: block; margin-bottom: 6px; padding: 0; font-family: "Archivo-B
     <button type="button" role="tab" id="tab-torneo" data-tab="torneo" aria-controls="p-torneo" aria-selected="false" tabindex="-1"><i style="background: #140C2B"></i>Torneo</button>
     <button type="button" role="tab" id="tab-chiusura" data-tab="chiusura" aria-controls="p-chiusura" aria-selected="false" tabindex="-1"><i style="background: #9C94B8"></i>Chiusura</button>
     <button type="button" role="tab" id="tab-evento" data-tab="evento" aria-controls="p-evento" aria-selected="false" tabindex="-1"><i style="background: #1A0E3D"></i>Evento</button>
-    <button type="button" role="tab" id="tab-annuncio" data-tab="annuncio" aria-controls="p-annuncio" aria-selected="false" tabindex="-1"><i style="background: #B9E62E"></i>Annuncio</button>
   </div>
 
   <div class="colonne" id="vista-uscite" role="tabpanel" aria-labelledby="tab-uscite">
@@ -367,27 +366,6 @@ legend { display: block; margin-bottom: 6px; padding: 0; font-family: "Archivo-B
       </fieldset>
 
       <!-- Evento -->
-      <!-- Annuncio -->
-      <fieldset id="p-annuncio" role="tabpanel" aria-labelledby="tab-annuncio" hidden>
-        <div class="campo">
-          <label for="a-sopra">Etichetta in alto</label>
-          <input type="text" id="a-sopra" placeholder="AVVISO!" autocapitalize="characters">
-        </div>
-        <div class="campo">
-          <label for="a-titolo">Titolo</label>
-          <input type="text" id="a-titolo" placeholder="ARRIVANO I TORNEI" autocapitalize="characters">
-        </div>
-        <div class="campo">
-          <label for="a-testo">Testo</label>
-          <p class="aiuto">Scrivi quanto serve: va a capo da solo e la dimensione si adatta. Per separare i paragrafi vai a capo.</p>
-          <textarea id="a-testo" rows="7" placeholder="Qui il testo dell'annuncio."></textarea>
-        </div>
-        <div class="campo">
-          <label for="a-invito">Invito in basso (facoltativo)</label>
-          <input type="text" id="a-invito" placeholder="VI ASPETTIAMO IN NEGOZIO" autocapitalize="characters">
-        </div>
-      </fieldset>
-
       <fieldset id="p-evento" role="tabpanel" aria-labelledby="tab-evento" hidden>
         <div class="campo">
           <label for="e-sopra">Riga sopra il titolo</label>
@@ -397,6 +375,11 @@ legend { display: block; margin-bottom: 6px; padding: 0; font-family: "Archivo-B
           <label for="e-titolo">Titolo</label>
           <p class="aiuto">Scrivi / dove vuoi andare a capo, per esempio FIRMA/COPIE. Se il testo supera i 40 caratteri va a capo da solo e si rimpicciolisce per starci.</p>
           <input type="text" id="e-titolo" placeholder="FIRMACOPIE" autocapitalize="characters">
+        </div>
+        <div class="campo">
+          <label for="e-testo">Testo (facoltativo)</label>
+          <p class="aiuto">Per gli annunci: il titolo resta breve e luminoso, qui scrivi il resto. Va a capo da solo e la dimensione si adatta; per separare i paragrafi vai a capo.</p>
+          <textarea id="e-testo" rows="5" placeholder="Qui il testo dell'annuncio."></textarea>
         </div>
         <div class="campo">
           <label for="e-sotto">Sottotitolo (facoltativo)</label>
@@ -465,7 +448,7 @@ legend { display: block; margin-bottom: 6px; padding: 0; font-family: "Archivo-B
   var VIOLA = '#5B21B6', LIME = '#B9E62E', SCURO = '#140C2B', BIANCO = '#FFFFFF', LILLA = '#E4DDF3', GRIGIO = '#9C94B8', CHIARO = '#F1ECFB';
   var BLACK = '"Archivo-Black-Expanded"', BOLD = '"Archivo-Bold"';
   var CHIAVE = 'area51-storie-v1';
-  var CAMPI = ['post-titolo', 'post-fascia', 'post-invito', 't-gioco', 't-sfondo-x', 't-nome', 't-sub', 't-formato', 't-data', 't-ora', 't-posti', 't-premi', 't-invito', 'c-dal', 'c-al', 'c-riga1', 'c-riga2', 'c-saluto', 'a-sopra', 'a-titolo', 'a-testo', 'a-invito', 'e-sopra', 'e-titolo', 'e-sotto', 'e-data', 'e-ora', 'e-saluto'];
+  var CAMPI = ['post-titolo', 'post-fascia', 'post-invito', 't-gioco', 't-sfondo-x', 't-nome', 't-sub', 't-formato', 't-data', 't-ora', 't-posti', 't-premi', 't-invito', 'c-dal', 'c-al', 'c-riga1', 'c-riga2', 'c-saluto', 'e-sopra', 'e-titolo', 'e-testo', 'e-sotto', 'e-data', 'e-ora', 'e-saluto'];
   var GIOCHI = {
     magic: ['MAGIC', 'THE GATHERING'],
     pokemon: ['POKÉMON', 'GIOCO DI CARTE COLLEZIONABILI'],
@@ -473,8 +456,8 @@ legend { display: block; margin-bottom: 6px; padding: 0; font-family: "Archivo-B
     onepiece: ['ONE PIECE', 'CARD GAME'],
     altro: ['', '']
   };
-  var NOMI_TAB = { uscite: 'post uscite', post: 'nuovo post', torneo: 'torneo', chiusura: 'chiusura', evento: 'evento', annuncio: 'annuncio' };
-  var COLORI_TAB = { uscite: '#5B21B6', post: '#5B21B6', torneo: '#140C2B', chiusura: '#9C94B8', evento: '#1A0E3D', annuncio: '#140C2B' };
+  var NOMI_TAB = { uscite: 'post uscite', post: 'nuovo post', torneo: 'torneo', chiusura: 'chiusura', evento: 'evento' };
+  var COLORI_TAB = { uscite: '#5B21B6', post: '#5B21B6', torneo: '#140C2B', chiusura: '#9C94B8', evento: '#1A0E3D' };
 
   function el(id) { return document.getElementById(id); }
   var tela = el('storia'), esito = el('s-esito'), bottoneSalva = el('salva');
@@ -934,11 +917,14 @@ legend { display: block; margin-bottom: 6px; padding: 0; font-family: "Archivo-B
     discoVolante(540, 560);
     marchio(60, 270, MARCHIO_MEDIO);
 
+    /* testo facoltativo sotto il titolo (per gli annunci): se c'è, tutto sale un po' e il titolo si riduce */
+    var testoEv = grezzo('e-testo'), haTesto = !!testoEv, TY = haTesto ? 790 : 860;
+
     /* riga sopra il titolo */
     var sopra = valore('e-sopra');
     adatta(sopra, 900, BOLD, 34, 10);
-    scrivi(sopra, 543, 813, SCURO, 'centro', 10);
-    scrivi(sopra, 540, 810, BIANCO, 'centro', 10);
+    scrivi(sopra, 543, TY - 47, SCURO, 'centro', 10);
+    scrivi(sopra, 540, TY - 50, BIANCO, 'centro', 10);
 
     /* quando: data e ora sono facoltative (senza nessuna delle due il riquadro non compare) */
     var dEv = leggiData(grezzo('e-data')), oEv = grezzo('e-ora');
@@ -948,27 +934,52 @@ legend { display: block; margin-bottom: 6px; padding: 0; font-family: "Archivo-B
     /* titolo luminoso (sempre lo stesso stile); se è lungo (più di 40 caratteri, senza "/") va a capo da solo e si rimpicciolisce fino a starci */
     var titoloTesto = valore('e-titolo'), alto, t;
     if (titoloTesto.length > 40 && titoloTesto.indexOf('/') < 0) {
-      var spazio = (q ? 1450 : 1570) - (haSotto ? 100 : 0) - 860 - 20, px = 100, righe = [];
+      var spazio = (q ? 1450 : 1570) - (haSotto ? 100 : 0) - TY - 20, px = 100, righe = [];
       for (; px >= 28; px -= 2) {
         usa(BLACK, px); righe = aCapoLargo(titoloTesto, 900, 0);
         if (righe.length * px * 1.06 <= spazio) { break; }
       }
       t = { righe: righe, px: px };
     } else {
-      t = righeTitolo(titoloTesto, 900, 150, 100);
+      t = righeTitolo(titoloTesto, 900, haTesto ? 112 : 150, haTesto ? 70 : 100);
     }
     var passo = Math.round(t.px * (t.righe.length > 2 ? 1.06 : 1.0));
     alto = passo * t.righe.length;
-    var cy = 860 + alto / 2;
+    var cy = TY + alto / 2;
     ruota(540, cy, -3, function () {
       usa(BLACK, t.px);
-      t.righe.forEach(function (r, i) { scrivi(r, 548, 860 + passo / 2 + passo * i + 8, SCURO, 'centro'); });
+      t.righe.forEach(function (r, i) { scrivi(r, 548, TY + passo / 2 + passo * i + 8, SCURO, 'centro'); });
       ctx.save(); ctx.shadowColor = LIME; ctx.shadowBlur = 34;
-      t.righe.forEach(function (r, i) { scrivi(r, 540, 860 + passo / 2 + passo * i, BIANCO, 'centro'); });
+      t.righe.forEach(function (r, i) { scrivi(r, 540, TY + passo / 2 + passo * i, BIANCO, 'centro'); });
       ctx.restore();
     });
+    var fondo = TY + alto + 30;
 
-    var sotto = grezzo('e-sotto').toLocaleUpperCase('it'), yb = 860 + alto + 40;
+    /* testo: Archivo Bold bianco con contorno scuro (si legge sul raggio chiaro), a capo da solo, dimensione adattata */
+    if (haTesto) {
+      var limite = (q ? 1450 : 1570) - (haSotto ? 100 : 0), spT = limite - fondo, pxT = 50, rT = [];
+      var parT = testoEv.split(/\n+/).filter(Boolean);
+      for (; pxT >= 26; pxT -= 2) {
+        usa(BOLD, pxT); rT = [];
+        parT.forEach(function (pp, i) { aCapoLargo(pp, 860, 0).forEach(function (r) { rT.push(r); }); if (i < parT.length - 1) { rT.push(''); } });
+        var hT = rT.reduce(function (s, r) { return s + (r ? pxT * 1.3 : pxT * 0.6); }, 0);
+        if (hT <= spT) { break; }
+      }
+      usa(BOLD, pxT);
+      var yT = fondo;
+      rT.forEach(function (r) {
+        if (!r) { yT += pxT * 0.6; return; }
+        yT += pxT * 0.65;
+        ctx.save(); ctx.font = font(BOLD, pxT); ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.lineJoin = 'round';
+        ctx.lineWidth = Math.max(8, pxT * 0.26); ctx.strokeStyle = SCURO; ctx.strokeText(r, 540, yT);
+        ctx.fillStyle = BIANCO; ctx.fillText(r, 540, yT);
+        ctx.restore();
+        yT += pxT * 0.65;
+      });
+      fondo = yT + 10;
+    }
+
+    var sotto = grezzo('e-sotto').toLocaleUpperCase('it'), yb = fondo + 10;
     if (sotto) {
       var sp = adatta(sotto, 860, BOLD, 48, 4), sw = larghezza(sotto, 4) + 52, sh = sp + 26;
       rettangolo(540 - sw / 2, yb, sw, sh, SCURO);
@@ -988,56 +999,6 @@ legend { display: block; margin-bottom: 6px; padding: 0; font-family: "Archivo-B
     scrivi(saluto, 540, 1630, LIME, 'centro', 8);
   }
 
-  /* ---------- Storia: annuncio (scuro): titolo breve e testo lungo leggibile su un riquadro chiaro ---------- */
-  function disegnaAnnuncio() {
-    rettangolo(0, 0, W, H, SCURO);
-    ruota(550, 1100, -14, function () { rettangolo(-300, 1040, 1700, 120, VIOLA); });
-    ruota(550, 1207, -14, function () { rettangolo(-300, 1190, 1700, 34, LIME); });
-    marchio(60, 250, Object.assign({ ruota: -2, contorno: LIME, ombra: VIOLA, scarto: 18 }, MARCHIO_GRANDE));
-
-    var X = 90, Y = 600, LARGA = 900, PAD = 54, MAXW = LARGA - PAD * 2;
-    var tit = righeTitolo(valore('a-titolo'), MAXW, 84, 56);
-    var TESTA = tit.righe.length > 1 ? 240 : 150;
-    /* testo: si prova dalla dimensione più grande a quella più piccola finché sta nel riquadro */
-    var grezzoTesto = grezzo('a-testo') || el('a-testo').placeholder, par = grezzoTesto.split(/\n+/).filter(Boolean);
-    var spazioTesto = 1500 - (Y + TESTA + 10) - 90, px = 58, righe = [], H_testo = 0;
-    for (; px >= 28; px -= 2) {
-      usa(BOLD, px); righe = [];
-      par.forEach(function (p, i) { aCapoLargo(p, MAXW, 0).forEach(function (r) { righe.push(r); }); if (i < par.length - 1) { righe.push(''); } });
-      H_testo = righe.reduce(function (s, r) { return s + (r ? px * 1.32 : px * 0.7); }, 0);
-      if (H_testo <= spazioTesto) { break; }
-    }
-    var ALTA = Math.max(420, Math.round(10 + TESTA + 44 + H_testo + 54 + 10));
-    ruota(X + LARGA / 2, Y + ALTA / 2, -2, function () {
-      rettangolo(X + 22, Y + 22, LARGA, ALTA, VIOLA);
-      rettangolo(X, Y, LARGA, ALTA, LIME);
-      rettangolo(X + 10, Y + 10, LARGA - 20, ALTA - 20, LILLA);
-      rettangolo(X + 10, Y + 10, LARGA - 20, TESTA, VIOLA);
-      rettangolo(X + 10, Y + TESTA, LARGA - 20, 10, SCURO);
-      var py = Y + 10 + TESTA / 2 - (tit.righe.length - 1) * tit.px * 0.5;
-      tit.righe.forEach(function (r, i) { usa(BLACK, tit.px); scrivi(r, X + PAD, py + i * tit.px * 1.05, LIME, 'sinistra'); });
-      var y = Y + TESTA + 10 + 44;
-      usa(BOLD, px);
-      righe.forEach(function (r) {
-        if (r) { y += px * 0.66; scrivi(r, X + PAD, y, SCURO, 'sinistra'); y += px * 0.66; } else { y += px * 0.7; }
-      });
-    });
-    var sopra = valore('a-sopra');
-    usa(BLACK, 84);
-    var pw = larghezza(sopra) + 96, ph = 144, px2 = Math.min(560, W - 50 - pw);
-    ruota(px2 + pw / 2, 480 + ph / 2, 4, function () {
-      rettangolo(px2, 480, pw, ph, LIME);
-      rettangolo(px2 + 8, 488, pw - 16, ph - 16, VIOLA);
-      usa(BLACK, 84); scrivi(sopra, px2 + 48, 480 + ph / 2 + 4, LIME, 'sinistra');
-    });
-    var invito = grezzo('a-invito');
-    if (invito) {
-      invito = invito.toLocaleUpperCase('it');
-      adatta(invito, 780, BOLD, 46, 8);
-      scrivi(invito, 540, Math.min(1600, Y + ALTA + 100), LIME, 'centro', 8);
-    }
-  }
-
   function disegnaZone() {
     rettangolo(0, 0, W, 250, 'rgba(255,40,80,0.35)');
     rettangolo(0, 1670, W, 250, 'rgba(255,40,80,0.35)');
@@ -1051,7 +1012,6 @@ legend { display: block; margin-bottom: 6px; padding: 0; font-family: "Archivo-B
     if (linguetta === 'post') { disegnaPost(); }
     else if (linguetta === 'torneo') { disegnaTorneo(); }
     else if (linguetta === 'evento') { disegnaEvento(); }
-    else if (linguetta === 'annuncio') { disegnaAnnuncio(); }
     else { disegnaChiusura(); }
     if (conZone) { disegnaZone(); }
   }
@@ -1128,7 +1088,6 @@ legend { display: block; margin-bottom: 6px; padding: 0; font-family: "Archivo-B
   /* ---------- Esempi ---------- */
   function prossimoSabato() { var d = new Date(); d.setDate(d.getDate() + ((6 - d.getDay() + 7) % 7 || 7)); return d; }
   var ESEMPI = {
-    annuncio: function () { return { 'a-sopra': 'AVVISO!', 'a-titolo': 'ARRIVANO I TORNEI', 'a-testo': 'Come preannunciato, i tornei ufficiali partono a gennaio.\nNell’attesa potete passare in negozio per partite amichevoli e piccoli eventi.', 'a-invito': 'VI ASPETTIAMO IN NEGOZIO' }; },
     post: function () { return { 'post-titolo': 'NUOVO POST!', 'post-fascia': 'NUOVI ARRIVI', 'post-invito': 'TOCCA E SCOPRILO' }; },
     torneo: function () {
       return { 't-gioco': 'magic', 't-nome': 'MAGIC', 't-sub': 'THE GATHERING', 't-formato': 'COMMANDER', 't-data': iso(prossimoSabato()), 't-ora': '17:30', 't-posti': 'MAX 16 GIOCATORI', 't-premi': '1 BUSTINA FOIL', 't-invito': 'TOCCA E ISCRIVITI' };
@@ -1148,7 +1107,6 @@ legend { display: block; margin-bottom: 6px; padding: 0; font-family: "Archivo-B
       var gioco = (grezzo('t-nome') || 'gioco').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
       return 'area51-storia-torneo-' + gioco + (grezzo('t-data') ? '-' + grezzo('t-data') : '') + '.jpg';
     }
-    if (linguetta === 'annuncio') { return 'area51-storia-annuncio-' + iso(new Date()) + '.jpg'; }
     if (linguetta === 'evento') { return 'area51-storia-evento' + (grezzo('e-data') ? '-' + grezzo('e-data') : '') + '.jpg'; }
     if (linguetta === 'chiusura') { return 'area51-storia-chiusura' + (grezzo('c-dal') ? '-' + grezzo('c-dal') : '') + '.jpg'; }
     return 'area51-storia-nuovo-post-' + iso(new Date()) + '.jpg';
