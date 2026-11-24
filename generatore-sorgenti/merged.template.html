@@ -278,7 +278,13 @@ legend { display: block; margin-bottom: 6px; padding: 0; font-family: "Archivo-B
 
       <!-- Nuovo post -->
       <fieldset id="p-post" role="tabpanel" aria-labelledby="tab-post">
-        <p class="aiuto" id="aiuto-post">Questa storia è una <b>cornice</b>: dopo averla pubblicata, apri il post, tocca l'aeroplanino e scegli «Aggiungi alla storia». Il post compare come adesivo: mettilo nel riquadro al centro. Chi tocca la storia in qualunque punto apre il post.</p>
+        <div class="campo">
+          <label for="post-foto">Foto del banco (facoltativa)</label>
+          <p class="aiuto" id="aiuto-foto-post">Riempie il riquadro della storia: i bordi della foto possono essere tagliati.</p>
+          <input type="file" id="post-foto" accept="image/*" aria-describedby="aiuto-foto-post">
+          <button type="button" class="scatta" id="post-scatta">Scatta una foto</button>
+          <input type="file" id="post-foto-camera" accept="image/*" capture="environment" hidden>
+        </div>
         <div class="campo">
           <label for="post-titolo">Etichetta in alto</label>
           <input type="text" id="post-titolo" placeholder="NUOVO POST!" autocapitalize="characters">
@@ -286,6 +292,10 @@ legend { display: block; margin-bottom: 6px; padding: 0; font-family: "Archivo-B
         <div class="campo">
           <label for="post-fascia">Scritta nella fascia</label>
           <input type="text" id="post-fascia" placeholder="NUOVI ARRIVI" autocapitalize="characters">
+        </div>
+        <div class="campo">
+          <label for="post-invito">Invito in basso</label>
+          <input type="text" id="post-invito" placeholder="TOCCA E SCOPRILO" autocapitalize="characters">
         </div>
       </fieldset>
 
@@ -429,7 +439,7 @@ legend { display: block; margin-bottom: 6px; padding: 0; font-family: "Archivo-B
   var VIOLA = '#5B21B6', LIME = '#B9E62E', SCURO = '#140C2B', BIANCO = '#FFFFFF', LILLA = '#E4DDF3', GRIGIO = '#9C94B8', CHIARO = '#F1ECFB';
   var BLACK = '"Archivo-Black-Expanded"', BOLD = '"Archivo-Bold"';
   var CHIAVE = 'area51-storie-v1';
-  var CAMPI = ['post-titolo', 'post-fascia', 't-gioco', 't-sfondo-x', 't-nome', 't-sub', 't-formato', 't-data', 't-ora', 't-posti', 't-premi', 't-invito', 'c-dal', 'c-al', 'c-riga1', 'c-riga2', 'c-saluto', 'e-sopra', 'e-titolo', 'e-sotto', 'e-data', 'e-ora', 'e-saluto'];
+  var CAMPI = ['post-titolo', 'post-fascia', 'post-invito', 't-gioco', 't-sfondo-x', 't-nome', 't-sub', 't-formato', 't-data', 't-ora', 't-posti', 't-premi', 't-invito', 'c-dal', 'c-al', 'c-riga1', 'c-riga2', 'c-saluto', 'e-sopra', 'e-titolo', 'e-sotto', 'e-data', 'e-ora', 'e-saluto'];
   var GIOCHI = {
     magic: ['MAGIC', 'THE GATHERING'],
     pokemon: ['POKÉMON', 'GIOCO DI CARTE COLLEZIONABILI'],
@@ -621,9 +631,23 @@ legend { display: block; margin-bottom: 6px; padding: 0; font-family: "Archivo-B
     ctx.restore();
   }
 
-  /* ---------- Storia: nuovo post (viola): una cornice, il post condiviso si mette come adesivo nel riquadro centrale ---------- */
+  /* ---------- Storia: nuovo post (viola) ---------- */
   function disegnaPost() {
     rettangolo(0, 0, W, H, VIOLA);
+    ruota(530, 865, -3, function () {
+      rettangolo(112, 422, 880, 930, SCURO);
+      rettangolo(90, 400, 880, 930, SCURO);
+      if (foto) { fotoRiempie(foto, 100, 410, 860, 730); }
+      else {
+        rettangolo(100, 410, 860, 730, LILLA);
+        usa(BOLD, 56); scrivi('[FOTO DEL BANCO]', 530, 795, VIOLA, 'centro');
+      }
+      marchio(132, 442, MARCHIO_PICCOLO);
+      rettangolo(100, 1140, 860, 180, SCURO);
+      var fascia = valore('post-fascia');
+      adatta(fascia, 780, BLACK, 72);
+      scrivi(fascia, 530, 1235, LIME, 'centro');
+    });
     var titolo = valore('post-titolo');
     var px = adatta(titolo, 820, BLACK, 92);
     var w = larghezza(titolo) + 96, h = 156;
@@ -632,20 +656,11 @@ legend { display: block; margin-bottom: 6px; padding: 0; font-family: "Archivo-B
       rettangolo(50, 230, w, h, SCURO);
       usa(BLACK, px); scrivi(titolo, 98, 230 + h / 2 + 4, LIME, 'sinistra');
     });
-    ruota(540, 478, -3, function () {
-      rettangolo(112, 436, 880, 120, SCURO);
-      rettangolo(90, 414, 880, 120, SCURO);
-      var fascia = valore('post-fascia');
-      adatta(fascia, 800, BLACK, 64);
-      scrivi(fascia, 530, 478, LIME, 'centro');
-    });
-    /* riquadro per il post condiviso (adesivo 4:5, circa 830 x 1040) */
-    var X = 100, Y = 590, LA = 880, AL = 1050;
-    rettangolo(X + 22, Y + 22, LA, AL, SCURO);
-    rettangolo(X, Y, LA, AL, LIME);
-    rettangolo(X + 10, Y + 10, LA - 20, AL - 20, SCURO);
-    marchio(70, 1690, MARCHIO_PICCOLO);
-    ruota(930, 1700, 6, function () { alieno(850, 1620, 170, { ombra: SCURO, scarto: 8, bordo: true }); });
+    ruota(965, 1485, 6, function () { alieno(860, 1380, 210, { ombra: SCURO, scarto: 9, bordo: true }); });
+    var invito = valore('post-invito');
+    adatta(invito, 780, BOLD, 46, 8);
+    scrivi(invito, 540, 1458, BIANCO, 'centro', 8);
+    freccia(500, 1502, LIME);
   }
 
   /* ---------- Storia: torneo con illustrazione ("locandina"): l'immagine sta in alto, le informazioni in una fascia compatta sotto ---------- */
@@ -1019,7 +1034,7 @@ legend { display: block; margin-bottom: 6px; padding: 0; font-family: "Archivo-B
   /* ---------- Esempi ---------- */
   function prossimoSabato() { var d = new Date(); d.setDate(d.getDate() + ((6 - d.getDay() + 7) % 7 || 7)); return d; }
   var ESEMPI = {
-    post: function () { return { 'post-titolo': 'NUOVO POST!', 'post-fascia': 'NUOVI ARRIVI' }; },
+    post: function () { return { 'post-titolo': 'NUOVO POST!', 'post-fascia': 'NUOVI ARRIVI', 'post-invito': 'TOCCA E SCOPRILO' }; },
     torneo: function () {
       return { 't-gioco': 'magic', 't-nome': 'MAGIC', 't-sub': 'THE GATHERING', 't-formato': 'COMMANDER', 't-data': iso(prossimoSabato()), 't-ora': '17:30', 't-posti': 'MAX 16 GIOCATORI', 't-premi': '1 BUSTINA FOIL', 't-invito': 'TOCCA E ISCRIVITI' };
     },
@@ -1141,6 +1156,26 @@ legend { display: block; margin-bottom: 6px; padding: 0; font-family: "Archivo-B
     img.onerror = function () { URL.revokeObjectURL(url); esito.textContent = 'Non riesco a leggere l’immagine: prova con un file JPG o PNG.'; };
     img.src = url;
   });
+  el('post-scatta').addEventListener('click', function () { el('post-foto-camera').click(); });
+  el('post-foto-camera').addEventListener('change', caricaFotoPost);
+  el('post-foto').addEventListener('change', caricaFotoPost);
+  function caricaFotoPost() {
+    var file = this.files && this.files[0];
+    if (!file) { return; }
+    var url = URL.createObjectURL(file);
+    var img = new Image();
+    img.onload = function () {
+      URL.revokeObjectURL(url);
+      foto = img;
+      esito.textContent = 'Foto scelta: ' + (file.name || 'foto') + '.';
+      aggiorna();
+    };
+    img.onerror = function () {
+      URL.revokeObjectURL(url);
+      esito.textContent = 'Non riesco a leggere la foto: prova con un file JPG o PNG.';
+    };
+    img.src = url;
+  }
   el('zone').addEventListener('change', aggiorna);
   el('s-modulo').addEventListener('submit', function (e) { e.preventDefault(); });
   el('s-esempio').addEventListener('click', function () {
@@ -1166,6 +1201,7 @@ legend { display: block; margin-bottom: 6px; padding: 0; font-family: "Archivo-B
 
   /* ---------- Avvio ---------- */
   ripristina();
+  el('post-foto').value = '';
   var CAMPIONE = 'AREA51 fumetteria 0123456789 → · … ÈÌÉ’';
   Promise.all([
     document.fonts.load(font(BLACK, 42), CAMPIONE),
