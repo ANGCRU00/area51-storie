@@ -918,7 +918,7 @@ legend { display: block; margin-bottom: 6px; padding: 0; font-family: "Archivo-B
     marchio(60, 270, MARCHIO_MEDIO);
 
     /* testo facoltativo sotto il titolo (per gli annunci): se c'è, tutto sale un po' e il titolo si riduce */
-    var testoEv = grezzo('e-testo'), haTesto = !!testoEv, TY = haTesto ? 790 : 860;
+    var testoEv = grezzo('e-testo'), haTesto = !!testoEv, TY = haTesto ? 770 : 860;
 
     /* riga sopra il titolo */
     var sopra = grezzo('e-sopra').toLocaleUpperCase('it');   /* facoltativa */
@@ -959,26 +959,32 @@ legend { display: block; margin-bottom: 6px; padding: 0; font-family: "Archivo-B
     });
     var fondo = TY + alto + (alto ? 30 : 10);
 
-    /* testo: banda scura a tutta larghezza con scritte lime in maiuscolo spaziato (come il sottotitolo), a capo da solo, dimensione adattata */
+    /* testo: banda scura a tutta larghezza con scritte lime (minuscolo, come scritto), a capo da solo, dimensione adattata.
+       Copre il raggio ma si ferma sopra le carte che volano (che comunque sono ridisegnate sopra la banda) */
     if (haTesto) {
-      var limite = (q ? 1450 : 1570) - (haSotto ? 100 : 0), spT = limite - fondo - 20 - 64, pxT = 46, rT = [];
-      var parT = testoEv.toLocaleUpperCase('it').split(/\n+/).filter(Boolean);
-      for (; pxT >= 24; pxT -= 2) {
+      var limite = Math.min(1240, (q ? 1450 : 1570) - (haSotto ? 100 : 0)), spT = limite - fondo - 10 - 48, pxT = 44, rT = [];
+      var parT = testoEv.split(/\n+/).filter(Boolean);
+      for (; pxT >= 26; pxT -= 2) {
         usa(BOLD, pxT); rT = [];
-        parT.forEach(function (pp, i) { aCapoLargo(pp, 900, 4).forEach(function (r) { rT.push(r); }); if (i < parT.length - 1) { rT.push(''); } });
-        var hT = rT.reduce(function (s, r) { return s + (r ? pxT * 1.5 : pxT * 0.7); }, 0);
+        parT.forEach(function (pp, i) { aCapoLargo(pp, 900, 0).forEach(function (r) { rT.push(r); }); if (i < parT.length - 1) { rT.push(''); } });
+        var hT = rT.reduce(function (s, r) { return s + (r ? pxT * 1.3 : pxT * 0.6); }, 0);
         if (hT <= spT) { break; }
       }
-      var y0 = fondo + 20;
-      rettangolo(0, y0, W, hT + 64, SCURO);
-      var yT = y0 + 32;
+      var y0 = fondo + 10;
+      rettangolo(0, y0, W, hT + 48, SCURO);
+      var yT = y0 + 24;
       usa(BOLD, pxT);
       rT.forEach(function (r) {
-        if (!r) { yT += pxT * 0.7; return; }
-        scrivi(r, 540, yT + pxT * 0.75, LIME, 'centro', 4);
-        yT += pxT * 1.5;
+        if (!r) { yT += pxT * 0.6; return; }
+        scrivi(r, 540, yT + pxT * 0.65, LIME, 'centro');
+        yT += pxT * 1.3;
       });
-      fondo = y0 + hT + 64 + 10;
+      fondo = y0 + hT + 48 + 10;
+      /* le carte che volano restano sopra la banda */
+      fumettoVolante(150, 1330, -18, '#FF2E88', .85);
+      cartaVolante(930, 1300, 16);
+      fumettoVolante(800, 1410, 10, '#2EE6FF', .75);
+      cartaVolante(290, 1440, -8);
     }
 
     var sotto = grezzo('e-sotto').toLocaleUpperCase('it'), yb = fondo + 10;
