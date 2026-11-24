@@ -971,7 +971,9 @@ legend { display: block; margin-bottom: 6px; padding: 0; font-family: "Archivo-B
         if (hT <= spT) { break; }
       }
       var y0 = fondo + 10;
-      ctx.save(); ctx.fillStyle = 'rgba(20, 12, 43, 0.8)'; ctx.fillRect(0, y0, W, hT + 48); ctx.restore();   /* trasparente al 20% */
+      usa(BOLD, pxT);
+      var maxR = rT.reduce(function (m, r) { return Math.max(m, larghezza(r)); }, 0), bw = Math.min(W, Math.round(maxR + 80));   /* la banda segue la larghezza del testo */
+      ctx.save(); ctx.fillStyle = 'rgba(20, 12, 43, 0.8)'; ctx.fillRect(540 - bw / 2, y0, bw, hT + 48); ctx.restore();   /* trasparente al 20% */
       var yT = y0 + 24;
       usa(BOLD, pxT);
       rT.forEach(function (r) {
