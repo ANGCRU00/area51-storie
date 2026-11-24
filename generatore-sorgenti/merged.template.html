@@ -971,6 +971,10 @@ legend { display: block; margin-bottom: 6px; padding: 0; font-family: "Archivo-B
       }
       usa(BOLD, pxT);
       var yT = fondo;
+      /* rettangolo semitrasparente sotto il testo */
+      ctx.save(); ctx.fillStyle = 'rgba(20, 12, 43, 0.55)';
+      ctx.fillRect(70, fondo - 18, 940, hT + 36);
+      ctx.restore();
       rT.forEach(function (r) {
         if (!r) { yT += pxT * 0.6; return; }
         yT += pxT * 0.65;
