@@ -368,10 +368,6 @@ legend { display: block; margin-bottom: 6px; padding: 0; font-family: "Archivo-B
       <!-- Evento -->
       <fieldset id="p-evento" role="tabpanel" aria-labelledby="tab-evento" hidden>
         <div class="campo">
-          <label for="e-sopra">Riga sopra il titolo (facoltativa)</label>
-          <input type="text" id="e-sopra" placeholder="AVVISTAMENTO IN NEGOZIO" autocapitalize="characters">
-        </div>
-        <div class="campo">
           <label for="e-titolo">Titolo (facoltativo)</label>
           <p class="aiuto">Scrivi / dove vuoi andare a capo, per esempio FIRMA/COPIE. Se il testo supera i 40 caratteri va a capo da solo e si rimpicciolisce per starci.</p>
           <input type="text" id="e-titolo" placeholder="FIRMACOPIE" autocapitalize="characters">
@@ -448,7 +444,7 @@ legend { display: block; margin-bottom: 6px; padding: 0; font-family: "Archivo-B
   var VIOLA = '#5B21B6', LIME = '#B9E62E', SCURO = '#140C2B', BIANCO = '#FFFFFF', LILLA = '#E4DDF3', GRIGIO = '#9C94B8', CHIARO = '#F1ECFB';
   var BLACK = '"Archivo-Black-Expanded"', BOLD = '"Archivo-Bold"';
   var CHIAVE = 'area51-storie-v1';
-  var CAMPI = ['post-titolo', 'post-fascia', 'post-invito', 't-gioco', 't-sfondo-x', 't-nome', 't-sub', 't-formato', 't-data', 't-ora', 't-posti', 't-premi', 't-invito', 'c-dal', 'c-al', 'c-riga1', 'c-riga2', 'c-saluto', 'e-sopra', 'e-titolo', 'e-testo', 'e-sotto', 'e-data', 'e-ora', 'e-saluto'];
+  var CAMPI = ['post-titolo', 'post-fascia', 'post-invito', 't-gioco', 't-sfondo-x', 't-nome', 't-sub', 't-formato', 't-data', 't-ora', 't-posti', 't-premi', 't-invito', 'c-dal', 'c-al', 'c-riga1', 'c-riga2', 'c-saluto', 'e-titolo', 'e-testo', 'e-sotto', 'e-data', 'e-ora', 'e-saluto'];
   var GIOCHI = {
     magic: ['MAGIC', 'THE GATHERING'],
     pokemon: ['POKÉMON', 'GIOCO DI CARTE COLLEZIONABILI'],
@@ -918,15 +914,7 @@ legend { display: block; margin-bottom: 6px; padding: 0; font-family: "Archivo-B
     marchio(60, 270, MARCHIO_MEDIO);
 
     /* testo facoltativo sotto il titolo (per gli annunci): se c'è, tutto sale un po' e il titolo si riduce */
-    var testoEv = grezzo('e-testo'), haTesto = !!testoEv, TY = haTesto ? 770 : 860;
-
-    /* riga sopra il titolo */
-    var sopra = grezzo('e-sopra').toLocaleUpperCase('it');   /* facoltativa */
-    if (sopra) {
-      adatta(sopra, 900, BOLD, 40, 10);
-      scrivi(sopra, 543, TY - 47, SCURO, 'centro', 10);
-      scrivi(sopra, 540, TY - 50, LIME, 'centro', 10);
-    }
+    var testoEv = grezzo('e-testo'), haTesto = !!testoEv, TY = haTesto ? 740 : 810;
 
     /* quando: data e ora sono facoltative (senza nessuna delle due il riquadro non compare) */
     var dEv = leggiData(grezzo('e-data')), oEv = grezzo('e-ora');
@@ -1108,7 +1096,7 @@ legend { display: block; margin-bottom: 6px; padding: 0; font-family: "Archivo-B
       return { 't-gioco': 'magic', 't-nome': 'MAGIC', 't-sub': 'THE GATHERING', 't-formato': 'COMMANDER', 't-data': iso(prossimoSabato()), 't-ora': '17:30', 't-posti': 'MAX 16 GIOCATORI', 't-premi': '1 BUSTINA FOIL', 't-invito': 'TOCCA E ISCRIVITI' };
     },
     evento: function () {
-      return { 'e-sopra': 'AVVISTAMENTO IN NEGOZIO', 'e-titolo': 'FIRMA/COPIE', 'e-sotto': 'CON [OSPITE]', 'e-data': iso(prossimoSabato()), 'e-ora': '17:00', 'e-saluto': 'VI ASPETTIAMO IN NEGOZIO' };
+      return { 'e-titolo': 'FIRMA/COPIE', 'e-sotto': 'CON [OSPITE]', 'e-data': iso(prossimoSabato()), 'e-ora': '17:00', 'e-saluto': 'VI ASPETTIAMO IN NEGOZIO' };
     },
     chiusura: function () {
       var d = new Date(); d.setDate(d.getDate() + 14);
