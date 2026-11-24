@@ -297,6 +297,10 @@ legend { display: block; margin-bottom: 6px; padding: 0; font-family: "Archivo-B
           <label for="post-invito">Invito in basso</label>
           <input type="text" id="post-invito" placeholder="TOCCA E SCOPRILO" autocapitalize="characters">
         </div>
+        <div class="campo">
+          <button type="button" id="post-pulsante">Crea il pulsante che copre il Link</button>
+          <p class="aiuto" id="aiuto-pulsante">Un'immagine piena con la scritta dell'invito, da mettere come adesivo foto SOPRA l'adesivo Link per nasconderlo: il tocco arriva comunque al link. Si crea una volta sola e si riusa in tutte le storie.</p>
+        </div>
       </fieldset>
 
       <!-- Torneo -->
@@ -1115,6 +1119,28 @@ legend { display: block; margin-bottom: 6px; padding: 0; font-family: "Archivo-B
       esito.textContent = 'Storia salvata: ' + file.name;
     });
   }
+
+  /* Pulsante pieno che copre l'adesivo Link di Instagram (il tocco passa al Link sotto): immagine unica, riutilizzabile */
+  function pulsanteCoprente() {
+    var largo = 800, alto = 150, cv = document.createElement('canvas');
+    cv.width = largo; cv.height = alto;
+    ctx = cv.getContext('2d', { colorSpace: 'srgb' });
+    rettangolo(0, 0, largo, alto, SCURO);
+    rettangolo(8, 8, largo - 16, alto - 16, LIME);
+    rettangolo(16, 16, largo - 32, alto - 32, VIOLA);
+    var testo = valore('post-invito') + ' →';
+    adatta(testo, largo - 100, BLACK, 52, 4);
+    scrivi(testo, largo / 2, alto / 2 + 3, BIANCO, 'centro', 4);
+    cv.toBlob(function (b) {
+      cv.width = 0; cv.height = 0; aggiorna();
+      if (!b) { esito.textContent = 'Non sono riuscito a creare il pulsante.'; return; }
+      var f = new File([b], 'area51-pulsante-invito.jpg', { type: 'image/jpeg' });
+      if (puoCondividere() && navigator.canShare({ files: [f] })) {
+        navigator.share({ files: [f] }).then(function () { esito.textContent = 'Pulsante condiviso.'; }, function () { esito.textContent = 'Condivisione annullata.'; });
+      } else { scarica(f, f.name); esito.textContent = 'Pulsante salvato: ' + f.name; }
+    }, 'image/jpeg', 0.95);
+  }
+  el('post-pulsante').addEventListener('click', pulsanteCoprente);
 
   function suSalva() {
     clearTimeout(attesa);
