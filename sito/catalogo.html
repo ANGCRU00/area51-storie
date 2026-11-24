@@ -870,7 +870,7 @@
         uscite[u.id] = u; var q = u.data_uscita ? new Date(u.data_uscita + 'T12:00:00') : null;
         PRODOTTI.push({
           id: 900000 + i, ean: '', titolo: u.titolo, serie: u.serie || u.titolo, tipo: '', genere: '', avanzamento: '', editore: u.editore || '', eta: '', edizione: 'standard',
-          prezzo: u.prezzo || 0, novita: false, preordine: true, disponibile: false, scaduto: true, uscitaId: u.id, copertina: u.copertina || '',
+          prezzo: u.prezzo || 0, novita: false, preordine: true, disponibile: false, scaduto: true, uscitaId: u.id, copertina: A51DB.copertinaUscita(u),
           uscitaTesto: q ? q.getDate() + ' ' + MESI_IT[q.getMonth()] + ' ' + q.getFullYear() : '', ordineNovita: q ? Math.round(q.getTime() / 864e5) : 0, colori: COLORI[i % COLORI.length]
         });
       });

@@ -438,6 +438,16 @@
           </div>
         </div>
 
+        <div class="rounded-2xl border border-white/10 bg-[#0e0926]/90 p-5 sm:p-6 mb-6">
+          <h3 class="font-heavy text-lg text-white mb-1">Aggiorna da Starshop</h3>
+          <p class="text-sm font-semibold text-brand-muted mb-3">Carica le uscite dei prossimi 60 giorni di fumetti, manga, carte da gioco e giochi da tavolo e di ruolo, con le copertine. I titoli nuovi compaiono subito sul sito; quelli già presenti si aggiornano senza toccare ciò che hai cambiato tu (visibilità e data limite). Se Starshop mette una data segnaposto a fine mese, la ritrovi qui da correggere.</p>
+          <div class="flex flex-wrap items-center gap-3">
+            <button type="button" id="g-usc-sync" class="bg-brand-lime text-black font-heavy text-xs px-5 py-2 rounded-full rounded-bl-[4px] shadow-brutal-violet hover:bg-[#a6d420] transition-colors">Aggiorna dalle uscite di Starshop</button>
+            <button type="button" id="g-usc-cop" class="border border-white/25 hover:border-brand-lime hover:text-brand-lime font-heavy text-xs px-4 py-2 rounded-full transition-colors">Scarica le copertine mancanti</button>
+            <p id="g-usc-sync-esito" role="status" class="text-sm font-bold text-brand-lime"></p>
+          </div>
+        </div>
+
         <form id="g-usc-form" hidden class="rounded-2xl border border-brand-lime/50 bg-[#0e0926]/90 p-5 sm:p-6 mb-6 grid grid-cols-1 sm:grid-cols-2 gap-4" novalidate>
           <input type="hidden" name="id">
           <div class="sm:col-span-2"><label for="us-titolo" class="block font-heavy text-xs uppercase tracking-widest text-brand-lime mb-2">Titolo</label>
@@ -465,7 +475,16 @@
             <p id="g-usc-esito" role="status" class="text-sm font-bold text-brand-lime"></p>
           </div>
         </form>
+        <div class="flex flex-wrap items-center gap-3 mb-4">
+          <label for="g-usc-cerca" class="sr-only">Cerca tra le uscite</label>
+          <input id="g-usc-cerca" type="search" placeholder="Cerca per titolo, editore o EAN" class="campo-profilo !w-auto min-w-[16rem] flex-1 max-w-md">
+          <select id="g-usc-cat" class="campo-profilo !w-auto" aria-label="Categoria">
+            <option value="">Tutte le categorie</option><option value="manga">Manga</option><option value="fumetti">Fumetti</option><option value="tcg">TCG</option><option value="giochi">Giochi</option><option value="-">Senza categoria</option>
+          </select>
+          <p id="g-usc-conta" class="text-sm font-bold text-brand-muted"></p>
+        </div>
         <ul id="g-usc-lista" class="space-y-3"></ul>
+        <button type="button" id="g-usc-altre" hidden class="mt-4 border border-white/25 hover:border-brand-lime hover:text-brand-lime font-heavy text-xs px-5 py-2 rounded-full transition-colors">Mostra altre</button>
         <p id="g-usc-vuoto" hidden class="vuoto-profilo !block">Nessuna uscita: aggiungine una o importa un file.</p>
       </section>
 
@@ -961,12 +980,23 @@
     if (u.data_limite && u.data_limite < o) return ['Termine scaduto (è in Manga e fumetti con l\'avviso)', 'text-[#FB923C]'];
     return ['Prenotabile' + (u.data_limite ? ' fino al ' + giornoIt(u.data_limite) : ' (data limite da confermare)'), 'text-brand-lime'];
   }
+  var uscMax = 60;
+  function usciteFiltrate() {
+    var q = ($('g-usc-cerca').value || '').trim().toLowerCase(), cat = $('g-usc-cat').value;
+    return uscite.filter(function (u) {
+      if (cat && (cat === '-' ? u.categoria : u.categoria !== cat)) return false;
+      return !q || [u.titolo, u.editore, u.ean].some(function (v) { return v && String(v).toLowerCase().indexOf(q) >= 0; });
+    });
+  }
   function disegnaUscite() {
     var ul = $('g-usc-lista'); svuota(ul); $('g-usc-vuoto').hidden = uscite.length > 0; $('g-usc-vuoto').textContent = 'Nessuna uscita: aggiungine una o importa un file.';
-    uscite.forEach(function (u) {
+    var elenco = usciteFiltrate(), mostrate = elenco.slice(0, uscMax);
+    $('g-usc-conta').textContent = uscite.length ? (elenco.length === uscite.length ? uscite.length + ' uscite' : elenco.length + ' di ' + uscite.length + ' uscite') : '';
+    $('g-usc-altre').hidden = elenco.length <= mostrate.length;
+    mostrate.forEach(function (u) {
       var li = el('li', 'rounded-2xl border border-white/10 bg-[#0e0926]/90 p-4 sm:p-5 flex flex-wrap items-start justify-between gap-3');
       var tx = el('div', 'min-w-0');
-      tx.appendChild(el('p', 'text-[11px] font-bold text-brand-muted tracking-wider uppercase', [u.editore, u.ean, u.fonte === 'starshop' ? 'Starshop' : 'inserita a mano', u.visibile ? '' : 'NON VISIBILE'].filter(Boolean).join(' · ')));
+      tx.appendChild(el('p', 'text-[11px] font-bold text-brand-muted tracking-wider uppercase', [u.editore, u.ean, u.categoria, u.fonte === 'starshop' ? 'Starshop' : 'inserita a mano', u.visibile ? '' : 'NON VISIBILE'].filter(Boolean).join(' · ')));
       tx.appendChild(el('p', 'font-heavy text-lg text-white mt-1 break-words', u.titolo));
       tx.appendChild(el('p', 'text-sm font-semibold text-brand-muted mt-1', (u.data_uscita ? 'Esce il ' + giornoIt(u.data_uscita) : 'Data di uscita da definire') + (u.prezzo != null ? ' · ' + euro(u.prezzo) : '')));
       var st = statoUscita(u); tx.appendChild(el('p', 'text-xs font-bold mt-1 ' + st[1], st[0]));
@@ -974,12 +1004,54 @@
       if (n) tx.appendChild(el('p', 'text-xs font-bold text-white mt-1', 'Prenotazioni: ' + n + (n === 1 ? ' copia' : ' copie')));
       li.appendChild(tx);
       var az = el('div', 'flex flex-wrap gap-2');
+      var bv = el('button', BTN, u.visibile ? 'Nascondi' : 'Mostra'); bv.type = 'button';
+      bv.addEventListener('click', async function () { var x = await sb.from('uscite').update({ visibile: !u.visibile }).eq('id', u.id); if (x.error) { alert(errore(x.error)); return; } u.visibile = !u.visibile; disegnaUscite(); });
       var bm = el('button', BTN, 'Modifica'); bm.type = 'button'; bm.addEventListener('click', function () { apriUscita(u); });
       var bd = el('button', 'text-xs font-heavy text-brand-muted hover:text-[#FB923C] px-2 py-2', 'Elimina'); bd.type = 'button';
-      bd.addEventListener('click', async function () { if (!confirm('Eliminare questa uscita? Le prenotazioni già ricevute restano, senza il collegamento al titolo.')) return; var x = await sb.from('uscite').delete().eq('id', u.id); if (x.error) alert(errore(x.error)); caricaUscite(); });
-      az.appendChild(bm); az.appendChild(bd); li.appendChild(az); ul.appendChild(li);
+      bd.addEventListener('click', async function () { if (!confirm('Eliminare questa uscita? Le prenotazioni già ricevute restano, senza il collegamento al titolo.')) return; var x = await sb.from('uscite').delete().eq('id', u.id); if (x.error) alert(errore(x.error)); else caricaUscite(); });
+      az.appendChild(bv); az.appendChild(bm); az.appendChild(bd); li.appendChild(az); ul.appendChild(li);
     });
   }
+  $('g-usc-cerca').addEventListener('input', function () { uscMax = 60; disegnaUscite(); });
+  $('g-usc-cat').addEventListener('change', function () { uscMax = 60; disegnaUscite(); });
+  $('g-usc-altre').addEventListener('click', function () { uscMax += 60; disegnaUscite(); });
+
+  /* Aggiornamento dalle uscite di Starshop (funzione sul server, solo gestore) */
+  async function chiamaStarshopUscite(corpo) {
+    var sess = await sb.auth.getSession(); if (!sess.data.session) throw new Error('La sessione è scaduta: esci e rientra.');
+    var f = await fetch(A51DB.url + '/functions/v1/starshop', { method: 'POST', headers: { 'Content-Type': 'application/json', apikey: A51DB.chiave, Authorization: 'Bearer ' + sess.data.session.access_token }, body: JSON.stringify(corpo) });
+    var j = await f.json().catch(function () { return {}; });
+    if (!f.ok || j.ok === false) throw new Error(j.errore || 'errore ' + f.status);
+    return j;
+  }
+  async function scaricaCopertineUscite(es) {
+    var tot = 0, senza = 0, giri = 0;
+    while (giri++ < 60) {
+      var j = await chiamaStarshopUscite({ azione: 'uscite_copertine', quante: 16 });
+      tot += j.scaricate || 0; senza += j.senza_copertina || 0;
+      es.textContent = 'Copertine: ' + tot + ' scaricate' + (senza ? ', ' + senza + ' non disponibili' : '') + (j.restano ? ' · ne restano ' + j.restano : '');
+      if (!j.restano || (!j.scaricate && !j.senza_copertina)) break;
+    }
+    return { tot: tot, senza: senza };
+  }
+  $('g-usc-sync').addEventListener('click', async function () {
+    var b = this, es = $('g-usc-sync-esito'); es.className = 'text-sm font-bold text-brand-lime'; b.disabled = true; es.textContent = 'Leggo le uscite da Starshop (circa mezzo minuto)…';
+    try {
+      var j = await chiamaStarshopUscite({ azione: 'sincronizza_uscite', giorni: 60 });
+      es.textContent = 'Fatto: ' + j.tenuti + ' titoli (' + j.nuovi + ' nuovi, ' + j.aggiornati + ' già presenti)' + (j.scartati_senza_titolo ? ' · ' + j.scartati_senza_titolo + ' senza titolo scartati' : '') + (j.errori ? ' · ' + j.errori + ' errori' : '') + '. Scarico le copertine…';
+      await caricaUscite();
+      var c = await scaricaCopertineUscite(es);
+      es.textContent = j.tenuti + ' titoli aggiornati (' + j.nuovi + ' nuovi) · copertine: ' + c.tot + ' scaricate' + (c.senza ? ', ' + c.senza + ' non disponibili' : '') + '.';
+      await caricaUscite();
+    } catch (e) { es.className = 'text-sm font-bold text-[#FB923C]'; es.textContent = errore(e); }
+    b.disabled = false;
+  });
+  $('g-usc-cop').addEventListener('click', async function () {
+    var b = this, es = $('g-usc-sync-esito'); es.className = 'text-sm font-bold text-brand-lime'; b.disabled = true; es.textContent = 'Scarico le copertine…';
+    try { var c = await scaricaCopertineUscite(es); es.textContent = 'Copertine: ' + c.tot + ' scaricate' + (c.senza ? ', ' + c.senza + ' non disponibili' : '') + '.'; await caricaUscite(); }
+    catch (e) { es.className = 'text-sm font-bold text-[#FB923C]'; es.textContent = errore(e); }
+    b.disabled = false;
+  });
   function apriUscita(u) {
     fu.reset(); fu.hidden = false; $('g-usc-esito').textContent = ''; fu.elements.id.value = u ? u.id : '';
     if (u) { ['titolo', 'serie', 'numero', 'editore', 'ean', 'prezzo', 'copertina', 'data_uscita', 'data_limite'].forEach(function (k) { fu.elements[k].value = u[k] == null ? '' : u[k]; }); fu.elements.visibile.checked = !!u.visibile; }

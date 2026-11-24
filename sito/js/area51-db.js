@@ -15,8 +15,13 @@ window.A51DB.livelli = function () {
 };
 
 /* Prossime uscite prenotabili (tabella "uscite", visibili a tutti): data di uscita e data limite per ordinare. Risolve con un elenco, vuoto se non ce ne sono o se il database non risponde. */
+/* Copertina di un'uscita: un indirizzo intero, oppure il nome di un file nel nostro archivio (copertine scaricate da Starshop). Vuoto se non c'è. */
+window.A51DB.copertinaUscita = function (u) {
+  var c = u && u.copertina; if (!c) return '';
+  return /^https?:\/\//.test(c) ? c : A51DB.url + '/storage/v1/object/public/copertine-articoli/' + encodeURIComponent(c);
+};
 window.A51DB.uscite = function () {
   if (!window.fetch) return Promise.resolve([]);
-  return fetch(A51DB.url + '/rest/v1/uscite?select=*&order=data_uscita.asc.nullslast,titolo.asc', { headers: { apikey: A51DB.chiave, Authorization: 'Bearer ' + A51DB.chiave } })
+  return fetch(A51DB.url + '/rest/v1/uscite?select=*&order=data_uscita.asc.nullslast,titolo.asc&limit=1000', { headers: { apikey: A51DB.chiave, Authorization: 'Bearer ' + A51DB.chiave } })
     .then(function (r) { return r.ok ? r.json() : []; }).catch(function () { return []; });
 };
