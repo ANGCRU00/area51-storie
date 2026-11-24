@@ -372,7 +372,7 @@ legend { display: block; margin-bottom: 6px; padding: 0; font-family: "Archivo-B
           <input type="text" id="e-sopra" placeholder="AVVISTAMENTO IN NEGOZIO" autocapitalize="characters">
         </div>
         <div class="campo">
-          <label for="e-titolo">Titolo</label>
+          <label for="e-titolo">Titolo (facoltativo)</label>
           <p class="aiuto">Scrivi / dove vuoi andare a capo, per esempio FIRMA/COPIE. Se il testo supera i 40 caratteri va a capo da solo e si rimpicciolisce per starci.</p>
           <input type="text" id="e-titolo" placeholder="FIRMACOPIE" autocapitalize="characters">
         </div>
@@ -932,7 +932,7 @@ legend { display: block; margin-bottom: 6px; padding: 0; font-family: "Archivo-B
     var haSotto = !!grezzo('e-sotto');
 
     /* titolo luminoso (sempre lo stesso stile); se è lungo (più di 40 caratteri, senza "/") va a capo da solo e si rimpicciolisce fino a starci */
-    var titoloTesto = valore('e-titolo'), alto, t;
+    var titoloTesto = grezzo('e-titolo').toLocaleUpperCase('it'), alto, t;   /* il titolo è facoltativo: senza, niente scritta luminosa */
     if (titoloTesto.length > 40 && titoloTesto.indexOf('/') < 0) {
       var spazio = (q ? 1450 : 1570) - (haSotto ? 100 : 0) - TY - 20, px = 100, righe = [];
       for (; px >= 28; px -= 2) {
@@ -940,8 +940,10 @@ legend { display: block; margin-bottom: 6px; padding: 0; font-family: "Archivo-B
         if (righe.length * px * 1.06 <= spazio) { break; }
       }
       t = { righe: righe, px: px };
-    } else {
+    } else if (titoloTesto) {
       t = righeTitolo(titoloTesto, 900, haTesto ? 112 : 150, haTesto ? 70 : 100);
+    } else {
+      t = { righe: [], px: 0 };
     }
     var passo = Math.round(t.px * (t.righe.length > 2 ? 1.06 : 1.0));
     alto = passo * t.righe.length;
@@ -953,7 +955,7 @@ legend { display: block; margin-bottom: 6px; padding: 0; font-family: "Archivo-B
       t.righe.forEach(function (r, i) { scrivi(r, 540, TY + passo / 2 + passo * i, BIANCO, 'centro'); });
       ctx.restore();
     });
-    var fondo = TY + alto + 30;
+    var fondo = TY + alto + (alto ? 30 : 10);
 
     /* testo: Archivo Bold bianco con contorno scuro (si legge sul raggio chiaro), a capo da solo, dimensione adattata */
     if (haTesto) {
