@@ -302,6 +302,11 @@ legend { display: block; margin-bottom: 6px; padding: 0; font-family: "Archivo-B
       <!-- Torneo -->
       <fieldset id="p-torneo" role="tabpanel" aria-labelledby="tab-torneo" hidden>
         <div class="campo">
+          <label for="t-sfondo">Immagine di sfondo (facoltativa)</label>
+          <input type="file" id="t-sfondo" accept="image/*">
+          <p class="aiuto" id="aiuto-sfondo">Un'illustrazione del gioco al posto dei disegni di sfondo. Meglio verticale. Non viene salvata: va ricaricata ogni volta.</p>
+        </div>
+        <div class="campo">
           <label for="t-gioco">Gioco</label>
           <select id="t-gioco">
             <option value="magic">Magic: The Gathering</option>
@@ -438,6 +443,7 @@ legend { display: block; margin-bottom: 6px; padding: 0; font-family: "Archivo-B
   var tela = el('storia'), esito = el('s-esito'), bottoneSalva = el('salva');
   var linguetta = 'uscite';
   var foto = null;            /* mai salvata */
+  var sfondoImg = null;       /* illustrazione di sfondo del torneo, mai salvata */
   var fontPronti = false;
 
   /* Il testo scritto o, se vuoto, l'esempio grigio del campo */
@@ -698,6 +704,18 @@ legend { display: block; margin-bottom: 6px; padding: 0; font-family: "Archivo-B
     }
   }
   function sfondoGioco() {
+    if (sfondoImg) {
+      /* illustrazione a tutta storia, spostata in su così il soggetto resta sopra la scheda; sotto sfuma nel fondo scuro */
+      var sc = Math.max(W / sfondoImg.width, H / sfondoImg.height) * 1.1, iw = sfondoImg.width * sc, ih = sfondoImg.height * sc;
+      var dy = -Math.min(ih - H * 0.6, H * 0.21);   /* il soggetto sale sopra la scheda, che copre la parte centrale */
+      ctx.drawImage(sfondoImg, (W - iw) / 2, dy, iw, ih);
+      var f = ctx.createLinearGradient(0, dy + ih - 520, 0, dy + ih);
+      f.addColorStop(0, 'rgba(20,12,43,0)'); f.addColorStop(1, SCURO);
+      ctx.fillStyle = f; ctx.fillRect(0, dy + ih - 520, W, 520);
+      if (dy + ih < H) { rettangolo(0, dy + ih, W, H - (dy + ih), SCURO); }
+      ctx.fillStyle = 'rgba(20,12,43,0.32)'; ctx.fillRect(0, 0, W, H);
+      return;
+    }
     var g = el('t-gioco').value;
     var grande = { magic: motivoMana, pokemon: motivoPalla, riftbound: motivoVarco, onepiece: motivoTimone }[g] || motivoCarte;
     ctx.save();
@@ -1021,7 +1039,7 @@ legend { display: block; margin-bottom: 6px; padding: 0; font-family: "Archivo-B
     return Array.from(el('p-' + linguetta).querySelectorAll('input, select'));
   }
   function schedaHaContenuto() {
-    return campiScheda().some(function (c) { return c.type === 'file' ? !!foto : c.tagName !== 'SELECT' && c.value.trim(); });
+    return campiScheda().some(function (c) { return c.type === 'file' ? (c.id === 't-sfondo' ? !!sfondoImg : !!foto) : c.tagName !== 'SELECT' && c.value.trim(); });
   }
 
   /* ---------- Esempi ---------- */
@@ -1139,6 +1157,14 @@ legend { display: block; margin-bottom: 6px; padding: 0; font-family: "Archivo-B
     el('t-sub').value = g[1];
     pianifica();
   });
+  el('t-sfondo').addEventListener('change', function () {
+    var file = this.files && this.files[0];
+    if (!file) { sfondoImg = null; aggiorna(); return; }
+    var url = URL.createObjectURL(file), img = new Image();
+    img.onload = function () { URL.revokeObjectURL(url); sfondoImg = img; esito.textContent = 'Sfondo scelto: ' + (file.name || 'immagine') + '.'; aggiorna(); };
+    img.onerror = function () { URL.revokeObjectURL(url); esito.textContent = 'Non riesco a leggere l’immagine: prova con un file JPG o PNG.'; };
+    img.src = url;
+  });
   el('post-scatta').addEventListener('click', function () { el('post-foto-camera').click(); });
   el('post-foto-camera').addEventListener('change', caricaFotoPost);
   el('post-foto').addEventListener('change', caricaFotoPost);
@@ -1172,7 +1198,7 @@ legend { display: block; margin-bottom: 6px; padding: 0; font-family: "Archivo-B
   el('s-svuota').addEventListener('click', function () {
     if (schedaHaContenuto() && !window.confirm('Cancellare i campi di questa storia?')) { return; }
     campiScheda().forEach(function (c) {
-      if (c.type === 'file') { c.value = ''; foto = null; }
+      if (c.type === 'file') { c.value = ''; if (c.id === 't-sfondo') { sfondoImg = null; } else { foto = null; } }
       else if (c.tagName === 'SELECT') { c.selectedIndex = 0; }
       else { c.value = ''; }
     });
