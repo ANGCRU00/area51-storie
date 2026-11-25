@@ -18,6 +18,12 @@ export const uscite = sqliteTable('uscite', {
   serie: text('serie'),
   numero: text('numero'),
   editore: text('editore'),
+  /** dati di fatto da Starshop (riempiti dalla sincronizzazione) */
+  autore: text('autore'),
+  pagine: integer('pagine'),
+  lingua: text('lingua'),
+  /** codice della serie su Starshop (codice articolo senza il numero finale) */
+  codicePadre: text('codice_padre'),
   /** prezzo di copertina, mai prezzi B2B */
   prezzo: real('prezzo'),
   dataUscita: text('data_uscita'),
@@ -34,6 +40,7 @@ export const uscite = sqliteTable('uscite', {
   index('uscite_data').on(t.dataUscita),
   index('uscite_categoria').on(t.categoria),
   index('uscite_editore').on(t.editore),
+  index('uscite_serie').on(t.codicePadre),
   check('uscite_categoria_valida', sql`${t.categoria} IS NULL OR ${t.categoria} IN ('manga', 'fumetti', 'tcg', 'giochi')`),
 ]);
 

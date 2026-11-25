@@ -444,6 +444,7 @@
           <div class="flex flex-wrap items-center gap-3">
             <button type="button" id="g-usc-sync" class="bg-brand-lime text-black font-heavy text-xs px-5 py-2 rounded-full rounded-bl-[4px] shadow-brutal-violet hover:bg-[#a6d420] transition-colors">Aggiorna dalle uscite di Starshop</button>
             <button type="button" id="g-usc-cop" class="border border-white/25 hover:border-brand-lime hover:text-brand-lime font-heavy text-xs px-4 py-2 rounded-full transition-colors">Scarica le copertine mancanti</button>
+            <button type="button" id="g-usc-studio" class="border border-white/25 hover:border-brand-lime hover:text-brand-lime font-heavy text-xs px-4 py-2 rounded-full transition-colors" title="Legge i dati di Starshop per capire se indicano genere o età consigliata. Solo lettura, circa un minuto.">Studia genere ed età (Starshop)</button>
             <p id="g-usc-sync-esito" role="status" class="text-sm font-bold text-brand-lime"></p>
           </div>
         </div>
@@ -1044,6 +1045,15 @@
       es.textContent = j.tenuti + ' titoli aggiornati (' + j.nuovi + ' nuovi) · copertine: ' + c.tot + ' scaricate' + (c.senza ? ', ' + c.senza + ' non disponibili' : '') + '.';
       await caricaUscite();
     } catch (e) { es.className = 'text-sm font-bold text-[#FB923C]'; es.textContent = errore(e); }
+    b.disabled = false;
+  });
+  // Studio dei codici "caratteristica" di Starshop: legge le uscite e salva un riepilogo in studio_starshop (solo lettura verso Starshop)
+  $('g-usc-studio').addEventListener('click', async function () {
+    var b = this, es = $('g-usc-sync-esito'); es.className = 'text-sm font-bold text-brand-lime'; b.disabled = true; es.textContent = 'Studio i dati di Starshop (circa un minuto)…';
+    try {
+      var j = await chiamaStarshopUscite({ azione: 'studio_caratteristiche' });
+      es.textContent = 'Studio completato: ' + j.articoli_letti + ' articoli letti' + (j.finito ? '' : ' (elenco non completo)') + '. Puoi dirlo a chi segue il sito.';
+    } catch (e) { es.className = 'text-sm font-bold text-[#FB923C]'; es.textContent = 'Studio non riuscito: ' + e.message; }
     b.disabled = false;
   });
   $('g-usc-cop').addEventListener('click', async function () {

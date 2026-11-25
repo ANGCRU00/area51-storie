@@ -49,7 +49,33 @@ export type Prodotto = {
   pagine: number | null;
   lingua: string | null;
   codicePadre: string | null;
+  /** nome della serie (titolo senza il numero finale) e numero del volume, se si riconoscono */
+  serie: string;
+  volume: string | null;
+  /** Standard, Variant, Deluxe, Limited… ricavata dal titolo (solo manga e fumetti) */
+  edizione: string | null;
 };
+
+/* Serie e volume: "BLUE BOX 17" con numero 17 → serie "BLUE BOX", volume "17" */
+function serieVolume(titolo: string, numero: string | null): { serie: string; volume: string | null } {
+  // il numero finale, preceduto da spazio o da "N.", "Vol.", "#" (ma non dalla N finale di una parola, es. EDITION)
+  const m = titolo.match(/^(.*?)(?:\s+(?:N\.?|NO\.?|VOL\.?|#)\s*|\s+|\s*[.#-]\s*)(\d{1,4})\s*$/i);
+  if (m && m[1].trim().length >= 2 && (!numero || Number(m[2]) === Number(numero))) return { serie: m[1].trim(), volume: String(Number(m[2])) };
+  // il numero Starshop da solo non basta (per carte e giochi è un progressivo di catalogo): senza numero nel titolo, niente volume
+  return { serie: titolo, volume: null };
+}
+/** Serie e volume solo per manga e fumetti; carte e giochi restano con il titolo intero */
+const volumeSeLibro = (titolo: string, numero: string | null, c: Categoria | null) =>
+  c === 'manga' || c === 'fumetti' ? serieVolume(titolo, numero) : { serie: titolo, volume: null };
+function edizioneDa(titolo: string, categoria: Categoria | null): string | null {
+  if (categoria !== 'manga' && categoria !== 'fumetti') return null;
+  const t = titolo.toUpperCase();
+  if (/\b(VARIANT|VRT|VAR)\b/.test(t)) return 'Variant';
+  if (/\bDELUXE\b/.test(t)) return 'Deluxe';
+  if (/\b(LIMITED|LTD|LIMITATA)\b/.test(t)) return 'Limited';
+  if (/\b(COLLECTOR|SPECIAL|SPECIALE)\b/.test(t)) return 'Speciale';
+  return 'Standard';
+}
 
 const oggi = () => new Date().toISOString().slice(0, 10);
 export const urlCopertina = (chiave: string | null) => (chiave ? '/file/' + chiave : null);
@@ -62,15 +88,17 @@ export function daArticolo(a: Articolo): Prodotto {
     numero: a.numero == null ? null : String(a.numero), prezzo: a.prezzoListino, dataUscita: a.dataUscita, dataLimite: null,
     categoria: categoriaDaStarshop(a.categoria, a.sottoCategoria), copertina: urlCopertina(a.copertina), disponibilita: disp,
     pagine: a.pagine, lingua: a.lingua, codicePadre: a.codicePadre,
+    ...volumeSeLibro(a.titolo, a.numero == null ? null : String(a.numero), categoriaDaStarshop(a.categoria, a.sottoCategoria)), edizione: edizioneDa(a.titolo, categoriaDaStarshop(a.categoria, a.sottoCategoria)),
   };
 }
 
 export function daUscita(u: Uscita): Prodotto {
   return {
-    codice: u.ean || u.riferimentoEsterno || u.id, tipo: 'uscita', idUscita: u.id, ean: u.ean, titolo: u.titolo, autore: null, editore: u.editore,
+    codice: u.ean || u.riferimentoEsterno || u.id, tipo: 'uscita', idUscita: u.id, ean: u.ean, titolo: u.titolo, autore: u.autore, editore: u.editore,
     numero: u.numero, prezzo: u.prezzo, dataUscita: u.dataUscita, dataLimite: u.dataLimite, categoria: u.categoria, copertina: urlCopertina(u.copertina),
-    disponibilita: u.dataUscita && u.dataUscita <= oggi() ? 'uscito' : 'preordine', pagine: null, lingua: null,
-    codicePadre: u.riferimentoEsterno ? u.riferimentoEsterno.replace(/\d{4}$/, '') : null,
+    disponibilita: u.dataUscita && u.dataUscita <= oggi() ? 'uscito' : 'preordine', pagine: u.pagine, lingua: u.lingua,
+    codicePadre: u.codicePadre ?? (u.riferimentoEsterno ? u.riferimentoEsterno.replace(/\d{4}$/, '') : null),
+    ...volumeSeLibro(u.titolo, u.numero, u.categoria), edizione: edizioneDa(u.titolo, u.categoria),
   };
 }
 
@@ -89,7 +117,7 @@ export type Filtri = {
   categorie: Categoria[];
   cerca?: string;
   stato?: 'tutti' | 'negozio' | 'preordini';
-  editore?: string;
+  editori?: string[];
   mese?: string;           // AAAA-MM, solo per le uscite
   ordine?: 'recenti' | 'uscita' | 'prezzo' | 'titolo';
   pagina?: number;
@@ -118,7 +146,7 @@ export async function cercaProdotti(f: Filtri): Promise<Risultato> {
   if (stato !== 'preordini') {
     const cond = [eq(articoli.visibile, true)];
     if (f.cerca) { const c = condizioniCerca(articoli, f.cerca, articoli.autore); if (c) cond.push(c); }
-    if (f.editore) cond.push(eq(articoli.editore, f.editore));
+    if (f.editori?.length) cond.push(inArray(articoli.editore, f.editori));
     magazzino = (await d.select().from(articoli).where(and(...cond)).limit(2000)).map(daArticolo)
       .filter((p) => p.categoria && f.categorie.includes(p.categoria) && p.disponibilita !== 'preordine');
   }
@@ -130,7 +158,7 @@ export async function cercaProdotti(f: Filtri): Promise<Risultato> {
     if (!catUscite.length) cond.push(sql`0`);
     else cond.push(inArray(uscite.categoria, catUscite as ('manga' | 'fumetti' | 'tcg' | 'giochi')[]));
     if (f.cerca) { const c = condizioniCerca(uscite, f.cerca); if (c) cond.push(c); }
-    if (f.editore) cond.push(eq(uscite.editore, f.editore));
+    if (f.editori?.length) cond.push(inArray(uscite.editore, f.editori));
     if (f.mese && /^\d{4}-\d{2}$/.test(f.mese)) cond.push(like(uscite.dataUscita, f.mese + '%'));
     prossime = (await d.select().from(uscite).where(and(...cond)).orderBy(asc(uscite.dataUscita), asc(uscite.titolo)).limit(3000)).map(daUscita);
   }
@@ -163,7 +191,7 @@ export async function cercaProdotti(f: Filtri): Promise<Risultato> {
 }
 
 /** Scheda prodotto: cerca il codice (EAN o codice Starshop) prima nel magazzino visibile, poi tra le uscite visibili. */
-export async function trovaProdotto(codice: string): Promise<{ prodotto: Prodotto; altri: Prodotto[] } | null> {
+export async function trovaProdotto(codice: string): Promise<{ prodotto: Prodotto; altri: Prodotto[]; edizioni: Prodotto[]; simili: Prodotto[] } | null> {
   if (!/^[A-Za-z0-9-]{4,40}$/.test(codice)) return null;
   const d = db();
   const [a] = await d.select().from(articoli).where(and(eq(articoli.visibile, true), or(eq(articoli.ean, codice), eq(articoli.codiceStarshop, codice)))).limit(1);
@@ -175,16 +203,34 @@ export async function trovaProdotto(codice: string): Promise<{ prodotto: Prodott
   if (!prodotto) return null;
 
   // altri volumi della stessa serie: stesso codice padre Starshop (codice senza le ultime 4 cifre)
-  let altri: Prodotto[] = [];
+  const visti = new Set([prodotto.codice]);
+  const nuovo = (x: Prodotto) => (visti.has(x.codice) ? false : (visti.add(x.codice), true));
+  let stessaSerie: Prodotto[] = [];
   if (prodotto.codicePadre && prodotto.codicePadre.length >= 6) {
     const p = prodotto.codicePadre;
-    const da = (await d.select().from(articoli).where(and(eq(articoli.visibile, true), eq(articoli.codicePadre, p))).limit(24)).map(daArticolo);
-    const du = (await d.select().from(uscite).where(and(eq(uscite.visibile, true), like(uscite.riferimentoEsterno, p + '____'))).limit(24)).map(daUscita);
-    const visti = new Set([prodotto.codice]);
-    altri = [...da, ...du].filter((x) => (visti.has(x.codice) ? false : (visti.add(x.codice), true)))
-      .sort((x, y) => (x.dataUscita ?? '').localeCompare(y.dataUscita ?? '')).slice(0, 12);
+    const da = (await d.select().from(articoli).where(and(eq(articoli.visibile, true), eq(articoli.codicePadre, p))).limit(40)).map(daArticolo);
+    const du = (await d.select().from(uscite).where(and(eq(uscite.visibile, true), eq(uscite.codicePadre, p))).limit(40)).map(daUscita);
+    stessaSerie = [...da, ...du].filter(nuovo);
   }
-  return { prodotto, altri };
+  // altre edizioni dello stesso volume (es. Variant): stessa serie e stesso numero, anche con codice diverso
+  if (prodotto.volume && prodotto.serie.length >= 3) {
+    const prefisso = prodotto.serie.replace(/[%_]/g, '') + '%';
+    const du = (await d.select().from(uscite).where(and(eq(uscite.visibile, true), like(uscite.titolo, prefisso))).limit(40)).map(daUscita);
+    stessaSerie.push(...du.filter((x) => x.serie === prodotto!.serie).filter(nuovo));
+  }
+  const edizioni = stessaSerie.filter((x) => x.volume && x.volume === prodotto!.volume);
+  const altri = stessaSerie.filter((x) => !edizioni.includes(x))
+    .sort((x, y) => Number(x.volume ?? 0) - Number(y.volume ?? 0) || (x.dataUscita ?? '').localeCompare(y.dataUscita ?? '')).slice(0, 12);
+
+  // ti potrebbe piacere: stesso editore, altre serie, con copertina, prossime uscite
+  let simili: Prodotto[] = [];
+  if (prodotto.editore) {
+    const cond = [eq(uscite.visibile, true), eq(uscite.editore, prodotto.editore), sql`${uscite.copertina} <> ''`, gte(uscite.dataUscita, oggi())];
+    if (prodotto.codicePadre) cond.push(sql`coalesce(${uscite.codicePadre}, '') <> ${prodotto.codicePadre}`);
+    simili = (await d.select().from(uscite).where(and(...cond)).orderBy(asc(uscite.dataUscita)).limit(12)).map(daUscita)
+      .filter((x) => x.serie !== prodotto!.serie).filter(nuovo).slice(0, 4);
+  }
+  return { prodotto, altri, edizioni, simili };
 }
 
 /** Home: ultime uscite (già uscite di recente o articoli arrivati) e prossime uscite */
@@ -213,7 +259,7 @@ export function filtriDaIndirizzo(url: URL, disponibili: Categoria[], base: Part
     categorie: cat ? [cat] : disponibili,
     cerca: (q.get('cerca') ?? '').trim().slice(0, 60) || undefined,
     stato: stato === 'negozio' || stato === 'preordini' ? stato : (base.stato ?? 'tutti'),
-    editore: (q.get('editore') ?? '').slice(0, 80) || undefined,
+    editori: [...new Set(q.getAll('editore').map((e) => e.slice(0, 80)).filter(Boolean))].slice(0, 30),
     mese: /^\d{4}-\d{2}$/.test(q.get('mese') ?? '') ? q.get('mese')! : undefined,
     ordine: ordine === 'uscita' || ordine === 'prezzo' || ordine === 'titolo' || ordine === 'recenti' ? ordine : (base.ordine ?? 'recenti'),
     pagina: Math.max(1, Math.min(500, Number(q.get('pagina')) || 1)),

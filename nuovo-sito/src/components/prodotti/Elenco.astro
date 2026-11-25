@@ -23,21 +23,27 @@ const { percorso, bollino, titolo, introduzione, risultato, filtri, categorie, m
 const { prodotti, totale, pagine, pagina, editori, mesi } = risultato;
 
 const qui = Astro.url.pathname;
-function indirizzo(cambia: Record<string, string | number | undefined>) {
+function indirizzo(cambia: Record<string, string | number | string[] | undefined>) {
   const q = new URLSearchParams();
-  const valori: Record<string, string | number | undefined> = { cerca: filtri.cerca, cat: filtri.cat, stato: filtri.stato === 'tutti' ? '' : filtri.stato,
-    editore: filtri.editore, mese: filtri.mese, ordine: filtri.ordine === 'recenti' ? '' : filtri.ordine, pagina: undefined, ...cambia };
-  for (const [k, v] of Object.entries(valori)) if (v !== undefined && v !== '' && !(k === 'pagina' && v === 1)) q.set(k, String(v));
+  const valori: Record<string, string | number | string[] | undefined> = { cerca: filtri.cerca, cat: filtri.cat, stato: filtri.stato === 'tutti' ? '' : filtri.stato,
+    editore: filtri.editori ?? [], mese: filtri.mese, ordine: filtri.ordine === 'recenti' ? '' : filtri.ordine, pagina: undefined, ...cambia };
+  for (const [k, v] of Object.entries(valori)) {
+    if (Array.isArray(v)) v.forEach((x) => q.append(k, x));
+    else if (v !== undefined && v !== '' && !(k === 'pagina' && v === 1)) q.set(k, String(v));
+  }
   const s = q.toString();
   return qui + (s ? '?' + s : '');
 }
+const scelti = filtri.editori ?? [];
 const attivi = [
   filtri.cerca && { testo: '«' + filtri.cerca + '»', via: indirizzo({ cerca: '' }) },
   filtri.cat && categorie.length > 1 && { testo: NOME_CATEGORIA[filtri.cat], via: indirizzo({ cat: '' }) },
   filtri.stato && filtri.stato !== 'tutti' && { testo: filtri.stato === 'negozio' ? 'In negozio' : 'Preordini', via: indirizzo({ stato: '' }) },
-  filtri.editore && { testo: filtri.editore, via: indirizzo({ editore: '' }) },
+  ...scelti.map((e) => ({ testo: e, via: indirizzo({ editore: scelti.filter((x) => x !== e) }) })),
   filtri.mese && { testo: nomeMese(filtri.mese), via: indirizzo({ mese: '' }) },
 ].filter(Boolean) as { testo: string; via: string }[];
+// editori scelti sempre in cima all'elenco
+const elencoEditori = [...scelti.filter((e) => !editori.includes(e)), ...editori].sort((a, b) => Number(scelti.includes(b)) - Number(scelti.includes(a)) || a.localeCompare(b));
 const numeri = Array.from({ length: pagine }, (_, i) => i + 1).filter((n) => n === 1 || n === pagine || Math.abs(n - pagina) <= 2);
 ---
 <div class="contenitore pagina">
@@ -78,14 +84,16 @@ const numeri = Array.from({ length: pagine }, (_, i) => i + 1).filter((n) => n =
             </div>
           </fieldset>
         )}
-        {editori.length > 0 && (
-          <div class="campo">
-            <label for="f-editore" class="pesante etichetta">Editore</label>
-            <select id="f-editore" name="editore">
-              <option value="">Tutti gli editori</option>
-              {editori.map((e) => <option value={e} selected={filtri.editore === e}>{e}</option>)}
-            </select>
-          </div>
+        {elencoEditori.length > 0 && (
+          <fieldset class="campo">
+            <legend class="pesante etichetta">Editore{scelti.length > 0 && <span class="quanti-ed">{scelti.length}</span>}</legend>
+            {elencoEditori.length > 8 && <input type="search" class="filtra-editori" placeholder="Cerca un editore" aria-label="Cerca un editore nell'elenco" data-filtra-editori />}
+            <div class="editori" data-elenco-editori>
+              {elencoEditori.map((e) => (
+                <label class="spunta"><input type="checkbox" name="editore" value={e} checked={scelti.includes(e)} /><span>{e}</span></label>
+              ))}
+            </div>
+          </fieldset>
         )}
         {mostraMese && mesi.length > 0 && (
           <div class="campo">
@@ -154,12 +162,19 @@ const numeri = Array.from({ length: pagine }, (_, i) => i + 1).filter((n) => n =
   const modulo = document.getElementById('modulo-filtri') as HTMLFormElement | null;
   modulo?.addEventListener('change', (e) => {
     const t = e.target as HTMLElement;
-    if (t.matches('select, input[type="radio"]')) modulo.requestSubmit();
+    if (t.matches('select, input[type="radio"], input[type="checkbox"]')) modulo.requestSubmit();
   });
   // i campi vuoti non finiscono nell'indirizzo
   modulo?.addEventListener('formdata', (e) => {
     for (const [k, v] of [...e.formData.entries()]) if (v === '') e.formData.delete(k);
   });
+  // ricerca dentro l'elenco degli editori (non invia il modulo)
+  const filtraEd = document.querySelector<HTMLInputElement>('[data-filtra-editori]');
+  filtraEd?.addEventListener('input', () => {
+    const q = filtraEd.value.trim().toLowerCase();
+    document.querySelectorAll<HTMLLabelElement>('[data-elenco-editori] label').forEach((l) => { l.hidden = !!q && !l.textContent!.toLowerCase().includes(q); });
+  });
+  filtraEd?.addEventListener('keydown', (e) => { if (e.key === 'Enter') e.preventDefault(); });
   const pannello = document.getElementById('filtri') as HTMLDetailsElement | null;
   if (pannello && window.matchMedia('(max-width: 1279px)').matches && !location.search) pannello.open = false;
 </script>
@@ -202,6 +217,13 @@ const numeri = Array.from({ length: pagine }, (_, i) => i + 1).filter((n) => n =
   .chip label:hover span { border-color: var(--lime); color: var(--lime); }
   .chip input:checked + span { background: var(--lime); border-color: var(--lime); color: #000; }
   .chip input:focus-visible + span { outline: 2px solid var(--lime); outline-offset: 2px; }
+  .editori { display: grid; gap: .15rem; max-height: 15rem; overflow-y: auto; padding: .35rem; border: 1px solid var(--linea-tenue); border-radius: .75rem; background: rgb(18 10 46 / .6); }
+  .spunta { display: flex; align-items: flex-start; gap: .6rem; padding: .4rem .5rem; border-radius: .5rem; cursor: pointer; font-size: .85rem; font-weight: 600; color: var(--testo-tenue); }
+  .spunta:hover { background: rgb(255 255 255 / .05); color: #fff; }
+  .spunta input { width: 1.05rem; height: 1.05rem; margin-top: .1rem; flex-shrink: 0; accent-color: var(--lime); }
+  .spunta input:checked + span { color: var(--lime); font-weight: 800; }
+  .filtra-editori { margin-bottom: .5rem; padding: .55rem 1rem !important; font-size: .9rem !important; }
+  .quanti-ed { margin-left: .5rem; background: var(--lime); color: #000; border-radius: var(--raggio-pillola); padding: 0 .45rem; font-size: 11px; letter-spacing: 0; }
   .bottoni { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem; }
   .azzera { font-size: .875rem; font-weight: 700; color: var(--testo-tenue); text-decoration: underline; }
   .azzera:hover { color: var(--lime); }
