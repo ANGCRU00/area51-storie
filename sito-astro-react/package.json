@@ -1,0 +1,21 @@
+{
+  "name": "area51-sito-astro-react",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "prepara": "node scripts/prepara.mjs",
+    "dev": "node scripts/prepara.mjs && astro dev",
+    "build": "node scripts/prepara.mjs && astro build && node scripts/percorsi-relativi.mjs",
+    "preview": "astro preview"
+  },
+  "dependencies": {
+    "@astrojs/react": "^7.1.9",
+    "astro": "^7.4.13",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1"
+  },
+  "devDependencies": {
+    "@types/react": "^19",
+    "@types/react-dom": "^19"
+  }
+}

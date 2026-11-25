@@ -1,0 +1,51 @@
+<!-- Modale prodotto: si apre dalle schede di Nuovi arrivi e Prossime uscite senza lasciare la home; si chiude con la X, con Esc o toccando lo sfondo -->
+<div id="modale-prodotto" hidden class="fixed inset-0 z-[85] flex items-center justify-center p-3 sm:p-4 bg-[#070514]/80 backdrop-blur-sm">
+  <div role="dialog" aria-modal="true" aria-labelledby="mp-titolo" class="animate-modale relative w-full max-w-3xl max-h-[92vh] overflow-y-auto bg-[#0d0724] border-2 border-brand-lime rounded-3xl shadow-[8px_8px_0_#5B21B6] p-5 sm:p-7">
+    <button type="button" id="mp-chiudi" aria-label="Chiudi" class="absolute top-3 right-3 z-10 w-11 h-11 rounded-full bg-[#0d0724] border border-white/15 hover:border-brand-lime hover:text-brand-lime flex items-center justify-center transition-colors">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke-linecap="round" stroke-width="2.4"/></svg>
+    </button>
+    <div class="grid sm:grid-cols-[minmax(0,13rem)_minmax(0,1fr)] gap-5 sm:gap-7">
+      <div class="relative aspect-[2/3] w-36 sm:w-full mx-auto self-start rounded-xl overflow-hidden border border-white/10 bg-[#120a2e]">
+        <img id="mp-img" alt="" width="220" height="320" class="absolute inset-0 w-full h-full object-cover">
+        <span id="mp-et" class="absolute top-2 left-2 font-heavy text-[10px] px-2.5 py-0.5 rounded -rotate-2"></span>
+      </div>
+      <div class="min-w-0 space-y-4 sm:pr-10">
+        <div>
+          <p id="mp-editore" class="text-xs font-bold text-brand-lime tracking-wider uppercase"></p>
+          <h2 id="mp-titolo" class="font-heavy text-2xl sm:text-3xl text-white leading-tight mt-1 uppercase"></h2>
+          <p id="mp-volume" class="font-heavy text-lg text-brand-lime mt-1 uppercase"></p>
+        </div>
+        <dl id="mp-dati" class="grid grid-cols-2 gap-x-5 gap-y-3 rounded-xl border border-white/10 bg-white/[0.03] p-4 text-sm"></dl>
+        <div class="flex flex-wrap items-center gap-x-5 gap-y-2">
+          <span id="mp-prezzo" class="font-heavy text-3xl text-brand-lime leading-none"></span>
+          <p id="mp-disp" class="text-sm font-heavy text-white rounded-full border border-white/15 bg-white/[0.03] px-4 py-2"></p>
+        </div>
+        <div><h3 class="font-heavy text-xs uppercase tracking-widest text-brand-lime mb-2">Trama</h3><div id="mp-trama" class="space-y-3 text-sm font-semibold text-brand-muted leading-relaxed"></div></div>
+        <div class="flex flex-wrap items-center gap-3">
+          <button type="button" id="mp-azione" class="bg-brand-lime text-black font-heavy text-sm px-7 py-3.5 rounded-full rounded-bl-[4px] shadow-brutal-violet hover:bg-[#a6d420] transition-colors">Aggiungi al carrello</button>
+          <button type="button" id="mp-pref" aria-pressed="false" aria-label="Aggiungi ai preferiti" class="group w-12 h-12 rounded-full border border-white/20 hover:border-brand-lime hover:text-brand-lime aria-pressed:border-brand-lime aria-pressed:text-brand-lime flex items-center justify-center transition-colors">
+            <svg class="w-5 h-5 group-aria-pressed:fill-current" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M4.3 6.3a4.5 4.5 0 000 6.4L12 20.4l7.7-7.7a4.5 4.5 0 00-6.4-6.4L12 7.6l-1.3-1.3a4.5 4.5 0 00-6.4 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/></svg>
+          </button>
+          <a id="mp-scheda" href="catalogo.html" class="text-sm font-heavy text-brand-lime hover:underline py-2">Apri la scheda completa →</a>
+        </div>
+        <p id="mp-esito" role="status" class="text-sm font-bold text-brand-lime min-h-[1.25rem]"></p>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Modale account: compare qualche secondo dopo l'arrivo, si chiude con la X, con Esc o toccando lo sfondo.
+     Accedi e Registrati sono segnaposto: il sito non ha ancora un servizio per gli account. -->
+<div id="modale-account" hidden class="fixed inset-0 z-[90] flex items-center justify-center p-4 bg-[#070514]/80 backdrop-blur-sm">
+  <div role="dialog" aria-modal="true" aria-labelledby="modale-titolo" aria-describedby="modale-testo" class="animate-modale relative w-full max-w-md bg-[#0d0724] border-2 border-brand-lime rounded-3xl shadow-[8px_8px_0_#5B21B6] px-6 pt-9 pb-7 text-center">
+    <button type="button" id="modale-chiudi" aria-label="Chiudi" class="absolute top-3 right-3 w-11 h-11 rounded-full border border-white/15 hover:border-brand-lime hover:text-brand-lime flex items-center justify-center transition-colors">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke-linecap="round" stroke-width="2.4"/></svg>
+    </button>
+    <svg class="w-16 h-16 mx-auto -rotate-6" aria-hidden="true"><use href="#alieno"/></svg>
+    <h2 id="modale-titolo" class="font-heavy text-2xl text-white mt-3">Sei già dei nostri?</h2>
+    <p id="modale-testo" class="text-brand-muted mt-3 leading-relaxed">Accedi al tuo account oppure registrati: salvi la lista desideri, prenoti le novità e ritiri in negozio senza ripetere i tuoi dati.</p>
+    <div class="mt-6 grid gap-3 sm:grid-cols-2">
+      <a href="profilo.html" class="bg-brand-lime text-black font-heavy text-sm px-5 py-3.5 rounded-full shadow-brutal-violet hover:bg-[#a6d420] transition-colors">Registrati</a>
+      <a href="profilo.html" class="border-2 border-brand-violet hover:border-brand-lime text-white font-heavy text-sm px-5 py-3 rounded-full transition-colors">Accedi</a>
+    </div>
+  </div>
+</div>

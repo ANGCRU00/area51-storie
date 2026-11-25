@@ -1,0 +1,5 @@
+node_modules/
+dist/
+.astro/
+# copiati da ../sito da scripts/prepara.mjs a ogni avvio
+public/

@@ -1,0 +1,17 @@
+---
+/* La home: è solo un elenco di sezioni. I dati (novità, prossime uscite, eventi) sono calcolati quando si costruisce il sito. */
+import Base from '../layouts/Base.astro';
+import Intestazione from '../components/statici/Intestazione.astro';
+import Nastro from '../components/statici/Nastro.astro';
+import Catalogo from '../components/Catalogo.astro';
+import Club from '../components/statici/Club.astro';
+import Eventi from '../components/Eventi.astro';
+---
+<Base titolo="Area 51 Fumetteria | Manga, giochi, carte e collezionismo a Barletta"
+      descrizione="Fumetteria Area 51 a Barletta: manga, fumetti, carte TCG, figure, Warhammer e tornei. Viale G. Falcone e P. Borsellino 35.">
+  <Intestazione />
+  <Nastro />
+  <Catalogo />
+  <Club />
+  <Eventi />
+</Base>

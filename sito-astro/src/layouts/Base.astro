@@ -39,11 +39,11 @@ const { titolo, descrizione } = Astro.props;
 <Script />
 <Modali />
 <ScriptFinali />
-<button id="demo-isole" type="button" aria-pressed="false">Mostra le isole</button>
+<button id="demo-isole" type="button" aria-pressed="false">Mostra le isole (Solid)</button>
 <script is:inline>
   document.getElementById('demo-isole').addEventListener('click', function () {
     var on = document.body.classList.toggle('vedi-isole');
-    this.setAttribute('aria-pressed', on ? 'true' : 'false'); this.textContent = on ? 'Nascondi le isole' : 'Mostra le isole';
+    this.setAttribute('aria-pressed', on ? 'true' : 'false'); this.textContent = on ? 'Nascondi le isole (Solid)' : 'Mostra le isole (Solid)';
   });
 </script>
 </body>

@@ -1,0 +1,173 @@
+{
+ "costruita": "2026-11-25T13:21:39.225Z",
+ "nuovi": [
+  {
+   "ean": "9788822668097",
+   "titolo": "Haikyu!! Club 14",
+   "editore": "Star Comics",
+   "prezzo": 5.2,
+   "quando": "Uscito il 24 novembre 2026",
+   "pre": false
+  },
+  {
+   "ean": "9788822668325",
+   "titolo": "Detective Conan New Edition 75",
+   "editore": "Star Comics",
+   "prezzo": 6.9,
+   "quando": "Uscito il 24 novembre 2026",
+   "pre": false
+  },
+  {
+   "ean": "9788822668738",
+   "titolo": "Blue Box 17",
+   "editore": "Star Comics",
+   "prezzo": 6.9,
+   "quando": "Uscito il 24 novembre 2026",
+   "pre": false
+  },
+  {
+   "ean": "9788822668783",
+   "titolo": "Ranking of Kings 18",
+   "editore": "Star Comics",
+   "prezzo": 6.9,
+   "quando": "Uscito il 24 novembre 2026",
+   "pre": false
+  },
+  {
+   "ean": "9788822669063",
+   "titolo": "Phantom Busters 2",
+   "editore": "Star Comics",
+   "prezzo": 6.9,
+   "quando": "Uscito il 24 novembre 2026",
+   "pre": false
+  },
+  {
+   "ean": "9788822669131",
+   "titolo": "Mix 23",
+   "editore": "Star Comics",
+   "prezzo": 6.5,
+   "quando": "Uscito il 24 novembre 2026",
+   "pre": false
+  },
+  {
+   "ean": "9791221961874",
+   "titolo": "Naruto Color New Edition 21",
+   "editore": "Panini Comics",
+   "prezzo": 7.9,
+   "quando": "Uscito il 19 novembre 2026",
+   "pre": false
+  },
+  {
+   "ean": "9788822659897",
+   "titolo": "Premium Collection 2",
+   "editore": "Star Comics",
+   "prezzo": 9.9,
+   "quando": "Uscito il 17 novembre 2026",
+   "pre": false
+  }
+ ],
+ "prossime": [
+  {
+   "ean": "9791221961881",
+   "titolo": "Naruto Color New Edition 22",
+   "editore": "Panini Comics",
+   "prezzo": 7.9,
+   "quando": "Esce il 26 novembre 2026",
+   "pre": true
+  },
+  {
+   "ean": "9788828717218",
+   "titolo": "Avengers: L'Ascesa di Red Ronin",
+   "editore": "Panini Comics",
+   "prezzo": 5.9,
+   "quando": "Esce a dicembre 2026",
+   "pre": true
+  },
+  {
+   "ean": "9788828750154",
+   "titolo": "D.gray-Man 8 Terza Ristampa",
+   "editore": "Panini Comics",
+   "prezzo": 5.9,
+   "quando": "Esce a dicembre 2026",
+   "pre": true
+  },
+  {
+   "ean": "9788828791904",
+   "titolo": "Warhammer the Old World: Gotrek & Felix Vol. 1: Sventratroll",
+   "editore": "Panini Comics",
+   "prezzo": 19.9,
+   "quando": "Esce a dicembre 2026",
+   "pre": true
+  },
+  {
+   "ean": "9788832755268",
+   "titolo": "Girl From the Other Side 1",
+   "editore": "J-POP",
+   "prezzo": 6.5,
+   "quando": "Esce a dicembre 2026",
+   "pre": true
+  },
+  {
+   "ean": "9788834938522",
+   "titolo": "Radiant - Fabula Fantasia 1",
+   "editore": "J-POP",
+   "prezzo": 7.9,
+   "quando": "Esce a dicembre 2026",
+   "pre": true
+  },
+  {
+   "ean": "9788834939024",
+   "titolo": "Tokyo Ghoul:re Deluxe Box 2 Vol. 5-8",
+   "editore": "J-POP",
+   "prezzo": 64,
+   "quando": "Esce a dicembre 2026",
+   "pre": true
+  },
+  {
+   "ean": "9788834944769",
+   "titolo": "Can't Stop Cursing You 1",
+   "editore": "J-POP",
+   "prezzo": 6.9,
+   "quando": "Esce a dicembre 2026",
+   "pre": true
+  }
+ ],
+ "eventi": [
+  {
+   "linea": "carte",
+   "gioco": "magic",
+   "titolo": "Draft Magic · Tarkir: Dragonstorm",
+   "giorno": "Ven",
+   "numero": 27,
+   "mese": "Nov",
+   "ora": "20:00",
+   "quota": 20,
+   "occupati": 6,
+   "posti": 8
+  },
+  {
+   "linea": "carte",
+   "gioco": "pokemon",
+   "titolo": "Prerelease Pokémon · Fiamme Spettrali",
+   "giorno": "Sab",
+   "numero": 28,
+   "mese": "Nov",
+   "ora": "15:00",
+   "quota": 30,
+   "occupati": 10,
+   "posti": 16
+  },
+  {
+   "linea": "serate",
+   "gioco": "",
+   "titolo": "Serata giochi cooperativi",
+   "giorno": "Sab",
+   "numero": 28,
+   "mese": "Nov",
+   "ora": "21:00",
+   "quota": 0,
+   "occupati": 11,
+   "posti": 16
+  }
+ ]
+}

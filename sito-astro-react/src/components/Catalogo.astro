@@ -1,0 +1,17 @@
+---
+/* Sezione "Nuovi arrivi / Prossime uscite": il titolo è HTML fisso, la parte che cambia (pulsanti e schede) è un'isola React.
+   Le schede arrivano già pronte dalla costruzione del sito (home.json), quindi Google le vede anche senza JavaScript. */
+import NuoviArrivi from './isole/NuoviArrivi.tsx';
+import home from '../data/home.json';
+---
+<section id="catalogo" class="pt-14 lg:pt-16 pb-10 lg:pb-14 max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
+  <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-6 lg:mb-8">
+    <div>
+      <p class="text-xs font-heavy text-brand-lime uppercase tracking-widest mb-2">Nuovi mondi · in negozio e in arrivo</p>
+      <h2 class="font-heavy text-3xl sm:text-4xl lg:text-5xl text-white leading-tight">La tua prossima ossessione arriva qui.</h2>
+    </div>
+  </div>
+  <div class="isola" data-nome="Isola: Nuovi arrivi e prossime uscite">
+    <NuoviArrivi client:visible nuovi={home.nuovi} prossime={home.prossime} />
+  </div>
+</section>
