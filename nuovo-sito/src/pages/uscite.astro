@@ -2,14 +2,16 @@
 /* Prossime uscite da prenotare: tabella uscite di D1 (Starshop e inserite a mano), solo quelle visibili. */
 import Base from '../layouts/Base.astro';
 import Elenco from '../components/prodotti/Elenco.astro';
-import { cercaProdotti, filtriDaIndirizzo, type Categoria } from '../lib/prodotti';
+import { COOKIE_ADULTI, cercaProdotti, filtriDaIndirizzo, type Categoria } from '../lib/prodotti';
 
 export const prerender = false;
 const disponibili: Categoria[] = ['manga', 'fumetti', 'tcg', 'giochi'];
 const filtri = filtriDaIndirizzo(Astro.url, disponibili, { stato: 'preordini', ordine: 'uscita', perPagina: 40 });
+filtri.adulti = Astro.cookies.get(COOKIE_ADULTI)?.value === '1';
 filtri.stato = 'preordini';
 const risultato = await cercaProdotti(filtri);
 Astro.response.headers.set('cache-control', 'public, max-age=0, s-maxage=60');
+Astro.response.headers.set('vary', 'cookie');
 ---
 <Base titolo="Prossime uscite · Area 51 Fumetteria Barletta" descrizione="Manga, fumetti, carte e giochi in uscita nei prossimi mesi: prenotali alla Fumetteria Area 51 di Barletta.">
   <Elenco percorso="Prossime uscite" bollino="Prenota le novità" titolo="Prossime uscite"

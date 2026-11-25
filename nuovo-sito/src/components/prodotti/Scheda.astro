@@ -16,9 +16,10 @@ const c = COL[[...p.codice].reduce((s, ch) => s + ch.charCodeAt(0), 0) % COL.len
   <a href={link} class="collegamento">
     <div class="copertina" style={p.copertina ? undefined : `background:linear-gradient(150deg,${c[0]},${c[1]})`}>
       {p.copertina
-        ? <img src={p.copertina} alt={'Copertina di ' + p.titolo} width="220" height="320" loading="lazy" decoding="async" />
+        ? <img class:list={[{ sfocata: p.adulti }]} src={p.copertina} alt={'Copertina di ' + p.titolo} width="220" height="320" loading="lazy" decoding="async" />
         : <span class="pesante senza">{p.titolo}</span>}
       <span class:list={['pesante etichetta', { viola: prenota, grigia: p.disponibilita === 'esaurito' || p.disponibilita === 'uscito' }]}>{etichetta}</span>
+      {p.adulti && <span class="pesante bollino18" title="Contenuti per adulti">18+</span>}
     </div>
     {p.editore && <p class="editore">{p.editore}</p>}
     <h3 class="pesante titolo">{p.titolo}</h3>
@@ -44,6 +45,9 @@ const c = COL[[...p.codice].reduce((s, ch) => s + ch.charCodeAt(0), 0) % COL.len
   .scheda:hover .copertina img { transform: scale(1.05); }
   .senza { padding: .75rem; text-align: center; color: #fff; font-size: .875rem; line-height: 1.2; text-shadow: 2px 2px 0 rgb(20 12 43 / .6); overflow-wrap: anywhere; }
   .etichetta { position: absolute; top: .5rem; left: .5rem; background: var(--lime); color: #000; font-size: 10px; padding: .125rem .625rem; border-radius: .25rem; transform: rotate(-2deg); }
+  .sfocata { filter: blur(14px) saturate(.6); transform: scale(1.1); }
+  .scheda:hover .copertina img.sfocata { transform: scale(1.1); }
+  .bollino18 { position: absolute; top: .5rem; right: .5rem; background: #FB923C; color: #000; font-size: 11px; padding: .15rem .5rem; border-radius: .25rem; }
   .etichetta.viola { background: var(--viola); color: #fff; }
   .etichetta.grigia { background: #3A2F5E; color: #fff; }
   .editore { font-size: 11px; font-weight: 700; color: var(--testo-tenue); letter-spacing: .05em; text-transform: uppercase; overflow-wrap: anywhere; }

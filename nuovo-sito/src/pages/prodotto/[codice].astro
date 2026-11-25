@@ -8,13 +8,16 @@ import Base from '../../layouts/Base.astro';
 import Percorso from '../../components/comuni/Percorso.astro';
 import Scheda from '../../components/prodotti/Scheda.astro';
 import AzioniCarrello from '../../components/prodotti/AzioniCarrello.astro';
-import { NOME_CATEGORIA, TESTO_DISPONIBILITA, dataLunga, euro, trovaProdotto } from '../../lib/prodotti';
+import { COOKIE_ADULTI, NOME_CATEGORIA, NOME_GENERE, TESTO_DISPONIBILITA, dataLunga, euro, trovaProdotto } from '../../lib/prodotti';
 
 export const prerender = false;
 const trovato = await trovaProdotto(Astro.params.codice ?? '');
 if (!trovato) return Astro.rewrite('/404');
 const { prodotto: p, altri, edizioni, simili } = trovato;
 Astro.response.headers.set('cache-control', 'public, max-age=0, s-maxage=60');
+Astro.response.headers.set('vary', 'cookie');
+// titolo per adulti e visitatore che non ha ancora confermato la maggiore età: copertina sfocata e richiesta di conferma
+const chiediEta = p.adulti && Astro.cookies.get(COOKIE_ADULTI)?.value !== '1';
 
 const reparto = p.categoria === 'tcg' ? { testo: 'TCG', href: '/tcg' } : p.categoria === 'giochi' ? { testo: 'Giochi da tavolo', href: '/giochi' }
   : p.categoria === 'figure' ? { testo: 'Figure & Funko', href: '/figure' } : p.categoria === 'gadget' ? { testo: 'Gadget', href: '/gadget' }
@@ -24,7 +27,7 @@ const acquistabile = prenota || p.disponibilita === 'in_negozio' || p.disponibil
 const maiuscolaIniziale = (s: string) => s.charAt(0) + s.slice(1).toLowerCase();
 const dettagli = [
   ['Editore', p.editore], ['Autore', p.autore], ['Data di uscita', p.dataUscita ? dataLunga(p.dataUscita) : null],
-  ['Edizione', p.edizione], ['Pagine', p.pagine ? String(p.pagine) : null], ['Lingua', p.lingua ? maiuscolaIniziale(p.lingua) : null],
+  ['Genere', p.generi.length ? p.generi.map((g) => NOME_GENERE[g] ?? g).join(', ') : null], ['Edizione', p.edizione], ['Pagine', p.pagine ? String(p.pagine) : null], ['Lingua', p.lingua ? maiuscolaIniziale(p.lingua) : null],
   ['Tipo', p.categoria ? NOME_CATEGORIA[p.categoria] : null], ['EAN', p.ean],
 ].filter((d) => d[1]) as [string, string][];
 const tutteLeEdizioni = edizioni.length ? [p, ...edizioni].sort((a, b) => (a.edizione === 'Standard' ? -1 : b.edizione === 'Standard' ? 1 : 0)) : [];
@@ -33,10 +36,17 @@ const tutteLeEdizioni = edizioni.length ? [p, ...edizioni].sort((a, b) => (a.edi
   <div class="contenitore pagina">
     <Percorso voci={[{ testo: reparto.testo, href: reparto.href }, { testo: p.titolo }]} />
 
+    {chiediEta && (
+      <div class="eta" data-cookie={COOKIE_ADULTI}>
+        <p class="pesante">Questo titolo è per adulti (18+).</p>
+        <p>Per vedere la copertina conferma di avere almeno 18 anni. La scelta resta solo su questo dispositivo.</p>
+        <div><button type="button" class="pulsante" data-eta-ok>Ho almeno 18 anni</button> <a class="indietro" href="/catalogo">Torna al catalogo</a></div>
+      </div>
+    )}
     <section class="prodotto">
       <div class="copertina">
         {p.copertina
-          ? <img src={p.copertina} alt={'Copertina di ' + p.titolo} width="318" height="484" />
+          ? <img class:list={[{ sfocata: chiediEta }]} src={p.copertina} alt={'Copertina di ' + p.titolo} width="318" height="484" />
           : <div class="senza"><svg aria-hidden="true"><use href="#alieno" /></svg><span>Copertina non ancora disponibile</span></div>}
       </div>
 
@@ -45,6 +55,7 @@ const tutteLeEdizioni = edizioni.length ? [p, ...edizioni].sort((a, b) => (a.edi
           <span class:list={['pesante etichetta', { viola: prenota, grigia: p.disponibilita === 'esaurito' || p.disponibilita === 'uscito' }]}>{TESTO_DISPONIBILITA[p.disponibilita]}</span>
           {p.categoria && <span class="etichetta tenue">{NOME_CATEGORIA[p.categoria]}</span>}
           {p.edizione && p.edizione !== 'Standard' && <span class="etichetta tenue">{p.edizione}</span>}
+          {p.adulti && <span class="pesante etichetta arancio">18+ · per adulti</span>}
         </div>
         <h1 class="pesante">{p.serie}</h1>
         {p.volume && <p class="pesante volume">Volume {p.volume}</p>}
@@ -126,6 +137,15 @@ const tutteLeEdizioni = edizioni.length ? [p, ...edizioni].sort((a, b) => (a.edi
 </Base>
 
 <script>
+  /* conferma della maggiore età per i titoli 18+ (cookie di 180 giorni) */
+  const eta = document.querySelector<HTMLElement>('.eta[data-cookie]');
+  eta?.querySelector('[data-eta-ok]')?.addEventListener('click', () => {
+    document.cookie = (eta.dataset.cookie ?? 'area51_adulti') + '=1; path=/; max-age=15552000; samesite=lax';
+    location.reload();
+  });
+</script>
+
+<script>
   /* Disponibilità con lo stato del negozio adesso (dipende dall'ora di chi guarda) */
   import { statoNegozio } from '../../lib/orari';
   const el = document.getElementById('stato-negozio');
@@ -146,6 +166,12 @@ const tutteLeEdizioni = edizioni.length ? [p, ...edizioni].sort((a, b) => (a.edi
   .etichetta { font-size: .75rem; padding: .3rem .75rem; border-radius: .375rem; background: var(--lime); color: #000; }
   .etichetta.viola { background: var(--viola); color: #fff; }
   .etichetta.grigia { background: #3A2F5E; color: #fff; }
+  .etichetta.arancio { background: #FB923C; color: #000; }
+  .sfocata { filter: blur(22px) saturate(.5); transform: scale(1.15); }
+  .eta { margin-bottom: 1.5rem; display: grid; gap: .6rem; padding: 1.25rem; border-radius: var(--raggio); border: 2px solid #FB923C; background: rgb(251 146 60 / .1); color: var(--testo-tenue); font-weight: 600; }
+  .eta .pesante { color: #fff; font-size: 1.1rem; }
+  .eta div { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem; }
+  .indietro { color: #fff; text-decoration: underline; font-weight: 700; }
   .etichetta.tenue { background: none; border: 1px solid var(--linea); color: var(--testo-tenue); font-weight: 700; }
   h1 { font-size: 2rem; line-height: 1.1; color: #fff; overflow-wrap: anywhere; text-wrap: balance; }
   @media (min-width: 640px) { h1 { font-size: 2.75rem; } }

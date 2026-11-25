@@ -99,6 +99,28 @@ export const richieste = sqliteTable('richieste', {
   check('richieste_lunghezze', sql`length(${t.cosa}) BETWEEN 3 AND 300 AND length(${t.nome}) BETWEEN 1 AND 40 AND length(${t.email}) BETWEEN 5 AND 80`),
 ]);
 
+/* Serie: genere ed età, uguali per tutti i volumi (chiave = codice padre Starshop, es. "00001DCNE").
+   Starshop non li fornisce: per i manga si propongono da AniList (scripts/generi-anilist.mjs), poi il gestore conferma o corregge.
+   `adulti` = contenuti per maggiorenni: nascosti negli elenchi finché il visitatore non li attiva. */
+export const GENERI = ['shonen', 'shojo', 'seinen', 'josei', 'fantasy', 'fantascienza', 'horror', 'giallo', 'sportivo', 'commedia', 'avventura', 'slice', 'romance', 'azione'] as const;
+export const serie = sqliteTable('serie', {
+  chiave: text('chiave').primaryKey(),
+  nome: text('nome').notNull(),
+  /** generi del sito (vedi GENERI), come elenco JSON */
+  generi: text('generi', { mode: 'json' }).$type<string[]>().notNull().default(sql`'[]'`),
+  adulti: integer('adulti', { mode: 'boolean' }).notNull().default(false),
+  fonte: text('fonte', { enum: ['anilist', 'gestore', 'nessuna'] }).notNull().default('nessuna'),
+  /** dati della proposta AniList, per il controllo del gestore */
+  anilistId: integer('anilist_id'),
+  anilistTitolo: text('anilist_titolo'),
+  anilistGeneri: text('anilist_generi', { mode: 'json' }).$type<string[]>(),
+  somiglianza: real('somiglianza'),
+  /** vero quando il gestore ha controllato (o scritto) genere ed età */
+  confermata: integer('confermata', { mode: 'boolean' }).notNull().default(false),
+  aggiornataIl: text('aggiornata_il').notNull().default(adesso),
+}, (t) => [index('serie_adulti').on(t.adulti)]);
+export type Serie = typeof serie.$inferSelect;
+
 export type Uscita = typeof uscite.$inferSelect;
 export type Articolo = typeof articoli.$inferSelect;
 export type Richiesta = typeof richieste.$inferSelect;

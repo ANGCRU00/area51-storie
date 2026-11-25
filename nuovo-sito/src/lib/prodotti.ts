@@ -2,7 +2,15 @@
    Decisione di Angelo (25/11/2026): il catalogo mostra SOLO magazzino + uscite, niente cataloghi editori né dati presunti.
    Qui ci sono le regole comuni a catalogo, uscite, scheda prodotto e home. */
 import { and, asc, desc, eq, gte, inArray, like, lte, or, sql, type SQL } from 'drizzle-orm';
-import { articoli, db, uscite, type Articolo, type Uscita } from '../db';
+import { articoli, db, serie as tabellaSerie, uscite, GENERI, type Articolo, type Uscita } from '../db';
+
+export { GENERI };
+export const NOME_GENERE: Record<string, string> = {
+  shonen: 'Shōnen', shojo: 'Shōjo', seinen: 'Seinen', josei: 'Josei', fantasy: 'Fantasy', fantascienza: 'Fantascienza', horror: 'Horror',
+  giallo: 'Giallo', sportivo: 'Sportivo', commedia: 'Commedia', avventura: 'Avventura', slice: 'Slice of life', romance: 'Romance', azione: 'Azione',
+};
+/** cookie che il visitatore imposta confermando di essere maggiorenne (interruttore 18+) */
+export const COOKIE_ADULTI = 'area51_adulti';
 
 export const CATEGORIE = ['manga', 'fumetti', 'tcg', 'giochi', 'figure', 'gadget'] as const;
 export type Categoria = (typeof CATEGORIE)[number];
@@ -54,7 +62,21 @@ export type Prodotto = {
   volume: string | null;
   /** Standard, Variant, Deluxe, Limited… ricavata dal titolo (solo manga e fumetti) */
   edizione: string | null;
+  /** dalla tabella serie (AniList + gestore): generi del sito e contenuti per adulti */
+  generi: string[];
+  adulti: boolean;
 };
+
+type InfoSerie = { generi: string[]; adulti: boolean };
+/** genere ed età di tutte le serie (tabella piccola: si legge intera) */
+async function mappaSerie(): Promise<Map<string, InfoSerie>> {
+  const righe = await db().select({ chiave: tabellaSerie.chiave, generi: tabellaSerie.generi, adulti: tabellaSerie.adulti }).from(tabellaSerie);
+  return new Map(righe.map((r) => [r.chiave, { generi: r.generi ?? [], adulti: r.adulti }]));
+}
+function conSerie(p: Prodotto, m: Map<string, InfoSerie>): Prodotto {
+  const s = p.codicePadre ? m.get(p.codicePadre) : undefined;
+  return s ? { ...p, generi: s.generi, adulti: s.adulti } : p;
+}
 
 /* Serie e volume: "BLUE BOX 17" con numero 17 → serie "BLUE BOX", volume "17" */
 function serieVolume(titolo: string, numero: string | null): { serie: string; volume: string | null } {
@@ -90,7 +112,7 @@ export function daArticolo(a: Articolo): Prodotto {
     numero: a.numero == null ? null : String(a.numero), prezzo: a.prezzoListino, dataUscita: a.dataUscita, dataLimite: null,
     categoria: categoriaDaStarshop(a.categoria, a.sottoCategoria), copertina: urlCopertina(a.copertina), disponibilita: disp,
     pagine: a.pagine, lingua: a.lingua, codicePadre: a.codicePadre,
-    ...volumeSeLibro(a.titolo, a.numero == null ? null : String(a.numero), categoriaDaStarshop(a.categoria, a.sottoCategoria)), edizione: edizioneDa(a.titolo, categoriaDaStarshop(a.categoria, a.sottoCategoria)),
+    ...volumeSeLibro(a.titolo, a.numero == null ? null : String(a.numero), categoriaDaStarshop(a.categoria, a.sottoCategoria)), edizione: edizioneDa(a.titolo, categoriaDaStarshop(a.categoria, a.sottoCategoria)), generi: [], adulti: false,
   };
 }
 
@@ -100,7 +122,7 @@ export function daUscita(u: Uscita): Prodotto {
     numero: u.numero, prezzo: u.prezzo, dataUscita: u.dataUscita, dataLimite: u.dataLimite, categoria: u.categoria, copertina: urlCopertina(u.copertina),
     disponibilita: u.dataUscita && u.dataUscita <= oggi() ? 'uscito' : 'preordine', pagine: u.pagine, lingua: u.lingua,
     codicePadre: u.codicePadre ?? (u.riferimentoEsterno ? u.riferimentoEsterno.replace(/\d{4}$/, '') : null),
-    ...volumeSeLibro(u.titolo, u.numero, u.categoria), edizione: edizioneDa(u.titolo, u.categoria),
+    ...volumeSeLibro(u.titolo, u.numero, u.categoria), edizione: edizioneDa(u.titolo, u.categoria), generi: [], adulti: false,
   };
 }
 
@@ -120,12 +142,15 @@ export type Filtri = {
   cerca?: string;
   stato?: 'tutti' | 'negozio' | 'preordini';
   editori?: string[];
+  generi?: string[];
+  /** il visitatore ha confermato di essere maggiorenne: si mostrano anche i titoli per adulti */
+  adulti?: boolean;
   mese?: string;           // AAAA-MM, solo per le uscite
   ordine?: 'recenti' | 'uscita' | 'prezzo' | 'titolo';
   pagina?: number;
   perPagina?: number;
 };
-export type Risultato = { prodotti: Prodotto[]; totale: number; pagine: number; pagina: number; editori: string[]; mesi: string[] };
+export type Risultato = { prodotti: Prodotto[]; totale: number; pagine: number; pagina: number; editori: string[]; mesi: string[]; generi: string[]; nascostiAdulti: number };
 
 /* Testo di ricerca: ogni parola deve comparire nel titolo, nell'editore o nell'autore (senza distinguere maiuscole). */
 function condizioniCerca<T extends { titolo: any; editore: any }>(t: T, cerca: string, autore?: any): SQL | undefined {
@@ -167,7 +192,14 @@ export async function cercaProdotti(f: Filtri): Promise<Risultato> {
 
   // stesso codice in magazzino e tra le uscite: vale il magazzino
   const inMagazzino = new Set(magazzino.map((p) => p.codice));
-  let tutti = [...magazzino, ...prossime.filter((p) => !inMagazzino.has(p.codice))];
+  const ms = await mappaSerie();
+  let tutti = [...magazzino, ...prossime.filter((p) => !inMagazzino.has(p.codice))].map((p) => conSerie(p, ms));
+  // titoli per adulti: fuori dagli elenchi finché il visitatore non li attiva
+  const nascostiAdulti = f.adulti ? 0 : tutti.filter((p) => p.adulti).length;
+  if (!f.adulti) tutti = tutti.filter((p) => !p.adulti);
+  // generi presenti (per il menu) prima di filtrare per genere; poi almeno uno dei generi scelti
+  const generiPresenti = GENERI.filter((g) => tutti.some((p) => p.generi.includes(g)));
+  if (f.generi?.length) tutti = tutti.filter((p) => p.generi.some((g) => f.generi!.includes(g)));
 
   const ordine = f.ordine ?? 'recenti';
   const confronto: Record<string, (a: Prodotto, b: Prodotto) => number> = {
@@ -189,7 +221,7 @@ export async function cercaProdotti(f: Filtri): Promise<Risultato> {
   const mesi = [...new Set(tutti.filter((p) => p.tipo === 'uscita' && p.dataUscita).map((p) => p.dataUscita!.slice(0, 7)))].sort();
 
   const totale = tutti.length, pagine = Math.max(1, Math.ceil(totale / per)), pagina = Math.min(Math.max(1, f.pagina ?? 1), pagine);
-  return { prodotti: tutti.slice((pagina - 1) * per, pagina * per), totale, pagine, pagina, editori, mesi };
+  return { prodotti: tutti.slice((pagina - 1) * per, pagina * per), totale, pagine, pagina, editori, mesi, generi: generiPresenti, nascostiAdulti };
 }
 
 /** Scheda prodotto: cerca il codice (EAN o codice Starshop) prima nel magazzino visibile, poi tra le uscite visibili. */
@@ -203,6 +235,8 @@ export async function trovaProdotto(codice: string): Promise<{ prodotto: Prodott
     if (u) prodotto = daUscita(u);
   }
   if (!prodotto) return null;
+  const ms = await mappaSerie();
+  prodotto = conSerie(prodotto, ms);
 
   // altri volumi della stessa serie: stesso codice padre Starshop (codice senza le ultime 4 cifre)
   const visti = new Set([prodotto.codice]);
@@ -232,7 +266,7 @@ export async function trovaProdotto(codice: string): Promise<{ prodotto: Prodott
     simili = (await d.select().from(uscite).where(and(...cond)).orderBy(asc(uscite.dataUscita)).limit(12)).map(daUscita)
       .filter((x) => x.serie !== prodotto!.serie).filter(nuovo).slice(0, 4);
   }
-  return { prodotto, altri, edizioni, simili };
+  return { prodotto, altri: altri.map((x) => conSerie(x, ms)), edizioni: edizioni.map((x) => conSerie(x, ms)), simili: simili.map((x) => conSerie(x, ms)).filter((x) => !x.adulti || prodotto!.adulti) };
 }
 
 /** Home: ultime uscite (già uscite di recente o articoli arrivati) e prossime uscite */
@@ -246,7 +280,9 @@ export async function perLaHome(): Promise<{ appena: Prodotto[]; prossime: Prodo
     .orderBy(asc(uscite.dataUscita), asc(uscite.titolo)).limit(8)).map(daUscita);
   const visti = new Set<string>();
   const appena = [...arrivati, ...usciti].filter((p) => (visti.has(p.codice) ? false : (visti.add(p.codice), true))).slice(0, 8);
-  return { appena, prossime };
+  const ms = await mappaSerie();
+  const senzaAdulti = (l: Prodotto[]) => l.map((p) => conSerie(p, ms)).filter((p) => !p.adulti);
+  return { appena: senzaAdulti(appena), prossime: senzaAdulti(prossime) };
 }
 
 /** Legge i filtri dall'indirizzo (?cerca=&cat=&stato=&editore=&mese=&ordine=&pagina=), accettando solo valori validi. */
@@ -262,6 +298,7 @@ export function filtriDaIndirizzo(url: URL, disponibili: Categoria[], base: Part
     cerca: (q.get('cerca') ?? '').trim().slice(0, 60) || undefined,
     stato: stato === 'negozio' || stato === 'preordini' ? stato : (base.stato ?? 'tutti'),
     editori: [...new Set(q.getAll('editore').map((e) => e.slice(0, 80)).filter(Boolean))].slice(0, 30),
+    generi: [...new Set(q.getAll('genere').filter((g) => (GENERI as readonly string[]).includes(g)))],
     mese: /^\d{4}-\d{2}$/.test(q.get('mese') ?? '') ? q.get('mese')! : undefined,
     ordine: ordine === 'uscita' || ordine === 'prezzo' || ordine === 'titolo' || ordine === 'recenti' ? ordine : (base.ordine ?? 'recenti'),
     pagina: Math.max(1, Math.min(500, Number(q.get('pagina')) || 1)),

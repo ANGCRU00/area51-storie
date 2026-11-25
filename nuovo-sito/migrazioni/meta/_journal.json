@@ -15,6 +15,13 @@
       "when": 1795620644929,
       "tag": "0001_uscite_dettagli",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1795621568671,
+      "tag": "0002_serie",
+      "breakpoints": true
     }
   ]
 }

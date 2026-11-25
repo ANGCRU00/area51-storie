@@ -17,6 +17,9 @@ Niente Tailwind: ogni componente ha il suo CSS. Analisi tecnica completa: vedi C
   `/tcg`, `/giochi`, `/figure`, `/warhammer`, `/gadget`, `/uscite`, scheda `/prodotto/<EAN o codice Starshop>`. Regole comuni in
   `src/lib/prodotti.ts`, componenti in `src/components/prodotti/` (`Elenco` con filtri GET, `Scheda`, `AzioniCarrello`). Home: "Appena usciti"
   e "Prossime uscite" da D1.
+- **Genere e 18+**: tabella `serie` (chiave = codice padre Starshop). Per i manga le proposte arrivano da AniList con
+  `node scripts/generi-anilist.mjs` (aggiunge `--tutte` per rifare anche le serie già cercate; le serie confermate dal gestore non si
+  toccano). I titoli per adulti sono nascosti finché il visitatore non conferma di essere maggiorenne (cookie `area51_adulti`).
 - **Dati provvisori**: solo gli eventi della home, da `../sito/dati/eventi.js` tramite `scripts/dati-provvisori.mjs` (fino alla fase 8).
 
 ## Struttura
@@ -57,6 +60,7 @@ npx wrangler d1 create area51               # copiare il database_id che stampa 
 npx wrangler r2 bucket create area51-file
 npx wrangler d1 migrations apply area51 --remote
 npx wrangler d1 execute area51 --remote --file importazione/dati.sql   # uscite e articoli trasferiti
+npx wrangler d1 execute area51 --remote --file importazione/serie.sql  # generi e 18+ delle serie
 # copertine: caricare i file di importazione/copertine/ nel bucket area51-file con chiave copertine/<file>
 npm run deploy                              # pubblica su https://area51.<account>.workers.dev
 ```
