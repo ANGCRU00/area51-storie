@@ -1,48 +1,17 @@
 ---
-/* Home provvisoria della fase 1: mostra il layout comune (sfondo, testata, piede) e lo stato di D1 e R2.
-   Nella fase 2 diventa la home vera, partendo dalla demo in ../sito-astro-react. */
+/* Home: apertura, nastro, novità, club, eventi. Le parti comuni (sfondo, testata, piede) le mette Base. */
 import Base from '../layouts/Base.astro';
+import Apertura from '../components/home/Apertura.astro';
+import Nastro from '../components/home/Nastro.astro';
+import Novita from '../components/home/Novita.astro';
+import Club from '../components/home/Club.astro';
+import Eventi from '../components/home/Eventi.astro';
 ---
-<Base titolo="Area 51 Fumetteria · nuovo sito in costruzione">
-  <section class="contenitore apertura">
-    <p class="occhiello">Nuovo sito · fase 1</p>
-    <h1 class="pesante">La base è pronta.<br /><span class="lime">Il resto atterra presto.</span></h1>
-    <p class="testo">Testata con la navicella, sfondo con il sistema solare e piede sono scritti una volta sola e valgono per tutte le pagine.
-      Il sito gira sui Workers di Cloudflare e legge il suo database (D1) e lo spazio per le copertine (R2).</p>
-    <div class="stato" aria-live="polite">
-      <h2 class="pesante">Collegamenti</h2>
-      <ul>
-        <li><span class="spia" id="spia-d1"></span><b>Database D1</b><span id="testo-d1">controllo in corso…</span></li>
-        <li><span class="spia" id="spia-r2"></span><b>File R2</b><span id="testo-r2">controllo in corso…</span></li>
-      </ul>
-    </div>
-  </section>
+<Base titolo="Area 51 Fumetteria | Manga, giochi, carte e collezionismo a Barletta"
+  descrizione="Fumetteria Area 51 a Barletta: manga, fumetti, carte TCG, figure, Warhammer e tornei. Viale G. Falcone e P. Borsellino 35.">
+  <Apertura />
+  <Nastro />
+  <Novita />
+  <Club />
+  <Eventi />
 </Base>
-
-<script>
-  /* Chiede a /api/stato se D1 e R2 rispondono e accende le spie. */
-  const metti = (chi: string, ok: boolean, testo: string) => {
-    document.getElementById('spia-' + chi)?.classList.add(ok ? 'verde' : 'rossa');
-    const t = document.getElementById('testo-' + chi); if (t) t.textContent = testo;
-  };
-  fetch('/api/stato').then((r) => r.json()).then((s) => {
-    metti('d1', s.d1?.ok, s.d1?.ok ? 'risponde: «' + (s.d1.ultima_riga?.nota ?? 'nessuna riga') + '»' : s.d1?.errore ?? 'non risponde');
-    metti('r2', s.r2?.ok, s.r2?.ok ? 'risponde (' + s.r2.file + ' file)' : 'non risponde');
-  }).catch(() => { metti('d1', false, 'interfaccia non raggiungibile'); metti('r2', false, 'interfaccia non raggiungibile'); });
-</script>
-
-<style>
-  .apertura { padding-block: 4rem 5rem; display: grid; gap: 1.25rem; max-width: 60rem; margin-inline: auto; }
-  .occhiello { font-weight: 900; font-stretch: 125%; font-size: .75rem; letter-spacing: .15em; text-transform: uppercase; color: var(--lime); }
-  h1 { font-size: clamp(2.25rem, 7vw, 4.5rem); line-height: 1.02; color: #fff; text-wrap: balance; }
-  .lime { color: var(--lime); }
-  .testo { color: var(--testo-tenue); font-weight: 600; max-width: 60ch; font-size: 1.05rem; }
-  .stato { margin-top: 1rem; background: rgb(14 9 38 / .9); border: 1px solid var(--linea-tenue); border-radius: var(--raggio); padding: 1.25rem; max-width: 34rem; }
-  .stato h2 { font-size: 1rem; color: #fff; margin-bottom: .75rem; }
-  .stato ul { display: grid; gap: .5rem; }
-  .stato li { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem .75rem; font-size: .9rem; }
-  .stato li span:last-child { color: var(--testo-tenue); min-width: 0; overflow-wrap: anywhere; }
-  .spia { width: .75rem; height: .75rem; border-radius: 50%; background: var(--testo-tenue); flex-shrink: 0; }
-  .spia.verde { background: var(--lime); box-shadow: var(--alone-lime); }
-  .spia.rossa { background: #FB923C; }
-</style>

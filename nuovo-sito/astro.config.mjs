@@ -11,5 +11,7 @@ export default defineConfig({
   adapter: cloudflare({ imageService: 'compile' }),
   session: false,
   integrations: [react()],
+  // indirizzi senza barra finale: /negozio, /privacy (le pagine diventano negozio.html, privacy.html)
   trailingSlash: 'never',
+  build: { format: 'file' },
 });

@@ -1,0 +1,18 @@
+---
+/* Sezione "Nuovi arrivi / Prossime uscite": titolo fisso, pulsanti e schede in un'isola React.
+   I dati per ora vengono da src/data/provvisori.json; dalla fase 4 dal database D1. */
+import NuoviArrivi from '../isole/NuoviArrivi.tsx';
+import dati from '../../data/provvisori.json';
+---
+<section id="catalogo" class="contenitore novita">
+  <p class="pesante occhiello">Nuovi mondi · in negozio e in arrivo</p>
+  <h2 class="pesante titolo-sezione">La tua prossima ossessione arriva qui.</h2>
+  <NuoviArrivi client:visible nuovi={dati.nuovi} prossime={dati.prossime} />
+</section>
+
+<style>
+  .novita { padding-block: 3.5rem 2.5rem; }
+  @media (min-width: 1024px) { .novita { padding-block: 4rem 3.5rem; } }
+  .titolo-sezione { margin-bottom: 1.5rem; }
+  @media (min-width: 1024px) { .titolo-sezione { margin-bottom: 2rem; } }
+</style>

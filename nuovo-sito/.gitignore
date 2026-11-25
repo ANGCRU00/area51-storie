@@ -4,3 +4,5 @@ dist/
 .wrangler/
 .dev.vars
 .env
+public/img/copertine/
+src/data/provvisori.json

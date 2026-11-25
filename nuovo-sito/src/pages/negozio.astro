@@ -1,0 +1,165 @@
+---
+/* Il negozio: dove siamo, come si ritira, orari, Carta della Cultura e del Merito, modulo "Chiedicelo".
+   Testi presi dal sito attuale (sito/negozio.html). Gli orari vengono da src/lib/orari.ts. */
+import Base from '../layouts/Base.astro';
+import Percorso from '../components/comuni/Percorso.astro';
+import Chiedicelo from '../components/isole/Chiedicelo.tsx';
+import { GIORNI, ORARI, SETTIMANA, maiuscola } from '../lib/orari';
+---
+<Base titolo="Il negozio · Area 51 Fumetteria Barletta"
+  descrizione="Area 51, fumetteria a Barletta: indirizzo, orari di apertura, ritiro in negozio, Carta della Cultura e Carta del Merito.">
+  <div class="contenitore pagina">
+    <Percorso voci={[{ testo: 'Il negozio' }]} />
+
+    <section class="testa">
+      <div class="testa-testo">
+        <span class="bollino">Dove siamo</span>
+        <h1 class="pesante">Area <span class="lime">51</span></h1>
+        <p class="introduzione">Fumetteria a Barletta: manga, fumetti, giochi, carte. E un posto dove parlarne. Scegli online, ritiri e paghi in negozio.</p>
+        <p id="stato-grande" class="stato-grande" hidden><span class="spia" aria-hidden="true"></span><span class="stato-testo"></span></p>
+      </div>
+      <svg class="alieno" aria-hidden="true"><use href="#alieno" /></svg>
+    </section>
+
+    <section class="due">
+      <div id="contatti" class="riquadro contatti">
+        <h2 class="pesante sottotitolo">Come raggiungerci</h2>
+        <address class="indirizzo">
+          <span class="via">Viale G. Falcone e P. Borsellino, 35</span>
+          <span class="citta">76121 Barletta (BT)</span>
+          <a class="telefono" href="tel:+390883884567">0883 884567</a>
+        </address>
+        <div class="azioni">
+          <a href="https://maps.app.goo.gl/z5Y362wULi7cZeE7A" target="_blank" rel="noopener noreferrer" class="pulsante">Apri la mappa ↗</a>
+          <a href="tel:+390883884567" class="pesante chiama">Chiama</a>
+        </div>
+        <ol class="passi ritiro">
+          <li>Scegli i prodotti sul sito e aggiungili al carrello.</li>
+          <li>Passa in negozio negli orari di apertura.</li>
+          <li>Paghi e ritiri. Non spediamo.</li>
+        </ol>
+      </div>
+
+      <div class="riquadro">
+        <h2 class="pesante sottotitolo">Orari di apertura</h2>
+        <table class="orari">
+          <caption class="solo-lettori">Orari di apertura del negozio, da lunedì a domenica</caption>
+          <tbody>
+            {SETTIMANA.map((g) => (
+              <tr data-giorno={g} class={ORARI[g] ? '' : 'chiuso'}>
+                <th scope="row" class="pesante"><span class="nome-giorno">{maiuscola(GIORNI[g])}</span></th>
+                <td>{ORARI[g] ? ORARI[g].map((f) => f[0] + '–' + f[1]).join('  ·  ') : 'Chiuso'}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="carta-cultura" class="riquadro blocco" aria-labelledby="cc-titolo">
+      <div class="divisa">
+        <div>
+          <span class="bollino">Anche con i buoni</span>
+          <h2 id="cc-titolo" class="pesante titolo-blocco">Carta della Cultura e <span class="lime">Carta del Merito</span></h2>
+          <p class="paragrafo">Accettiamo i buoni della Carta della Cultura Giovani e della Carta del Merito (l'ex 18app) per manga, fumetti e libri.</p>
+          <p class="paragrafo piccolo"><span class="bianco">Solo in negozio, di persona.</span> I buoni non si usano online né per le prenotazioni a distanza, e non devi mandarci il codice: lo porti con te.</p>
+          <p class="paragrafo piccolo">Le somme del 2026 si possono spendere entro il <span class="bianco">31 dicembre 2026</span>.</p>
+        </div>
+        <ol class="passi">
+          <li><span>Genera il buono sul <a class="collegamento" href="https://cartegiovani.cultura.gov.it" target="_blank" rel="noopener noreferrer">sito del Ministero della Cultura</a> con SPID o CIE: scegli la categoria e l'importo.</span></li>
+          <li><span>Vieni in negozio con il codice del buono (o il codice QR) e un <span class="bianco">documento</span>: il buono è personale e controlliamo l'identità del titolare.</span></li>
+          <li><span>Convalidiamo il buono e ritiri quello che hai scelto.</span></li>
+        </ol>
+      </div>
+    </section>
+
+    <section id="chiedicelo" class="blocco chiedicelo">
+      <div class="divisa">
+        <div>
+          <span class="bollino">Chiedicelo</span>
+          <h2 class="pesante titolo-blocco">Non lo trovi? <span class="lime">Chiedicelo.</span></h2>
+          <p class="paragrafo">Dicci quale fumetto, gioco o manuale cerchi: verifichiamo se possiamo procurartelo e ti ricontattiamo.</p>
+          <p class="paragrafo piccolo">Preferisci parlarne a voce? Chiamaci allo <a class="collegamento" href="tel:+390883884567">0883 884567</a> negli orari di apertura.</p>
+        </div>
+        <Chiedicelo client:visible />
+      </div>
+    </section>
+  </div>
+</Base>
+
+<script>
+  /* Oggi in evidenza nella tabella e stato "aperto/chiuso" aggiornato ogni minuto: dipendono dall'ora di chi guarda. */
+  import { statoNegozio } from '../lib/orari';
+  const oggi = new Date().getDay();
+  const riga = document.querySelector<HTMLTableRowElement>('tr[data-giorno="' + oggi + '"]');
+  if (riga) {
+    riga.classList.add('oggi');
+    const nome = riga.querySelector('.nome-giorno');
+    if (nome) nome.textContent += ' · oggi';
+  }
+  const box = document.getElementById('stato-grande');
+  const aggiorna = () => {
+    if (!box) return;
+    const s = statoNegozio();
+    box.hidden = false;
+    box.classList.toggle('aperto', s.aperto);
+    const t = box.querySelector('.stato-testo'); if (t) t.textContent = s.testo;
+  };
+  aggiorna(); setInterval(aggiorna, 60000);
+</script>
+
+<style>
+  .pagina { padding-block: 2rem 4rem; }
+  @media (min-width: 1024px) { .pagina { padding-top: 3.5rem; } }
+  .testa { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; column-gap: 1rem; padding-bottom: 2.5rem; }
+  .testa .bollino { margin-bottom: 1rem; }
+  h1 { font-size: 2.1rem; line-height: 1.02; color: #fff; }
+  @media (min-width: 640px) { h1 { font-size: 3rem; } }
+  @media (min-width: 1024px) { h1 { font-size: 3.75rem; } }
+  .introduzione { color: var(--testo-tenue); margin-top: 1rem; max-width: 36rem; line-height: 1.625; }
+  .stato-grande { margin-top: 1.25rem; display: inline-flex; align-items: center; gap: .5rem; font-size: .875rem; font-weight: 700; padding: .5rem 1rem;
+    border-radius: var(--raggio-pillola); border: 1px solid var(--linea); }
+  .spia { width: .625rem; height: .625rem; border-radius: 50%; background: #FB923C; }
+  .stato-grande.aperto .spia { background: var(--lime); }
+  .alieno { width: 6rem; height: 6rem; transform: rotate(-6deg); }
+  @media (min-width: 640px) { .alieno { width: 10rem; height: 10rem; } }
+  @media (min-width: 1024px) { .alieno { width: 13rem; height: 13rem; } }
+
+  .due { display: grid; gap: 1.5rem; }
+  @media (min-width: 1024px) { .due { grid-template-columns: 1fr 1fr; gap: 2rem; } }
+  .contatti { display: grid; gap: 1.5rem; align-content: start; scroll-margin-top: 7rem; }
+  .sottotitolo { font-size: 1.25rem; color: #fff; }
+  .indirizzo { font-style: normal; display: grid; gap: .375rem; line-height: 1.625; }
+  .via { color: var(--lime); font-weight: 700; font-size: 1.125rem; }
+  .citta { color: #fff; font-weight: 600; }
+  .telefono { justify-self: start; font-weight: 600; color: var(--testo-tenue); text-decoration: underline; }
+  .telefono:hover { color: var(--lime); }
+  .azioni { display: flex; flex-wrap: wrap; gap: .75rem; }
+  .chiama { border: 2px solid var(--viola); color: #fff; font-size: .875rem; padding: .75rem 1.5rem; border-radius: var(--raggio-pillola); transition: border-color var(--transizione); }
+  .chiama:hover { border-color: var(--lime); }
+  .ritiro { padding-top: 1rem; border-top: 1px solid var(--linea-tenue); }
+
+  .orari { width: 100%; margin-top: 1.25rem; border-collapse: collapse; font-size: .875rem; }
+  @media (min-width: 640px) { .orari { font-size: 1rem; } }
+  .orari th, .orari td { padding-block: .75rem; border-bottom: 1px solid var(--linea-tenue); }
+  .orari th { text-align: left; color: #fff; padding-right: 1rem; }
+  .orari td { text-align: right; font-weight: 600; color: #fff; white-space: pre; }
+  .orari tr.chiuso td { color: var(--testo-tenue); }
+  .orari tr.oggi th, .orari tr.oggi td { color: var(--lime); }
+  @media (max-width: 400px) { .orari td { white-space: normal; } }
+
+  .blocco { margin-top: 1.5rem; scroll-margin-top: 7rem; }
+  @media (min-width: 1024px) { .blocco { margin-top: 2rem; } }
+  .divisa { display: grid; grid-template-columns: minmax(0, 1fr); gap: 1.5rem; }
+  @media (min-width: 1024px) { .divisa { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 2.5rem; } }
+  .divisa .bollino { margin-bottom: .75rem; }
+  .titolo-blocco { font-size: 1.5rem; line-height: 1.25; color: #fff; }
+  @media (min-width: 640px) { .titolo-blocco { font-size: 1.875rem; } }
+  .paragrafo { margin-top: .75rem; font-weight: 600; color: var(--testo-tenue); line-height: 1.625; font-size: .875rem; }
+  @media (min-width: 640px) { .paragrafo:not(.piccolo) { font-size: 1rem; } }
+  .bianco { color: #fff; }
+  .collegamento { color: #fff; text-decoration: underline; }
+  .collegamento:hover { color: var(--lime); }
+  .chiedicelo { border-radius: var(--raggio); border: 2px solid rgb(185 230 46 / .6); background: rgb(13 7 36 / .95); padding: 1.5rem; box-shadow: 6px 6px 0 var(--viola); }
+  @media (min-width: 640px) { .chiedicelo { padding: 2rem; } }
+</style>

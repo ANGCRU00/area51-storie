@@ -3,11 +3,12 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "astro dev",
-    "build": "astro build",
+    "dev": "node scripts/dati-provvisori.mjs && astro dev",
+    "build": "node scripts/dati-provvisori.mjs && astro build",
     "preview": "astro build && wrangler dev",
     "deploy": "astro build && wrangler deploy",
-    "db:locale": "wrangler d1 execute area51 --local --command \"select 1\""
+    "db:locale": "wrangler d1 execute area51 --local --command \"select 1\"",
+    "dati": "node scripts/dati-provvisori.mjs"
   },
   "dependencies": {
     "@astrojs/cloudflare": "^14.4.9",

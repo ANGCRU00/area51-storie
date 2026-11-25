@@ -1,0 +1,73 @@
+---
+/* I tre prossimi eventi, scritti nella pagina alla costruzione (nessun JavaScript).
+   Per ora dai dati provvisori (sito/dati/eventi.js); dalla fase 8 da D1, con i posti aggiornati. */
+import dati from '../../data/provvisori.json';
+---
+<section id="eventi" class="contenitore eventi">
+  <div class="testa">
+    <p class="pesante occhiello">Fuori dallo schermo, dentro l'avventura</p>
+    <h2 class="pesante titolo-sezione">Stesso pianeta. Stesse passioni.</h2>
+  </div>
+  <ul class="lista">
+    {dati.eventi.map((e) => {
+      const noto = e.occupati !== null;
+      const occupati = e.occupati ?? 0;
+      const rimasti = e.posti - occupati;
+      const perc = e.posti ? Math.round(occupati / e.posti * 100) : 0;
+      return (
+        <li>
+          <a href={'/eventi?linea=' + e.linea} class="evento">
+            <div class="alto">
+              <div class="data">
+                <span class="pesante piccolo">{e.giorno}</span>
+                <span class="pesante numero">{e.numero}</span>
+                <span class="pesante piccolo">{e.mese}</span>
+              </div>
+              <div class="dettagli">
+                <span class="pesante tipo">{e.tipo}</span>
+                <h3 class="pesante nome">{e.titolo}</h3>
+                <p class="ora">Ore {e.ora} · {e.quota ? 'Quota ' + e.quota + ' €' : 'Gratis'}</p>
+              </div>
+            </div>
+            <div class="posti">
+              <div class="posti-riga">
+                <span>{noto ? occupati + ' / ' + e.posti + ' posti occupati' : (e.posti ? e.posti + ' posti' : 'Posti da definire')}</span>
+                {noto && <span class="lime">{e.posti > 0 && rimasti <= 2 ? 'Solo ' + rimasti + ' rimasti!' : rimasti + ' rimasti'}</span>}
+              </div>
+              {noto && <div class="barra" aria-hidden="true"><div style={'width:' + perc + '%'}></div></div>}
+            </div>
+          </a>
+        </li>
+      );
+    })}
+  </ul>
+  <a class="pesante tutti" href="/eventi">Tutti gli eventi →</a>
+</section>
+
+<style>
+  .eventi { padding-block: 2.5rem; }
+  @media (min-width: 1024px) { .eventi { padding-block: 3.5rem; } }
+  .testa { margin-bottom: 3rem; }
+  .lista { display: grid; grid-template-columns: 1fr; gap: 1.5rem; }
+  @media (min-width: 768px) { .lista { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+  .evento { display: flex; flex-direction: column; gap: 1rem; height: 100%; padding: 1.25rem; border-radius: var(--raggio); background: rgb(14 9 38 / .9);
+    border: 1px solid var(--linea-tenue); transition: border-color var(--transizione); }
+  .evento:hover { border-color: var(--lime); }
+  .alto { display: flex; align-items: flex-start; gap: 1rem; }
+  .data { flex-shrink: 0; width: 4.5rem; border-radius: .75rem; border: 1px solid rgb(185 230 46 / .4); background: var(--inchiostro); text-align: center; padding-block: .5rem; }
+  .data span { display: block; }
+  .piccolo { font-size: 10px; letter-spacing: .1em; color: var(--lime); text-transform: uppercase; }
+  .numero { font-size: 1.875rem; color: #fff; line-height: 1; margin-block: .25rem; }
+  .dettagli { min-width: 0; }
+  .tipo { display: inline-block; background: rgb(91 33 182 / .6); border: 1px solid var(--viola); color: #fff; font-size: 10px; text-transform: uppercase; letter-spacing: .05em;
+    padding: .25rem .625rem; border-radius: .375rem; }
+  .nome { font-size: 1rem; color: #fff; text-transform: uppercase; margin-top: .5rem; line-height: 1.375; overflow-wrap: anywhere; transition: color var(--transizione); }
+  .evento:hover .nome { color: var(--lime); }
+  .ora { font-size: .875rem; font-weight: 700; color: var(--testo-tenue); margin-top: .25rem; }
+  .posti { margin-top: auto; display: grid; gap: .5rem; }
+  .posti-riga { display: flex; align-items: center; justify-content: space-between; gap: .75rem; font-size: .75rem; font-weight: 700; color: var(--testo-tenue); }
+  .barra { height: .5rem; border-radius: var(--raggio-pillola); background: rgb(255 255 255 / .1); overflow: hidden; }
+  .barra div { height: 100%; background: var(--lime); border-radius: var(--raggio-pillola); }
+  .tutti { display: inline-block; margin-top: 2rem; padding-block: .5rem; font-size: .875rem; color: var(--lime); }
+  .tutti:hover { text-decoration: underline; }
+</style>

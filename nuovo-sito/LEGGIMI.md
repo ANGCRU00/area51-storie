@@ -3,24 +3,27 @@
 Astro 7 (pagine) + React 19 (isole) pubblicato sui **Workers di Cloudflare**, con database **D1** e file su **R2**.
 Niente Tailwind: ogni componente ha il suo CSS. Analisi tecnica completa: vedi CLAUDE.md, sezione "Nuovo sito".
 
-## Stato: fase 1 (base del progetto)
+## Stato: fase 2 (home e pagine fisse)
 
-- Layout comune scritto una volta per tutte le pagine (`src/layouts/Base.astro`): simboli SVG, sfondo con il sistema solare,
-  testata con la navicella del menu, ricerca, menu da telefono, piede.
-- Isole React in testata: contatore del carrello e dei preferiti (stesse chiavi di localStorage del sito attuale).
-- `/api/stato`: controlla che il sito raggiunga D1 e R2.
-- Home provvisoria e pagina 404. Le altre pagine arrivano dalla fase 2.
+- **Fase 1**: layout comune (`src/layouts/Base.astro`: simboli, sfondo, testata con navicella, ricerca, menu da telefono, piede),
+  contatori di carrello e preferiti, `/api/stato` (controllo di D1 e R2).
+- **Fase 2**: home completa (apertura con stato del negozio in diretta, nastro, novità e prossime uscite, club, eventi),
+  `/negozio` (orari da `src/lib/orari.ts`, Carta della Cultura, modulo **Chiedicelo** che salva in D1 tramite `/api/chiedicelo`),
+  `/privacy` e `/condizioni` (testi provvisori del sito attuale, da completare).
+- **Dati provvisori**: novità ed eventi della home vengono da `../sito/dati/*.js` tramite `scripts/dati-provvisori.mjs`
+  (lanciato da `npm run dev` e `npm run build`). Dalla fase 3/4 arriveranno da D1 e lo script si toglie.
 
 ## Struttura
 
 | Cartella | Contenuto |
 |---|---|
-| `src/pages/` | le pagine (`index.astro`, `404.astro`) e le interfacce (`api/stato.ts`) |
+| `src/pages/` | le pagine (`index`, `negozio`, `privacy`, `condizioni`, `404`) e le interfacce (`api/stato.ts`, `api/chiedicelo.ts`) |
 | `src/layouts/Base.astro` | testa del documento e parti comuni |
-| `src/components/comuni/` | `Simboli`, `Sfondo`, `Testata`, `Piede` |
+| `src/components/comuni/` | `Simboli`, `Sfondo`, `Testata`, `Piede`, `Percorso`, `Documento` (pagine di testo) |
+| `src/components/home/` | sezioni della home |
 | `src/components/isole/` | isole React, ognuna con il suo `.module.css` |
 | `src/stili/` | `variabili.css` (colori, caratteri, misure, ombre) e `base.css` (regole comuni) |
-| `src/lib/negozio.ts` | carrello e preferiti sul dispositivo |
+| `src/lib/` | `negozio.ts` (carrello e preferiti sul dispositivo), `orari.ts` (orari del negozio), `api.ts` (aiuti per le interfacce) |
 | `migrazioni/` | modifiche al database D1, in ordine |
 | `public/` | file serviti così come sono (caratteri) |
 

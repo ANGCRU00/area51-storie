@@ -1,0 +1,49 @@
+---
+/* Sezione Area 51 Club. Nomi dei livelli scelti dal negozio; soglie e vantaggi non sono ancora stati definiti
+   (nel sito attuale arrivano dalla tabella "livelli", oggi vuota). Dalla fase 8 si leggeranno da D1. */
+const livelli = ['Avvistamento', 'Rapito dagli alieni', 'Amico degli Alieni'];
+---
+<section class="contenitore club-fuori">
+  <div id="club" class="club">
+    <div class="testo">
+      <p class="pesante occhiello">Area 51 Club</p>
+      <h2 class="pesante titolo">Più torni, più ricevi.</h2>
+      <p class="descrizione">Con la tessera Area 51 Club il tuo livello cresce con quanto spendi in negozio nel tempo, e a ogni livello c'è un vantaggio. Chiedi la tessera in negozio.</p>
+      <a class="pulsante" href="/#club">Scopri il club →</a>
+    </div>
+    <div class="livelli">
+      <p class="pesante livelli-testa"><span>Livelli del Club</span><span class="lime">più spendi, più ricevi</span></p>
+      <ol class="elenco">
+        {livelli.map((nome, i) => (
+          <li>
+            <span class="pesante numero">{i + 1}</span>
+            <span class="voce"><b class="pesante">{nome}</b><span>[SOGLIA] · [VANTAGGIO]</span></span>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </div>
+</section>
+
+<style>
+  .club-fuori { padding-block: 2.25rem 1rem; }
+  @media (min-width: 1024px) { .club-fuori { padding-block: 3rem 2rem; } }
+  .club { display: flex; flex-direction: column; gap: 2rem; border: 2px solid var(--lime); border-radius: 1.5rem; padding: 1.25rem; background: rgb(13 7 36 / .95);
+    box-shadow: 0 0 30px rgb(185 230 46 / .15); scroll-margin-top: 7rem; }
+  @media (min-width: 640px) { .club { padding: 2.5rem; } }
+  @media (min-width: 1024px) { .club { flex-direction: row; align-items: center; gap: 3.5rem; } .testo, .livelli { flex: 1; } }
+  .titolo { font-size: 1.875rem; line-height: 1.25; color: #fff; margin-bottom: 1rem; }
+  @media (min-width: 640px) { .titolo { font-size: 2.25rem; } }
+  .descrizione { color: var(--testo-tenue); line-height: 1.625; margin-bottom: 1.5rem; }
+  .livelli { background: var(--scheda-sopra); border: 1px solid var(--linea-tenue); border-radius: var(--raggio); padding: 1rem; min-width: 0; }
+  @media (min-width: 640px) { .livelli { padding: 1.25rem; } }
+  .livelli-testa { display: flex; justify-content: space-between; gap: 1rem; font-size: 11px; color: var(--testo-tenue); text-transform: uppercase; margin-bottom: .75rem; }
+  .elenco { display: grid; gap: .5rem; }
+  .elenco li { display: flex; align-items: flex-start; gap: .75rem; border-radius: .75rem; border: 1px solid var(--linea-tenue); background: var(--scheda); padding: .5rem .75rem; }
+  @media (min-width: 640px) { .elenco li { padding: .75rem 1rem; } }
+  .numero { display: none; flex-shrink: 0; width: 1.75rem; height: 1.75rem; border-radius: 50%; background: var(--lime); color: #000; font-size: .75rem; align-items: center; justify-content: center; }
+  @media (min-width: 640px) { .numero { display: flex; } }
+  .voce { min-width: 0; }
+  .voce b { display: block; color: #fff; }
+  .voce span { display: block; font-size: .875rem; font-weight: 600; color: var(--testo-tenue); }
+</style>

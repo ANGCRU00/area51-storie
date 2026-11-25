@@ -57,6 +57,27 @@ ul, ol { list-style: none; padding: 0; }
 .tondo:hover { border-color: var(--lime); color: var(--lime); }
 .tondo svg { width: 1rem; height: 1rem; }
 
+/* Intestazioni di sezione: occhiello lime piccolo e titolo grande bianco */
+.occhiello { font-size: .75rem; color: var(--lime); text-transform: uppercase; letter-spacing: .1em; margin-bottom: .5rem; }
+.titolo-sezione { font-size: 1.875rem; line-height: 1.25; color: #fff; text-wrap: balance; }
+@media (min-width: 640px) { .titolo-sezione { font-size: 2.25rem; } }
+@media (min-width: 1024px) { .titolo-sezione { font-size: 3rem; } }
+.lime { color: var(--lime); }
+
+/* Bollino lime inclinato sopra i titoli ("Dove siamo", "I tuoi dati"…) */
+.bollino { display: inline-block; transform: rotate(-2deg); background: var(--lime); color: #000; padding: .25rem .75rem; border-radius: .25rem;
+  font-weight: 900; font-stretch: 125%; font-size: 11px; text-transform: uppercase; letter-spacing: .05em; box-shadow: var(--ombra-brutal); }
+
+/* Riquadro scuro con bordo sottile (schede di contenuto) */
+.riquadro { border-radius: var(--raggio); border: 1px solid var(--linea-tenue); background: rgb(14 9 38 / .9); padding: 1.5rem; }
+@media (min-width: 640px) { .riquadro { padding: 2rem; } }
+
+/* Elenco numerato con pallini lime */
+.passi { display: grid; gap: .75rem; font-size: .875rem; font-weight: 600; color: var(--testo-tenue); counter-reset: passo; }
+.passi > li { display: flex; gap: .75rem; counter-increment: passo; }
+.passi > li::before { content: counter(passo); flex-shrink: 0; width: 1.75rem; height: 1.75rem; border-radius: 50%; background: var(--lime); color: #000;
+  font-weight: 900; font-stretch: 125%; font-size: .75rem; display: flex; align-items: center; justify-content: center; }
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
 }

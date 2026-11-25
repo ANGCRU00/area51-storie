@@ -1,0 +1,63 @@
+---
+/* Condizioni: testo provvisorio preso dal sito attuale (sito/condizioni.html), da completare dal negozio e far rivedere a un professionista.
+   I segnaposto tra parentesi quadre (data-n) li riempirà il gestore dall'area gestore (fase 7). */
+import Base from '../layouts/Base.astro';
+import Percorso from '../components/comuni/Percorso.astro';
+import Documento from '../components/comuni/Documento.astro';
+---
+<Base titolo="Condizioni di vendita · Area 51" descrizione="Ritiro, pagamento e prenotazioni alla Fumetteria Area 51 di Barletta.">
+  <Documento bollino="Ritiro e prenotazioni">
+    <Percorso slot="percorso" voci={[{ testo: 'Condizioni di vendita' }]} />
+    <Fragment slot="titolo">Condizioni di <span class="lime">vendita</span></Fragment>
+    <Fragment slot="introduzione">Come funzionano ritiro, pagamento e prenotazioni alla Fumetteria Area 51. Le parti tra parentesi quadre le completa il negozio.</Fragment>
+    <Fragment slot="avviso"><b>Testo provvisorio.</b> Le regole su recesso, rimborsi e caparra le deve decidere il titolare e rivedere un professionista (commercialista o consulente) prima di vendere online.</Fragment>
+      <section aria-labelledby="c-chi">
+        <h2 id="c-chi" class="pesante">Chi vende</h2>
+        <p><span class="evid" data-n="ragione_sociale">[RAGIONE SOCIALE]</span>, Fumetteria Area 51, Viale G. Falcone e P. Borsellino 35, 76121 Barletta (BT). Partita IVA <span class="evid" data-n="partita_iva">[PARTITA IVA]</span>. Telefono 0883 884567. Email <span class="evid" data-n="email_negozio">[EMAIL DEL NEGOZIO]</span>.</p>
+      </section>
+
+      <section aria-labelledby="c-ritiro">
+        <h2 id="c-ritiro" class="pesante">Ritiro e pagamento in negozio</h2>
+        <p>Quello che scegli sul sito lo ritiri e lo paghi in negozio, negli orari di apertura. <span class="evid">Non spediamo.</span> I prezzi sono in euro e comprendono l'IVA. La disponibilità indicata sul sito è una stima e la confermiamo noi.</p>
+      </section>
+
+      <section aria-labelledby="c-prenotare">
+        <h2 id="c-prenotare" class="pesante">Prenotare le prossime uscite</h2>
+        <ul class="punti">
+          <li>Ogni titolo ha un <span class="evid">ultimo giorno per ordinarlo</span>, scritto sulla sua scheda. Se prenoti entro quel giorno, possiamo ordinarlo per te.</li>
+          <li>La prenotazione è una <span class="evid">richiesta</span>: vale quando il negozio la conferma per email o per telefono.</li>
+          <li><span class="evid">Dopo l'ultimo giorno per ordinare, non è detto che il titolo arrivi.</span> Puoi comunque chiederlo: ti diciamo se riusciamo a procurartelo. In quel caso il sito te lo segnala prima di inviare la richiesta.</li>
+          <li>Puoi prenotare fino a 5 copie dello stesso titolo con una richiesta.</li>
+          <li>Ritiro: il titolo prenotato ti aspetta <span class="evid" data-n="giorni_ritiro">[DA DEFINIRE: numero di giorni dopo l'uscita]</span>; dopo, torna in vendita. <span class="evid" data-n="ritiro_non_ritirato">[DA DEFINIRE: cosa succede a chi non ritira più volte.]</span></li>
+        </ul>
+      </section>
+
+      <section aria-labelledby="c-caparra">
+        <h2 id="c-caparra" class="pesante">Caparra</h2>
+        <p>Per alcuni titoli il negozio può chiedere una caparra, scalata dal prezzo al ritiro. <span class="evid" data-n="caparra">[DA DEFINIRE: per quali titoli, di quanto, e se viene restituita quando il cliente non ritira. Se si pagherà online, i pagamenti saranno gestiti da Nexi.]</span> Per ora il sito non incassa pagamenti.</p>
+      </section>
+
+      <section aria-labelledby="c-recesso">
+        <h2 id="c-recesso" class="pesante">Recesso, rimborsi e garanzia</h2>
+        <p><span class="evid" data-n="recesso">[DA DEFINIRE con il commercialista: diritto di recesso per gli acquisti a distanza, tempi e modi dei rimborsi, garanzia legale di conformità sui prodotti.]</span> Il consumatore conserva in ogni caso i diritti che la legge gli riconosce.</p>
+      </section>
+
+      <section aria-labelledby="c-buoni">
+        <h2 id="c-buoni" class="pesante">Carta della Cultura e Carta del Merito</h2>
+        <p>I buoni della Carta della Cultura Giovani e della Carta del Merito si usano <span class="evid">solo in negozio, di persona</span>, con un documento: il buono è personale e controlliamo l'identità del titolare. Non si accettano online, per telefono né con l'invio del codice. Se prenoti un titolo sul sito, puoi pagarlo con il buono al ritiro in negozio. Il buono vale per i prodotti ammessi dal Ministero della Cultura e fino alla scadenza indicata dal Ministero.</p>
+      </section>
+
+      <section aria-labelledby="c-tessera">
+        <h2 id="c-tessera" class="pesante">Tessera Area 51 Club</h2>
+        <p>La tessera si chiede in negozio. Il livello dipende da quanto spendi in negozio nel tempo e a ogni livello corrisponde un vantaggio. <span class="evid" data-n="livelli_regole">[DA DEFINIRE: livelli, soglie, vantaggi, a quali prodotti si applicano, da quando valgono e se si sommano ad altri sconti.]</span></p>
+      </section>
+
+      <section aria-labelledby="c-dati">
+        <h2 id="c-dati" class="pesante">I tuoi dati</h2>
+        <p>Come usiamo i dati che ci lasci nei moduli è spiegato nell'<a href="/privacy">informativa sulla privacy</a>.</p>
+      </section>
+
+      <p class="nota">Ultimo aggiornamento: <span class="evid" data-n="data_aggiornamento">[DATA]</span>.</p>
+
+  </Documento>
+</Base>

@@ -1,0 +1,13 @@
+/* Riquadro informativo della home (orari, prossimo evento, ultimo arrivo): lo usano l'isola StatoNegozio
+   e il componente fisso components/home/RiquadroInfo.astro, così hanno le stesse misure. */
+.riquadro { display: flex; align-items: center; gap: .75rem; border-radius: .75rem; border: 1px solid var(--linea-tenue); background: rgb(18 10 46 / .8);
+  padding: .75rem 1rem; transition: border-color var(--transizione); }
+.riquadro:hover { border-color: var(--lime); }
+.icona { width: 1.5rem; height: 1.5rem; flex-shrink: 0; color: var(--lime); }
+.testi { min-width: 0; }
+.titolo { display: block; font-size: .875rem; color: #fff; }
+.sotto { display: block; font-size: .75rem; font-weight: 600; color: var(--testo-tenue); }
+@media (min-width: 640px) { .titolo { font-size: 1rem; } .sotto { font-size: .875rem; } }
+.spia { display: inline-block; width: .5rem; height: .5rem; border-radius: 50%; margin-right: .5rem; vertical-align: middle; }
+.aperto { background: var(--lime); }
+.chiuso { background: #FB923C; }

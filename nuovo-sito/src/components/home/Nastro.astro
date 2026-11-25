@@ -1,0 +1,22 @@
+---
+/* Nastro lime inclinato che scorre con le categorie del negozio. Il testo è ripetuto due volte per lo scorrimento continuo. */
+const voci = ['Manga e fumetti', 'TCG', 'Giochi da tavolo', 'Figure e Funko', 'Warhammer', 'Gadget'];
+const giro = [...voci, ...voci];
+---
+<div class="nastro" role="img" aria-label="Manga e fumetti, TCG, giochi da tavolo, figure e Funko, Warhammer, gadget">
+  <div class="pesante scorre" aria-hidden="true">
+    {[0, 1].map(() => (
+      <span class="blocco">{giro.map((v) => <><span>{v}</span><span>✦</span></>)}</span>
+    ))}
+  </div>
+</div>
+
+<style>
+  .nastro { position: relative; z-index: 20; width: 100%; overflow: hidden; background: var(--lime); padding-block: .75rem; border-block: 2px solid #000;
+    transform: rotate(-1deg); box-shadow: 0 8px 0 var(--viola); }
+  .scorre { display: flex; width: max-content; animation: scorri 56s linear infinite; color: #000; font-size: .875rem; letter-spacing: .1em; text-transform: uppercase; }
+  @media (min-width: 640px) { .scorre { font-size: 1rem; } }
+  .blocco { display: flex; align-items: center; gap: 1.5rem; padding-right: 1.5rem; }
+  @keyframes scorri { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+  @media (prefers-reduced-motion: reduce) { .scorre { animation: none; } }
+</style>
