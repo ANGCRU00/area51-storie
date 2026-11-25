@@ -27,6 +27,7 @@ const chiave = (file) => (file ? 'copertine/' + file : file);   // '' resta '' (
 /* ---------- righe ---------- */
 const righeUscite = uscite.map((u) => ({
   id: u.id, riferimento_esterno: u.r, ean: u.ean, titolo: u.t, serie: u.s, numero: u.n, editore: u.e,
+  autore: u.au ?? null, pagine: u.pg ?? null, lingua: u.l ?? null,
   prezzo: u.p == null ? null : Number(u.p), data_uscita: u.du, data_limite: u.dl, copertina: chiave(u.c),
   categoria: u.cat, fonte: 'starshop', visibile: u.v ? 1 : 0, codice_padre: u.r && /\d{4}$/.test(u.r) ? u.r.slice(0, -4) : null,
   creato_il: new Date(u.ci).toISOString().slice(0, 19) + 'Z', aggiornato_il: new Date(u.ai).toISOString().slice(0, 19) + 'Z',

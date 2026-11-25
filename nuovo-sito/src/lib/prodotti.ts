@@ -78,13 +78,15 @@ function edizioneDa(titolo: string, categoria: Categoria | null): string | null 
 }
 
 const oggi = () => new Date().toISOString().slice(0, 10);
+/** "AA.VV." (autori vari) scritto per esteso */
+const autoreLeggibile = (a: string | null) => (a && /^AA\.?\s?VV\.?$/i.test(a.trim()) ? 'Autori vari' : a);
 export const urlCopertina = (chiave: string | null) => (chiave ? '/file/' + chiave : null);
 
 export function daArticolo(a: Articolo): Prodotto {
   const disp: Disponibilita = a.stato === 'esaurito' ? 'esaurito' : a.stato === 'appena_arrivato' ? 'appena_arrivato'
     : a.stato === 'annunciato' ? 'preordine' : 'in_negozio';
   return {
-    codice: a.ean || a.codiceStarshop, tipo: 'magazzino', ean: a.ean, titolo: a.titolo, autore: a.autore, editore: a.editore,
+    codice: a.ean || a.codiceStarshop, tipo: 'magazzino', ean: a.ean, titolo: a.titolo, autore: autoreLeggibile(a.autore), editore: a.editore,
     numero: a.numero == null ? null : String(a.numero), prezzo: a.prezzoListino, dataUscita: a.dataUscita, dataLimite: null,
     categoria: categoriaDaStarshop(a.categoria, a.sottoCategoria), copertina: urlCopertina(a.copertina), disponibilita: disp,
     pagine: a.pagine, lingua: a.lingua, codicePadre: a.codicePadre,
@@ -94,7 +96,7 @@ export function daArticolo(a: Articolo): Prodotto {
 
 export function daUscita(u: Uscita): Prodotto {
   return {
-    codice: u.ean || u.riferimentoEsterno || u.id, tipo: 'uscita', idUscita: u.id, ean: u.ean, titolo: u.titolo, autore: u.autore, editore: u.editore,
+    codice: u.ean || u.riferimentoEsterno || u.id, tipo: 'uscita', idUscita: u.id, ean: u.ean, titolo: u.titolo, autore: autoreLeggibile(u.autore), editore: u.editore,
     numero: u.numero, prezzo: u.prezzo, dataUscita: u.dataUscita, dataLimite: u.dataLimite, categoria: u.categoria, copertina: urlCopertina(u.copertina),
     disponibilita: u.dataUscita && u.dataUscita <= oggi() ? 'uscito' : 'preordine', pagine: u.pagine, lingua: u.lingua,
     codicePadre: u.codicePadre ?? (u.riferimentoEsterno ? u.riferimentoEsterno.replace(/\d{4}$/, '') : null),
