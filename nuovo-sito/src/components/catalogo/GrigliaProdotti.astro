@@ -1,0 +1,37 @@
+---
+import type { Prodotto } from '../../lib/prodotti';
+import Scheda from '../prodotti/Scheda.astro';
+
+interface Props {
+  prodotti: Prodotto[];
+  conFiltri: boolean;
+  messaggioVuoto?: string;
+}
+const { prodotti, conFiltri, messaggioVuoto } = Astro.props;
+
+const suggerimento =
+  messaggioVuoto ??
+  (conFiltri
+    ? 'Prova a togliere qualche filtro.'
+    : 'Il catalogo si riempie man mano che registriamo gli arrivi in negozio.');
+---
+
+{prodotti.length > 0 ? (
+  <div class="griglia">
+    {prodotti.map((p) => (
+      <Scheda p={p} />
+    ))}
+  </div>
+) : (
+  <div class="vuoto">
+    <svg class="alieno" aria-hidden="true">
+      <use href="#alieno" />
+    </svg>
+    <div>
+      <p class="pesante">Nessun prodotto qui, per ora.</p>
+      <p>
+        {suggerimento} Cerchi qualcosa? <a href="/negozio#chiedicelo">Chiedicelo</a>.
+      </p>
+    </div>
+  </div>
+)}

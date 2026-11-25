@@ -1,0 +1,33 @@
+---
+import { NOME_GENERE } from '../../lib/prodotti';
+import Tendina from './Tendina.astro';
+
+interface Props {
+  disponibili: string[];
+  scelti: string[];
+}
+const { disponibili, scelti } = Astro.props;
+const elenco = [...new Set([...scelti, ...disponibili])];
+---
+
+{elenco.length > 0 && (
+  <Tendina etichetta="Genere" attiva={scelti.length > 0} quanti={scelti.length} larga>
+    <div class="chip">
+      {elenco.map((genere) => (
+        <label>
+          <input type="checkbox" name="genere" value={genere} checked={scelti.includes(genere)} />
+          <span>{NOME_GENERE[genere] ?? genere}</span>
+        </label>
+      ))}
+    </div>
+    <p class="nota">
+      Generi proposti da AniList per i manga e controllati dal negozio: gli altri titoli non hanno ancora un
+      genere.
+    </p>
+    <div class="applica">
+      <button type="submit" class="pulsante piccolo">
+        Applica
+      </button>
+    </div>
+  </Tendina>
+)}

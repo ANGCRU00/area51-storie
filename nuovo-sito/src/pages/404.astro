@@ -4,18 +4,42 @@ import Base from '../layouts/Base.astro';
 export const prerender = false;
 Astro.response.status = 404;
 ---
+
 <Base titolo="Pagina non trovata · Area 51">
   <section class="contenitore vuoto">
-    <svg class="alieno" aria-hidden="true"><use href="#alieno" /></svg>
+    <svg class="alieno" aria-hidden="true">
+      <use href="#alieno" />
+    </svg>
     <h1 class="pesante">Questa pagina è stata rapita dagli alieni.</h1>
     <p>Il nuovo sito è in costruzione: molte pagine arriveranno nelle prossime fasi.</p>
-    <a class="pulsante" href="/">Torna alla home</a>
+    <a class="pulsante" href="/">
+      Torna alla home
+    </a>
   </section>
 </Base>
 
 <style>
-  .vuoto { min-height: 60vh; display: grid; place-content: center; justify-items: center; gap: 1rem; text-align: center; padding-block: 4rem; }
-  .alieno { width: 6rem; height: 6rem; }
-  h1 { font-size: clamp(1.75rem, 5vw, 3rem); line-height: 1.1; color: #fff; text-wrap: balance; max-width: 22ch; }
-  p { color: var(--testo-tenue); }
+  .vuoto {
+    min-height: 60vh;
+    display: grid;
+    place-content: center;
+    justify-items: center;
+    gap: 1rem;
+    text-align: center;
+    padding-block: 4rem;
+  }
+  .alieno {
+    width: 6rem;
+    height: 6rem;
+  }
+  h1 {
+    font-size: clamp(1.75rem, 5vw, 3rem);
+    line-height: 1.1;
+    color: #fff;
+    text-wrap: balance;
+    max-width: 22ch;
+  }
+  p {
+    color: var(--testo-tenue);
+  }
 </style>

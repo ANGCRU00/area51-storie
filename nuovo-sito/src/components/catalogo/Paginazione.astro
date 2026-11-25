@@ -1,0 +1,39 @@
+---
+interface Props {
+  pagina: number;
+  pagine: number;
+  indirizzoPagina: (numero: number) => string;
+}
+const { pagina, pagine, indirizzoPagina } = Astro.props;
+
+const vicinaOEstrema = (n: number) => n === 1 || n === pagine || Math.abs(n - pagina) <= 2;
+const numeri = Array.from({ length: pagine }, (_, i) => i + 1).filter(vicinaOEstrema);
+const salto = (indice: number) => indice > 0 && numeri[indice] - numeri[indice - 1] > 1;
+---
+
+{pagine > 1 && (
+  <nav class="pagine" aria-label="Pagine">
+    {pagina > 1 && (
+      <a href={indirizzoPagina(pagina - 1)} rel="prev">
+        ← Indietro
+      </a>
+    )}
+    {numeri.map((n, i) => (
+      <>
+        {salto(i) && <span class="salto">…</span>}
+        {n === pagina ? (
+          <span class="pesante attuale" aria-current="page">
+            {n}
+          </span>
+        ) : (
+          <a href={indirizzoPagina(n)}>{n}</a>
+        )}
+      </>
+    ))}
+    {pagina < pagine && (
+      <a href={indirizzoPagina(pagina + 1)} rel="next">
+        Avanti →
+      </a>
+    )}
+  </nav>
+)}

@@ -15,7 +15,11 @@ export const GET: APIRoute = async () => {
     const [a] = await db().select({ n: count() }).from(articoli);
     r.d1 = { ok: true, uscite: u?.n ?? 0, articoli: a?.n ?? 0 };
   } catch (e) {
-    r.d1 = { ok: false, errore: 'Tabelle non trovate: lancia "npm run db:locale"', dettaglio: String(e).slice(0, 200) };
+    r.d1 = {
+      ok: false,
+      errore: 'Tabelle non trovate: lancia "npm run db:locale"',
+      dettaglio: String(e).slice(0, 200),
+    };
   }
   try {
     const l = await env.FILE.list({ prefix: 'copertine/', limit: 1000 });

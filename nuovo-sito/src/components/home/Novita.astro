@@ -1,24 +1,57 @@
 ---
 /* Sezione "Appena usciti / Prossime uscite": titolo fisso, pulsanti e schede in un'isola React. Dati da D1 (src/lib/prodotti.ts). */
 import NuoviArrivi, { type Scheda } from '../isole/NuoviArrivi.tsx';
-import { quando, type Prodotto } from '../../lib/prodotti';
-interface Props { appena: Prodotto[]; prossime: Prodotto[] }
+import { quandoEsce, type Prodotto } from '../../lib/prodotti';
+interface Props {
+  appena: Prodotto[];
+  prossime: Prodotto[];
+}
 const { appena, prossime } = Astro.props;
-const scheda = (p: Prodotto): Scheda => ({ codice: p.codice, titolo: p.titolo, editore: p.editore, prezzo: p.prezzo, quando: quando(p) || 'In negozio',
-  pre: p.disponibilita === 'preordine', copertina: p.copertina });
+const scheda = (p: Prodotto): Scheda => ({
+  codice: p.codice,
+  titolo: p.titolo,
+  editore: p.editore,
+  prezzo: p.prezzo,
+  quando: quandoEsce(p) || 'In negozio',
+  pre: p.disponibilita === 'preordine',
+  copertina: p.copertina,
+});
 ---
+
 <section id="catalogo" class="contenitore novita">
   <p class="pesante occhiello">Nuovi mondi · in negozio e in arrivo</p>
   <h2 class="pesante titolo-sezione">La tua prossima ossessione arriva qui.</h2>
   <NuoviArrivi client:visible nuovi={appena.map(scheda)} prossime={prossime.map(scheda)} />
-  <a class="pesante tutte" href="/uscite">Tutte le prossime uscite →</a>
+  <a class="pesante tutte" href="/uscite">
+    Tutte le prossime uscite →
+  </a>
 </section>
 
 <style>
-  .novita { padding-block: 3.5rem 2.5rem; }
-  @media (min-width: 1024px) { .novita { padding-block: 4rem 3.5rem; } }
-  .titolo-sezione { margin-bottom: 1.5rem; }
-  @media (min-width: 1024px) { .titolo-sezione { margin-bottom: 2rem; } }
-  .tutte { display: inline-block; margin-top: 1.5rem; padding-block: .5rem; font-size: .875rem; color: var(--lime); }
-  .tutte:hover { text-decoration: underline; }
+  .novita {
+    padding-block: 3.5rem 2.5rem;
+  }
+  @media (min-width: 1024px) {
+    .novita {
+      padding-block: 4rem 3.5rem;
+    }
+  }
+  .titolo-sezione {
+    margin-bottom: 1.5rem;
+  }
+  @media (min-width: 1024px) {
+    .titolo-sezione {
+      margin-bottom: 2rem;
+    }
+  }
+  .tutte {
+    display: inline-block;
+    margin-top: 1.5rem;
+    padding-block: 0.5rem;
+    font-size: 0.875rem;
+    color: var(--lime);
+  }
+  .tutte:hover {
+    text-decoration: underline;
+  }
 </style>

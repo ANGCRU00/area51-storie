@@ -1,0 +1,218 @@
+---
+import { dataLunga, euro, siCompra, siPrenota, TESTO_DISPONIBILITA, type Prodotto } from '../../lib/prodotti';
+
+interface Props {
+  prodotto: Prodotto;
+  /** il volume e le sue altre edizioni (vuoto se ce n'è una sola) */
+  edizioni: Prodotto[];
+}
+const { prodotto: p, edizioni } = Astro.props;
+
+const prenotabile = siPrenota(p);
+const acquistabile = siCompra(p);
+const ultimoGiorno = p.dataLimite
+  ? `Prenota entro il ${dataLunga(p.dataLimite)}.`
+  : 'Ultimo giorno per prenotare: da confermare.';
+const QUANTITA = [1, 2, 3, 4, 5];
+---
+
+<div class="acquisto">
+  <div class="prezzo-riga">
+    <span class="pesante prezzo">{euro(p.prezzo)}</span>
+    <span class="disponibile">
+      <span
+        class:list={['spia', { verde: acquistabile && !prenotabile, viola: prenotabile }]}
+        aria-hidden="true"
+      ></span>
+      {TESTO_DISPONIBILITA[p.disponibilita]}
+    </span>
+  </div>
+  <p class="nota" id="stato-negozio" hidden></p>
+
+  {prenotabile && (
+    <p class="nota">{ultimoGiorno} La prenotazione vale quando la confermiamo per email o telefono.</p>
+  )}
+  {p.disponibilita === 'uscito' && (
+    <p class="nota">È già uscito: chiedi in negozio se è disponibile, o scrivici con il modulo Chiedicelo.</p>
+  )}
+  {p.disponibilita === 'esaurito' && (
+    <p class="nota">Al momento è esaurito in negozio: possiamo provare a ordinarlo per te.</p>
+  )}
+
+  {edizioni.length > 1 && (
+    <div>
+      <p class="pesante etichetta-campo">Edizione</p>
+      <div class="scelte">
+        {edizioni.map((e) =>
+          e.codice === p.codice ? (
+            <span class="scelta attiva" aria-current="true">
+              <b>{e.edizione ?? 'Standard'}</b>
+              <span>{euro(e.prezzo)}</span>
+            </span>
+          ) : (
+            <a class="scelta" href={'/prodotto/' + encodeURIComponent(e.codice)}>
+              <b>{e.edizione ?? 'Standard'}</b>
+              <span>{euro(e.prezzo)}</span>
+            </a>
+          ),
+        )}
+      </div>
+    </div>
+  )}
+
+  <div class="bottoni">
+    {acquistabile ? (
+      <>
+        <label class="quantita">
+          <span class="solo-lettori">Quantità</span>
+          <select id="quantita">
+            {QUANTITA.map((n) => (
+              <option value={n}>{n}</option>
+            ))}
+          </select>
+        </label>
+        <button
+          type="button"
+          class:list={['pulsante', { 'pulsante-viola': prenotabile }]}
+          data-aggiungi={p.codice}
+          data-titolo={p.titolo}
+          data-prezzo={p.prezzo ?? 0}
+          data-editore={p.editore ?? ''}
+          data-copertina={p.copertina ?? ''}
+          data-preordine={prenotabile ? '1' : ''}
+          data-quantita-da="quantita"
+        >
+          {prenotabile ? 'Prenota' : 'Aggiungi al carrello'}
+        </button>
+      </>
+    ) : (
+      <a class="pulsante" href="/negozio#chiedicelo">
+        Chiedilo al negozio
+      </a>
+    )}
+  </div>
+</div>
+
+<script>
+  import { statoNegozio } from '../../lib/orari';
+
+  const riga = document.getElementById('stato-negozio');
+  if (riga) {
+    const { testo } = statoNegozio();
+    riga.textContent = 'Negozio: ' + testo.charAt(0).toLowerCase() + testo.slice(1);
+    riga.hidden = false;
+  }
+</script>
+
+<style>
+  .acquisto {
+    display: grid;
+    gap: 0.9rem;
+    padding: 1.25rem;
+    border-radius: var(--raggio);
+    border: 2px solid rgb(185 230 46 / 0.6);
+    background: rgb(13 7 36 / 0.95);
+  }
+  .prezzo-riga {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+  }
+  .prezzo {
+    font-size: 2rem;
+    color: var(--lime);
+  }
+  .disponibile {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 700;
+    font-size: 0.875rem;
+    color: #fff;
+  }
+  .spia {
+    width: 0.6rem;
+    height: 0.6rem;
+    border-radius: 50%;
+    background: #fb923c;
+  }
+  .spia.verde {
+    background: var(--lime);
+  }
+  .spia.viola {
+    background: var(--viola-chiaro);
+  }
+  .nota {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--testo-tenue);
+    line-height: 1.5;
+  }
+  .etichetta-campo {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #fff;
+    margin-bottom: 0.5rem;
+  }
+  .scelte {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .scelta {
+    display: grid;
+    gap: 0.1rem;
+    padding: 0.55rem 0.9rem;
+    border-radius: 0.75rem;
+    border: 1px solid var(--linea);
+    font-size: 0.8rem;
+    min-width: 7rem;
+  }
+  .scelta b {
+    color: #fff;
+  }
+  .scelta span {
+    color: var(--testo-tenue);
+    font-weight: 700;
+  }
+  a.scelta:hover {
+    border-color: var(--lime);
+  }
+  .scelta.attiva {
+    border: 2px solid var(--lime);
+  }
+  .bottoni {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .quantita select {
+    appearance: none;
+    background: var(--scheda);
+    border: 1px solid var(--linea);
+    border-radius: var(--raggio-pillola);
+    padding: 0.7rem 2.2rem 0.7rem 1.1rem;
+    color: #fff;
+    font-weight: 700;
+    background-image:
+      linear-gradient(45deg, transparent 50%, var(--lime) 50%),
+      linear-gradient(135deg, var(--lime) 50%, transparent 50%);
+    background-position:
+      calc(100% - 1.1rem) 50%,
+      calc(100% - 0.8rem) 50%;
+    background-size: 0.3rem 0.3rem;
+    background-repeat: no-repeat;
+  }
+  .pulsante-viola {
+    background: var(--viola);
+    color: #fff;
+    box-shadow: var(--ombra-brutal-lime);
+  }
+  .pulsante-viola:hover {
+    background: var(--viola-acceso);
+  }
+</style>

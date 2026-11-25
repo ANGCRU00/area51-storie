@@ -1,68 +1,270 @@
 ---
 /* Scheda di un prodotto negli elenchi (catalogo, uscite, altri volumi). HTML fisso: il pulsante "Aggiungi"/"Prenota"
    lo gestisce lo script di AzioniCarrello.astro (uno per pagina), tramite gli attributi data-*. */
-import { TESTO_DISPONIBILITA, euro, quando, type Prodotto } from '../../lib/prodotti';
-interface Props { p: Prodotto; i?: number }
+import { TESTO_DISPONIBILITA, euro, quandoEsce, type Prodotto } from '../../lib/prodotti';
+interface Props {
+  p: Prodotto;
+  i?: number;
+}
 const { p } = Astro.props;
 const link = '/prodotto/' + encodeURIComponent(p.codice);
-const etichetta = p.disponibilita === 'preordine' ? 'PREORDINE' : p.disponibilita === 'appena_arrivato' ? 'NOVITÀ' : p.disponibilita === 'esaurito' ? 'ESAURITO' : p.disponibilita === 'uscito' ? 'USCITO' : 'IN NEGOZIO';
+const etichetta =
+  p.disponibilita === 'preordine'
+    ? 'PREORDINE'
+    : p.disponibilita === 'appena_arrivato'
+      ? 'NOVITÀ'
+      : p.disponibilita === 'esaurito'
+        ? 'ESAURITO'
+        : p.disponibilita === 'uscito'
+          ? 'USCITO'
+          : 'IN NEGOZIO';
 const prenota = p.disponibilita === 'preordine';
 const acquistabile = p.disponibilita === 'in_negozio' || p.disponibilita === 'appena_arrivato' || prenota;
 // colore del riquadro senza copertina, sempre lo stesso per lo stesso titolo
-const COL = [['#22D3EE', '#5B21B6'], ['#FCD34D', '#EC4899'], ['#8B5CF6', '#1E1B4B'], ['#B9E62E', '#3D1775'], ['#F472B6', '#7C3AED'], ['#34D399', '#1E3A8A'], ['#FB923C', '#7F1D1D'], ['#60A5FA', '#312E81']];
+const COL = [
+  ['#22D3EE', '#5B21B6'],
+  ['#FCD34D', '#EC4899'],
+  ['#8B5CF6', '#1E1B4B'],
+  ['#B9E62E', '#3D1775'],
+  ['#F472B6', '#7C3AED'],
+  ['#34D399', '#1E3A8A'],
+  ['#FB923C', '#7F1D1D'],
+  ['#60A5FA', '#312E81'],
+];
 const c = COL[[...p.codice].reduce((s, ch) => s + ch.charCodeAt(0), 0) % COL.length];
 ---
+
 <article class="scheda">
   <a href={link} class="collegamento">
-    <div class="copertina" style={p.copertina ? undefined : `background:linear-gradient(150deg,${c[0]},${c[1]})`}>
-      {p.copertina
-        ? <img class:list={[{ sfocata: p.adulti }]} src={p.copertina} alt={'Copertina di ' + p.titolo} width="220" height="320" loading="lazy" decoding="async" />
-        : <span class="pesante senza">{p.titolo}</span>}
-      <span class:list={['pesante etichetta', { viola: prenota, grigia: p.disponibilita === 'esaurito' || p.disponibilita === 'uscito' }]}>{etichetta}</span>
-      {p.adulti && <span class="pesante bollino18" title="Contenuti per adulti">18+</span>}
+    <div
+      class="copertina"
+      style={p.copertina ? undefined : `background:linear-gradient(150deg,${c[0]},${c[1]})`}
+    >
+      {p.copertina ? (
+        <img
+          class:list={[{ sfocata: p.perAdulti }]}
+          src={p.copertina}
+          alt={'Copertina di ' + p.titolo}
+          width="220"
+          height="320"
+          loading="lazy"
+          decoding="async"
+        />
+      ) : (
+        <span class="pesante senza">{p.titolo}</span>
+      )}
+      <span
+        class:list={[
+          'pesante etichetta',
+          { viola: prenota, grigia: p.disponibilita === 'esaurito' || p.disponibilita === 'uscito' },
+        ]}
+      >
+        {etichetta}
+      </span>
+      {p.perAdulti && (
+        <span class="pesante bollino18" title="Contenuti per adulti">
+          18+
+        </span>
+      )}
     </div>
     {p.editore && <p class="editore">{p.editore}</p>}
     <h3 class="pesante titolo">{p.titolo}</h3>
-    <p class="quando">{prenota || p.disponibilita === 'uscito' ? quando(p) : TESTO_DISPONIBILITA[p.disponibilita]}</p>
+    <p class="quando">
+      {prenota || p.disponibilita === 'uscito' ? quandoEsce(p) : TESTO_DISPONIBILITA[p.disponibilita]}
+    </p>
   </a>
   <div class="piede">
     <span class="pesante prezzo">{euro(p.prezzo)}</span>
-    {acquistabile
-      ? <button type="button" class:list={['pesante azione', { prenota }]} data-aggiungi={p.codice} data-titolo={p.titolo} data-prezzo={p.prezzo ?? 0}
-          data-editore={p.editore ?? ''} data-copertina={p.copertina ?? ''} data-preordine={prenota ? '1' : ''}>{prenota ? 'Prenota' : 'Aggiungi'}</button>
-      : <a class="pesante azione" href="/negozio#chiedicelo">Chiedilo</a>}
+    {acquistabile ? (
+      <button
+        type="button"
+        class:list={['pesante azione', { prenota }]}
+        data-aggiungi={p.codice}
+        data-titolo={p.titolo}
+        data-prezzo={p.prezzo ?? 0}
+        data-editore={p.editore ?? ''}
+        data-copertina={p.copertina ?? ''}
+        data-preordine={prenota ? '1' : ''}
+      >
+        {prenota ? 'Prenota' : 'Aggiungi'}
+      </button>
+    ) : (
+      <a class="pesante azione" href="/negozio#chiedicelo">
+        Chiedilo
+      </a>
+    )}
   </div>
 </article>
 
 <style>
-  .scheda { display: flex; flex-direction: column; justify-content: space-between; min-width: 0; padding: .75rem; border-radius: var(--raggio);
-    background: rgb(14 9 38 / .9); border: 1px solid var(--linea-tenue); transition: border-color var(--transizione); }
-  .scheda:hover { border-color: var(--lime); }
-  .collegamento { display: block; }
-  .copertina { position: relative; aspect-ratio: 3 / 4; border-radius: .75rem; overflow: hidden; margin-bottom: .75rem; background: var(--scheda);
-    display: flex; align-items: center; justify-content: center; }
-  .copertina img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform .3s; }
-  .scheda:hover .copertina img { transform: scale(1.05); }
-  .senza { padding: .75rem; text-align: center; color: #fff; font-size: .875rem; line-height: 1.2; text-shadow: 2px 2px 0 rgb(20 12 43 / .6); overflow-wrap: anywhere; }
-  .etichetta { position: absolute; top: .5rem; left: .5rem; background: var(--lime); color: #000; font-size: 10px; padding: .125rem .625rem; border-radius: .25rem; transform: rotate(-2deg); }
-  .sfocata { filter: blur(14px) saturate(.6); transform: scale(1.1); }
-  .scheda:hover .copertina img.sfocata { transform: scale(1.1); }
-  .bollino18 { position: absolute; top: .5rem; right: .5rem; background: #FB923C; color: #000; font-size: 11px; padding: .15rem .5rem; border-radius: .25rem; }
-  .etichetta.viola { background: var(--viola); color: #fff; }
-  .etichetta.grigia { background: #3A2F5E; color: #fff; }
-  .editore { font-size: 11px; font-weight: 700; color: var(--testo-tenue); letter-spacing: .05em; text-transform: uppercase; overflow-wrap: anywhere; }
-  .titolo { font-size: .875rem; color: #fff; margin-top: .25rem; line-height: 1.3; overflow-wrap: anywhere; transition: color var(--transizione); }
-  .scheda:hover .titolo { color: var(--lime); }
-  @media (min-width: 640px) { .titolo { font-size: 1rem; } }
-  .quando { margin-top: .375rem; font-size: 11px; font-weight: 600; color: var(--testo-tenue); }
-  @media (min-width: 640px) { .quando { font-size: .75rem; } }
-  .piede { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .5rem; margin-top: .75rem; padding-top: .75rem; border-top: 1px solid var(--linea-tenue); }
-  .prezzo { font-size: .875rem; color: var(--lime); }
-  @media (min-width: 640px) { .prezzo { font-size: 1rem; } }
-  .azione { font-size: .75rem; padding: .5rem .875rem; border-radius: var(--raggio-pillola); border-bottom-left-radius: 4px; border: 1px solid rgb(255 255 255 / .25);
-    box-shadow: 3px 3px 0 var(--viola); transition: background-color var(--transizione), color var(--transizione), border-color var(--transizione); }
-  .azione:hover { background: var(--lime); color: #000; border-color: var(--lime); }
-  .azione.prenota { background: var(--viola); color: #fff; border-color: var(--viola); box-shadow: var(--ombra-brutal-lime); }
-  .azione.prenota:hover { background: var(--viola-acceso); }
-  @media (max-width: 420px) { .azione { width: 100%; text-align: center; } }
+  .scheda {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-width: 0;
+    padding: 0.75rem;
+    border-radius: var(--raggio);
+    background: rgb(14 9 38 / 0.9);
+    border: 1px solid var(--linea-tenue);
+    transition: border-color var(--transizione);
+  }
+  .scheda:hover {
+    border-color: var(--lime);
+  }
+  .collegamento {
+    display: block;
+  }
+  .copertina {
+    position: relative;
+    aspect-ratio: 3 / 4;
+    border-radius: 0.75rem;
+    overflow: hidden;
+    margin-bottom: 0.75rem;
+    background: var(--scheda);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .copertina img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s;
+  }
+  .scheda:hover .copertina img {
+    transform: scale(1.05);
+  }
+  .senza {
+    padding: 0.75rem;
+    text-align: center;
+    color: #fff;
+    font-size: 0.875rem;
+    line-height: 1.2;
+    text-shadow: 2px 2px 0 rgb(20 12 43 / 0.6);
+    overflow-wrap: anywhere;
+  }
+  .etichetta {
+    position: absolute;
+    top: 0.5rem;
+    left: 0.5rem;
+    background: var(--lime);
+    color: #000;
+    font-size: 10px;
+    padding: 0.125rem 0.625rem;
+    border-radius: 0.25rem;
+    transform: rotate(-2deg);
+  }
+  .sfocata {
+    filter: blur(14px) saturate(0.6);
+    transform: scale(1.1);
+  }
+  .scheda:hover .copertina img.sfocata {
+    transform: scale(1.1);
+  }
+  .bollino18 {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    background: #fb923c;
+    color: #000;
+    font-size: 11px;
+    padding: 0.15rem 0.5rem;
+    border-radius: 0.25rem;
+  }
+  .etichetta.viola {
+    background: var(--viola);
+    color: #fff;
+  }
+  .etichetta.grigia {
+    background: #3a2f5e;
+    color: #fff;
+  }
+  .editore {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--testo-tenue);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    overflow-wrap: anywhere;
+  }
+  .titolo {
+    font-size: 0.875rem;
+    color: #fff;
+    margin-top: 0.25rem;
+    line-height: 1.3;
+    overflow-wrap: anywhere;
+    transition: color var(--transizione);
+  }
+  .scheda:hover .titolo {
+    color: var(--lime);
+  }
+  @media (min-width: 640px) {
+    .titolo {
+      font-size: 1rem;
+    }
+  }
+  .quando {
+    margin-top: 0.375rem;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--testo-tenue);
+  }
+  @media (min-width: 640px) {
+    .quando {
+      font-size: 0.75rem;
+    }
+  }
+  .piede {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    margin-top: 0.75rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--linea-tenue);
+  }
+  .prezzo {
+    font-size: 0.875rem;
+    color: var(--lime);
+  }
+  @media (min-width: 640px) {
+    .prezzo {
+      font-size: 1rem;
+    }
+  }
+  .azione {
+    font-size: 0.75rem;
+    padding: 0.5rem 0.875rem;
+    border-radius: var(--raggio-pillola);
+    border-bottom-left-radius: 4px;
+    border: 1px solid rgb(255 255 255 / 0.25);
+    box-shadow: 3px 3px 0 var(--viola);
+    transition:
+      background-color var(--transizione),
+      color var(--transizione),
+      border-color var(--transizione);
+  }
+  .azione:hover {
+    background: var(--lime);
+    color: #000;
+    border-color: var(--lime);
+  }
+  .azione.prenota {
+    background: var(--viola);
+    color: #fff;
+    border-color: var(--viola);
+    box-shadow: var(--ombra-brutal-lime);
+  }
+  .azione.prenota:hover {
+    background: var(--viola-acceso);
+  }
+  @media (max-width: 420px) {
+    .azione {
+      width: 100%;
+      text-align: center;
+    }
+  }
 </style>

@@ -3,23 +3,23 @@
    Valori presi dal sito attuale (sito/sorgenti/tailwind.config.js). */
 :root {
   /* Colori */
-  --lime: #B9E62E;
+  --lime: #b9e62e;
   --lime-scuro: #a6d420;
-  --lime-chiaro: #DCEFA0;
-  --viola: #5B21B6;
-  --viola-acceso: #7C3AED;
+  --lime-chiaro: #dcefa0;
+  --viola: #5b21b6;
+  --viola-acceso: #7c3aed;
   --viola-chiaro: #a78bfa;
-  --notte: #070514;            /* sfondo della pagina */
-  --notte-profonda: #05030f;   /* piede */
-  --pannello: #0d0724;         /* menu, ricerca */
-  --scheda: #120a2e;           /* campi, schede */
-  --scheda-sopra: #180e3e;     /* passaggio del mouse */
-  --testo: #F1ECFB;
-  --testo-tenue: #B3A9CC;
-  --linea: rgb(255 255 255 / .15);
-  --linea-tenue: rgb(255 255 255 / .1);
-  --linea-viola: rgb(91 33 182 / .4);
-  --inchiostro: #140C2B;       /* contorni dei disegni */
+  --notte: #070514; /* sfondo della pagina */
+  --notte-profonda: #05030f; /* piede */
+  --pannello: #0d0724; /* menu, ricerca */
+  --scheda: #120a2e; /* campi, schede */
+  --scheda-sopra: #180e3e; /* passaggio del mouse */
+  --testo: #f1ecfb;
+  --testo-tenue: #b3a9cc;
+  --linea: rgb(255 255 255 / 0.15);
+  --linea-tenue: rgb(255 255 255 / 0.1);
+  --linea-viola: rgb(91 33 182 / 0.4);
+  --inchiostro: #140c2b; /* contorni dei disegni */
 
   /* Caratteri */
   --font: 'Archivo', system-ui, sans-serif;
@@ -34,10 +34,18 @@
   /* Ombre */
   --ombra-brutal: 5px 5px 0 0 var(--viola);
   --ombra-brutal-lime: 3px 3px 0 0 var(--lime);
-  --alone-lime: 0 0 28px rgb(185 230 46 / .4);
+  --alone-lime: 0 0 28px rgb(185 230 46 / 0.4);
 
   /* Tempi */
-  --transizione: .15s ease;
+  --transizione: 0.15s ease;
 }
-@media (min-width: 640px) { :root { --margine-lato: 1.5rem; } }
-@media (min-width: 1024px) { :root { --margine-lato: 2rem; } }
+@media (min-width: 640px) {
+  :root {
+    --margine-lato: 1.5rem;
+  }
+}
+@media (min-width: 1024px) {
+  :root {
+    --margine-lato: 2rem;
+  }
+}

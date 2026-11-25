@@ -1,0 +1,54 @@
+---
+import { COOKIE_ETA_CONFERMATA } from '../../lib/prodotti';
+---
+
+<div class="eta" data-cookie={COOKIE_ETA_CONFERMATA}>
+  <p class="pesante">Questo titolo è per adulti (18+).</p>
+  <p>Per vedere la copertina conferma di avere almeno 18 anni. La scelta resta solo su questo dispositivo.</p>
+  <div>
+    <button type="button" class="pulsante" data-eta-ok>
+      Ho almeno 18 anni
+    </button>
+    <a class="indietro" href="/catalogo">
+      Torna al catalogo
+    </a>
+  </div>
+</div>
+
+<script>
+  const SEI_MESI_IN_SECONDI = 15552000;
+  const riquadro = document.querySelector<HTMLElement>('.eta[data-cookie]');
+  riquadro?.querySelector('[data-eta-ok]')?.addEventListener('click', () => {
+    document.cookie = `${riquadro.dataset.cookie}=1; path=/; max-age=${SEI_MESI_IN_SECONDI}; samesite=lax`;
+    location.reload();
+  });
+</script>
+
+<style>
+  .eta {
+    margin-bottom: 1.5rem;
+    display: grid;
+    gap: 0.6rem;
+    padding: 1.25rem;
+    border-radius: var(--raggio);
+    border: 2px solid #fb923c;
+    background: rgb(251 146 60 / 0.1);
+    color: var(--testo-tenue);
+    font-weight: 600;
+  }
+  .eta .pesante {
+    color: #fff;
+    font-size: 1.1rem;
+  }
+  .eta div {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem;
+  }
+  .indietro {
+    color: #fff;
+    text-decoration: underline;
+    font-weight: 700;
+  }
+</style>

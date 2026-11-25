@@ -1,0 +1,25 @@
+---
+import Tendina from './Tendina.astro';
+
+type Opzione = { valore: string; testo: string };
+
+interface Props {
+  nome: string;
+  etichetta: string;
+  opzioni: Opzione[];
+  scelta: string;
+}
+const { nome, etichetta, opzioni, scelta } = Astro.props;
+const testoScelto = opzioni.find((o) => o.valore === scelta && o.valore !== '')?.testo;
+---
+
+<Tendina etichetta={testoScelto ?? etichetta} attiva={!!testoScelto}>
+  <div class="chip">
+    {opzioni.map((o) => (
+      <label>
+        <input type="radio" name={nome} value={o.valore} checked={o.valore === scelta} />
+        <span>{o.testo}</span>
+      </label>
+    ))}
+  </div>
+</Tendina>

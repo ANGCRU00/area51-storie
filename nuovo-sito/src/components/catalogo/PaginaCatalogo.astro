@@ -1,0 +1,120 @@
+---
+import {
+  cercaProdotti,
+  COOKIE_ETA_CONFERMATA,
+  filtriDaIndirizzo,
+  filtriScelti,
+  indirizzoConFiltri,
+  type Categoria,
+  type Filtri,
+} from '../../lib/prodotti';
+import Percorso from '../comuni/Percorso.astro';
+import AzioniCarrello from '../prodotti/AzioniCarrello.astro';
+import BarraFiltri from './BarraFiltri.astro';
+import FiltriScelti from './FiltriScelti.astro';
+import GrigliaProdotti from './GrigliaProdotti.astro';
+import Paginazione from './Paginazione.astro';
+
+interface Props {
+  categorie: Categoria[];
+  percorso: string;
+  bollino: string;
+  titolo: string;
+  introduzione: string;
+  messaggioVuoto?: string;
+  /** filtri fissi della pagina (es. le uscite mostrano solo i preordini) */
+  filtriFissi?: Partial<Filtri>;
+  conStato?: boolean;
+  conMese?: boolean;
+}
+const {
+  categorie,
+  percorso,
+  bollino,
+  titolo,
+  introduzione,
+  messaggioVuoto,
+  filtriFissi = {},
+  conStato = true,
+  conMese = false,
+} = Astro.props;
+
+const filtri = {
+  ...filtriDaIndirizzo(Astro.url, categorie, filtriFissi),
+  ...(filtriFissi.stato ? { stato: filtriFissi.stato } : {}),
+  etaConfermata: Astro.cookies.get(COOKIE_ETA_CONFERMATA)?.value === '1',
+};
+const risultato = await cercaProdotti(filtri);
+
+const qui = Astro.url.pathname;
+const scelti = filtriScelti(qui, filtri, categorie, conStato);
+const indirizzoPagina = (numero: number) => indirizzoConFiltri(qui, filtri, { pagina: numero });
+---
+
+<div class="contenitore pagina catalogo">
+  <Percorso voci={[{ testo: percorso }]} />
+  <header class="testa">
+    <span class="bollino">{bollino}</span>
+    <h1 class="pesante">{titolo}</h1>
+    <p class="introduzione">{introduzione}</p>
+  </header>
+
+  <BarraFiltri
+    filtri={filtri}
+    risultato={risultato}
+    categorie={categorie}
+    conStato={conStato}
+    conMese={conMese}
+  />
+  <FiltriScelti
+    scelti={scelti}
+    totale={risultato.totale}
+    pagina={risultato.pagina}
+    pagine={risultato.pagine}
+  />
+
+  <section class="risultati" aria-live="polite">
+    <GrigliaProdotti
+      prodotti={risultato.prodotti}
+      conFiltri={scelti.length > 0}
+      messaggioVuoto={messaggioVuoto}
+    />
+    <Paginazione pagina={risultato.pagina} pagine={risultato.pagine} indirizzoPagina={indirizzoPagina} />
+  </section>
+</div>
+<AzioniCarrello />
+
+<style>
+  .pagina {
+    padding-block: 2rem 4rem;
+  }
+  @media (min-width: 1024px) {
+    .pagina {
+      padding-top: 3rem;
+    }
+  }
+  .testa {
+    margin-bottom: 1.5rem;
+  }
+  .testa .bollino {
+    margin-bottom: 0.75rem;
+  }
+  h1 {
+    font-size: 2rem;
+    line-height: 1.1;
+    color: #fff;
+    text-wrap: balance;
+  }
+  @media (min-width: 640px) {
+    h1 {
+      font-size: 3rem;
+    }
+  }
+  .introduzione {
+    margin-top: 0.75rem;
+    max-width: 48rem;
+    font-weight: 600;
+    color: var(--testo-tenue);
+    line-height: 1.6;
+  }
+</style>

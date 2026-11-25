@@ -1,0 +1,110 @@
+---
+/* Barra dei filtri: un normale modulo GET (funziona anche senza JavaScript). Con JavaScript lo script
+   filtri-catalogo aggiorna i risultati senza ricaricare la pagina. */
+import '../../stili/filtri.css';
+import {
+  COOKIE_ETA_CONFERMATA,
+  nomeMese,
+  vedeSoloAdulti,
+  type Categoria,
+  type FiltriDellaPagina,
+  type Risultato,
+} from '../../lib/prodotti';
+import SceltaEditori from './SceltaEditori.astro';
+import SceltaGeneri from './SceltaGeneri.astro';
+import SceltaSingola from './SceltaSingola.astro';
+import SceltaTipo from './SceltaTipo.astro';
+
+interface Props {
+  filtri: FiltriDellaPagina;
+  risultato: Risultato;
+  categorie: Categoria[];
+  conStato: boolean;
+  conMese: boolean;
+}
+const { filtri, risultato, categorie, conStato, conMese } = Astro.props;
+const percorso = Astro.url.pathname;
+
+const STATI = [
+  { valore: '', testo: 'Tutti' },
+  { valore: 'negozio', testo: 'In negozio' },
+  { valore: 'preordini', testo: 'Preordini' },
+];
+const mesi = [
+  { valore: '', testo: 'Tutti' },
+  ...risultato.mesi.map((m) => ({ valore: m, testo: nomeMese(m) })),
+];
+const ORDINI = [
+  { valore: '', testo: 'In evidenza' },
+  { valore: 'uscita', testo: 'Data di uscita' },
+  { valore: 'prezzo', testo: 'Prezzo più basso' },
+  { valore: 'titolo', testo: 'Titolo (A–Z)' },
+];
+const ordineScelto = filtri.ordine === 'recenti' ? '' : filtri.ordine;
+---
+
+<form method="get" action={percorso} class="barra" id="modulo-filtri" data-cookie={COOKIE_ETA_CONFERMATA}>
+  <div class="cerca">
+    <label for="f-cerca" class="solo-lettori">
+      Cerca titolo, editore o autore
+    </label>
+    <input
+      id="f-cerca"
+      name="cerca"
+      type="search"
+      maxlength="60"
+      value={filtri.cerca ?? ''}
+      placeholder="Cerca titolo, editore o autore"
+    />
+    <button type="submit" class="tondo" aria-label="Cerca">
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-linecap="round" stroke-width="2"></path>
+      </svg>
+    </button>
+  </div>
+
+  <div class="tendine">
+    <SceltaTipo
+      categorie={categorie}
+      scelta={filtri.cat}
+      soloAdulti={vedeSoloAdulti(filtri)}
+      etaConfermata={!!filtri.etaConfermata}
+      chiediEta={!!filtri.soloAdulti && !filtri.etaConfermata}
+      titoliPerAdulti={risultato.titoliPerAdulti}
+    />
+    <SceltaGeneri disponibili={risultato.generi} scelti={filtri.generi ?? []} />
+    <SceltaEditori disponibili={risultato.editori} scelti={filtri.editori ?? []} />
+    {conStato && (
+      <SceltaSingola
+        nome="stato"
+        etichetta="Stato"
+        opzioni={STATI}
+        scelta={filtri.stato === 'tutti' ? '' : (filtri.stato ?? '')}
+      />
+    )}
+    {conMese && risultato.mesi.length > 0 && (
+      <SceltaSingola nome="mese" etichetta="Mese" opzioni={mesi} scelta={filtri.mese ?? ''} />
+    )}
+
+    <label class="ordina">
+      <span class="solo-lettori">Ordina per</span>
+      <select id="f-ordine" name="ordine" aria-label="Ordina per">
+        {ORDINI.map((o) => (
+          <option value={o.valore} selected={o.valore === ordineScelto}>
+            {o.testo}
+          </option>
+        ))}
+      </select>
+    </label>
+  </div>
+
+  <noscript>
+    <button type="submit" class="pulsante piccolo">
+      Mostra risultati
+    </button>
+  </noscript>
+</form>
+
+<script>
+  import '../../scripts/filtri-catalogo';
+</script>

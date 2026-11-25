@@ -1,23 +1,120 @@
-.modulo { display: grid; gap: 1rem; min-width: 0; }
-.etichetta { display: block; font-size: .75rem; text-transform: uppercase; letter-spacing: .1em; color: var(--lime); margin-bottom: .5rem; }
-.facoltativo { text-transform: none; letter-spacing: normal; font-weight: 600; font-stretch: 100%; color: var(--testo-tenue); }
-.campo { width: 100%; background: var(--scheda); border: 1px solid var(--linea); border-radius: var(--raggio-pillola); padding: .75rem 1.25rem; font-size: 1rem; color: #fff;
-  transition: border-color var(--transizione); }
-.campo::placeholder { color: var(--testo-tenue); }
-.campo:hover, .campo:focus { border-color: var(--lime); }
-.campo:focus { outline: none; box-shadow: 0 0 0 1px var(--lime); }
-.area { border-radius: var(--raggio); resize: vertical; }
-select.campo { appearance: none; background-image: linear-gradient(45deg, transparent 50%, var(--lime) 50%), linear-gradient(135deg, var(--lime) 50%, transparent 50%);
-  background-position: calc(100% - 1.4rem) 50%, calc(100% - 1rem) 50%; background-size: .4rem .4rem; background-repeat: no-repeat; padding-right: 2.5rem; }
-select.campo option { background: var(--scheda); }
-.coppia { display: grid; grid-template-columns: 1fr; gap: 1rem; }
-@media (min-width: 640px) { .coppia { grid-template-columns: 1fr 1fr; } }
-.trappola { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
-.consenso { display: flex; align-items: flex-start; gap: .75rem; font-size: .875rem; font-weight: 600; color: var(--testo-tenue); line-height: 1.375; cursor: pointer; }
-.consenso input { margin-top: .125rem; width: 1.25rem; height: 1.25rem; flex-shrink: 0; accent-color: var(--lime); }
-.consenso a { color: #fff; text-decoration: underline; }
-.consenso a:hover { color: var(--lime); }
-.invio { display: flex; flex-wrap: wrap; align-items: center; gap: .75rem; }
-.invio button:disabled { opacity: .7; cursor: wait; }
-.esito, .esitoErrore { font-size: .875rem; font-weight: 700; color: var(--lime); }
-.esitoErrore { color: #FB923C; }
+.modulo {
+  display: grid;
+  gap: 1rem;
+  min-width: 0;
+}
+.etichetta {
+  display: block;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--lime);
+  margin-bottom: 0.5rem;
+}
+.facoltativo {
+  text-transform: none;
+  letter-spacing: normal;
+  font-weight: 600;
+  font-stretch: 100%;
+  color: var(--testo-tenue);
+}
+.campo {
+  width: 100%;
+  background: var(--scheda);
+  border: 1px solid var(--linea);
+  border-radius: var(--raggio-pillola);
+  padding: 0.75rem 1.25rem;
+  font-size: 1rem;
+  color: #fff;
+  transition: border-color var(--transizione);
+}
+.campo::placeholder {
+  color: var(--testo-tenue);
+}
+.campo:hover,
+.campo:focus {
+  border-color: var(--lime);
+}
+.campo:focus {
+  outline: none;
+  box-shadow: 0 0 0 1px var(--lime);
+}
+.area {
+  border-radius: var(--raggio);
+  resize: vertical;
+}
+select.campo {
+  appearance: none;
+  background-image:
+    linear-gradient(45deg, transparent 50%, var(--lime) 50%),
+    linear-gradient(135deg, var(--lime) 50%, transparent 50%);
+  background-position:
+    calc(100% - 1.4rem) 50%,
+    calc(100% - 1rem) 50%;
+  background-size: 0.4rem 0.4rem;
+  background-repeat: no-repeat;
+  padding-right: 2.5rem;
+}
+select.campo option {
+  background: var(--scheda);
+}
+.coppia {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+@media (min-width: 640px) {
+  .coppia {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+.trappola {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+.consenso {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--testo-tenue);
+  line-height: 1.375;
+  cursor: pointer;
+}
+.consenso input {
+  margin-top: 0.125rem;
+  width: 1.25rem;
+  height: 1.25rem;
+  flex-shrink: 0;
+  accent-color: var(--lime);
+}
+.consenso a {
+  color: #fff;
+  text-decoration: underline;
+}
+.consenso a:hover {
+  color: var(--lime);
+}
+.invio {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+}
+.invio button:disabled {
+  opacity: 0.7;
+  cursor: wait;
+}
+.esito,
+.esitoErrore {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--lime);
+}
+.esitoErrore {
+  color: #fb923c;
+}

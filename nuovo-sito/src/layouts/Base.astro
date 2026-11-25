@@ -13,30 +13,38 @@ interface Props {
   /** false per le pagine da non mostrare su Google (profilo, carrello, area gestore). Durante lo sviluppo è sempre false. */
   indicizza?: boolean;
 }
-const { titolo, descrizione = 'Fumetteria Area 51 a Barletta: manga, fumetti, carte TCG, figure, Warhammer e tornei.', indicizza = false } = Astro.props;
+const {
+  titolo,
+  descrizione = 'Fumetteria Area 51 a Barletta: manga, fumetti, carte TCG, figure, Warhammer e tornei.',
+  indicizza = false,
+} = Astro.props;
 ---
+
 <!doctype html>
 <html lang="it">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>{titolo}</title>
-  <meta name="description" content={descrizione} />
-  {!indicizza && <meta name="robots" content="noindex, nofollow" />}
-  <meta name="theme-color" content="#070514" />
-  <link rel="preload" href="/fonts/archivo.woff2" as="font" type="font/woff2" crossorigin />
-</head>
-<body>
-  <Simboli />
-  <Sfondo />
-  <Testata />
-  <main id="contenuto" class="contenuto">
-    <slot />
-  </main>
-  <Piede />
-</body>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{titolo}</title>
+    <meta name="description" content={descrizione} />
+    {!indicizza && <meta name="robots" content="noindex, nofollow" />}
+    <meta name="theme-color" content="#070514" />
+    <link rel="preload" href="/fonts/archivo.woff2" as="font" type="font/woff2" crossorigin />
+  </head>
+  <body>
+    <Simboli />
+    <Sfondo />
+    <Testata />
+    <main id="contenuto" class="contenuto">
+      <slot />
+    </main>
+    <Piede />
+  </body>
 </html>
 
 <style>
-  .contenuto { position: relative; z-index: 10; }
+  .contenuto {
+    position: relative;
+    z-index: 10;
+  }
 </style>

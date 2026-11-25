@@ -1,20 +1,24 @@
 ---
-/* Prossime uscite da prenotare: tabella uscite di D1 (Starshop e inserite a mano), solo quelle visibili. */
 import Base from '../layouts/Base.astro';
-import Elenco from '../components/prodotti/Elenco.astro';
-import { COOKIE_ADULTI, cercaProdotti, filtriDaIndirizzo, type Categoria } from '../lib/prodotti';
+import PaginaCatalogo from '../components/catalogo/PaginaCatalogo.astro';
+import { impostaCachePaginaDinamica } from '../lib/cache';
 
 export const prerender = false;
-const disponibili: Categoria[] = ['manga', 'fumetti', 'tcg', 'giochi'];
-const filtri = filtriDaIndirizzo(Astro.url, disponibili, { stato: 'preordini', ordine: 'uscita', perPagina: 40 });
-filtri.etaConfermata = Astro.cookies.get(COOKIE_ADULTI)?.value === '1';
-filtri.stato = 'preordini';
-const risultato = await cercaProdotti(filtri);
-Astro.response.headers.set('cache-control', 'public, max-age=0, s-maxage=60');
-Astro.response.headers.set('vary', 'cookie');
+impostaCachePaginaDinamica(Astro.response.headers);
 ---
-<Base titolo="Prossime uscite · Area 51 Fumetteria Barletta" descrizione="Manga, fumetti, carte e giochi in uscita nei prossimi mesi: prenotali alla Fumetteria Area 51 di Barletta.">
-  <Elenco percorso="Prossime uscite" bollino="Prenota le novità" titolo="Prossime uscite"
+
+<Base
+  titolo="Prossime uscite · Area 51 Fumetteria Barletta"
+  descrizione="Manga, fumetti, carte e giochi in uscita nei prossimi mesi: prenotali alla Fumetteria Area 51 di Barletta."
+>
+  <PaginaCatalogo
+    categorie={['manga', 'fumetti', 'tcg', 'giochi']}
+    percorso="Prossime uscite"
+    bollino="Prenota le novità"
+    titolo="Prossime uscite"
     introduzione="Manga, fumetti, carte e giochi in arrivo nelle prossime settimane. Prenota quello che ti interessa: lo ordiniamo per te e lo ritiri in negozio."
-    risultato={risultato} filtri={filtri} categorie={disponibili} mostraStato={false} mostraMese />
+    filtriFissi={{ stato: 'preordini', ordine: 'uscita', perPagina: 40 }}
+    conStato={false}
+    conMese
+  />
 </Base>

@@ -10,7 +10,9 @@
     "dati": "node scripts/dati-provvisori.mjs",
     "db:genera": "drizzle-kit generate",
     "db:locale": "wrangler d1 migrations apply area51 --local",
-    "importa": "node scripts/importa-da-supabase.mjs"
+    "importa": "node scripts/importa-da-supabase.mjs",
+    "formatta": "prettier --write .",
+    "controlla-formato": "prettier --check ."
   },
   "dependencies": {
     "@astrojs/cloudflare": "^14.4.9",
@@ -24,6 +26,8 @@
     "@types/react": "^19.3.2",
     "@types/react-dom": "^19.3.0",
     "drizzle-kit": "^0.31.11",
+    "prettier": "^3.10.1",
+    "prettier-plugin-astro": "^1.1.2",
     "wrangler": "^4.168.0"
   }
 }

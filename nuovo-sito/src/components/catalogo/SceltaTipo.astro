@@ -1,0 +1,74 @@
+---
+import { NOME_CATEGORIA, type Categoria } from '../../lib/prodotti';
+import Tendina from './Tendina.astro';
+
+interface Props {
+  categorie: Categoria[];
+  scelta: Categoria | '';
+  soloAdulti: boolean;
+  etaConfermata: boolean;
+  /** link condiviso con il filtro 18+ ma età non ancora confermata */
+  chiediEta: boolean;
+  titoliPerAdulti: number;
+}
+const { categorie, scelta, soloAdulti, etaConfermata, chiediEta, titoliPerAdulti } = Astro.props;
+
+const piuCategorie = categorie.length > 1;
+const conFiltro18 = titoliPerAdulti > 0 || soloAdulti || chiediEta;
+const etichetta = scelta ? NOME_CATEGORIA[scelta] : soloAdulti ? 'Solo 18+' : 'Tipo';
+const notaAdulti = soloAdulti
+  ? 'Stai vedendo solo i titoli per adulti.'
+  : `18+ mostra solo i titoli per adulti (${titoliPerAdulti}).`;
+---
+
+{(piuCategorie || conFiltro18) && (
+  <Tendina etichetta={etichetta} attiva={!!scelta || soloAdulti} aperta={chiediEta}>
+    {soloAdulti && scelta && (
+      <span slot="segno" class="segno18">
+        18+
+      </span>
+    )}
+    <div class="chip">
+      {piuCategorie && (
+        <label>
+          <input type="radio" name="cat" value="" checked={!scelta} />
+          <span>Tutto</span>
+        </label>
+      )}
+      {piuCategorie &&
+        categorie.map((c) => (
+          <label>
+            <input type="radio" name="cat" value={c} checked={scelta === c} />
+            <span>{NOME_CATEGORIA[c]}</span>
+          </label>
+        ))}
+      {conFiltro18 && (
+        <label class="chip18" title="Mostra solo i titoli per adulti">
+          <input
+            type="checkbox"
+            name="adulti"
+            value="1"
+            checked={soloAdulti}
+            data-casella18
+            data-confermata={etaConfermata ? '1' : ''}
+          />
+          <span>18+</span>
+        </label>
+      )}
+    </div>
+    {conFiltro18 && <p class="nota">{notaAdulti}</p>}
+    {conFiltro18 && !etaConfermata && (
+      <div class="adulti-conferma" hidden={!chiediEta} data-adulti-conferma>
+        <p>I titoli 18+ sono per adulti. Confermi di avere almeno 18 anni?</p>
+        <div>
+          <button type="button" class="pulsante piccolo" data-adulti-si>
+            Sì, ho almeno 18 anni
+          </button>
+          <button type="button" class="testo-pulsante" data-adulti-annulla>
+            No
+          </button>
+        </div>
+      </div>
+    )}
+  </Tendina>
+)}

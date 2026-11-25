@@ -5,39 +5,73 @@ import StatoNegozio from '../isole/StatoNegozio.tsx';
 import RiquadroInfo from './RiquadroInfo.astro';
 import dati from '../../data/provvisori.json';
 import type { Prodotto } from '../../lib/prodotti';
-interface Props { ultimo?: Prodotto }
+interface Props {
+  ultimo?: Prodotto;
+}
 const { ultimo } = Astro.props;
 
 const ev = dati.eventi[0];
 const evento = ev
-  ? { titolo: 'Prossimo evento: ' + ev.titolo, sotto: ev.giorno + ' ' + ev.numero + ' ' + ev.mese + ', ore ' + ev.ora }
+  ? {
+      titolo: 'Prossimo evento: ' + ev.titolo,
+      sotto: ev.giorno + ' ' + ev.numero + ' ' + ev.mese + ', ore ' + ev.ora,
+    }
   : { titolo: 'Prossimo evento', sotto: 'Tornei, serate e avventure in negozio' };
 const arrivo = ultimo
-  ? { titolo: 'Appena uscito: ' + ultimo.titolo, sotto: 'Guarda le novità del catalogo', href: '/prodotto/' + encodeURIComponent(ultimo.codice) }
+  ? {
+      titolo: 'Appena uscito: ' + ultimo.titolo,
+      sotto: 'Guarda le novità del catalogo',
+      href: '/prodotto/' + encodeURIComponent(ultimo.codice),
+    }
   : { titolo: 'Novità', sotto: 'Guarda il catalogo', href: '/catalogo' };
 ---
+
 <section class="apertura">
   <div class="contenitore griglia">
     <div class="sinistra">
-      <span class="pesante bollino"><span class="punto"></span>Avvistamento confermato</span>
-      <h1 class="pesante titolo">Storie di un altro <span class="lime">pianeta.</span></h1>
+      <span class="pesante bollino">
+        <span class="punto"></span>Avvistamento confermato
+      </span>
+      <h1 class="pesante titolo">
+        Storie di un altro <span class="lime">pianeta.</span>
+      </h1>
       <ul class="info">
-        <li><StatoNegozio client:load /></li>
-        <li><RiquadroInfo href="/eventi" icona="calendario" titolo={evento.titolo} sotto={evento.sotto} /></li>
-        <li><RiquadroInfo href={arrivo.href} icona="libro" titolo={arrivo.titolo} sotto={arrivo.sotto} /></li>
+        <li>
+          <StatoNegozio client:load />
+        </li>
+        <li>
+          <RiquadroInfo href="/eventi" icona="calendario" titolo={evento.titolo} sotto={evento.sotto} />
+        </li>
+        <li>
+          <RiquadroInfo href={arrivo.href} icona="libro" titolo={arrivo.titolo} sotto={arrivo.sotto} />
+        </li>
       </ul>
       <div class="pulsanti">
-        <a class="pulsante grande" href="/catalogo">Esplora gli scaffali <span aria-hidden="true">→</span></a>
-        <a class="pesante secondario" href="/negozio">Vieni a trovarci <span class="lime" aria-hidden="true">↗</span></a>
+        <a class="pulsante grande" href="/catalogo">
+          Esplora gli scaffali <span aria-hidden="true">→</span>
+        </a>
+        <a class="pesante secondario" href="/negozio">
+          Vieni a trovarci{' '}
+          <span class="lime" aria-hidden="true">
+            ↗
+          </span>
+        </a>
       </div>
     </div>
 
     <div class="destra">
-      <svg class="disco" aria-hidden="true"><use href="#disco" /></svg>
+      <svg class="disco" aria-hidden="true">
+        <use href="#disco" />
+      </svg>
       <div class="raggio" aria-hidden="true"></div>
       <article class="evidenza">
         <div class="foto">
-          <img src="/img/angolo-manga.jpg" alt="L'angolo manga della fumetteria Area 51" width="640" height="576" />
+          <img
+            src="/img/angolo-manga.jpg"
+            alt="L'angolo manga della fumetteria Area 51"
+            width="640"
+            height="576"
+          />
           <span class="pesante etichetta">IN EVIDENZA</span>
         </div>
         <div class="evidenza-testo">
@@ -54,50 +88,244 @@ const arrivo = ultimo
 </section>
 
 <style>
-  .apertura { position: relative; padding-block: 2.85rem 4.75rem; }
-  @media (min-width: 1024px) { .apertura { padding-block: 4.75rem 6.65rem; } }
-  .griglia { display: grid; grid-template-columns: 1fr; gap: 3.5rem; align-items: center; }
-  @media (min-width: 1024px) { .griglia { grid-template-columns: 7fr 5fr; gap: 2rem; } }
-  .sinistra, .destra { zoom: .95; min-width: 0; }
-  .sinistra { display: flex; flex-direction: column; align-items: flex-start; gap: 1.5rem; }
+  .apertura {
+    position: relative;
+    padding-block: 2.85rem 4.75rem;
+  }
+  @media (min-width: 1024px) {
+    .apertura {
+      padding-block: 4.75rem 6.65rem;
+    }
+  }
+  .griglia {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 3.5rem;
+    align-items: center;
+  }
+  @media (min-width: 1024px) {
+    .griglia {
+      grid-template-columns: 7fr 5fr;
+      gap: 2rem;
+    }
+  }
+  .sinistra,
+  .destra {
+    zoom: 0.95;
+    min-width: 0;
+  }
+  .sinistra {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.5rem;
+  }
 
-  .bollino { transform: rotate(-2deg); display: inline-flex; align-items: center; gap: .5rem; background: var(--lime); color: #000; padding: .375rem 1rem; border-radius: .25rem;
-    font-size: .75rem; text-transform: uppercase; letter-spacing: .05em; box-shadow: var(--ombra-brutal); }
-  .punto { width: .5rem; height: .5rem; border-radius: 50%; background: #000; }
-  .titolo { font-size: 2.6rem; line-height: 1.02; color: #fff; text-wrap: balance; }
-  @media (min-width: 640px) { .titolo { font-size: 3.75rem; } }
-  @media (min-width: 1024px) { .titolo { font-size: 4.5rem; } }
-  .lime { color: var(--lime); }
-  .info { width: 100%; max-width: 36rem; display: grid; gap: .625rem; }
-  .pulsanti { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem; padding-top: .25rem; }
-  .grande { font-size: .875rem; padding: 1rem 1.75rem; }
-  @media (min-width: 640px) { .grande { font-size: 1rem; } }
-  .secondario { border: 2px solid var(--viola); background: rgb(19 13 49 / .8); color: #fff; font-size: .875rem; padding: .875rem 1.5rem; border-radius: var(--raggio-pillola);
-    transition: border-color var(--transizione); }
-  .secondario:hover { border-color: var(--lime); }
-  @media (min-width: 640px) { .secondario { font-size: 1rem; } }
+  .bollino {
+    transform: rotate(-2deg);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: var(--lime);
+    color: #000;
+    padding: 0.375rem 1rem;
+    border-radius: 0.25rem;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    box-shadow: var(--ombra-brutal);
+  }
+  .punto {
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 50%;
+    background: #000;
+  }
+  .titolo {
+    font-size: 2.6rem;
+    line-height: 1.02;
+    color: #fff;
+    text-wrap: balance;
+  }
+  @media (min-width: 640px) {
+    .titolo {
+      font-size: 3.75rem;
+    }
+  }
+  @media (min-width: 1024px) {
+    .titolo {
+      font-size: 4.5rem;
+    }
+  }
+  .lime {
+    color: var(--lime);
+  }
+  .info {
+    width: 100%;
+    max-width: 36rem;
+    display: grid;
+    gap: 0.625rem;
+  }
+  .pulsanti {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem;
+    padding-top: 0.25rem;
+  }
+  .grande {
+    font-size: 0.875rem;
+    padding: 1rem 1.75rem;
+  }
+  @media (min-width: 640px) {
+    .grande {
+      font-size: 1rem;
+    }
+  }
+  .secondario {
+    border: 2px solid var(--viola);
+    background: rgb(19 13 49 / 0.8);
+    color: #fff;
+    font-size: 0.875rem;
+    padding: 0.875rem 1.5rem;
+    border-radius: var(--raggio-pillola);
+    transition: border-color var(--transizione);
+  }
+  .secondario:hover {
+    border-color: var(--lime);
+  }
+  @media (min-width: 640px) {
+    .secondario {
+      font-size: 1rem;
+    }
+  }
 
   /* Disco volante, raggio e scheda in evidenza */
-  .destra { position: relative; display: flex; flex-direction: column; align-items: center; }
-  .disco { position: relative; z-index: 30; width: 12rem; height: 5rem; filter: drop-shadow(0 10px 25px rgb(185 230 46 / .35)); animation: fluttua 5s ease-in-out infinite; }
-  .raggio { position: absolute; top: 4rem; z-index: 10; width: 16rem; height: 14rem; animation: fluttua 5s ease-in-out infinite;
-    background: linear-gradient(180deg, rgb(185 230 46 / .5) 0%, rgb(124 58 237 / .15) 60%, rgb(7 5 20 / 0) 100%); clip-path: polygon(32% 0, 68% 0, 100% 100%, 0 100%); }
-  @media (min-width: 640px) {
-    .disco { width: 18rem; height: 8rem; }
-    .raggio { top: 6rem; width: 24rem; height: 20rem; }
+  .destra {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
-  @keyframes fluttua { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
-  .evidenza { position: relative; z-index: 20; width: 18rem; max-width: 100%; transform: rotate(-2deg); padding: .75rem; border-radius: var(--raggio);
-    background: linear-gradient(to bottom, #1b1240, #0c0822); border: 2px solid rgb(185 230 46 / .8); box-shadow: var(--alone-lime); }
-  @media (min-width: 640px) { .evidenza { width: 20rem; } }
-  .foto { position: relative; height: 10rem; border-radius: .75rem; overflow: hidden; }
-  @media (min-width: 640px) { .foto { height: 18rem; } }
-  .foto img { width: 100%; height: 100%; object-fit: cover; }
-  .etichetta { position: absolute; top: .75rem; left: .75rem; background: var(--lime); color: #000; font-size: 11px; padding: .125rem .625rem; border-radius: .25rem; }
-  .evidenza-testo { padding: .75rem .5rem .25rem; }
-  .categoria { font-size: 11px; font-weight: 700; color: var(--lime); text-transform: uppercase; letter-spacing: .1em; }
-  .evidenza h2 { font-size: 1.125rem; color: #fff; margin-top: .125rem; }
-  .evidenza-piede { display: flex; align-items: center; justify-content: space-between; margin-top: .5rem; padding-top: .5rem; border-top: 1px solid var(--linea-tenue); }
-  .prezzo { color: var(--lime); font-size: 1.25rem; }
-  .stato { font-size: .75rem; font-weight: 600; color: var(--testo-tenue); background: rgb(255 255 255 / .05); padding: .25rem .5rem; border-radius: .25rem; }
+  .disco {
+    position: relative;
+    z-index: 30;
+    width: 12rem;
+    height: 5rem;
+    filter: drop-shadow(0 10px 25px rgb(185 230 46 / 0.35));
+    animation: fluttua 5s ease-in-out infinite;
+  }
+  .raggio {
+    position: absolute;
+    top: 4rem;
+    z-index: 10;
+    width: 16rem;
+    height: 14rem;
+    animation: fluttua 5s ease-in-out infinite;
+    background: linear-gradient(
+      180deg,
+      rgb(185 230 46 / 0.5) 0%,
+      rgb(124 58 237 / 0.15) 60%,
+      rgb(7 5 20 / 0) 100%
+    );
+    clip-path: polygon(32% 0, 68% 0, 100% 100%, 0 100%);
+  }
+  @media (min-width: 640px) {
+    .disco {
+      width: 18rem;
+      height: 8rem;
+    }
+    .raggio {
+      top: 6rem;
+      width: 24rem;
+      height: 20rem;
+    }
+  }
+  @keyframes fluttua {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+  }
+  .evidenza {
+    position: relative;
+    z-index: 20;
+    width: 18rem;
+    max-width: 100%;
+    transform: rotate(-2deg);
+    padding: 0.75rem;
+    border-radius: var(--raggio);
+    background: linear-gradient(to bottom, #1b1240, #0c0822);
+    border: 2px solid rgb(185 230 46 / 0.8);
+    box-shadow: var(--alone-lime);
+  }
+  @media (min-width: 640px) {
+    .evidenza {
+      width: 20rem;
+    }
+  }
+  .foto {
+    position: relative;
+    height: 10rem;
+    border-radius: 0.75rem;
+    overflow: hidden;
+  }
+  @media (min-width: 640px) {
+    .foto {
+      height: 18rem;
+    }
+  }
+  .foto img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .etichetta {
+    position: absolute;
+    top: 0.75rem;
+    left: 0.75rem;
+    background: var(--lime);
+    color: #000;
+    font-size: 11px;
+    padding: 0.125rem 0.625rem;
+    border-radius: 0.25rem;
+  }
+  .evidenza-testo {
+    padding: 0.75rem 0.5rem 0.25rem;
+  }
+  .categoria {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--lime);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  .evidenza h2 {
+    font-size: 1.125rem;
+    color: #fff;
+    margin-top: 0.125rem;
+  }
+  .evidenza-piede {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 0.5rem;
+    padding-top: 0.5rem;
+    border-top: 1px solid var(--linea-tenue);
+  }
+  .prezzo {
+    color: var(--lime);
+    font-size: 1.25rem;
+  }
+  .stato {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--testo-tenue);
+    background: rgb(255 255 255 / 0.05);
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+  }
 </style>

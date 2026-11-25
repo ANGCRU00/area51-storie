@@ -1,0 +1,39 @@
+---
+import type { FiltroScelto } from '../../lib/prodotti';
+
+interface Props {
+  scelti: FiltroScelto[];
+  totale: number;
+  pagina: number;
+  pagine: number;
+}
+const { scelti, totale, pagina, pagine } = Astro.props;
+const percorso = Astro.url.pathname;
+const prodotti = totale === 1 ? 'prodotto' : 'prodotti';
+---
+
+<div class="sopra">
+  {scelti.length > 0 && (
+    <ul class="attivi">
+      {scelti.map((filtro) => (
+        <li>
+          <a href={filtro.indirizzo} aria-label={'Togli il filtro ' + filtro.testo}>
+            {filtro.testo} <span aria-hidden="true">×</span>
+          </a>
+        </li>
+      ))}
+      {scelti.length > 1 && (
+        <li>
+          <a href={percorso} class="azzera">
+            Azzera tutto
+          </a>
+        </li>
+      )}
+    </ul>
+  )}
+  <p class="conta">
+    <b class="pesante">{totale}</b>
+    {prodotti}
+    {pagine > 1 && ` · pagina ${pagina} di ${pagine}`}
+  </p>
+</div>

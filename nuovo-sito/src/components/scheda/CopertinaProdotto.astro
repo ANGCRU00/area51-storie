@@ -1,0 +1,149 @@
+---
+import type { Prodotto } from '../../lib/prodotti';
+
+interface Props {
+  prodotto: Prodotto;
+  sfocata: boolean;
+}
+const { prodotto: p, sfocata } = Astro.props;
+---
+
+<div class="copertina">
+  {p.copertina ? (
+    <img
+      class:list={[{ sfocata }]}
+      src={p.copertina}
+      alt={'Copertina di ' + p.titolo}
+      width="318"
+      height="484"
+    />
+  ) : (
+    <div class="senza">
+      <svg aria-hidden="true">
+        <use href="#alieno" />
+      </svg>
+      <span>Copertina non ancora disponibile</span>
+    </div>
+  )}
+  <button
+    type="button"
+    class="cuore"
+    id="desiderio"
+    aria-pressed="false"
+    aria-label="Aggiungi alla lista desideri"
+    data-codice={p.codice}
+    data-titolo={p.titolo}
+    data-prezzo={p.prezzo ?? 0}
+    data-copertina={p.copertina ?? ''}
+    data-editore={p.editore ?? ''}
+  >
+    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+      <path
+        d="M4.3 6.3a4.5 4.5 0 000 6.4L12 20.4l7.7-7.7a4.5 4.5 0 00-6.4-6.4L12 7.6l-1.3-1.3a4.5 4.5 0 00-6.4 0z"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+      ></path>
+    </svg>
+  </button>
+</div>
+
+<script>
+  import { ascolta, preferiti } from '../../lib/negozio';
+
+  const cuore = document.getElementById('desiderio') as HTMLButtonElement | null;
+
+  function mostraStato() {
+    if (!cuore) return;
+    const nellaLista = preferiti.ha(cuore.dataset.codice ?? '');
+    cuore.setAttribute('aria-pressed', String(nellaLista));
+    cuore.setAttribute(
+      'aria-label',
+      nellaLista ? 'Togli dalla lista desideri' : 'Aggiungi alla lista desideri',
+    );
+  }
+
+  cuore?.addEventListener('click', () => {
+    const d = cuore.dataset;
+    preferiti.scambia({
+      k: d.codice ?? '',
+      t: d.titolo ?? '',
+      p: Number(d.prezzo) || 0,
+      l: location.pathname,
+      i: d.copertina ?? '',
+      e: d.editore ?? '',
+    });
+  });
+  ascolta(mostraStato);
+  mostraStato();
+</script>
+
+<style>
+  .copertina {
+    position: relative;
+    width: 100%;
+    max-width: 300px;
+    margin-inline: auto;
+    aspect-ratio: 318 / 484;
+    border-radius: var(--raggio);
+    overflow: hidden;
+    border: 2px solid rgb(185 230 46 / 0.6);
+    box-shadow: var(--ombra-brutal);
+    background: var(--scheda);
+  }
+  .copertina img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .sfocata {
+    filter: blur(22px) saturate(0.5);
+    transform: scale(1.15);
+  }
+  .senza {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    padding: 1.5rem;
+    text-align: center;
+    color: var(--testo-tenue);
+    font-weight: 700;
+  }
+  .senza svg {
+    width: 5rem;
+    height: 5rem;
+  }
+  .cuore {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    z-index: 2;
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgb(20 12 43 / 0.85);
+    border: 1px solid rgb(255 255 255 / 0.25);
+    color: #fff;
+    transition:
+      color var(--transizione),
+      border-color var(--transizione);
+  }
+  .cuore svg {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+  .cuore:hover,
+  .cuore[aria-pressed='true'] {
+    border-color: var(--lime);
+    color: var(--lime);
+  }
+  .cuore[aria-pressed='true'] svg {
+    fill: currentColor;
+  }
+</style>

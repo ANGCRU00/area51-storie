@@ -9,7 +9,15 @@ import { emailValida, errore, json, leggiJson, testo } from '../../lib/api';
 
 export const prerender = false;
 
-const CATEGORIE = ['Manga e fumetti', 'TCG', 'Giochi da tavolo', 'Giochi di ruolo', 'Figure e Funko', 'Warhammer', 'Gadget'];
+const CATEGORIE = [
+  'Manga e fumetti',
+  'TCG',
+  'Giochi da tavolo',
+  'Giochi di ruolo',
+  'Figure e Funko',
+  'Warhammer',
+  'Gadget',
+];
 
 export const POST: APIRoute = async ({ request }) => {
   const d = await leggiJson(request);
@@ -26,13 +34,20 @@ export const POST: APIRoute = async ({ request }) => {
 
   if (cosa.length < 3) return errore('Scrivi cosa cerchi (almeno 3 caratteri).');
   if (!nome) return errore('Scrivi il tuo nome.');
-  if (!emailValida(email)) return errore('Controlla l\'indirizzo email.');
-  if (d.privacy !== true) return errore('Serve il consenso al trattamento dei dati per rispondere alla richiesta.');
+  if (!emailValida(email)) return errore("Controlla l'indirizzo email.");
+  if (d.privacy !== true)
+    return errore('Serve il consenso al trattamento dei dati per rispondere alla richiesta.');
 
   const unOraFa = new Date(Date.now() - 3600_000).toISOString().slice(0, 19) + 'Z';
-  const [recenti] = await db().select({ n: count() }).from(richieste).where(and(eq(richieste.email, email), gt(richieste.creataIl, unOraFa)));
-  if ((recenti?.n ?? 0) >= 3) return errore("Hai già inviato diverse richieste: riprova tra un'ora o chiamaci allo 0883 884567.", 429);
+  const [recenti] = await db()
+    .select({ n: count() })
+    .from(richieste)
+    .where(and(eq(richieste.email, email), gt(richieste.creataIl, unOraFa)));
+  if ((recenti?.n ?? 0) >= 3)
+    return errore("Hai già inviato diverse richieste: riprova tra un'ora o chiamaci allo 0883 884567.", 429);
 
-  await db().insert(richieste).values({ cosa, categoria, nome, email, telefono: telefono || null });
+  await db()
+    .insert(richieste)
+    .values({ cosa, categoria, nome, email, telefono: telefono || null });
   return json({ ok: true }, 201);
 };

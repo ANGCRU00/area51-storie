@@ -2,19 +2,54 @@
    Lo stile dei singoli pezzi sta nei loro componenti (<style> negli .astro, .module.css nelle isole React). */
 @import './variabili.css';
 
-@font-face { font-family: 'Archivo'; src: url(/fonts/archivo.woff2) format('woff2'); font-weight: 100 900; font-stretch: 62% 125%; font-display: block;
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
-@font-face { font-family: 'Archivo'; src: url(/fonts/archivo-ext.woff2) format('woff2'); font-weight: 100 900; font-stretch: 62% 125%; font-display: block;
-  unicode-range: U+0100-02AF, U+0304, U+0308, U+0329, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF; }
+@font-face {
+  font-family: 'Archivo';
+  src: url(/fonts/archivo.woff2) format('woff2');
+  font-weight: 100 900;
+  font-stretch: 62% 125%;
+  font-display: block;
+  unicode-range:
+    U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+2122,
+    U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Archivo';
+  src: url(/fonts/archivo-ext.woff2) format('woff2');
+  font-weight: 100 900;
+  font-stretch: 62% 125%;
+  font-display: block;
+  unicode-range:
+    U+0100-02AF, U+0304, U+0308, U+0329, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113,
+    U+2C60-2C7F, U+A720-A7FF;
+}
 
-*, *::before, *::after { box-sizing: border-box; }
-* { margin: 0; }
-html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
-@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+* {
+  margin: 0;
+}
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
 body {
-  position: relative; min-height: 100vh; overflow-x: hidden;
-  font-family: var(--font); font-size: 1rem; line-height: 1.5; color: var(--testo);
-  -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
+  position: relative;
+  min-height: 100vh;
+  overflow-x: hidden;
+  font-family: var(--font);
+  font-size: 1rem;
+  line-height: 1.5;
+  color: var(--testo);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
   background-color: var(--notte);
   background-image:
     radial-gradient(1px 1px at 25px 35px, #fff 100%, transparent),
@@ -27,57 +62,210 @@ body {
     radial-gradient(1.5px 1.5px at 330px 470px, #fff 100%, transparent);
   background-size: 550px 550px;
 }
-::selection { background: var(--lime); color: #000; }
-img, svg, video { display: block; max-width: 100%; }
-button, input, select, textarea { font: inherit; color: inherit; }
-button { cursor: pointer; background: none; border: 0; padding: 0; }
-a { color: inherit; text-decoration: none; }
-ul, ol { list-style: none; padding: 0; }
-:focus-visible { outline: 2px solid var(--lime); outline-offset: 2px; }
-[hidden] { display: none !important; }
+::selection {
+  background: var(--lime);
+  color: #000;
+}
+img,
+svg,
+video {
+  display: block;
+  max-width: 100%;
+}
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+button {
+  cursor: pointer;
+  background: none;
+  border: 0;
+  padding: 0;
+}
+a {
+  color: inherit;
+  text-decoration: none;
+}
+ul,
+ol {
+  list-style: none;
+  padding: 0;
+}
+:focus-visible {
+  outline: 2px solid var(--lime);
+  outline-offset: 2px;
+}
+[hidden] {
+  display: none !important;
+}
 
 /* Titoli: Archivo largo e nerissimo, come grafiche e storie */
-.pesante { font-family: var(--font); font-weight: 900; font-stretch: 125%; letter-spacing: -0.01em; }
+.pesante {
+  font-family: var(--font);
+  font-weight: 900;
+  font-stretch: 125%;
+  letter-spacing: -0.01em;
+}
 
 /* Colonna centrale con margini laterali */
-.contenitore { width: 100%; max-width: var(--larghezza-max); margin-inline: auto; padding-inline: var(--margine-lato); }
+.contenitore {
+  width: 100%;
+  max-width: var(--larghezza-max);
+  margin-inline: auto;
+  padding-inline: var(--margine-lato);
+}
 
 /* Testo solo per i lettori di schermo */
-.solo-lettori { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+.solo-lettori {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
 
 /* Pulsante principale lime con ombra viola */
-.pulsante { display: inline-flex; align-items: center; justify-content: center; gap: .5rem; background: var(--lime); color: #000;
-  font-weight: 900; font-stretch: 125%; font-size: .875rem; padding: .75rem 1.5rem; border-radius: var(--raggio-pillola);
-  box-shadow: var(--ombra-brutal); transition: background-color var(--transizione); }
-.pulsante:hover { background: var(--lime-scuro); }
+.pulsante {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background: var(--lime);
+  color: #000;
+  font-weight: 900;
+  font-stretch: 125%;
+  font-size: 0.875rem;
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--raggio-pillola);
+  box-shadow: var(--ombra-brutal);
+  transition: background-color var(--transizione);
+}
+.pulsante:hover {
+  background: var(--lime-scuro);
+}
 
 /* Pulsante rotondo con sola icona (testata, chiusure) */
-.tondo { width: 2.75rem; height: 2.75rem; border-radius: 50%; border: 1px solid var(--linea); display: flex; align-items: center; justify-content: center;
-  transition: color var(--transizione), border-color var(--transizione); }
-.tondo:hover { border-color: var(--lime); color: var(--lime); }
-.tondo svg { width: 1rem; height: 1rem; }
+.tondo {
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 50%;
+  border: 1px solid var(--linea);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition:
+    color var(--transizione),
+    border-color var(--transizione);
+}
+.tondo:hover {
+  border-color: var(--lime);
+  color: var(--lime);
+}
+.tondo svg {
+  width: 1rem;
+  height: 1rem;
+}
 
 /* Intestazioni di sezione: occhiello lime piccolo e titolo grande bianco */
-.occhiello { font-size: .75rem; color: var(--lime); text-transform: uppercase; letter-spacing: .1em; margin-bottom: .5rem; }
-.titolo-sezione { font-size: 1.875rem; line-height: 1.25; color: #fff; text-wrap: balance; }
-@media (min-width: 640px) { .titolo-sezione { font-size: 2.25rem; } }
-@media (min-width: 1024px) { .titolo-sezione { font-size: 3rem; } }
-.lime { color: var(--lime); }
+.occhiello {
+  font-size: 0.75rem;
+  color: var(--lime);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 0.5rem;
+}
+.titolo-sezione {
+  font-size: 1.875rem;
+  line-height: 1.25;
+  color: #fff;
+  text-wrap: balance;
+}
+@media (min-width: 640px) {
+  .titolo-sezione {
+    font-size: 2.25rem;
+  }
+}
+@media (min-width: 1024px) {
+  .titolo-sezione {
+    font-size: 3rem;
+  }
+}
+.lime {
+  color: var(--lime);
+}
 
 /* Bollino lime inclinato sopra i titoli ("Dove siamo", "I tuoi dati"…) */
-.bollino { display: inline-block; transform: rotate(-2deg); background: var(--lime); color: #000; padding: .25rem .75rem; border-radius: .25rem;
-  font-weight: 900; font-stretch: 125%; font-size: 11px; text-transform: uppercase; letter-spacing: .05em; box-shadow: var(--ombra-brutal); }
+.bollino {
+  display: inline-block;
+  transform: rotate(-2deg);
+  background: var(--lime);
+  color: #000;
+  padding: 0.25rem 0.75rem;
+  border-radius: 0.25rem;
+  font-weight: 900;
+  font-stretch: 125%;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  box-shadow: var(--ombra-brutal);
+}
 
 /* Riquadro scuro con bordo sottile (schede di contenuto) */
-.riquadro { border-radius: var(--raggio); border: 1px solid var(--linea-tenue); background: rgb(14 9 38 / .9); padding: 1.5rem; }
-@media (min-width: 640px) { .riquadro { padding: 2rem; } }
+.riquadro {
+  border-radius: var(--raggio);
+  border: 1px solid var(--linea-tenue);
+  background: rgb(14 9 38 / 0.9);
+  padding: 1.5rem;
+}
+@media (min-width: 640px) {
+  .riquadro {
+    padding: 2rem;
+  }
+}
 
 /* Elenco numerato con pallini lime */
-.passi { display: grid; gap: .75rem; font-size: .875rem; font-weight: 600; color: var(--testo-tenue); counter-reset: passo; }
-.passi > li { display: flex; gap: .75rem; counter-increment: passo; }
-.passi > li::before { content: counter(passo); flex-shrink: 0; width: 1.75rem; height: 1.75rem; border-radius: 50%; background: var(--lime); color: #000;
-  font-weight: 900; font-stretch: 125%; font-size: .75rem; display: flex; align-items: center; justify-content: center; }
+.passi {
+  display: grid;
+  gap: 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--testo-tenue);
+  counter-reset: passo;
+}
+.passi > li {
+  display: flex;
+  gap: 0.75rem;
+  counter-increment: passo;
+}
+.passi > li::before {
+  content: counter(passo);
+  flex-shrink: 0;
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 50%;
+  background: var(--lime);
+  color: #000;
+  font-weight: 900;
+  font-stretch: 125%;
+  font-size: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

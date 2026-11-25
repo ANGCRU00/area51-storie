@@ -1,0 +1,51 @@
+---
+import type { Prodotto } from '../../lib/prodotti';
+import Scheda from '../prodotti/Scheda.astro';
+
+interface Props {
+  titolo: string;
+  prodotti: Prodotto[];
+}
+const { titolo, prodotti } = Astro.props;
+---
+
+{prodotti.length > 0 && (
+  <section class="sezione">
+    <h2 class="pesante titolo-sezione">{titolo}</h2>
+    <div class="griglia">
+      {prodotti.map((p) => (
+        <Scheda p={p} />
+      ))}
+    </div>
+  </section>
+)}
+
+<style>
+  .sezione {
+    margin-top: 3.5rem;
+  }
+  h2 {
+    font-size: 1.5rem;
+    margin-bottom: 1.25rem;
+  }
+  @media (min-width: 640px) {
+    h2 {
+      font-size: 2rem;
+    }
+  }
+  .griglia {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.75rem;
+  }
+  @media (min-width: 640px) {
+    .griglia {
+      gap: 1.25rem;
+    }
+  }
+  @media (min-width: 1024px) {
+    .griglia {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+</style>

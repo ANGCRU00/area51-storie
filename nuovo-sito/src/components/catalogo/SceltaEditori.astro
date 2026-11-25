@@ -1,0 +1,41 @@
+---
+import Tendina from './Tendina.astro';
+
+interface Props {
+  disponibili: string[];
+  scelti: string[];
+}
+const { disponibili, scelti } = Astro.props;
+
+const sceltiPrima = (a: string, b: string) =>
+  Number(scelti.includes(b)) - Number(scelti.includes(a)) || a.localeCompare(b);
+const elenco = [...new Set([...scelti, ...disponibili])].sort(sceltiPrima);
+const conRicerca = elenco.length > 8;
+---
+
+{elenco.length > 0 && (
+  <Tendina etichetta="Editore" attiva={scelti.length > 0} quanti={scelti.length}>
+    {conRicerca && (
+      <input
+        type="search"
+        class="filtra-editori"
+        placeholder="Cerca un editore"
+        aria-label="Cerca un editore nell'elenco"
+        data-filtra-editori
+      />
+    )}
+    <div class="editori" data-elenco-editori>
+      {elenco.map((editore) => (
+        <label class="spunta">
+          <input type="checkbox" name="editore" value={editore} checked={scelti.includes(editore)} />
+          <span>{editore}</span>
+        </label>
+      ))}
+    </div>
+    <div class="applica">
+      <button type="submit" class="pulsante piccolo">
+        Applica
+      </button>
+    </div>
+  </Tendina>
+)}

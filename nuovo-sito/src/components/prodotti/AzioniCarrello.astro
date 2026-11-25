@@ -1,6 +1,7 @@
 ---
 /* Da mettere una volta nelle pagine con schede: gestisce tutti i pulsanti "Aggiungi"/"Prenota" (attributo data-aggiungi). */
 ---
+
 <script>
   import { carrello } from '../../lib/negozio';
   document.addEventListener('click', (e) => {
@@ -8,15 +9,26 @@
     if (!b) return;
     const d = b.dataset;
     // quantità scelta in un menu della pagina (scheda prodotto), se il pulsante ne indica uno
-    const menu = d.quantitaDa ? document.getElementById(d.quantitaDa) as HTMLSelectElement | null : null;
+    const menu = d.quantitaDa ? (document.getElementById(d.quantitaDa) as HTMLSelectElement | null) : null;
     const quante = Math.max(1, Math.min(5, Number(menu?.value) || 1));
-    carrello.aggiungi({
-      k: d.aggiungi ?? '', t: d.titolo ?? '', p: Number(d.prezzo) || 0, l: '/prodotto/' + encodeURIComponent(d.aggiungi ?? ''),
-      i: d.copertina ?? '', e: d.editore ?? '', d: d.preordine ? 'Preordine' : '',
-    }, quante);
+    carrello.aggiungi(
+      {
+        k: d.aggiungi ?? '',
+        t: d.titolo ?? '',
+        p: Number(d.prezzo) || 0,
+        l: '/prodotto/' + encodeURIComponent(d.aggiungi ?? ''),
+        i: d.copertina ?? '',
+        e: d.editore ?? '',
+        d: d.preordine ? 'Preordine' : '',
+      },
+      quante,
+    );
     const prima = b.textContent;
     b.textContent = 'Aggiunto ✓';
     b.disabled = true;
-    setTimeout(() => { b.textContent = prima; b.disabled = false; }, 1800);
+    setTimeout(() => {
+      b.textContent = prima;
+      b.disabled = false;
+    }, 1800);
   });
 </script>

@@ -5,60 +5,181 @@ import Base from '../layouts/Base.astro';
 import Percorso from '../components/comuni/Percorso.astro';
 import Documento from '../components/comuni/Documento.astro';
 ---
-<Base titolo="Informativa sulla privacy · Area 51" descrizione="Quali dati personali raccoglie il sito della Fumetteria Area 51, perché e per quanto tempo.">
+
+<Base
+  titolo="Informativa sulla privacy · Area 51"
+  descrizione="Quali dati personali raccoglie il sito della Fumetteria Area 51, perché e per quanto tempo."
+>
   <Documento bollino="I tuoi dati">
     <Percorso slot="percorso" voci={[{ testo: 'Informativa sulla privacy' }]} />
-    <Fragment slot="titolo">Informativa sulla <span class="lime">privacy</span></Fragment>
-    <Fragment slot="introduzione">Qui spieghiamo quali dati personali raccoglie questo sito, perché e per quanto tempo li conserviamo. Le parti tra parentesi quadre le completa il negozio.</Fragment>
-    <Fragment slot="avviso"><b>Testo provvisorio.</b> Va letto e completato dal titolare e fatto rivedere da un professionista (commercialista o consulente privacy) prima di far usare il sito ai clienti.</Fragment>
-      <section aria-labelledby="p-titolare">
-        <h2 id="p-titolare" class="pesante">Chi è il titolare</h2>
-        <p>Il titolare del trattamento è <span class="evid" data-n="ragione_sociale">[RAGIONE SOCIALE]</span>, che gestisce la Fumetteria Area 51, Viale G. Falcone e P. Borsellino 35, 76121 Barletta (BT). Partita IVA <span class="evid" data-n="partita_iva">[PARTITA IVA]</span>. Per qualsiasi domanda sui tuoi dati: <span class="evid" data-n="email_privacy">[EMAIL PER LA PRIVACY]</span> oppure telefono 0883 884567.</p>
-      </section>
+    <Fragment slot="titolo">
+      Informativa sulla <span class="lime">privacy</span>
+    </Fragment>
+    <Fragment slot="introduzione">
+      Qui spieghiamo quali dati personali raccoglie questo sito, perché e per quanto tempo li conserviamo. Le
+      parti tra parentesi quadre le completa il negozio.
+    </Fragment>
+    <Fragment slot="avviso">
+      <b>Testo provvisorio.</b> Va letto e completato dal titolare e fatto rivedere da un professionista
+      (commercialista o consulente privacy) prima di far usare il sito ai clienti.
+    </Fragment>
+    <section aria-labelledby="p-titolare">
+      <h2 id="p-titolare" class="pesante">
+        Chi è il titolare
+      </h2>
+      <p>
+        Il titolare del trattamento è{' '}
+        <span class="evid" data-n="ragione_sociale">
+          [RAGIONE SOCIALE]
+        </span>
+        , che gestisce la Fumetteria Area 51, Viale G. Falcone e P. Borsellino 35, 76121 Barletta (BT).
+        Partita IVA{' '}
+        <span class="evid" data-n="partita_iva">
+          [PARTITA IVA]
+        </span>
+        . Per qualsiasi domanda sui tuoi dati:{' '}
+        <span class="evid" data-n="email_privacy">
+          [EMAIL PER LA PRIVACY]
+        </span>{' '}
+        oppure telefono 0883 884567.
+      </p>
+    </section>
 
-      <section aria-labelledby="p-dati">
-        <h2 id="p-dati" class="pesante">Quali dati raccogliamo e perché</h2>
-        <ul class="punti">
-          <li><span class="evid">Richieste "Chiedicelo"</span>: nome, email, telefono (facoltativo), il titolo o il prodotto che cerchi e la categoria. Servono a rispondere alla tua richiesta. Base: la tua richiesta e il tuo consenso.</li>
-          <li><span class="evid">Prenotazioni delle prossime uscite</span>: nome, email, telefono (facoltativo), il titolo prenotato e le copie. Servono a gestire la prenotazione e a ricontattarti. Base: la tua richiesta (misure precontrattuali) e il tuo consenso.</li>
-          <li><span class="evid">Iscrizioni agli eventi</span>: nome, email, telefono (facoltativo) e l'evento scelto. Servono a gestire i posti e a ricontattarti. Base: la tua richiesta e il tuo consenso.</li>
-          <li><span class="evid">Pagamenti con Carta della Cultura e Carta del Merito</span>: codice del buono, importo, tipo di carta, nome (facoltativo), numero di fattura e i codici ISBN dei fumetti acquistati. Il negozio li registra per convalidare il buono sulla piattaforma del Ministero, tenere il registro e confrontarlo con le fatture. Base: l'esecuzione dell'acquisto e gli obblighi contabili e fiscali. Il buono è personale: al banco controlliamo il documento del titolare.</li>
-          <li><span class="evid">Tessera Area 51 Club</span> (se la chiedi in negozio): nome, telefono ed email (facoltativi) e lo storico degli acquisti registrati sulla tessera, che serve a calcolare il tuo livello e i vantaggi. Base: la tua adesione al programma. <span class="evid">[DA CONFERMARE: se il negozio usa questi dati per altri scopi, per esempio comunicazioni commerciali, serve un consenso a parte.]</span></li>
-        </ul>
-        <p>Non usiamo i dati per decisioni automatiche né per profilarti. Non vendiamo i tuoi dati.</p>
-      </section>
+    <section aria-labelledby="p-dati">
+      <h2 id="p-dati" class="pesante">
+        Quali dati raccogliamo e perché
+      </h2>
+      <ul class="punti">
+        <li>
+          <span class="evid">Richieste "Chiedicelo"</span>: nome, email, telefono (facoltativo), il titolo o
+          il prodotto che cerchi e la categoria. Servono a rispondere alla tua richiesta. Base: la tua
+          richiesta e il tuo consenso.
+        </li>
+        <li>
+          <span class="evid">Prenotazioni delle prossime uscite</span>: nome, email, telefono (facoltativo),
+          il titolo prenotato e le copie. Servono a gestire la prenotazione e a ricontattarti. Base: la tua
+          richiesta (misure precontrattuali) e il tuo consenso.
+        </li>
+        <li>
+          <span class="evid">Iscrizioni agli eventi</span>: nome, email, telefono (facoltativo) e l'evento
+          scelto. Servono a gestire i posti e a ricontattarti. Base: la tua richiesta e il tuo consenso.
+        </li>
+        <li>
+          <span class="evid">Pagamenti con Carta della Cultura e Carta del Merito</span>: codice del buono,
+          importo, tipo di carta, nome (facoltativo), numero di fattura e i codici ISBN dei fumetti
+          acquistati. Il negozio li registra per convalidare il buono sulla piattaforma del Ministero, tenere
+          il registro e confrontarlo con le fatture. Base: l'esecuzione dell'acquisto e gli obblighi contabili
+          e fiscali. Il buono è personale: al banco controlliamo il documento del titolare.
+        </li>
+        <li>
+          <span class="evid">Tessera Area 51 Club</span> (se la chiedi in negozio): nome, telefono ed email
+          (facoltativi) e lo storico degli acquisti registrati sulla tessera, che serve a calcolare il tuo
+          livello e i vantaggi. Base: la tua adesione al programma.{' '}
+          <span class="evid">
+            [DA CONFERMARE: se il negozio usa questi dati per altri scopi, per esempio comunicazioni
+            commerciali, serve un consenso a parte.]
+          </span>
+        </li>
+      </ul>
+      <p>Non usiamo i dati per decisioni automatiche né per profilarti. Non vendiamo i tuoi dati.</p>
+    </section>
 
-      <section aria-labelledby="p-dispositivo">
-        <h2 id="p-dispositivo" class="pesante">Cosa resta solo sul tuo dispositivo</h2>
-        <p>Preferiti, carrello, serie che segui, foto e dati del profilo e le iscrizioni agli eventi che segni nella pagina Profilo restano solo nel tuo browser: non arrivano a noi. Si cancellano dalla pagina Profilo (I miei dati, "Cancella tutti i miei dati") o svuotando i dati del sito dal browser. Il sito non usa cookie di tracciamento né di pubblicità.</p>
-      </section>
+    <section aria-labelledby="p-dispositivo">
+      <h2 id="p-dispositivo" class="pesante">
+        Cosa resta solo sul tuo dispositivo
+      </h2>
+      <p>
+        Preferiti, carrello, serie che segui, foto e dati del profilo e le iscrizioni agli eventi che segni
+        nella pagina Profilo restano solo nel tuo browser: non arrivano a noi. Si cancellano dalla pagina
+        Profilo (I miei dati, "Cancella tutti i miei dati") o svuotando i dati del sito dal browser. Il sito
+        non usa cookie di tracciamento né di pubblicità.
+      </p>
+    </section>
 
-      <section aria-labelledby="p-dove">
-        <h2 id="p-dove" class="pesante">Dove sono conservati i dati e chi li vede</h2>
-        <ul class="punti">
-          <li>Il sito, le richieste, le prenotazioni, le iscrizioni e le tessere sono ospitati da <span class="evid">Cloudflare</span> (Workers, database D1 e archivio file R2), che agisce per nostro conto. I dati dei moduli li legge solo il gestore del negozio, dopo l'accesso con le sue credenziali. <span class="evid">[DA VERIFICARE con il consulente: posizione dei server, accordo sul trattamento dei dati con Cloudflare e trasferimenti fuori dall'Unione Europea.]</span></li>
-          <li>Come per qualsiasi sito, il servizio che lo ospita vede l'indirizzo IP di chi visita le pagine.</li>
-          <li>Se in futuro attiveremo i pagamenti online con <span class="evid">Nexi</span>, i dati della carta li tratta Nexi: noi non li vediamo né li conserviamo.</li>
-        </ul>
-      </section>
+    <section aria-labelledby="p-dove">
+      <h2 id="p-dove" class="pesante">
+        Dove sono conservati i dati e chi li vede
+      </h2>
+      <ul class="punti">
+        <li>
+          Il sito, le richieste, le prenotazioni, le iscrizioni e le tessere sono ospitati da{' '}
+          <span class="evid">Cloudflare</span> (Workers, database D1 e archivio file R2), che agisce per
+          nostro conto. I dati dei moduli li legge solo il gestore del negozio, dopo l'accesso con le sue
+          credenziali.{' '}
+          <span class="evid">
+            [DA VERIFICARE con il consulente: posizione dei server, accordo sul trattamento dei dati con
+            Cloudflare e trasferimenti fuori dall'Unione Europea.]
+          </span>
+        </li>
+        <li>
+          Come per qualsiasi sito, il servizio che lo ospita vede l'indirizzo IP di chi visita le pagine.
+        </li>
+        <li>
+          Se in futuro attiveremo i pagamenti online con <span class="evid">Nexi</span>, i dati della carta li
+          tratta Nexi: noi non li vediamo né li conserviamo.
+        </li>
+      </ul>
+    </section>
 
-      <section aria-labelledby="p-quanto">
-        <h2 id="p-quanto" class="pesante">Per quanto tempo li conserviamo</h2>
-        <ul class="punti">
-          <li>Richieste "Chiedicelo": <span class="evid" data-n="conservazione_richieste">[DA DEFINIRE, per esempio 12 mesi dall'ultima risposta]</span>.</li>
-          <li>Prenotazioni e iscrizioni agli eventi: <span class="evid" data-n="conservazione_prenotazioni">[DA DEFINIRE]</span>.</li>
-          <li>Registro dei buoni Carta della Cultura e Merito: <span class="evid" data-n="conservazione_buoni">[DA DEFINIRE: di solito segue i tempi di conservazione dei documenti contabili e fiscali]</span>.</li>
-          <li>Tessera e storico acquisti: finché la tessera è attiva e <span class="evid" data-n="conservazione_tessera">[DA DEFINIRE]</span> dopo l'ultima attività.</li>
-        </ul>
-        <p>Alcuni documenti (per esempio quelli fiscali) vanno conservati per i tempi previsti dalla legge.</p>
-      </section>
+    <section aria-labelledby="p-quanto">
+      <h2 id="p-quanto" class="pesante">
+        Per quanto tempo li conserviamo
+      </h2>
+      <ul class="punti">
+        <li>
+          Richieste "Chiedicelo":{' '}
+          <span class="evid" data-n="conservazione_richieste">
+            [DA DEFINIRE, per esempio 12 mesi dall'ultima risposta]
+          </span>
+          .
+        </li>
+        <li>
+          Prenotazioni e iscrizioni agli eventi:{' '}
+          <span class="evid" data-n="conservazione_prenotazioni">
+            [DA DEFINIRE]
+          </span>
+          .
+        </li>
+        <li>
+          Registro dei buoni Carta della Cultura e Merito:{' '}
+          <span class="evid" data-n="conservazione_buoni">
+            [DA DEFINIRE: di solito segue i tempi di conservazione dei documenti contabili e fiscali]
+          </span>
+          .
+        </li>
+        <li>
+          Tessera e storico acquisti: finché la tessera è attiva e{' '}
+          <span class="evid" data-n="conservazione_tessera">
+            [DA DEFINIRE]
+          </span>{' '}
+          dopo l'ultima attività.
+        </li>
+      </ul>
+      <p>Alcuni documenti (per esempio quelli fiscali) vanno conservati per i tempi previsti dalla legge.</p>
+    </section>
 
-      <section aria-labelledby="p-diritti">
-        <h2 id="p-diritti" class="pesante">I tuoi diritti</h2>
-        <p>Puoi chiederci in qualsiasi momento di sapere quali dati abbiamo su di te, correggerli, cancellarli, limitarne l'uso, riceverli in un formato leggibile e opporti al loro uso. Se ci hai dato il consenso, puoi ritirarlo quando vuoi, senza conseguenze sulle richieste già trattate. Scrivi a <span class="evid" data-n="email_privacy">[EMAIL PER LA PRIVACY]</span>. Se pensi che i tuoi dati non siano trattati correttamente, puoi rivolgerti al Garante per la protezione dei dati personali (garanteprivacy.it).</p>
-      </section>
+    <section aria-labelledby="p-diritti">
+      <h2 id="p-diritti" class="pesante">
+        I tuoi diritti
+      </h2>
+      <p>
+        Puoi chiederci in qualsiasi momento di sapere quali dati abbiamo su di te, correggerli, cancellarli,
+        limitarne l'uso, riceverli in un formato leggibile e opporti al loro uso. Se ci hai dato il consenso,
+        puoi ritirarlo quando vuoi, senza conseguenze sulle richieste già trattate. Scrivi a{' '}
+        <span class="evid" data-n="email_privacy">
+          [EMAIL PER LA PRIVACY]
+        </span>
+        . Se pensi che i tuoi dati non siano trattati correttamente, puoi rivolgerti al Garante per la
+        protezione dei dati personali (garanteprivacy.it).
+      </p>
+    </section>
 
-      <p class="nota">Ultimo aggiornamento: <span class="evid" data-n="data_aggiornamento">[DATA]</span>. <a href="/condizioni">Condizioni di vendita</a> · <a href="/negozio#chiedicelo">Contattaci</a></p>
-
+    <p class="nota">
+      Ultimo aggiornamento:{' '}
+      <span class="evid" data-n="data_aggiornamento">
+        [DATA]
+      </span>
+      . <a href="/condizioni">Condizioni di vendita</a> · <a href="/negozio#chiedicelo">Contattaci</a>
+    </p>
   </Documento>
 </Base>

@@ -1,0 +1,21 @@
+---
+interface Props {
+  etichetta: string;
+  attiva?: boolean;
+  quanti?: number;
+  aperta?: boolean;
+  larga?: boolean;
+}
+const { etichetta, attiva = false, quanti = 0, aperta = false, larga = false } = Astro.props;
+---
+
+<details class="tendina" open={aperta}>
+  <summary class:list={['pesante', { attiva }]}>
+    {etichetta}
+    {quanti > 0 && <span class="quanti">{quanti}</span>}
+    <slot name="segno" />
+  </summary>
+  <div class:list={['pannello', { largo: larga }]}>
+    <slot />
+  </div>
+</details>
