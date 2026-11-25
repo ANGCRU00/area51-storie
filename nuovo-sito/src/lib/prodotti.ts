@@ -172,7 +172,7 @@ function condizioniCerca<T extends { titolo: any; editore: any }>(t: T, cerca: s
 
 /** Catalogo: articoli visibili del magazzino + uscite visibili, filtrati e ordinati. Le uscite già passate da più di 30 giorni non si mostrano. */
 export async function cercaProdotti(f: Filtri): Promise<Risultato> {
-  const d = db(), stato = f.stato ?? 'tutti', per = f.perPagina ?? 16;
+  const d = db(), stato = f.stato ?? 'tutti', per = f.perPagina ?? 20;   // 5 colonne × 4 righe da computer
   const limiteVecchie = new Date(Date.now() - 30 * 864e5).toISOString().slice(0, 10);
 
   // magazzino: si filtra la categoria dopo, perché si ricava da categoria + sottocategoria di Starshop
