@@ -5,7 +5,7 @@
 export type Riga = { k: string; t: string; p: number; l: string; i: string; e: string; d?: string; q: number };
 export type Preferito = { k: string; t: string; p: number; l: string; i: string; e: string };
 
-const CH = { carrello: 'area51-carrello', preferiti: 'area51-preferiti' } as const;
+const CH = { carrello: 'area51-carrello', preferiti: 'area51-preferiti', serie: 'area51-serie' } as const;
 const memoria: Record<string, unknown> = {};
 const ascoltatori = new Set<() => void>();
 
@@ -46,4 +46,29 @@ export const carrello = {
 export const preferiti = {
   tutti: () => leggi<Preferito[]>(CH.preferiti, []),
   conta: () => leggi<Preferito[]>(CH.preferiti, []).length,
+  ha: (k: string) => leggi<Preferito[]>(CH.preferiti, []).some((x) => x.k === k),
+  /** aggiunge o toglie dalla lista desideri; restituisce true se ora c'è */
+  scambia(s: Preferito): boolean {
+    const l = leggi<Preferito[]>(CH.preferiti, []);
+    if (l.some((x) => x.k === s.k)) { scrivi(CH.preferiti, l.filter((x) => x.k !== s.k)); return false; }
+    l.push({ k: testo(s.k), t: testo(s.t), p: Number(s.p) || 0, l: String(s.l ?? '').slice(0, 700), i: testo(s.i), e: testo(s.e) });
+    scrivi(CH.preferiti, l);
+    return true;
+  },
+};
+
+/* Serie seguite (s = nome della serie, e = editore), come nel sito attuale */
+export type SerieSeguita = { s: string; e: string };
+const stessa = (x: SerieSeguita, s: string, e: string) => x.s.toLowerCase() === s.toLowerCase() && x.e === e;
+export const serie = {
+  tutti: () => leggi<SerieSeguita[]>(CH.serie, []),
+  ha: (s: string, e: string) => leggi<SerieSeguita[]>(CH.serie, []).some((x) => stessa(x, s, e)),
+  /** segue o smette di seguire; restituisce true se ora la segue */
+  scambia(s: string, e: string): boolean {
+    const l = leggi<SerieSeguita[]>(CH.serie, []);
+    if (l.some((x) => stessa(x, s, e))) { scrivi(CH.serie, l.filter((x) => !stessa(x, s, e))); return false; }
+    l.push({ s: testo(s), e: testo(e) });
+    scrivi(CH.serie, l);
+    return true;
+  },
 };

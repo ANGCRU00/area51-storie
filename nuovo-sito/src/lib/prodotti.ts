@@ -79,7 +79,12 @@ function conSerie(p: Prodotto, m: Map<string, InfoSerie>): Prodotto {
 }
 
 /* Serie e volume: "BLUE BOX 17" con numero 17 → serie "BLUE BOX", volume "17" */
+/* indicazioni di edizione in fondo al titolo (come le scrive Starshop): si tolgono prima di cercare il numero del volume */
+const SEGNI_EDIZIONE = /\s+(NEW\.?\s?ED\.?|N\.\s?ED\.?|NUOVA\s+EDIZIONE|NEW\s+EDITION|ED\.?\s+DELUXE|DELUXE|VARIANT|VRT|LIMITED|LTD)\s*$/i;
 function serieVolume(titolo: string, numero: string | null): { serie: string; volume: string | null } {
+  let base = titolo.trim();
+  for (let i = 0; i < 3 && SEGNI_EDIZIONE.test(base); i++) base = base.replace(SEGNI_EDIZIONE, '').replace(/\s*-\s*$/, '').trim();
+  titolo = base;
   // il numero finale, preceduto da spazio o da "N.", "Vol.", "#" (ma non dalla N finale di una parola, es. EDITION)
   const m = titolo.match(/^(.*?)(?:\s+(?:N\.?|NO\.?|VOL\.?|#)\s*|\s+|\s*[.#-]\s*)(\d{1,4})\s*$/i);
   if (m && m[1].trim().length >= 2 && (!numero || Number(m[2]) === Number(numero))) return { serie: m[1].trim(), volume: String(Number(m[2])) };
@@ -92,7 +97,9 @@ const volumeSeLibro = (titolo: string, numero: string | null, c: Categoria | nul
 function edizioneDa(titolo: string, categoria: Categoria | null): string | null {
   if (categoria !== 'manga' && categoria !== 'fumetti') return null;
   const t = titolo.toUpperCase();
-  if (/\b(VARIANT|VRT|VAR)\b/.test(t)) return 'Variant';
+  const nuova = /(\bNEW\.?\s?ED\b|\bN\.\s?ED\b|NUOVA\s+EDIZIONE|NEW\s+EDITION)/.test(t);
+  if (/\b(VARIANT|VRT|VAR)\b/.test(t)) return nuova ? 'Nuova edizione, Variant' : 'Variant';
+  if (nuova) return 'Nuova edizione';
   if (/\bDELUXE\b/.test(t)) return 'Deluxe';
   if (/\b(LIMITED|LTD|LIMITATA)\b/.test(t)) return 'Limited';
   if (/\b(COLLECTOR|SPECIAL|SPECIALE)\b/.test(t)) return 'Speciale';
