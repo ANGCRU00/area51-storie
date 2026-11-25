@@ -1,0 +1,18 @@
+// Configurazione del Worker su Cloudflare.
+// database_id e il nome del bucket si completano dopo averli creati con:
+//   npx wrangler d1 create area51
+//   npx wrangler r2 bucket create area51-file
+// In locale (npm run dev) D1 e R2 sono simulati nella cartella .wrangler, senza account Cloudflare.
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "area51",
+  "compatibility_date": "2026-11-20",
+  "compatibility_flags": ["nodejs_compat"],
+  "observability": { "enabled": true },
+  "d1_databases": [
+    { "binding": "DB", "database_name": "area51", "database_id": "00000000-0000-0000-0000-000000000000", "migrations_dir": "migrazioni" }
+  ],
+  "r2_buckets": [
+    { "binding": "FILE", "bucket_name": "area51-file" }
+  ]
+}

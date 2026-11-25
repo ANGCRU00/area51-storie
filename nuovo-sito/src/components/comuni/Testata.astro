@@ -1,0 +1,195 @@
+---
+/* Testata comune: logo, menu delle categorie con la navicella che segue il mouse (da 1420 px),
+   ricerca, preferiti, profilo, carrello e menu da telefono. Carrello e preferiti sono isole React (contatori sempre aggiornati). */
+import PulsanteCarrello from '../isole/PulsanteCarrello.tsx';
+import PulsantePreferiti from '../isole/PulsantePreferiti.tsx';
+
+const voci = [
+  { testo: 'Manga & Fumetti', href: '/catalogo' },
+  { testo: 'TCG', href: '/tcg' },
+  { testo: 'Giochi da tavolo', href: '/giochi' },
+  { testo: 'Figure & Funko', href: '/figure' },
+  { testo: 'Warhammer', href: '/warhammer' },
+  { testo: 'Gadget', href: '/gadget' },
+  { testo: 'Eventi', href: '/eventi' },
+];
+---
+<header class="testata">
+  <div class="contenitore riga">
+    <a class="logo" href="/" aria-label="Area 51 Fumetteria, home">
+      <svg class="logo-alieno" aria-hidden="true"><use href="#alieno" /></svg>
+      <span class="logo-testo">
+        <span class="pesante logo-nome">AREA 51</span>
+        <span class="logo-sotto">FUMETTERIA</span>
+      </span>
+    </a>
+
+    <nav class="menu" id="menu-principale" aria-label="Categorie">
+      <div class="navicella" id="navicella" aria-hidden="true">
+        <div class="navicella-volo">
+          <svg class="navicella-disco"><use href="#disco" /></svg>
+          <div class="navicella-raggio"></div>
+        </div>
+      </div>
+      <div class="menu-voci">
+        {voci.map((v) => <a class="menu-voce" href={v.href}>{v.testo}</a>)}
+      </div>
+      <a class="menu-voce menu-negozio" href="/negozio">Il negozio ↗</a>
+    </nav>
+
+    <div class="azioni">
+      <button type="button" class="tondo solo-largo-360" id="apri-ricerca" aria-label="Cerca prodotti" aria-expanded="false" aria-controls="ricerca">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-linecap="round" stroke-width="2" /></svg>
+      </button>
+      <span class="solo-largo-640"><PulsantePreferiti client:idle /></span>
+      <a href="/profilo" class="tondo solo-largo-640" aria-label="Il tuo profilo">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 11a4 4 0 100-8 4 4 0 000 8zM4 21v-1a6 6 0 016-6h4a6 6 0 016 6v1" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" /></svg>
+      </a>
+      <PulsanteCarrello client:idle />
+      <button type="button" class="tondo pulsante-menu" id="apri-menu" aria-label="Apri il menu" aria-expanded="false" aria-controls="menu-telefono">
+        <svg class="icona-menu" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" stroke-linecap="round" stroke-width="2.2" /></svg>
+      </button>
+    </div>
+  </div>
+
+  <nav id="menu-telefono" class="menu-telefono" hidden aria-label="Menu">
+    <div class="contenitore menu-telefono-griglia">
+      <button type="button" class="menu-telefono-voce menu-telefono-cerca" id="cerca-telefono">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-linecap="round" stroke-width="2" /></svg>Cerca
+      </button>
+      {voci.map((v) => <a class="menu-telefono-voce" href={v.href}>{v.testo}</a>)}
+      <a class="menu-telefono-voce menu-telefono-negozio" href="/negozio">Il negozio ↗</a>
+      <a class="menu-telefono-voce intera" href="/profilo">Il tuo profilo</a>
+    </div>
+  </nav>
+
+  <div id="ricerca" class="ricerca" hidden>
+    <div class="contenitore ricerca-dentro">
+      <form class="ricerca-modulo" role="search" action="/catalogo" method="get">
+        <label for="ricerca-campo" class="solo-lettori">Cerca un titolo o un autore</label>
+        <input id="ricerca-campo" name="cerca" type="search" autocomplete="off" maxlength="60" placeholder="Cerca un titolo o un autore" class="ricerca-campo" />
+        <button type="submit" class="pulsante">Cerca</button>
+        <button type="button" id="chiudi-ricerca" class="tondo" aria-label="Chiudi la ricerca">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke-linecap="round" stroke-width="2.4" /></svg>
+        </button>
+      </form>
+    </div>
+  </div>
+</header>
+
+<script>
+  /* Menu da telefono */
+  const pulsanteMenu = document.getElementById('apri-menu') as HTMLButtonElement;
+  const menuTelefono = document.getElementById('menu-telefono') as HTMLElement;
+  function apriMenu(aperto: boolean) {
+    menuTelefono.hidden = !aperto;
+    pulsanteMenu.setAttribute('aria-expanded', String(aperto));
+    pulsanteMenu.setAttribute('aria-label', aperto ? 'Chiudi il menu' : 'Apri il menu');
+  }
+  pulsanteMenu.addEventListener('click', () => apriMenu(menuTelefono.hidden));
+
+  /* Ricerca: si apre dalla lente (o da "Cerca" nel menu da telefono), si chiude con la X o con Esc.
+     I suggerimenti mentre si scrive arrivano con il catalogo nel database (fase 4). */
+  const ricerca = document.getElementById('ricerca') as HTMLElement;
+  const lente = document.getElementById('apri-ricerca') as HTMLButtonElement;
+  const campo = document.getElementById('ricerca-campo') as HTMLInputElement;
+  function apriRicerca(aperta: boolean) {
+    ricerca.hidden = !aperta;
+    lente.setAttribute('aria-expanded', String(aperta));
+    if (aperta) { apriMenu(false); campo.focus(); } else { lente.focus(); }
+  }
+  lente.addEventListener('click', () => apriRicerca(ricerca.hidden));
+  document.getElementById('cerca-telefono')?.addEventListener('click', () => apriRicerca(true));
+  document.getElementById('chiudi-ricerca')?.addEventListener('click', () => apriRicerca(false));
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !ricerca.hidden) apriRicerca(false); });
+
+  /* Navicella che segue la voce del menu sotto il mouse. Molla con inerzia: accelera, si inclina nel verso in cui va,
+     e quando cambia direzione frena, oscilla e si raddrizza. Valori approvati: prontezza 0.045, attrito 0.80, inclinazione max 15°. */
+  const nav = document.getElementById('menu-principale');
+  const ufo = document.getElementById('navicella');
+  if (nav && ufo) {
+    const voci = Array.from(nav.querySelectorAll<HTMLAnchorElement>('.menu-voce'));
+    const attivo = voci.find((v) => location.pathname !== '/' && location.pathname.startsWith(v.pathname)) ?? voci[0];
+    const ridotto = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let px = 0, vel = 0, meta = 0, giro = 0;
+    ufo.style.transformOrigin = '50% 35%';
+    const disegna = (incl: number) => { ufo.style.transform = 'translateX(' + px.toFixed(2) + 'px) rotate(' + incl.toFixed(2) + 'deg)'; };
+    const passo = () => {
+      vel = (vel + (meta - px) * 0.045) * 0.80;   // forza della molla, poi attrito
+      px += vel;
+      if (Math.abs(meta - px) < 0.3 && Math.abs(vel) < 0.05) { px = meta; vel = 0; disegna(0); giro = 0; return; }
+      disegna(Math.max(-15, Math.min(15, vel * 2.2)));
+      giro = requestAnimationFrame(passo);
+    };
+    const vai = (el: HTMLElement, subito = false) => {
+      const n = nav.getBoundingClientRect(), r = el.getBoundingClientRect();
+      meta = r.left - n.left + r.width / 2 - (ufo.offsetWidth || 40) / 2;
+      if (subito || ridotto) { cancelAnimationFrame(giro); giro = 0; px = meta; vel = 0; disegna(0); return; }
+      if (!giro) giro = requestAnimationFrame(passo);
+    };
+    vai(attivo, true);   // subito, così la navicella non parte dal bordo e poi salta
+    document.fonts?.ready.then(() => vai(attivo, true));   // i caratteri cambiano le larghezze del menu
+    window.addEventListener('load', () => vai(attivo, true));
+    window.addEventListener('resize', () => vai(attivo, true));
+    voci.forEach((v) => { v.addEventListener('mouseenter', () => vai(v)); v.addEventListener('focus', () => vai(v)); });
+    nav.addEventListener('mouseleave', () => vai(attivo));
+  }
+</script>
+
+<style>
+  .testata { position: sticky; top: 0; z-index: 50; background: rgb(7 5 20 / .9); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--linea-viola); }
+  .riga { height: var(--altezza-testata); display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+
+  .logo { display: flex; align-items: center; gap: .5rem; flex-shrink: 0; }
+  .logo-alieno { width: 2.75rem; height: 2.75rem; transition: transform var(--transizione); }
+  .logo:hover .logo-alieno { transform: rotate(12deg); }
+  .logo-testo { display: flex; flex-direction: column; line-height: 1; }
+  .logo-nome { font-size: 1.25rem; color: #fff; }
+  .logo-sotto { font-size: 10px; letter-spacing: .3em; color: var(--lime); font-weight: 700; }
+  @media (min-width: 640px) { .logo { gap: .75rem; } .logo-nome { font-size: 1.5rem; } }
+
+  /* Menu delle categorie: da 1420 px (sotto c'è il menu da telefono) */
+  .menu { display: none; position: relative; align-items: center; gap: .5rem; font-size: .875rem; font-weight: 600; }
+  @media (min-width: 1420px) { .menu { display: flex; } }
+  .menu-voci { display: flex; align-items: center; gap: 2px; background: var(--pannello); border: 1px solid rgb(91 33 182 / .6); border-radius: var(--raggio-pillola); padding: .25rem; }
+  .menu-voce { white-space: nowrap; padding: .5rem .625rem; border-radius: var(--raggio-pillola); transition: color var(--transizione), background-color var(--transizione); }
+  .menu-voce:hover { color: var(--lime); background: var(--scheda-sopra); }
+  .menu-negozio { margin-left: .25rem; border: 1px solid rgb(185 230 46 / .6); color: var(--lime); font-weight: 700; font-size: .75rem; text-transform: uppercase; letter-spacing: .05em; padding: .625rem .75rem; }
+  .menu-negozio:hover { background: var(--lime); color: #000; }
+
+  .navicella { position: absolute; top: -1rem; left: 0; z-index: 30; pointer-events: none; }
+  .navicella-volo { display: flex; flex-direction: column; align-items: center; filter: drop-shadow(0 2px 10px rgb(185 230 46 / .65)); animation: dondola 2.4s ease-in-out infinite; }
+  .navicella-disco { width: 2.5rem; height: 1.25rem; }
+  .navicella-raggio { width: 2rem; height: 1rem; margin-top: -2px; background: linear-gradient(180deg, rgb(185 230 46 / .75), rgb(185 230 46 / 0)); clip-path: polygon(30% 0, 70% 0, 100% 100%, 0 100%); }
+  @keyframes dondola { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
+
+  .azioni { display: flex; align-items: center; gap: .5rem; }
+  @media (min-width: 640px) { .azioni { gap: .75rem; } }
+  .solo-largo-640 { display: none; }
+  @media (min-width: 640px) { .solo-largo-640 { display: flex; } }
+  @media (max-width: 359px) { .solo-largo-360 { display: none; } }
+  .pulsante-menu .icona-menu { width: 1.25rem; height: 1.25rem; }
+  @media (min-width: 1420px) { .pulsante-menu, .menu-telefono { display: none !important; } }
+
+  /* Menu da telefono */
+  .menu-telefono { border-top: 1px solid var(--linea-viola); background: var(--pannello); }
+  .menu-telefono-griglia { padding-block: 1rem; display: grid; grid-template-columns: 1fr 1fr; gap: .5rem; font-size: 1rem; font-weight: 600; }
+  .menu-telefono-voce { padding: .75rem 1rem; border-radius: .75rem; background: rgb(255 255 255 / .05); min-width: 0; overflow-wrap: anywhere; }
+  .menu-telefono-cerca { grid-column: 1 / -1; display: flex; align-items: center; gap: .5rem; text-align: left; background: none; border: 1px solid var(--linea); }
+  .menu-telefono-cerca svg { width: 1rem; height: 1rem; color: var(--lime); }
+  @media (min-width: 360px) { .menu-telefono-cerca { display: none; } }
+  .menu-telefono-negozio { background: none; border: 1px solid var(--lime); color: var(--lime); text-align: center; }
+  .intera { grid-column: 1 / -1; }
+
+  /* Ricerca */
+  .ricerca { position: absolute; inset-inline: 0; top: 100%; border-bottom: 1px solid var(--linea-viola); background: var(--pannello); box-shadow: 0 18px 30px rgb(0 0 0 / .45); }
+  .ricerca-dentro { padding-block: 1rem; }
+  .ricerca-modulo { display: flex; align-items: center; gap: .5rem; }
+  @media (min-width: 640px) { .ricerca-modulo { gap: .75rem; } }
+  .ricerca-campo { flex: 1; min-width: 0; background: var(--scheda); border: 1px solid rgb(91 33 182 / .6); border-radius: var(--raggio-pillola); padding: .75rem 1.25rem; font-size: 1rem; color: #fff; }
+  .ricerca-campo::placeholder { color: rgb(179 169 204 / .7); }
+  .ricerca-campo:focus { outline: none; border-color: var(--lime); box-shadow: 0 0 0 1px var(--lime); }
+  .ricerca-modulo .pulsante, .ricerca-modulo .tondo { flex-shrink: 0; }
+  .ricerca-modulo .tondo svg { width: 1.25rem; height: 1.25rem; }
+</style>

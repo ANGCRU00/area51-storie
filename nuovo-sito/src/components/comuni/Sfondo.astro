@@ -1,0 +1,119 @@
+---
+/* Sfondo comune a tutte le pagine: nebulose, sistema solare in movimento e due stelle cadenti, sempre dietro i contenuti. */
+---
+<!-- Sfondo: nebulose, sistema solare in movimento e due stelle cadenti, tutto dietro i contenuti -->
+<div aria-hidden="true" class="sfondo">
+  <div class="nebulosa n1"></div>
+  <div class="nebulosa n2"></div>
+  <div class="nebulosa n3"></div>
+  <!-- Sistema solare: i corpi viaggiano lungo curve ondulate, escono da un lato e rientrano dall'altro.
+       Il moto lo calcola lo script "sistema solare" in fondo alla pagina; tutto sta dietro ai contenuti (z-0). -->
+  <div class="corpo" style="top:2%" data-vel="9" data-x="0.06" data-amp="26" data-onde="0.8" data-fase="0.1" data-giro="0" data-verso="1" data-inclina="4"><svg class="pianeta" style="--w:3.5rem;--h:3.5rem;--wl:5rem;--hl:5rem;--glow:rgba(139,92,246,.5)"><use href="#p-luna"/></svg></div>
+  <div class="corpo" style="top:1.5%" data-vel="7" data-x="0.8" data-amp="30" data-onde="0.6" data-fase="0.55" data-giro="0" data-verso="-1" data-inclina="4"><svg class="pianeta" style="--w:6rem;--h:4.5rem;--wl:10rem;--hl:7.5rem;--glow:rgba(232,113,28,.5)"><use href="#p-gioviano"/></svg></div>
+  <div class="corpo" style="top:35%" data-vel="8" data-x="0.86" data-amp="34" data-onde="0.7" data-fase="0.3" data-giro="0" data-verso="1" data-inclina="4"><svg class="pianeta" style="--w:5rem;--h:4.3rem;--wl:9rem;--hl:7.7rem;--glow:rgba(30,115,216,.5)"><use href="#p-terra"/></svg></div>
+  <div class="corpo" style="top:42%" data-vel="11" data-x="0.04" data-amp="22" data-onde="1.1" data-fase="0.8" data-giro="0" data-verso="-1" data-inclina="4"><svg class="pianeta" style="--w:3.5rem;--h:3.5rem;--wl:5.5rem;--hl:5.5rem;--glow:rgba(200,30,58,.5)"><use href="#p-marte"/></svg></div>
+  <svg class="fascia" data-amp="16" data-onde="1.6" data-fase="0.2" aria-hidden="true"><path class="fascia-a" fill="none" stroke="#B9E62E" stroke-width="1.5" stroke-dasharray="5 6" opacity=".55"/><path class="fascia-b" fill="none" stroke="#8B5CF6" stroke-width="1.5" stroke-dasharray="1.5 6" stroke-linecap="round" opacity=".6"/></svg>
+  <div class="corpo" style="top:47%" data-vel="16" data-x="0.04" data-amp="16" data-onde="1.6" data-fase="0.2" data-giro="14" data-verso="1" data-inclina="4"><svg class="pianeta" style="--w:1.75rem;--h:1.5rem;--wl:2.5rem;--hl:2rem;--glow:rgba(185,230,46,.35)"><use href="#p-ast1"/></svg></div>
+  <div class="corpo" style="top:calc(47% - 10px)" data-vel="18" data-x="0.13" data-amp="16" data-onde="1.6" data-fase="0.2" data-giro="-30" data-verso="1" data-inclina="4"><svg class="pianeta" style="--w:1rem;--h:0.75rem;--wl:1.5rem;--hl:1.25rem;--glow:rgba(139,92,246,.45)"><use href="#p-ast3"/></svg></div>
+  <div class="corpo" style="top:47%" data-vel="15" data-x="0.25" data-amp="16" data-onde="1.6" data-fase="0.2" data-giro="-10" data-verso="1" data-inclina="4"><svg class="pianeta" style="--w:1.75rem;--h:1.5rem;--wl:2.75rem;--hl:2rem;--glow:rgba(185,230,46,.35)"><use href="#p-ast4"/></svg></div>
+  <div class="corpo" style="top:calc(47% - 4px)" data-vel="13" data-x="0.4" data-amp="16" data-onde="1.6" data-fase="0.2" data-giro="8" data-verso="1" data-inclina="4"><svg class="pianeta" style="--w:2.25rem;--h:1.75rem;--wl:3.5rem;--hl:2.5rem;--glow:rgba(185,230,46,.35)"><use href="#p-ast2"/></svg></div>
+  <div class="corpo" style="top:calc(47% + 6px)" data-vel="17" data-x="0.58" data-amp="16" data-onde="1.6" data-fase="0.2" data-giro="-16" data-verso="1" data-inclina="4"><svg class="pianeta" style="--w:1.75rem;--h:1.5rem;--wl:2.5rem;--hl:2rem;--glow:rgba(185,230,46,.35)"><use href="#p-ast1"/></svg></div>
+  <div class="corpo" style="top:calc(47% - 2px)" data-vel="14" data-x="0.79" data-amp="16" data-onde="1.6" data-fase="0.2" data-giro="11" data-verso="1" data-inclina="4"><svg class="pianeta" style="--w:1.75rem;--h:1.5rem;--wl:2.75rem;--hl:2rem;--glow:rgba(185,230,46,.35)"><use href="#p-ast4"/></svg></div>
+  <div class="corpo" style="top:calc(47% - 14px)" data-vel="19" data-x="0.9" data-amp="16" data-onde="1.6" data-fase="0.2" data-giro="24" data-verso="1" data-inclina="4"><svg class="pianeta" style="--w:1rem;--h:0.75rem;--wl:1.5rem;--hl:1.25rem;--glow:rgba(139,92,246,.45)"><use href="#p-ast5"/></svg></div>
+  <div class="corpo" style="top:52%" data-vel="6" data-x="0.88" data-amp="28" data-onde="0.7" data-fase="0.65" data-giro="0" data-verso="1" data-inclina="4"><svg class="pianeta" style="--w:5rem;--h:5rem;--wl:8rem;--hl:8rem;--glow:rgba(217,83,30,.5)"><use href="#p-fasce"/></svg></div>
+  <div class="corpo" style="top:61%" data-vel="7" data-x="0.02" data-amp="32" data-onde="0.5" data-fase="0.15" data-giro="0" data-verso="-1" data-inclina="4"><svg class="pianeta" style="--w:7rem;--h:4.7rem;--wl:11rem;--hl:7.3rem;--glow:rgba(185,230,46,.4)"><use href="#p-saturno"/></svg></div>
+  <div class="corpo" style="top:76%" data-vel="9" data-x="0.88" data-amp="26" data-onde="0.9" data-fase="0.4" data-giro="0" data-verso="1" data-inclina="4"><svg class="pianeta" style="--w:4rem;--h:4.7rem;--wl:6rem;--hl:7rem;--glow:rgba(14,159,154,.5)"><use href="#p-urano"/></svg></div>
+  <div class="corpo" style="top:89%" data-vel="8" data-x="0.05" data-amp="24" data-onde="0.8" data-fase="0.9" data-giro="0" data-verso="-1" data-inclina="4"><svg class="pianeta" style="--w:4rem;--h:4rem;--wl:6rem;--hl:6rem;--glow:rgba(48,86,211,.5)"><use href="#p-nettuno"/></svg></div>
+</div>
+<div aria-hidden="true" class="stelle-cadenti">
+  <div class="shooting s1"></div><div class="shooting s2"></div>
+</div>
+
+<script>
+  /* Sistema solare di sfondo: ogni .corpo avanza in orizzontale (data-vel px/s, data-verso 1 o -1),
+     sale e scende lungo un'onda (data-amp px, data-onde onde per larghezza schermo, data-fase),
+     si inclina seguendo la curva e, per gli asteroidi, ruota su se stesso (data-giro gradi/s).
+     Uscito da un lato rientra dall'altro. Con "riduci movimento" resta fermo in data-x. */
+  type Corpo = { el: HTMLElement; vel: number; verso: number; x0: number; amp: number; onde: number; fase: number; giro: number; inclina: number; x: number; r: number; w: number; h: number; pronto: boolean };
+  const elementi = Array.from(document.querySelectorAll<HTMLElement>('.corpo'));
+  const fascia = document.querySelector<SVGSVGElement>('.fascia');
+  if (elementi.length) {
+    const ridotto = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let W = 0;
+    const onda = (x: number, amp: number, onde: number, fase: number) => amp * Math.sin((x / W * onde + fase) * Math.PI * 2);
+    const pendenza = (x: number, amp: number, onde: number, fase: number) => amp * Math.cos((x / W * onde + fase) * Math.PI * 2) * (onde / W) * Math.PI * 2;
+    const stato: Corpo[] = elementi.map((el) => {
+      const d = el.dataset;
+      return { el, vel: +(d.vel ?? 0), verso: +(d.verso ?? 1) || 1, x0: +(d.x ?? 0), amp: +(d.amp ?? 0), onde: +(d.onde ?? 0), fase: +(d.fase ?? 0), giro: +(d.giro ?? 0) || 0, inclina: +(d.inclina ?? 0) || 0, x: 0, r: Math.random() * 360, w: 0, h: 0, pronto: false };
+    });
+    const misura = () => {
+      W = document.documentElement.clientWidth || window.innerWidth || 1024;
+      stato.forEach((s) => {
+        const b = (s.el.firstElementChild as Element).getBoundingClientRect();
+        s.w = b.width || 80; s.h = b.height || s.w;
+        if (!s.pronto) { s.x = s.x0 * W; s.pronto = true; }
+      });
+      if (fascia) {
+        const a = +(fascia.dataset.amp ?? 0), o = +(fascia.dataset.onde ?? 0), f = +(fascia.dataset.fase ?? 0);
+        let pa = '', pb = '';
+        for (let x = -20; x <= W + 20; x += 12) {
+          const y = 48 + onda(x, a, o, f);
+          pa += (pa ? ' L' : 'M') + x + ' ' + y.toFixed(1);
+          pb += (pb ? ' L' : 'M') + x + ' ' + (y + 12 + 4 * Math.sin(x / W * 9)).toFixed(1);
+        }
+        fascia.querySelector('.fascia-a')?.setAttribute('d', pa);
+        fascia.querySelector('.fascia-b')?.setAttribute('d', pb);
+      }
+    };
+    const posa = (s: Corpo) => {
+      const y = onda(s.x, s.amp, s.onde, s.fase), incl = Math.atan(pendenza(s.x, s.amp, s.onde, s.fase)) * 180 / Math.PI;
+      const rot = s.giro ? s.r : Math.max(-s.inclina, Math.min(s.inclina, incl));
+      s.el.style.transform = 'translate(' + (s.x - s.w / 2).toFixed(1) + 'px,' + (y - s.h / 2).toFixed(1) + 'px) rotate(' + rot.toFixed(1) + 'deg)';
+    };
+    let prima = 0;
+    const passo = (t: number) => {
+      const dt = prima ? Math.min(0.05, (t - prima) / 1000) : 0; prima = t;
+      stato.forEach((s) => {
+        s.x += s.vel * s.verso * dt;
+        const m = s.w / 2 + 30;
+        if (s.verso > 0 && s.x > W + m) s.x = -m;
+        if (s.verso < 0 && s.x < -m) s.x = W + m;
+        s.r += s.giro * dt;
+        posa(s);
+      });
+      requestAnimationFrame(passo);
+    };
+    misura();
+    window.addEventListener('resize', misura);
+    stato.forEach((s) => { posa(s); s.el.classList.add('pronto'); });
+    if (!ridotto) requestAnimationFrame(passo);
+  }
+</script>
+
+<style>
+  .sfondo { position: absolute; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
+  .stelle-cadenti { position: fixed; inset: 0; z-index: 1; overflow: hidden; pointer-events: none; }
+  .nebulosa { position: absolute; border-radius: 50%; }
+  .n1 { top: -10rem; left: -10rem; width: 600px; height: 600px; background: rgb(91 33 182 / .2); filter: blur(130px); }
+  .n2 { top: 30%; right: -12rem; width: 620px; height: 620px; background: rgb(124 58 237 / .15); filter: blur(150px); }
+  .n3 { top: 70%; left: -8rem; width: 560px; height: 560px; background: rgb(91 33 182 / .15); filter: blur(140px); }
+
+  /* Pianeti e asteroidi: il moto lo calcola lo script; --w/--h sono le misure da telefono, --wl/--hl da 1024 px */
+  .corpo { position: absolute; left: 0; will-change: transform; visibility: hidden; }
+  .corpo.pronto { visibility: visible; }
+  .pianeta { display: block; width: var(--w); height: var(--h); opacity: .5; filter: drop-shadow(0 0 10px var(--glow, rgb(185 230 46 / .4))); }
+  @media (min-width: 1024px) { .pianeta { width: var(--wl); height: var(--hl); opacity: .9; } }
+  .fascia { position: absolute; left: 0; top: 47%; width: 100%; height: 6rem; transform: translateY(-50%); overflow: visible; }
+
+  /* Due stelle cadenti, discrete */
+  .shooting { position: absolute; height: 2px; border-radius: 9999px; opacity: 0; background: linear-gradient(90deg, transparent, var(--lime) 85%, #fff); box-shadow: 0 0 10px rgb(185 230 46 / .7); }
+  .s1 { top: 8%; left: 88%; width: 180px; animation: cadente 7s ease-out infinite .5s; }
+  .s2 { top: 40%; left: 95%; width: 210px; animation: cadente 9s ease-out infinite 4s; }
+  @keyframes cadente {
+    0% { transform: translate3d(0, 0, 0) rotate(145deg) scaleX(.2); opacity: 0; }
+    8% { opacity: 1; }
+    80% { opacity: .4; }
+    100% { transform: translate3d(-700px, 500px, 0) rotate(145deg) scaleX(1); opacity: 0; }
+  }
+  @media (prefers-reduced-motion: reduce) { .shooting { display: none; } }
+</style>

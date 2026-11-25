@@ -1,0 +1,43 @@
+/* Variabili di stile del sito: colori, caratteri, misure, ombre.
+   Tutti i componenti usano solo queste variabili, così l'aspetto resta coerente (stile "Notte stellata").
+   Valori presi dal sito attuale (sito/sorgenti/tailwind.config.js). */
+:root {
+  /* Colori */
+  --lime: #B9E62E;
+  --lime-scuro: #a6d420;
+  --lime-chiaro: #DCEFA0;
+  --viola: #5B21B6;
+  --viola-acceso: #7C3AED;
+  --viola-chiaro: #a78bfa;
+  --notte: #070514;            /* sfondo della pagina */
+  --notte-profonda: #05030f;   /* piede */
+  --pannello: #0d0724;         /* menu, ricerca */
+  --scheda: #120a2e;           /* campi, schede */
+  --scheda-sopra: #180e3e;     /* passaggio del mouse */
+  --testo: #F1ECFB;
+  --testo-tenue: #B3A9CC;
+  --linea: rgb(255 255 255 / .15);
+  --linea-tenue: rgb(255 255 255 / .1);
+  --linea-viola: rgb(91 33 182 / .4);
+  --inchiostro: #140C2B;       /* contorni dei disegni */
+
+  /* Caratteri */
+  --font: 'Archivo', system-ui, sans-serif;
+
+  /* Misure */
+  --larghezza-max: 1440px;
+  --margine-lato: 1rem;
+  --raggio: 1rem;
+  --raggio-pillola: 9999px;
+  --altezza-testata: 5rem;
+
+  /* Ombre */
+  --ombra-brutal: 5px 5px 0 0 var(--viola);
+  --ombra-brutal-lime: 3px 3px 0 0 var(--lime);
+  --alone-lime: 0 0 28px rgb(185 230 46 / .4);
+
+  /* Tempi */
+  --transizione: .15s ease;
+}
+@media (min-width: 640px) { :root { --margine-lato: 1.5rem; } }
+@media (min-width: 1024px) { :root { --margine-lato: 2rem; } }

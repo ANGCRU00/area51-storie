@@ -1,0 +1,78 @@
+---
+/* Piede comune: indirizzo, orari, social, collegamenti e note su ritiro e pagamento. Testi e dati presi dal sito attuale. */
+const anno = new Date().getFullYear();
+---
+<footer class="piede">
+  <div class="contenitore">
+    <div class="griglia">
+      <div class="negozio">
+        <div class="marchio"><svg class="marchio-alieno" aria-hidden="true"><use href="#alieno" /></svg><span class="pesante marchio-nome">AREA 51</span></div>
+        <p class="motto">Manga, fumetti, giochi, carte. E un posto dove parlarne.</p>
+        <address class="indirizzo">
+          <span class="via">Viale G. Falcone e P. Borsellino, 35</span>
+          <span class="citta">76121 Barletta (BT) · <a class="sottolineato" href="tel:+390883884567">0883 884567</a></span>
+          <span class="orari">Mar–Sab 9:30–13 e 17–20:30 · Lun 17–20:30 · Dom chiuso</span>
+          <span class="social">
+            <a href="https://www.instagram.com/fumetteriaarea51/" target="_blank" rel="noopener noreferrer"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5" /><circle cx="12" cy="12" r="4" /><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none" /></svg>Instagram</a>
+            <a href="https://www.facebook.com/FumetteriaArea51" target="_blank" rel="noopener noreferrer"><svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 21v-8h3l.5-3.5H14V7.7C14 6.8 14.4 6 15.8 6H17.5V3.2C17 3.1 16 3 14.9 3 12.4 3 10.5 4.5 10.5 7.4V9.5H8V13h2.5v8" /></svg>Facebook</a>
+          </span>
+        </address>
+      </div>
+      <nav aria-label="Area 51">
+        <h3 class="pesante titolo">Area 51</h3>
+        <ul class="elenco">
+          <li><a href="/negozio">Il negozio</a></li>
+          <li><a href="/club">Area 51 Club</a></li>
+          <li><a href="/eventi">Eventi</a></li>
+          <li><a href="/uscite">Preordini</a></li>
+          <li><a href="/negozio#chiedicelo">Chiedicelo</a></li>
+        </ul>
+      </nav>
+      <nav aria-label="Parliamone">
+        <h3 class="pesante titolo">Parliamone</h3>
+        <ul class="elenco">
+          <li><a href="/profilo">Il tuo profilo</a></li>
+          <li><a href="/profilo#preferiti">Preferiti</a></li>
+          <li><a href="/condizioni">Condizioni di vendita</a></li>
+          <li><a href="/privacy">Privacy</a></li>
+        </ul>
+      </nav>
+    </div>
+    <div class="fondo">
+      <p>© {anno} Fumetteria Area 51 · Barletta</p>
+      <p>Ritiro e pagamento in negozio, nessuna spedizione. <a class="sottolineato" href="/negozio#carta-cultura">Accettiamo Carta della Cultura e Carta del Merito</a>, solo in negozio.</p>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .piede { position: relative; z-index: 10; border-top: 2px solid var(--lime); background: var(--notte-profonda); padding-block: 2rem 1.25rem; font-size: .875rem; color: var(--testo-tenue); }
+  .griglia { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem 1rem; margin-bottom: 1.5rem; }
+  @media (min-width: 1024px) { .griglia { grid-template-columns: repeat(4, 1fr); gap: 2rem; } }
+  .negozio { grid-column: span 2; display: grid; gap: .625rem; align-content: start; }
+  .marchio { display: flex; align-items: center; gap: .75rem; }
+  .marchio-alieno { width: 2.25rem; height: 2.25rem; }
+  .marchio-nome { font-size: 1.5rem; color: #fff; }
+  .motto { max-width: 24rem; }
+  .indirizzo { font-style: normal; line-height: 1.625; }
+  .indirizzo > span { display: block; }
+  .via { color: var(--lime); font-weight: 700; }
+  .citta { color: #fff; }
+  .orari { margin-top: .375rem; }
+  .indirizzo > .social { display: flex; flex-wrap: wrap; align-items: center; gap: .25rem 1.25rem; margin-top: .5rem; }
+  .social a { display: inline-flex; align-items: center; gap: .5rem; color: #fff; font-weight: 600; }
+  .social a:hover, .elenco a:hover, .sottolineato:hover { color: var(--lime); }
+  .social svg { width: 1rem; height: 1rem; }
+  .sottolineato { text-decoration: underline; }
+  .titolo { color: #fff; font-size: .75rem; text-transform: uppercase; letter-spacing: .05em; margin-bottom: .5rem; }
+  .elenco { display: grid; gap: .375rem; font-weight: 600; }
+  .fondo { padding-top: 1rem; border-top: 1px solid var(--linea-tenue); display: flex; flex-direction: column; align-items: center; justify-content: space-between; gap: .75rem;
+    font-size: .75rem; color: rgb(179 169 204 / .8); text-align: center; }
+  @media (min-width: 640px) { .fondo { flex-direction: row; text-align: left; } }
+  /* Telefono: i collegamenti di testo hanno un'area di tocco più alta */
+  @media (max-width: 767px) {
+    .elenco { gap: 0; }
+    .elenco a, .citta a { display: inline-block; padding-block: .45rem; }
+    .social a { padding-block: .45rem; }
+  }
+</style>
