@@ -4,3 +4,6 @@ __pycache__/
 node_modules/
 .DS_Store
 Thumbs.db
+
+# Documenti privati (API dei fornitori, mai su GitHub: il repository e pubblico)
+privato/
