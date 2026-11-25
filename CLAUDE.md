@@ -36,7 +36,7 @@ Si parla in italiano. Tutti i testi visibili sono in italiano.
 ## Nuovo sito: stack deciso (25/11/2026, decisione di Angelo)
 
 - **Tutto su Cloudflare, niente Supabase e niente VPS** nel nuovo sito. Analisi completa (versione 2): https://claude.ai/artifact/8kKuoNuSjPjStTtrpz1JYm
-- Front end: **Astro 7 + isole React 19** (scelto React invece di Solid: ecosistema e stabilita'), Tailwind, TypeScript; adattatore `@astrojs/cloudflare` (pagine e interfacce `/api` sui Workers nello stesso progetto). Demo di confronto: `sito-astro` (Solid) e `sito-astro-react` (React).
+- Front end: **Astro 7 + isole React 19** (scelto React invece di Solid: ecosistema e stabilita'), TypeScript; **niente Tailwind** (non piace all'amico che collabora): CSS dei componenti Astro (`<style>` locale) e CSS Modules (`.module.css`) nelle isole React, con un file comune di variabili (colori lime/viola, caratteri, spaziature, ombre) per mantenere lo stile Notte stellata; adattatore `@astrojs/cloudflare` (pagine e interfacce `/api` sui Workers nello stesso progetto). Demo di confronto: `sito-astro` (Solid) e `sito-astro-react` (React).
 - Back end: **D1** (database, tabelle con Drizzle), **Better Auth** (login clienti e gestore, ruoli, salvato in D1), **R2** (copertine e foto), **Worker `starshop` separato** con Cron Triggers e credenziali nei segreti (`STARSHOP_USER`, `STARSHOP_PASSWORD`), email con servizio esterno (da scegliere).
 - Permessi: il browser non parla mai con D1; ogni interfaccia passa da un controllo unico (`soloCliente`, `soloGestore`), chiusa per impostazione, con test automatici per ogni interfaccia.
 - Pagine dai dati (catalogo, uscite, schede) scritte sul momento da D1 con cache: nessuna ricostruzione quando il gestore cambia qualcosa.
