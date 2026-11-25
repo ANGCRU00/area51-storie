@@ -3,7 +3,8 @@
    Difese: campi controllati e accorciati, consenso privacy obbligatorio, campo trappola per i programmi automatici,
    al massimo 3 richieste all'ora per la stessa email. */
 import type { APIRoute } from 'astro';
-import { env } from 'cloudflare:workers';
+import { and, count, eq, gt } from 'drizzle-orm';
+import { db, richieste } from '../../db';
 import { emailValida, errore, json, leggiJson, testo } from '../../lib/api';
 
 export const prerender = false;
@@ -28,11 +29,10 @@ export const POST: APIRoute = async ({ request }) => {
   if (!emailValida(email)) return errore('Controlla l\'indirizzo email.');
   if (d.privacy !== true) return errore('Serve il consenso al trattamento dei dati per rispondere alla richiesta.');
 
-  const recenti = await env.DB.prepare("SELECT count(*) AS n FROM richieste WHERE email = ? AND creata_il > datetime('now', '-1 hour')")
-    .bind(email).first<{ n: number }>();
-  if ((recenti?.n ?? 0) >= 3) return errore('Hai già inviato diverse richieste: riprova tra un\'ora o chiamaci allo 0883 884567.', 429);
+  const unOraFa = new Date(Date.now() - 3600_000).toISOString().slice(0, 19) + 'Z';
+  const [recenti] = await db().select({ n: count() }).from(richieste).where(and(eq(richieste.email, email), gt(richieste.creataIl, unOraFa)));
+  if ((recenti?.n ?? 0) >= 3) return errore("Hai già inviato diverse richieste: riprova tra un'ora o chiamaci allo 0883 884567.", 429);
 
-  await env.DB.prepare('INSERT INTO richieste (cosa, categoria, nome, email, telefono) VALUES (?, ?, ?, ?, ?)')
-    .bind(cosa, categoria, nome, email, telefono || null).run();
+  await db().insert(richieste).values({ cosa, categoria, nome, email, telefono: telefono || null });
   return json({ ok: true }, 201);
 };

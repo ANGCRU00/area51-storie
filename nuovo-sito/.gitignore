@@ -6,3 +6,4 @@ dist/
 .env
 public/img/copertine/
 src/data/provvisori.json
+importazione/

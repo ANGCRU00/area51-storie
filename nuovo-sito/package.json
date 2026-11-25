@@ -7,19 +7,23 @@
     "build": "node scripts/dati-provvisori.mjs && astro build",
     "preview": "astro build && wrangler dev",
     "deploy": "astro build && wrangler deploy",
-    "db:locale": "wrangler d1 execute area51 --local --command \"select 1\"",
-    "dati": "node scripts/dati-provvisori.mjs"
+    "dati": "node scripts/dati-provvisori.mjs",
+    "db:genera": "drizzle-kit generate",
+    "db:locale": "wrangler d1 migrations apply area51 --local",
+    "importa": "node scripts/importa-da-supabase.mjs"
   },
   "dependencies": {
     "@astrojs/cloudflare": "^14.4.9",
     "@astrojs/react": "^7.1.9",
     "astro": "^7.4.13",
+    "drizzle-orm": "^0.45.4",
     "react": "^19.3.1",
     "react-dom": "^19.3.1"
   },
   "devDependencies": {
     "@types/react": "^19.3.2",
     "@types/react-dom": "^19.3.0",
+    "drizzle-kit": "^0.31.11",
     "wrangler": "^4.168.0"
   }
 }

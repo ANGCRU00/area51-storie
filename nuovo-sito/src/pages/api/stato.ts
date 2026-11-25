@@ -1,23 +1,27 @@
-/* GET /api/stato: controllo della fase 1. Dice se il sito raggiunge il database D1 e lo spazio file R2.
-   Non restituisce dati riservati. Gira sul Worker a ogni richiesta (non è preparata alla pubblicazione). */
+/* GET /api/stato: controllo tecnico. Dice se il sito raggiunge il database D1 e lo spazio file R2, con qualche conteggio.
+   Chi può usarla: chiunque. Non restituisce dati personali né riservati. */
 import type { APIRoute } from 'astro';
 import { env } from 'cloudflare:workers';
+import { count } from 'drizzle-orm';
+import { db, uscite, articoli } from '../../db';
+import { json } from '../../lib/api';
 
 export const prerender = false;
 
 export const GET: APIRoute = async () => {
-  const risposta: Record<string, unknown> = { ora: new Date().toISOString() };
+  const r: Record<string, unknown> = { ora: new Date().toISOString() };
   try {
-    const r = await env.DB.prepare('SELECT nota, creato_il FROM prova ORDER BY id DESC LIMIT 1').first<{ nota: string; creato_il: string }>();
-    risposta.d1 = { ok: true, ultima_riga: r };
+    const [u] = await db().select({ n: count() }).from(uscite);
+    const [a] = await db().select({ n: count() }).from(articoli);
+    r.d1 = { ok: true, uscite: u?.n ?? 0, articoli: a?.n ?? 0 };
   } catch (e) {
-    risposta.d1 = { ok: false, errore: 'Tabella di prova non trovata: lancia "npx wrangler d1 migrations apply area51 --local"', dettaglio: String(e).slice(0, 200) };
+    r.d1 = { ok: false, errore: 'Tabelle non trovate: lancia "npm run db:locale"', dettaglio: String(e).slice(0, 200) };
   }
   try {
-    const elenco = await env.FILE.list({ limit: 5 });
-    risposta.r2 = { ok: true, file: elenco.objects.length };
+    const l = await env.FILE.list({ prefix: 'copertine/', limit: 1000 });
+    r.r2 = { ok: true, copertine: l.objects.length + (l.truncated ? '+' : '') };
   } catch (e) {
-    risposta.r2 = { ok: false, dettaglio: String(e).slice(0, 200) };
+    r.r2 = { ok: false, dettaglio: String(e).slice(0, 200) };
   }
-  return new Response(JSON.stringify(risposta, null, 2), { headers: { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store' } });
+  return json(r);
 };
