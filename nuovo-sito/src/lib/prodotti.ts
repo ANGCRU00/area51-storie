@@ -173,7 +173,6 @@ export async function cercaProdotti(f: Filtri): Promise<Risultato> {
   if (stato !== 'preordini') {
     const cond = [eq(articoli.visibile, true)];
     if (f.cerca) { const c = condizioniCerca(articoli, f.cerca, articoli.autore); if (c) cond.push(c); }
-    if (f.editori?.length) cond.push(inArray(articoli.editore, f.editori));
     magazzino = (await d.select().from(articoli).where(and(...cond)).limit(2000)).map(daArticolo)
       .filter((p) => p.categoria && f.categorie.includes(p.categoria) && p.disponibilita !== 'preordine');
   }
@@ -185,7 +184,6 @@ export async function cercaProdotti(f: Filtri): Promise<Risultato> {
     if (!catUscite.length) cond.push(sql`0`);
     else cond.push(inArray(uscite.categoria, catUscite as ('manga' | 'fumetti' | 'tcg' | 'giochi')[]));
     if (f.cerca) { const c = condizioniCerca(uscite, f.cerca); if (c) cond.push(c); }
-    if (f.editori?.length) cond.push(inArray(uscite.editore, f.editori));
     if (f.mese && /^\d{4}-\d{2}$/.test(f.mese)) cond.push(like(uscite.dataUscita, f.mese + '%'));
     prossime = (await d.select().from(uscite).where(and(...cond)).orderBy(asc(uscite.dataUscita), asc(uscite.titolo)).limit(3000)).map(daUscita);
   }
@@ -216,8 +214,10 @@ export async function cercaProdotti(f: Filtri): Promise<Risultato> {
   };
   tutti.sort(confronto[ordine] ?? confronto.recenti);
 
-  // elenchi per i menu dei filtri (dalla categoria scelta, senza gli altri filtri)
+  // elenchi per i menu dei filtri. Gli editori si contano PRIMA di filtrare per editore, così scegliendone uno
+  // gli altri restano nell'elenco e se ne possono aggiungere (scelta multipla vera).
   const editori = [...new Set(tutti.map((p) => p.editore).filter(Boolean) as string[])].sort((a, b) => a.localeCompare(b));
+  if (f.editori?.length) tutti = tutti.filter((p) => p.editore && f.editori!.includes(p.editore));
   const mesi = [...new Set(tutti.filter((p) => p.tipo === 'uscita' && p.dataUscita).map((p) => p.dataUscita!.slice(0, 7)))].sort();
 
   const totale = tutti.length, pagine = Math.max(1, Math.ceil(totale / per)), pagina = Math.min(Math.max(1, f.pagina ?? 1), pagine);
