@@ -177,8 +177,11 @@ const tutteLeEdizioni = edizioni.length ? [p, ...edizioni].sort((a, b) => (a.edi
   @media (min-width: 640px) { h1 { font-size: 2.75rem; } }
   .volume { font-size: 1.5rem; color: var(--lime); margin-top: -.6rem; }
   .titolo-intero { color: var(--testo-tenue); font-weight: 700; margin-top: -.5rem; }
-  .tabella { display: grid; grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr)); gap: 1px; border-radius: var(--raggio); overflow: hidden; border: 1px solid var(--linea-tenue); background: var(--linea-tenue); margin: 0; }
-  .tabella div { background: rgb(14 9 38 / .95); padding: .75rem 1rem; min-width: 0; }
+  /* dati del prodotto: un solo riquadro con bordo lime, senza linee tra le voci */
+  .tabella { display: grid; grid-template-columns: repeat(auto-fill, minmax(9.5rem, 1fr)); gap: 1rem 1.5rem; margin: 0; padding: 1.1rem 1.25rem;
+    border: 2px solid rgb(185 230 46 / .6); border-radius: var(--raggio); background: rgb(14 9 38 / .95); }
+  @media (max-width: 639px) { .tabella { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .9rem 1rem; padding: 1rem; } }
+  .tabella div { min-width: 0; }
   .tabella dt { font-size: 11px; font-weight: 700; color: var(--testo-tenue); text-transform: uppercase; letter-spacing: .05em; }
   .tabella dd { margin: .2rem 0 0; color: #fff; font-weight: 700; overflow-wrap: anywhere; }
   .acquisto { display: grid; gap: .9rem; padding: 1.25rem; border-radius: var(--raggio); border: 2px solid rgb(185 230 46 / .6); background: rgb(13 7 36 / .95); }
