@@ -7,7 +7,7 @@ import { COOKIE_ADULTI, cercaProdotti, filtriDaIndirizzo, type Categoria } from 
 export const prerender = false;
 const disponibili: Categoria[] = ['gadget'];
 const filtri = filtriDaIndirizzo(Astro.url, disponibili);
-filtri.adulti = Astro.cookies.get(COOKIE_ADULTI)?.value === '1';
+filtri.etaConfermata = Astro.cookies.get(COOKIE_ADULTI)?.value === '1';
 const risultato = await cercaProdotti(filtri);
 Astro.response.headers.set('cache-control', 'public, max-age=0, s-maxage=60');
 Astro.response.headers.set('vary', 'cookie');

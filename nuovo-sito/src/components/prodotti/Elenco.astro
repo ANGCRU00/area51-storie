@@ -3,7 +3,9 @@
    Barra in alto (scelta di Angelo, 25/11/2026): ricerca, poi pulsanti a tendina Tipo (con 18+), Genere, Editore, Stato, Mese e
    l'ordinamento; sotto, i filtri scelti come etichette togliibili. La griglia usa tutta la larghezza.
    I filtri sono un normale modulo GET: funzionano anche senza JavaScript e ogni ricerca ha il suo indirizzo da condividere.
-   Le scelte singole (tipo, stato, mese, ordine) si applicano subito; quelle multiple (genere, editore) con "Applica". */
+   Le scelte singole (tipo, 18+, stato, mese, ordine) si applicano subito; quelle multiple (genere, editore) con "Applica".
+   Con JavaScript i risultati si aggiornano senza ricaricare la pagina (lo script chiede la pagina nuova e sostituisce solo
+   barra, filtri scelti e risultati); l'indirizzo cambia lo stesso, quindi ogni ricerca resta condivisibile. */
 import Percorso from '../comuni/Percorso.astro';
 import Scheda from './Scheda.astro';
 import AzioniCarrello from './AzioniCarrello.astro';
@@ -25,14 +27,16 @@ const { percorso, bollino, titolo, introduzione, risultato, filtri, categorie, m
 const { prodotti, totale, pagine, pagina, editori, mesi, generi, nascostiAdulti } = risultato;
 const sceltiGeneri = filtri.generi ?? [];
 const scelti = filtri.editori ?? [];
-// interruttore 18+ (nella tendina Tipo) solo dove ci sono titoli per adulti, o se il visitatore li ha già attivati
-const mostra18 = !!filtri.adulti || nascostiAdulti > 0;
+// filtro 18+ (nella tendina Tipo): mostra SOLO i titoli per adulti; serve la conferma della maggiore età (cookie)
+const solo18 = !!filtri.soloAdulti && !!filtri.etaConfermata;
+const chiedi18 = !!filtri.soloAdulti && !filtri.etaConfermata;   // link condiviso con ?adulti=1 ma età non ancora confermata
+const mostra18 = nascostiAdulti > 0 || !!filtri.soloAdulti;
 
 const qui = Astro.url.pathname;
 function indirizzo(cambia: Record<string, string | number | string[] | undefined>) {
   const q = new URLSearchParams();
   const valori: Record<string, string | number | string[] | undefined> = { cerca: filtri.cerca, cat: filtri.cat, stato: filtri.stato === 'tutti' ? '' : filtri.stato,
-    editore: scelti, genere: sceltiGeneri, mese: filtri.mese, ordine: filtri.ordine === 'recenti' ? '' : filtri.ordine, pagina: undefined, ...cambia };
+    editore: scelti, genere: sceltiGeneri, adulti: solo18 ? '1' : '', mese: filtri.mese, ordine: filtri.ordine === 'recenti' ? '' : filtri.ordine, pagina: undefined, ...cambia };
   for (const [k, v] of Object.entries(valori)) {
     if (Array.isArray(v)) v.forEach((x) => q.append(k, x));
     else if (v !== undefined && v !== '' && !(k === 'pagina' && v === 1)) q.set(k, String(v));
@@ -43,6 +47,7 @@ function indirizzo(cambia: Record<string, string | number | string[] | undefined
 const attivi = [
   filtri.cerca && { testo: '«' + filtri.cerca + '»', via: indirizzo({ cerca: '' }) },
   filtri.cat && categorie.length > 1 && { testo: NOME_CATEGORIA[filtri.cat], via: indirizzo({ cat: '' }) },
+  solo18 && { testo: 'Solo 18+', via: indirizzo({ adulti: '' }) },
   filtri.stato && filtri.stato !== 'tutti' && mostraStato && { testo: filtri.stato === 'negozio' ? 'In negozio' : 'Preordini', via: indirizzo({ stato: '' }) },
   ...sceltiGeneri.map((g) => ({ testo: NOME_GENERE[g] ?? g, via: indirizzo({ genere: sceltiGeneri.filter((x) => x !== g) }) })),
   ...scelti.map((e) => ({ testo: e, via: indirizzo({ editore: scelti.filter((x) => x !== e) }) })),
@@ -51,7 +56,7 @@ const attivi = [
 // editori scelti sempre in cima all'elenco
 const elencoEditori = [...scelti.filter((e) => !editori.includes(e)), ...editori].sort((a, b) => Number(scelti.includes(b)) - Number(scelti.includes(a)) || a.localeCompare(b));
 const elencoGeneri = [...new Set([...sceltiGeneri, ...generi])];
-const etichettaTipo = filtri.cat ? NOME_CATEGORIA[filtri.cat] : 'Tipo';
+const etichettaTipo = filtri.cat ? NOME_CATEGORIA[filtri.cat] : solo18 ? 'Solo 18+' : 'Tipo';
 const numeri = Array.from({ length: pagine }, (_, i) => i + 1).filter((n) => n === 1 || n === pagine || Math.abs(n - pagina) <= 2);
 ---
 <div class="contenitore pagina">
@@ -71,25 +76,24 @@ const numeri = Array.from({ length: pagine }, (_, i) => i + 1).filter((n) => n =
 
     <div class="tendine">
       {(categorie.length > 1 || mostra18) && (
-        <details class="tendina">
-          <summary class:list={['pesante', { attiva: !!filtri.cat || filtri.adulti }]}>{etichettaTipo}{filtri.adulti && <span class="segno18">18+</span>}</summary>
+        <details class="tendina" open={chiedi18}>
+          <summary class:list={['pesante', { attiva: !!filtri.cat || solo18 }]}>{etichettaTipo}{solo18 && filtri.cat && <span class="segno18">18+</span>}</summary>
           <div class="pannello">
             <div class="chip">
               {categorie.length > 1 && <label><input type="radio" name="cat" value="" checked={!filtri.cat} /><span>Tutto</span></label>}
               {categorie.length > 1 && categorie.map((c) => <label><input type="radio" name="cat" value={c} checked={filtri.cat === c} /><span>{NOME_CATEGORIA[c]}</span></label>)}
               {mostra18 && (
-                <button type="button" class="chip18" aria-pressed={filtri.adulti ? 'true' : 'false'} data-adulti-chip
-                  title={filtri.adulti ? 'Nascondi i titoli per adulti' : 'Mostra anche i titoli per adulti'}>18+</button>
+                <label class="chip18" title="Mostra solo i titoli per adulti">
+                  <input type="checkbox" name="adulti" value="1" checked={solo18} data-casella18 data-confermata={filtri.etaConfermata ? '1' : ''} /><span>18+</span>
+                </label>
               )}
             </div>
-            {mostra18 && !filtri.adulti && (
-              <>
-                <p class="nota">{nascostiAdulti} {nascostiAdulti === 1 ? 'titolo per adulti nascosto' : 'titoli per adulti nascosti'}.</p>
-                <div class="adulti-conferma" hidden data-adulti-conferma>
-                  <p>Mostrare anche i titoli per adulti? Confermi di avere almeno 18 anni?</p>
-                  <div><button type="button" class="pulsante piccolo" data-adulti="1">Sì, ho almeno 18 anni</button> <button type="button" class="testo-pulsante" data-adulti-annulla>No</button></div>
-                </div>
-              </>
+            {mostra18 && <p class="nota">{solo18 ? 'Stai vedendo solo i titoli per adulti.' : `18+ mostra solo i titoli per adulti (${nascostiAdulti}).`}</p>}
+            {mostra18 && !filtri.etaConfermata && (
+              <div class="adulti-conferma" hidden={!chiedi18} data-adulti-conferma>
+                <p>I titoli 18+ sono per adulti. Confermi di avere almeno 18 anni?</p>
+                <div><button type="button" class="pulsante piccolo" data-adulti-si>Sì, ho almeno 18 anni</button> <button type="button" class="testo-pulsante" data-adulti-annulla>No</button></div>
+              </div>
             )}
           </div>
         </details>
@@ -198,45 +202,100 @@ const numeri = Array.from({ length: pagine }, (_, i) => i + 1).filter((n) => n =
 <AzioniCarrello />
 
 <script>
-  const modulo = document.getElementById('modulo-filtri') as HTMLFormElement | null;
-  // scelte singole: si applicano subito; caselle multiple: con "Applica"
-  modulo?.addEventListener('change', (e) => {
-    const t = e.target as HTMLElement;
-    if (t.matches('select, input[type="radio"]')) modulo.requestSubmit();
+  /* Tutti i gestori sono "delegati" al documento: continuano a funzionare anche dopo che barra e risultati
+     vengono sostituiti dall'aggiornamento senza ricarica. */
+  const modulo = () => document.getElementById('modulo-filtri') as HTMLFormElement | null;
+  const tendine = () => Array.from(document.querySelectorAll<HTMLDetailsElement>('.tendina'));
+
+  /* ---------- aggiornamento senza ricaricare la pagina ---------- */
+  const PARTI = ['#modulo-filtri', '.sopra', '.risultati'];
+  let ultima = 0;
+  async function vai(url: string, comeStoria = true, scorri = false) {
+    const io = ++ultima;
+    document.querySelector('.risultati')?.classList.add('in-caricamento');
+    try {
+      const r = await fetch(url, { headers: { Accept: 'text/html' } });
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      const doc = new DOMParser().parseFromString(await r.text(), 'text/html');
+      if (io !== ultima) return;   // nel frattempo è partita una richiesta più recente
+      for (const sel of PARTI) {
+        const vecchio = document.querySelector(sel), nuovo = doc.querySelector(sel);
+        if (vecchio && nuovo) vecchio.replaceWith(nuovo);
+      }
+      document.title = doc.title;
+      if (comeStoria) history.pushState({ filtri: true }, '', url);
+      if (scorri) document.querySelector('.sopra')?.scrollIntoView({ block: 'start' });
+    } catch {
+      location.href = url;   // se qualcosa va storto, si carica la pagina normalmente
+    }
+  }
+  function indirizzoDalModulo(f: HTMLFormElement) {
+    const q = new URLSearchParams();
+    for (const [k, v] of new FormData(f).entries()) if (v !== '') q.append(k, String(v));
+    const s = q.toString();
+    return f.action.split('?')[0] + (s ? '?' + s : '');
+  }
+  document.addEventListener('submit', (e) => {
+    const f = e.target as HTMLFormElement;
+    if (f.id !== 'modulo-filtri') return;
+    e.preventDefault();
+    vai(indirizzoDalModulo(f));
   });
-  // i campi vuoti non finiscono nell'indirizzo
-  modulo?.addEventListener('formdata', (e) => {
-    for (const [k, v] of [...e.formData.entries()]) if (v === '') e.formData.delete(k);
+  // filtri scelti (etichette), "Azzera tutto" e pagine: stessi aggiornamenti senza ricarica
+  document.addEventListener('click', (e) => {
+    const a = (e.target as Element).closest<HTMLAnchorElement>('.attivi a, .pagine a');
+    if (!a || e.ctrlKey || e.metaKey || e.shiftKey) return;
+    e.preventDefault();
+    vai(a.href, true, !!a.closest('.pagine'));
+  });
+  window.addEventListener('popstate', () => vai(location.href, false));
+
+  /* ---------- modulo ---------- */
+  document.addEventListener('change', (e) => {
+    const t = e.target as HTMLInputElement;
+    const f = modulo(); if (!f || !f.contains(t)) return;
+    if (t.matches('[data-casella18]')) {
+      // 18+: senza conferma dell'età si chiede prima di applicare
+      if (t.checked && !t.dataset.confermata) {
+        t.checked = false;
+        const c = document.querySelector<HTMLElement>('[data-adulti-conferma]'); if (c) c.hidden = false;
+        return;
+      }
+      f.requestSubmit(); return;
+    }
+    if (t.matches('select, input[type="radio"]')) f.requestSubmit();
+  });
+  document.addEventListener('click', (e) => {
+    const el = e.target as Element;
+    if (el.closest('[data-adulti-si]')) {
+      document.cookie = 'area51_adulti=1; path=/; max-age=15552000; samesite=lax';
+      const c = document.querySelector<HTMLInputElement>('[data-casella18]');
+      if (c) { c.dataset.confermata = '1'; c.checked = true; }
+      modulo()?.requestSubmit();
+    }
+    if (el.closest('[data-adulti-annulla]')) {
+      const c = document.querySelector<HTMLElement>('[data-adulti-conferma]'); if (c) c.hidden = true;
+      const u = new URL(location.href);
+      if (u.searchParams.get('adulti') === '1') { u.searchParams.delete('adulti'); vai(u.toString()); }
+    }
   });
 
-  // una sola tendina aperta alla volta; si chiude cliccando fuori o con Esc
-  const tendine = Array.from(document.querySelectorAll<HTMLDetailsElement>('.tendina'));
-  tendine.forEach((d) => d.addEventListener('toggle', () => { if (d.open) tendine.forEach((x) => { if (x !== d) x.open = false; }); }));
-  document.addEventListener('click', (e) => { if (!(e.target as Element).closest('.tendina')) tendine.forEach((x) => { x.open = false; }); });
-  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') tendine.forEach((x) => { if (x.open) { x.open = false; x.querySelector('summary')?.focus(); } }); });
+  /* ---------- tendine: una sola aperta, si chiudono cliccando fuori o con Esc ---------- */
+  document.addEventListener('toggle', (e) => {
+    const d = e.target as HTMLDetailsElement;
+    if (d.classList?.contains('tendina') && d.open) tendine().forEach((x) => { if (x !== d) x.open = false; });
+  }, true);
+  document.addEventListener('click', (e) => { if (!(e.target as Element).closest('.tendina')) tendine().forEach((x) => { x.open = false; }); });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') tendine().forEach((x) => { if (x.open) { x.open = false; x.querySelector('summary')?.focus(); } }); });
 
-  // ricerca dentro l'elenco degli editori (non invia il modulo)
-  const filtraEd = document.querySelector<HTMLInputElement>('[data-filtra-editori]');
-  filtraEd?.addEventListener('input', () => {
-    const q = filtraEd.value.trim().toLowerCase();
+  /* ---------- ricerca dentro l'elenco degli editori (non invia il modulo) ---------- */
+  document.addEventListener('input', (e) => {
+    const c = e.target as HTMLInputElement;
+    if (!c.matches('[data-filtra-editori]')) return;
+    const q = c.value.trim().toLowerCase();
     document.querySelectorAll<HTMLLabelElement>('[data-elenco-editori] label').forEach((l) => { l.hidden = !!q && !l.textContent!.toLowerCase().includes(q); });
   });
-  filtraEd?.addEventListener('keydown', (e) => { if (e.key === 'Enter') e.preventDefault(); });
-
-  // casella "18+" nella tendina Tipo: chiede la conferma della maggiore età; la scelta resta nel browser (cookie di 180 giorni)
-  const nomeCookie = modulo?.dataset.cookie ?? 'area51_adulti';
-  const imposta18 = (si: boolean) => {
-    document.cookie = si ? nomeCookie + '=1; path=/; max-age=15552000; samesite=lax' : nomeCookie + '=; path=/; max-age=0; samesite=lax';
-    location.reload();
-  };
-  const conferma = document.querySelector<HTMLElement>('[data-adulti-conferma]');
-  document.querySelector<HTMLButtonElement>('[data-adulti-chip]')?.addEventListener('click', (e) => {
-    const b = e.currentTarget as HTMLButtonElement;
-    if (b.getAttribute('aria-pressed') === 'true') imposta18(false);
-    else if (conferma) conferma.hidden = !conferma.hidden;
-  });
-  document.querySelector('[data-adulti="1"]')?.addEventListener('click', () => imposta18(true));
-  document.querySelector('[data-adulti-annulla]')?.addEventListener('click', () => { if (conferma) conferma.hidden = true; });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Enter' && (e.target as Element).matches?.('[data-filtra-editori]')) e.preventDefault(); });
 </script>
 
 <style>
@@ -290,10 +349,15 @@ const numeri = Array.from({ length: pagine }, (_, i) => i + 1).filter((n) => n =
   .chip label:hover span { border-color: var(--lime); color: var(--lime); }
   .chip input:checked + span { background: var(--lime); border-color: var(--lime); color: #000; }
   .chip input:focus-visible + span { outline: 2px solid var(--lime); outline-offset: 2px; }
-  .chip18 { font-size: .8rem; font-weight: 800; padding: .45rem .9rem; border-radius: var(--raggio-pillola); border: 1px solid rgb(251 146 60 / .7); color: #FB923C; background: var(--scheda);
-    transition: background-color var(--transizione), color var(--transizione); }
-  .chip18:hover { background: rgb(251 146 60 / .15); }
-  .chip18[aria-pressed='true'] { background: #FB923C; color: #000; }
+  .chip18 { cursor: pointer; }
+  .chip18 input { position: absolute; opacity: 0; pointer-events: none; }
+  .chip18 span { display: inline-block; font-size: .8rem; font-weight: 800; padding: .45rem .9rem; border-radius: var(--raggio-pillola); border: 1px solid rgb(251 146 60 / .7);
+    color: #FB923C; background: var(--scheda); transition: background-color var(--transizione), color var(--transizione); }
+  .chip18:hover span { background: rgb(251 146 60 / .15); }
+  .chip18 input:checked + span { background: #FB923C; color: #000; }
+  .chip18 input:focus-visible + span { outline: 2px solid #FB923C; outline-offset: 2px; }
+  .risultati { transition: opacity .15s; }
+  .risultati.in-caricamento { opacity: .45; pointer-events: none; }
   .nota { font-size: .72rem; font-weight: 600; color: var(--testo-tenue); line-height: 1.4; }
   .adulti-conferma { display: grid; gap: .5rem; padding: .75rem; border-radius: .75rem; border: 1px dashed rgb(251 146 60 / .6); font-size: .85rem; font-weight: 700; color: #fff; }
   .adulti-conferma > div { display: flex; flex-wrap: wrap; align-items: center; gap: .75rem; }

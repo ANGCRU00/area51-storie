@@ -150,8 +150,10 @@ export type Filtri = {
   stato?: 'tutti' | 'negozio' | 'preordini';
   editori?: string[];
   generi?: string[];
-  /** il visitatore ha confermato di essere maggiorenne: si mostrano anche i titoli per adulti */
-  adulti?: boolean;
+  /** filtro 18+ (?adulti=1): mostra SOLO i titoli per adulti (decisione di Angelo). Vale solo se l'età è confermata. */
+  soloAdulti?: boolean;
+  /** il visitatore ha confermato di essere maggiorenne (cookie) */
+  etaConfermata?: boolean;
   mese?: string;           // AAAA-MM, solo per le uscite
   ordine?: 'recenti' | 'uscita' | 'prezzo' | 'titolo';
   pagina?: number;
@@ -199,9 +201,9 @@ export async function cercaProdotti(f: Filtri): Promise<Risultato> {
   const inMagazzino = new Set(magazzino.map((p) => p.codice));
   const ms = await mappaSerie();
   let tutti = [...magazzino, ...prossime.filter((p) => !inMagazzino.has(p.codice))].map((p) => conSerie(p, ms));
-  // titoli per adulti: fuori dagli elenchi finché il visitatore non li attiva
-  const nascostiAdulti = f.adulti ? 0 : tutti.filter((p) => p.adulti).length;
-  if (!f.adulti) tutti = tutti.filter((p) => !p.adulti);
+  // titoli per adulti: normalmente esclusi; con il filtro 18+ (ed età confermata) restano SOLO loro
+  const nascostiAdulti = tutti.filter((p) => p.adulti).length;
+  tutti = f.soloAdulti && f.etaConfermata ? tutti.filter((p) => p.adulti) : tutti.filter((p) => !p.adulti);
   // generi presenti (per il menu) prima di filtrare per genere; poi almeno uno dei generi scelti
   const generiPresenti = GENERI.filter((g) => tutti.some((p) => p.generi.includes(g)));
   if (f.generi?.length) tutti = tutti.filter((p) => p.generi.some((g) => f.generi!.includes(g)));
@@ -306,6 +308,7 @@ export function filtriDaIndirizzo(url: URL, disponibili: Categoria[], base: Part
     stato: stato === 'negozio' || stato === 'preordini' ? stato : (base.stato ?? 'tutti'),
     editori: [...new Set(q.getAll('editore').map((e) => e.slice(0, 80)).filter(Boolean))].slice(0, 30),
     generi: [...new Set(q.getAll('genere').filter((g) => (GENERI as readonly string[]).includes(g)))],
+    soloAdulti: q.get('adulti') === '1',
     mese: /^\d{4}-\d{2}$/.test(q.get('mese') ?? '') ? q.get('mese')! : undefined,
     ordine: ordine === 'uscita' || ordine === 'prezzo' || ordine === 'titolo' || ordine === 'recenti' ? ordine : (base.ordine ?? 'recenti'),
     pagina: Math.max(1, Math.min(500, Number(q.get('pagina')) || 1)),

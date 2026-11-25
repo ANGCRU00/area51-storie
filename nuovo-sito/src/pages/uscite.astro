@@ -7,7 +7,7 @@ import { COOKIE_ADULTI, cercaProdotti, filtriDaIndirizzo, type Categoria } from 
 export const prerender = false;
 const disponibili: Categoria[] = ['manga', 'fumetti', 'tcg', 'giochi'];
 const filtri = filtriDaIndirizzo(Astro.url, disponibili, { stato: 'preordini', ordine: 'uscita', perPagina: 40 });
-filtri.adulti = Astro.cookies.get(COOKIE_ADULTI)?.value === '1';
+filtri.etaConfermata = Astro.cookies.get(COOKIE_ADULTI)?.value === '1';
 filtri.stato = 'preordini';
 const risultato = await cercaProdotti(filtri);
 Astro.response.headers.set('cache-control', 'public, max-age=0, s-maxage=60');
