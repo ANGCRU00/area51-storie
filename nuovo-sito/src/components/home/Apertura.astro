@@ -4,14 +4,17 @@
 import StatoNegozio from '../isole/StatoNegozio.tsx';
 import RiquadroInfo from './RiquadroInfo.astro';
 import dati from '../../data/provvisori.json';
+import type { Prodotto } from '../../lib/prodotti';
+interface Props { ultimo?: Prodotto }
+const { ultimo } = Astro.props;
 
 const ev = dati.eventi[0];
 const evento = ev
   ? { titolo: 'Prossimo evento: ' + ev.titolo, sotto: ev.giorno + ' ' + ev.numero + ' ' + ev.mese + ', ore ' + ev.ora }
   : { titolo: 'Prossimo evento', sotto: 'Tornei, serate e avventure in negozio' };
-const arrivo = dati.ultimo
-  ? { titolo: 'Ultimo arrivo: ' + dati.ultimo.titolo, sotto: 'Guarda le novità del catalogo' }
-  : { titolo: 'Ultimo arrivo', sotto: 'Guarda le novità del catalogo' };
+const arrivo = ultimo
+  ? { titolo: 'Appena uscito: ' + ultimo.titolo, sotto: 'Guarda le novità del catalogo', href: '/prodotto/' + encodeURIComponent(ultimo.codice) }
+  : { titolo: 'Novità', sotto: 'Guarda il catalogo', href: '/catalogo' };
 ---
 <section class="apertura">
   <div class="contenitore griglia">
@@ -21,7 +24,7 @@ const arrivo = dati.ultimo
       <ul class="info">
         <li><StatoNegozio client:load /></li>
         <li><RiquadroInfo href="/eventi" icona="calendario" titolo={evento.titolo} sotto={evento.sotto} /></li>
-        <li><RiquadroInfo href="/catalogo" icona="libro" titolo={arrivo.titolo} sotto={arrivo.sotto} /></li>
+        <li><RiquadroInfo href={arrivo.href} icona="libro" titolo={arrivo.titolo} sotto={arrivo.sotto} /></li>
       </ul>
       <div class="pulsanti">
         <a class="pulsante grande" href="/catalogo">Esplora gli scaffali <span aria-hidden="true">→</span></a>

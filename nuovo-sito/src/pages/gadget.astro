@@ -1,0 +1,16 @@
+---
+/* Gadget: articoli del magazzino e prossime uscite da D1 (src/lib/prodotti.ts). Pagina scritta a ogni richiesta. */
+import Base from '../layouts/Base.astro';
+import Elenco from '../components/prodotti/Elenco.astro';
+import { cercaProdotti, filtriDaIndirizzo, type Categoria } from '../lib/prodotti';
+
+export const prerender = false;
+const disponibili: Categoria[] = ['gadget'];
+const filtri = filtriDaIndirizzo(Astro.url, disponibili);
+const risultato = await cercaProdotti(filtri);
+Astro.response.headers.set('cache-control', 'public, max-age=0, s-maxage=60');
+---
+<Base titolo="Gadget · Area 51 Fumetteria Barletta" descrizione="Gadget e idee regalo alla Fumetteria Area 51 di Barletta.">
+  <Elenco percorso="Gadget" bollino="Idee regalo" titolo="Gadget" introduzione="Portachiavi, tazze, peluche e idee regalo."
+    risultato={risultato} filtri={filtri} categorie={disponibili} vuoto="I gadget arriveranno sul sito quando li registreremo in magazzino. Intanto passa in negozio." />
+</Base>

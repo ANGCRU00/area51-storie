@@ -1,17 +1,22 @@
 ---
-/* Home: apertura, nastro, novità, club, eventi. Le parti comuni (sfondo, testata, piede) le mette Base. */
+/* Home: apertura, nastro, novità, club, eventi. Novità e uscite da D1; eventi ancora provvisori (fase 8). */
 import Base from '../layouts/Base.astro';
 import Apertura from '../components/home/Apertura.astro';
 import Nastro from '../components/home/Nastro.astro';
 import Novita from '../components/home/Novita.astro';
 import Club from '../components/home/Club.astro';
 import Eventi from '../components/home/Eventi.astro';
+import { perLaHome } from '../lib/prodotti';
+
+export const prerender = false;
+const { appena, prossime } = await perLaHome();
+Astro.response.headers.set('cache-control', 'public, max-age=0, s-maxage=60');
 ---
 <Base titolo="Area 51 Fumetteria | Manga, giochi, carte e collezionismo a Barletta"
   descrizione="Fumetteria Area 51 a Barletta: manga, fumetti, carte TCG, figure, Warhammer e tornei. Viale G. Falcone e P. Borsellino 35.">
-  <Apertura />
+  <Apertura ultimo={appena[0]} />
   <Nastro />
-  <Novita />
+  <Novita appena={appena} prossime={prossime} />
   <Club />
   <Eventi />
 </Base>

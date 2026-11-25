@@ -1,0 +1,229 @@
+---
+/* Pagina elenco (catalogo, categorie, uscite): intestazione, filtri, griglia di schede, pagine.
+   I filtri sono un normale modulo GET: funzionano anche senza JavaScript e ogni ricerca ha il suo indirizzo da condividere.
+   Lo script in fondo invia il modulo da solo quando si cambia un menu. Filtri a sinistra da 1280 px, sopra la griglia sotto. */
+import Percorso from '../comuni/Percorso.astro';
+import Scheda from './Scheda.astro';
+import AzioniCarrello from './AzioniCarrello.astro';
+import { NOME_CATEGORIA, nomeMese, type Categoria, type Filtri, type Risultato } from '../../lib/prodotti';
+
+interface Props {
+  percorso: string;
+  bollino: string;
+  titolo: string;
+  introduzione: string;
+  risultato: Risultato;
+  filtri: Filtri & { cat: Categoria | '' };
+  categorie: Categoria[];
+  mostraStato?: boolean;
+  mostraMese?: boolean;
+  vuoto?: string;
+}
+const { percorso, bollino, titolo, introduzione, risultato, filtri, categorie, mostraStato = true, mostraMese = false, vuoto } = Astro.props;
+const { prodotti, totale, pagine, pagina, editori, mesi } = risultato;
+
+const qui = Astro.url.pathname;
+function indirizzo(cambia: Record<string, string | number | undefined>) {
+  const q = new URLSearchParams();
+  const valori: Record<string, string | number | undefined> = { cerca: filtri.cerca, cat: filtri.cat, stato: filtri.stato === 'tutti' ? '' : filtri.stato,
+    editore: filtri.editore, mese: filtri.mese, ordine: filtri.ordine === 'recenti' ? '' : filtri.ordine, pagina: undefined, ...cambia };
+  for (const [k, v] of Object.entries(valori)) if (v !== undefined && v !== '' && !(k === 'pagina' && v === 1)) q.set(k, String(v));
+  const s = q.toString();
+  return qui + (s ? '?' + s : '');
+}
+const attivi = [
+  filtri.cerca && { testo: '«' + filtri.cerca + '»', via: indirizzo({ cerca: '' }) },
+  filtri.cat && categorie.length > 1 && { testo: NOME_CATEGORIA[filtri.cat], via: indirizzo({ cat: '' }) },
+  filtri.stato && filtri.stato !== 'tutti' && { testo: filtri.stato === 'negozio' ? 'In negozio' : 'Preordini', via: indirizzo({ stato: '' }) },
+  filtri.editore && { testo: filtri.editore, via: indirizzo({ editore: '' }) },
+  filtri.mese && { testo: nomeMese(filtri.mese), via: indirizzo({ mese: '' }) },
+].filter(Boolean) as { testo: string; via: string }[];
+const numeri = Array.from({ length: pagine }, (_, i) => i + 1).filter((n) => n === 1 || n === pagine || Math.abs(n - pagina) <= 2);
+---
+<div class="contenitore pagina">
+  <Percorso voci={[{ testo: percorso }]} />
+  <header class="testa">
+    <span class="bollino">{bollino}</span>
+    <h1 class="pesante">{titolo}</h1>
+    <p class="introduzione">{introduzione}</p>
+  </header>
+
+  <div class="disposizione">
+    <details class="filtri" id="filtri" open>
+      <summary class="pesante">Filtri{attivi.length > 0 && <span class="quanti">{attivi.length}</span>}</summary>
+      <form method="get" action={qui} class="modulo" id="modulo-filtri">
+        <div class="campo">
+          <label for="f-cerca" class="pesante etichetta">Cerca</label>
+          <div class="cerca-riga">
+            <input id="f-cerca" name="cerca" type="search" maxlength="60" value={filtri.cerca ?? ''} placeholder="Titolo, editore o autore" />
+            <button type="submit" class="tondo" aria-label="Cerca"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-linecap="round" stroke-width="2" /></svg></button>
+          </div>
+        </div>
+        {categorie.length > 1 && (
+          <fieldset class="campo">
+            <legend class="pesante etichetta">Tipo</legend>
+            <div class="chip">
+              <label><input type="radio" name="cat" value="" checked={!filtri.cat} /><span>Tutto</span></label>
+              {categorie.map((c) => <label><input type="radio" name="cat" value={c} checked={filtri.cat === c} /><span>{NOME_CATEGORIA[c]}</span></label>)}
+            </div>
+          </fieldset>
+        )}
+        {mostraStato && (
+          <fieldset class="campo">
+            <legend class="pesante etichetta">Stato</legend>
+            <div class="chip">
+              <label><input type="radio" name="stato" value="" checked={filtri.stato === 'tutti'} /><span>Tutti</span></label>
+              <label><input type="radio" name="stato" value="negozio" checked={filtri.stato === 'negozio'} /><span>In negozio</span></label>
+              <label><input type="radio" name="stato" value="preordini" checked={filtri.stato === 'preordini'} /><span>Preordini</span></label>
+            </div>
+          </fieldset>
+        )}
+        {editori.length > 0 && (
+          <div class="campo">
+            <label for="f-editore" class="pesante etichetta">Editore</label>
+            <select id="f-editore" name="editore">
+              <option value="">Tutti gli editori</option>
+              {editori.map((e) => <option value={e} selected={filtri.editore === e}>{e}</option>)}
+            </select>
+          </div>
+        )}
+        {mostraMese && mesi.length > 0 && (
+          <div class="campo">
+            <label for="f-mese" class="pesante etichetta">Mese di uscita</label>
+            <select id="f-mese" name="mese">
+              <option value="">Tutti i mesi</option>
+              {mesi.map((m) => <option value={m} selected={filtri.mese === m}>{nomeMese(m)}</option>)}
+            </select>
+          </div>
+        )}
+        <div class="campo">
+          <label for="f-ordine" class="pesante etichetta">Ordina per</label>
+          <select id="f-ordine" name="ordine">
+            <option value="" selected={filtri.ordine === 'recenti'}>In evidenza</option>
+            <option value="uscita" selected={filtri.ordine === 'uscita'}>Data di uscita</option>
+            <option value="prezzo" selected={filtri.ordine === 'prezzo'}>Prezzo più basso</option>
+            <option value="titolo" selected={filtri.ordine === 'titolo'}>Titolo (A–Z)</option>
+          </select>
+        </div>
+        <div class="bottoni">
+          <button type="submit" class="pulsante">Mostra risultati</button>
+          <a href={qui} class="azzera">Azzera</a>
+        </div>
+      </form>
+    </details>
+
+    <section class="risultati" aria-live="polite">
+      <div class="sopra">
+        <p class="conta"><b class="pesante">{totale}</b> {totale === 1 ? 'prodotto' : 'prodotti'}{pagine > 1 && ` · pagina ${pagina} di ${pagine}`}</p>
+        {attivi.length > 0 && (
+          <ul class="attivi">
+            {attivi.map((a) => <li><a href={a.via} aria-label={'Togli il filtro ' + a.testo}>{a.testo} <span aria-hidden="true">×</span></a></li>)}
+          </ul>
+        )}
+      </div>
+      {prodotti.length > 0
+        ? <div class="griglia">{prodotti.map((p, i) => <Scheda p={p} i={i} />)}</div>
+        : (
+          <div class="vuoto">
+            <svg class="alieno" aria-hidden="true"><use href="#alieno" /></svg>
+            <div>
+              <p class="pesante">Nessun prodotto qui, per ora.</p>
+              <p>{vuoto ?? (attivi.length ? 'Prova a togliere qualche filtro.' : 'Il catalogo si riempie man mano che registriamo gli arrivi in negozio.')} Cerchi qualcosa? <a href="/negozio#chiedicelo">Chiedicelo</a>.</p>
+            </div>
+          </div>
+        )}
+      {pagine > 1 && (
+        <nav class="pagine" aria-label="Pagine">
+          {pagina > 1 && <a href={indirizzo({ pagina: pagina - 1 })} rel="prev">← Indietro</a>}
+          {numeri.map((n, i) => (
+            <>
+              {i > 0 && n - numeri[i - 1] > 1 && <span class="salto">…</span>}
+              {n === pagina ? <span class="pesante attuale" aria-current="page">{n}</span> : <a href={indirizzo({ pagina: n })}>{n}</a>}
+            </>
+          ))}
+          {pagina < pagine && <a href={indirizzo({ pagina: pagina + 1 })} rel="next">Avanti →</a>}
+        </nav>
+      )}
+    </section>
+  </div>
+</div>
+<AzioniCarrello />
+
+<script>
+  /* Cambiando un menu o una scelta il modulo si invia da solo; sotto 1280 px il pannello dei filtri parte chiuso. */
+  const modulo = document.getElementById('modulo-filtri') as HTMLFormElement | null;
+  modulo?.addEventListener('change', (e) => {
+    const t = e.target as HTMLElement;
+    if (t.matches('select, input[type="radio"]')) modulo.requestSubmit();
+  });
+  // i campi vuoti non finiscono nell'indirizzo
+  modulo?.addEventListener('formdata', (e) => {
+    for (const [k, v] of [...e.formData.entries()]) if (v === '') e.formData.delete(k);
+  });
+  const pannello = document.getElementById('filtri') as HTMLDetailsElement | null;
+  if (pannello && window.matchMedia('(max-width: 1279px)').matches && !location.search) pannello.open = false;
+</script>
+
+<style>
+  .pagina { padding-block: 2rem 4rem; }
+  @media (min-width: 1024px) { .pagina { padding-top: 3rem; } }
+  .testa { margin-bottom: 1.75rem; }
+  .testa .bollino { margin-bottom: .75rem; }
+  h1 { font-size: 2rem; line-height: 1.1; color: #fff; text-wrap: balance; }
+  @media (min-width: 640px) { h1 { font-size: 3rem; } }
+  .introduzione { margin-top: .75rem; max-width: 48rem; font-weight: 600; color: var(--testo-tenue); line-height: 1.6; }
+
+  .disposizione { display: grid; grid-template-columns: minmax(0, 1fr); gap: 1.5rem; align-items: start; }
+  @media (min-width: 1280px) { .disposizione { grid-template-columns: 300px minmax(0, 1fr); gap: 2rem; } }
+
+  .filtri { border: 1px solid var(--linea-tenue); border-radius: var(--raggio); background: rgb(13 7 36 / .95); }
+  @media (min-width: 1280px) { .filtri { position: sticky; top: calc(var(--altezza-testata) + 1rem); } }
+  .filtri summary { list-style: none; cursor: pointer; padding: 1rem 1.25rem; color: var(--lime); text-transform: uppercase; letter-spacing: .1em; font-size: .875rem;
+    display: flex; align-items: center; gap: .5rem; }
+  .filtri summary::-webkit-details-marker { display: none; }
+  .filtri summary::after { content: '▾'; margin-left: auto; transition: transform var(--transizione); }
+  .filtri[open] summary::after { transform: rotate(180deg); }
+  .quanti { background: var(--lime); color: #000; border-radius: var(--raggio-pillola); min-width: 1.4rem; height: 1.4rem; display: inline-flex; align-items: center; justify-content: center; font-size: 11px; letter-spacing: 0; }
+  .modulo { display: grid; gap: 1.25rem; padding: 0 1.25rem 1.25rem; }
+  .campo { border: 0; padding: 0; margin: 0; min-width: 0; }
+  .etichetta { display: block; font-size: .75rem; text-transform: uppercase; letter-spacing: .1em; color: #fff; margin-bottom: .5rem; padding: 0; }
+  .cerca-riga { display: flex; gap: .5rem; }
+  input[type='search'], select { width: 100%; min-width: 0; background: var(--scheda); border: 1px solid var(--linea); border-radius: var(--raggio-pillola); padding: .7rem 1.1rem; font-size: 1rem; color: #fff; }
+  input[type='search']:focus, select:focus { outline: none; border-color: var(--lime); box-shadow: 0 0 0 1px var(--lime); }
+  select { appearance: none; background-image: linear-gradient(45deg, transparent 50%, var(--lime) 50%), linear-gradient(135deg, var(--lime) 50%, transparent 50%);
+    background-position: calc(100% - 1.3rem) 50%, calc(100% - .95rem) 50%; background-size: .35rem .35rem; background-repeat: no-repeat; padding-right: 2.4rem; }
+  select option { background: var(--scheda); }
+  .cerca-riga .tondo { flex-shrink: 0; }
+  .chip { display: flex; flex-wrap: wrap; gap: .5rem; }
+  .chip label { cursor: pointer; }
+  .chip input { position: absolute; opacity: 0; pointer-events: none; }
+  .chip span { display: inline-block; font-size: .8rem; font-weight: 700; padding: .45rem .9rem; border-radius: var(--raggio-pillola); border: 1px solid var(--linea); background: var(--scheda);
+    transition: border-color var(--transizione), color var(--transizione); }
+  .chip label:hover span { border-color: var(--lime); color: var(--lime); }
+  .chip input:checked + span { background: var(--lime); border-color: var(--lime); color: #000; }
+  .chip input:focus-visible + span { outline: 2px solid var(--lime); outline-offset: 2px; }
+  .bottoni { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem; }
+  .azzera { font-size: .875rem; font-weight: 700; color: var(--testo-tenue); text-decoration: underline; }
+  .azzera:hover { color: var(--lime); }
+
+  .sopra { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .75rem; margin-bottom: 1rem; }
+  .conta { font-size: .875rem; font-weight: 600; color: var(--testo-tenue); }
+  .conta b { color: #fff; }
+  .attivi { display: flex; flex-wrap: wrap; gap: .5rem; }
+  .attivi a { display: inline-flex; gap: .4rem; font-size: .75rem; font-weight: 700; padding: .35rem .75rem; border-radius: var(--raggio-pillola); border: 1px solid rgb(185 230 46 / .5); color: var(--lime); }
+  .attivi a:hover { background: var(--lime); color: #000; }
+  .griglia { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .75rem; }
+  @media (min-width: 640px) { .griglia { gap: 1.25rem; } }
+  @media (min-width: 1024px) { .griglia { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+  .vuoto { display: flex; flex-wrap: wrap; align-items: center; gap: 1.25rem; border: 2px dashed rgb(185 230 46 / .5); border-radius: var(--raggio); background: rgb(14 9 38 / .9); padding: 1.5rem; }
+  .vuoto > div { flex: 1; min-width: 14rem; }
+  .vuoto .pesante { color: #fff; font-size: 1.125rem; margin-bottom: .25rem; }
+  .vuoto p { color: var(--testo-tenue); font-weight: 600; }
+  .vuoto a { color: var(--lime); text-decoration: underline; }
+  .alieno { width: 4rem; height: 4rem; }
+  .pagine { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: .5rem; margin-top: 2rem; font-size: .875rem; font-weight: 700; }
+  .pagine a, .attuale { min-width: 2.5rem; height: 2.5rem; padding: 0 .8rem; display: inline-flex; align-items: center; justify-content: center; border-radius: var(--raggio-pillola); border: 1px solid var(--linea); }
+  .pagine a:hover { border-color: var(--lime); color: var(--lime); }
+  .attuale { background: var(--lime); color: #000; border-color: var(--lime); }
+  .salto { color: var(--testo-tenue); }
+</style>

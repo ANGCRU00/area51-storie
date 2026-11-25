@@ -3,7 +3,7 @@
 Astro 7 (pagine) + React 19 (isole) pubblicato sui **Workers di Cloudflare**, con database **D1** e file su **R2**.
 Niente Tailwind: ogni componente ha il suo CSS. Analisi tecnica completa: vedi CLAUDE.md, sezione "Nuovo sito".
 
-## Stato: fase 3 (database)
+## Stato: fase 4 (catalogo dal database)
 
 - **Fase 1**: layout comune (`src/layouts/Base.astro`: simboli, sfondo, testata con navicella, ricerca, menu da telefono, piede),
   contatori di carrello e preferiti, `/api/stato` (controllo di D1 e R2).
@@ -13,8 +13,11 @@ Niente Tailwind: ogni componente ha il suo CSS. Analisi tecnica completa: vedi C
 - **Fase 3**: tabelle D1 descritte con **Drizzle** in `src/db/schema.ts` (`uscite`, `articoli`, `richieste`); migrazioni generate
   in `migrazioni/` con `npm run db:genera`. Trasferiti da Supabase **solo i dati arrivati dall'API Starshop**: 537 uscite e 1 articolo,
   con 397 copertine in R2 (chiave `copertine/<file>`, servite da `/file/copertine/<file>`).
-- **Dati provvisori**: novità ed eventi della home vengono da `../sito/dati/*.js` tramite `scripts/dati-provvisori.mjs`
-  (lanciato da `npm run dev` e `npm run build`). Dalla fase 3/4 arriveranno da D1 e lo script si toglie.
+- **Fase 4**: catalogo da D1 (decisione di Angelo: **solo magazzino + uscite**, niente cataloghi editori): `/catalogo` (manga e fumetti),
+  `/tcg`, `/giochi`, `/figure`, `/warhammer`, `/gadget`, `/uscite`, scheda `/prodotto/<EAN o codice Starshop>`. Regole comuni in
+  `src/lib/prodotti.ts`, componenti in `src/components/prodotti/` (`Elenco` con filtri GET, `Scheda`, `AzioniCarrello`). Home: "Appena usciti"
+  e "Prossime uscite" da D1.
+- **Dati provvisori**: solo gli eventi della home, da `../sito/dati/eventi.js` tramite `scripts/dati-provvisori.mjs` (fino alla fase 8).
 
 ## Struttura
 

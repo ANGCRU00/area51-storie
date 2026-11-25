@@ -35,8 +35,8 @@
      si inclina seguendo la curva e, per gli asteroidi, ruota su se stesso (data-giro gradi/s).
      Uscito da un lato rientra dall'altro. Con "riduci movimento" resta fermo in data-x. */
   type Corpo = { el: HTMLElement; vel: number; verso: number; x0: number; amp: number; onde: number; fase: number; giro: number; inclina: number; x: number; r: number; w: number; h: number; pronto: boolean };
-  const elementi = Array.from(document.querySelectorAll<HTMLElement>('.corpo'));
-  const fascia = document.querySelector<SVGSVGElement>('.fascia');
+  const elementi = Array.from(document.querySelectorAll<HTMLElement>('.sfondo .corpo'));
+  const fascia = document.querySelector<SVGSVGElement>('.sfondo .fascia');
   if (elementi.length) {
     const ridotto = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     let W = 0;

@@ -1,0 +1,19 @@
+---
+/* Da mettere una volta nelle pagine con schede: gestisce tutti i pulsanti "Aggiungi"/"Prenota" (attributo data-aggiungi). */
+---
+<script>
+  import { carrello } from '../../lib/negozio';
+  document.addEventListener('click', (e) => {
+    const b = (e.target as Element).closest<HTMLButtonElement>('[data-aggiungi]');
+    if (!b) return;
+    const d = b.dataset;
+    carrello.aggiungi({
+      k: d.aggiungi ?? '', t: d.titolo ?? '', p: Number(d.prezzo) || 0, l: '/prodotto/' + encodeURIComponent(d.aggiungi ?? ''),
+      i: d.copertina ?? '', e: d.editore ?? '', d: d.preordine ? 'Preordine' : '',
+    });
+    const prima = b.textContent;
+    b.textContent = 'Aggiunto ✓';
+    b.disabled = true;
+    setTimeout(() => { b.textContent = prima; b.disabled = false; }, 1800);
+  });
+</script>

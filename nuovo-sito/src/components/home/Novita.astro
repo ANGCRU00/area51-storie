@@ -1,13 +1,17 @@
 ---
-/* Sezione "Nuovi arrivi / Prossime uscite": titolo fisso, pulsanti e schede in un'isola React.
-   I dati per ora vengono da src/data/provvisori.json; dalla fase 4 dal database D1. */
-import NuoviArrivi from '../isole/NuoviArrivi.tsx';
-import dati from '../../data/provvisori.json';
+/* Sezione "Appena usciti / Prossime uscite": titolo fisso, pulsanti e schede in un'isola React. Dati da D1 (src/lib/prodotti.ts). */
+import NuoviArrivi, { type Scheda } from '../isole/NuoviArrivi.tsx';
+import { quando, type Prodotto } from '../../lib/prodotti';
+interface Props { appena: Prodotto[]; prossime: Prodotto[] }
+const { appena, prossime } = Astro.props;
+const scheda = (p: Prodotto): Scheda => ({ codice: p.codice, titolo: p.titolo, editore: p.editore, prezzo: p.prezzo, quando: quando(p) || 'In negozio',
+  pre: p.disponibilita === 'preordine', copertina: p.copertina });
 ---
 <section id="catalogo" class="contenitore novita">
   <p class="pesante occhiello">Nuovi mondi · in negozio e in arrivo</p>
   <h2 class="pesante titolo-sezione">La tua prossima ossessione arriva qui.</h2>
-  <NuoviArrivi client:visible nuovi={dati.nuovi} prossime={dati.prossime} />
+  <NuoviArrivi client:visible nuovi={appena.map(scheda)} prossime={prossime.map(scheda)} />
+  <a class="pesante tutte" href="/uscite">Tutte le prossime uscite →</a>
 </section>
 
 <style>
@@ -15,4 +19,6 @@ import dati from '../../data/provvisori.json';
   @media (min-width: 1024px) { .novita { padding-block: 4rem 3.5rem; } }
   .titolo-sezione { margin-bottom: 1.5rem; }
   @media (min-width: 1024px) { .titolo-sezione { margin-bottom: 2rem; } }
+  .tutte { display: inline-block; margin-top: 1.5rem; padding-block: .5rem; font-size: .875rem; color: var(--lime); }
+  .tutte:hover { text-decoration: underline; }
 </style>

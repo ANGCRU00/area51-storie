@@ -1,0 +1,118 @@
+---
+/* Scheda prodotto: /prodotto/<EAN o codice Starshop>. Cerca prima nel magazzino visibile, poi tra le uscite visibili (D1).
+   Solo dati di fatto (titolo, autore, editore, prezzo di copertina, uscita, pagine): niente descrizioni Starshop né prezzi B2B. */
+import Base from '../../layouts/Base.astro';
+import Percorso from '../../components/comuni/Percorso.astro';
+import Scheda from '../../components/prodotti/Scheda.astro';
+import AzioniCarrello from '../../components/prodotti/AzioniCarrello.astro';
+import { NOME_CATEGORIA, TESTO_DISPONIBILITA, dataLunga, euro, trovaProdotto } from '../../lib/prodotti';
+
+export const prerender = false;
+const trovato = await trovaProdotto(Astro.params.codice ?? '');
+if (!trovato) return Astro.rewrite('/404');
+const { prodotto: p, altri } = trovato;
+Astro.response.headers.set('cache-control', 'public, max-age=0, s-maxage=60');
+
+const reparto = p.categoria === 'tcg' ? { testo: 'TCG', href: '/tcg' } : p.categoria === 'giochi' ? { testo: 'Giochi da tavolo', href: '/giochi' }
+  : p.categoria === 'figure' ? { testo: 'Figure & Funko', href: '/figure' } : p.categoria === 'gadget' ? { testo: 'Gadget', href: '/gadget' }
+  : { testo: 'Manga & Fumetti', href: '/catalogo' };
+const prenota = p.disponibilita === 'preordine';
+const acquistabile = prenota || p.disponibilita === 'in_negozio' || p.disponibilita === 'appena_arrivato';
+const dettagli = [
+  ['Editore', p.editore], ['Autore', p.autore], ['Tipo', p.categoria ? NOME_CATEGORIA[p.categoria] : null],
+  ['Data di uscita', p.dataUscita ? dataLunga(p.dataUscita) : null], ['Pagine', p.pagine ? String(p.pagine) : null],
+  ['Lingua', p.lingua ? p.lingua.charAt(0) + p.lingua.slice(1).toLowerCase() : null], ['EAN', p.ean],
+].filter((d) => d[1]) as [string, string][];
+---
+<Base titolo={p.titolo + ' · Area 51 Fumetteria'} descrizione={p.titolo + (p.editore ? ' (' + p.editore + ')' : '') + ': ' + TESTO_DISPONIBILITA[p.disponibilita].toLowerCase() + ' alla Fumetteria Area 51 di Barletta.'}>
+  <div class="contenitore pagina">
+    <Percorso voci={[{ testo: reparto.testo, href: reparto.href }, { testo: p.titolo }]} />
+
+    <section class="prodotto">
+      <div class="copertina">
+        {p.copertina
+          ? <img src={p.copertina} alt={'Copertina di ' + p.titolo} width="318" height="484" />
+          : <div class="senza"><svg aria-hidden="true"><use href="#alieno" /></svg><span>Copertina non ancora disponibile</span></div>}
+      </div>
+
+      <div class="dati">
+        <div class="etichette">
+          <span class:list={['pesante etichetta', { viola: prenota, grigia: p.disponibilita === 'esaurito' || p.disponibilita === 'uscito' }]}>{TESTO_DISPONIBILITA[p.disponibilita]}</span>
+          {p.categoria && <span class="etichetta tenue">{NOME_CATEGORIA[p.categoria]}</span>}
+        </div>
+        <h1 class="pesante">{p.titolo}</h1>
+        {p.editore && <p class="editore">{p.editore}</p>}
+
+        <dl class="tabella">
+          {dettagli.map(([k, v]) => <div><dt>{k}</dt><dd>{v}</dd></div>)}
+        </dl>
+
+        <div class="acquisto">
+          <span class="pesante prezzo">{euro(p.prezzo)}</span>
+          {prenota && <p class="nota">{p.dataLimite ? 'Prenota entro il ' + dataLunga(p.dataLimite) + '.' : 'Ultimo giorno per prenotare: da confermare.'} La prenotazione vale quando la confermiamo per email o telefono.</p>}
+          {p.disponibilita === 'uscito' && <p class="nota">È già uscito: chiedi in negozio se è disponibile, o scrivici con il modulo Chiedicelo.</p>}
+          {p.disponibilita === 'esaurito' && <p class="nota">Al momento è esaurito in negozio: possiamo provare a ordinarlo per te.</p>}
+          <div class="bottoni">
+            {acquistabile
+              ? <button type="button" class:list={['pulsante', { 'pulsante-viola': prenota }]} data-aggiungi={p.codice} data-titolo={p.titolo} data-prezzo={p.prezzo ?? 0}
+                  data-editore={p.editore ?? ''} data-copertina={p.copertina ?? ''} data-preordine={prenota ? '1' : ''}>{prenota ? 'Prenota' : 'Aggiungi al carrello'}</button>
+              : <a class="pulsante" href="/negozio#chiedicelo">Chiedilo al negozio</a>}
+          </div>
+        </div>
+
+        <ul class="ritiro">
+          <li><b class="pesante">Ritiro in negozio</b><span>Viale G. Falcone e P. Borsellino, 35, Barletta</span></li>
+          <li><b class="pesante">Paghi al ritiro</b><span>Anche con Carta della Cultura e Carta del Merito</span></li>
+          <li><b class="pesante">Nessuna spedizione</b><span>Lo ritiri tu negli orari di apertura</span></li>
+        </ul>
+      </div>
+    </section>
+
+    {altri.length > 0 && (
+      <section class="altri">
+        <h2 class="pesante titolo-sezione piccolo">Altri volumi della serie</h2>
+        <div class="griglia">{altri.map((a) => <Scheda p={a} />)}</div>
+      </section>
+    )}
+  </div>
+  <AzioniCarrello />
+</Base>
+
+<style>
+  .pagina { padding-block: 2rem 4rem; }
+  .prodotto { display: grid; grid-template-columns: minmax(0, 1fr); gap: 2rem; align-items: start; }
+  @media (min-width: 768px) { .prodotto { grid-template-columns: 300px minmax(0, 1fr); gap: 3rem; } }
+  .copertina { width: 100%; max-width: 300px; margin-inline: auto; aspect-ratio: 318 / 484; border-radius: var(--raggio); overflow: hidden; border: 2px solid rgb(185 230 46 / .6);
+    box-shadow: var(--ombra-brutal); background: var(--scheda); }
+  .copertina img { width: 100%; height: 100%; object-fit: cover; }
+  .senza { height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1rem; padding: 1.5rem; text-align: center; color: var(--testo-tenue); font-weight: 700; }
+  .senza svg { width: 5rem; height: 5rem; }
+  .dati { min-width: 0; display: grid; gap: 1.25rem; align-content: start; }
+  .etichette { display: flex; flex-wrap: wrap; gap: .5rem; }
+  .etichetta { font-size: .75rem; padding: .3rem .75rem; border-radius: .375rem; background: var(--lime); color: #000; }
+  .etichetta.viola { background: var(--viola); color: #fff; }
+  .etichetta.grigia { background: #3A2F5E; color: #fff; }
+  .etichetta.tenue { background: none; border: 1px solid var(--linea); color: var(--testo-tenue); font-weight: 700; }
+  h1 { font-size: 1.75rem; line-height: 1.15; color: #fff; overflow-wrap: anywhere; text-wrap: balance; }
+  @media (min-width: 640px) { h1 { font-size: 2.5rem; } }
+  .editore { color: var(--lime); font-weight: 700; text-transform: uppercase; letter-spacing: .05em; font-size: .875rem; margin-top: -.5rem; }
+  .tabella { display: grid; grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr)); gap: 1px; border-radius: var(--raggio); overflow: hidden; border: 1px solid var(--linea-tenue); background: var(--linea-tenue); margin: 0; }
+  .tabella div { background: rgb(14 9 38 / .95); padding: .75rem 1rem; min-width: 0; }
+  .tabella dt { font-size: 11px; font-weight: 700; color: var(--testo-tenue); text-transform: uppercase; letter-spacing: .05em; }
+  .tabella dd { margin: .2rem 0 0; color: #fff; font-weight: 700; overflow-wrap: anywhere; }
+  .acquisto { display: grid; gap: .75rem; padding: 1.25rem; border-radius: var(--raggio); border: 2px solid rgb(185 230 46 / .6); background: rgb(13 7 36 / .95); }
+  .prezzo { font-size: 2rem; color: var(--lime); }
+  .nota { font-size: .875rem; font-weight: 600; color: var(--testo-tenue); line-height: 1.5; }
+  .bottoni { display: flex; flex-wrap: wrap; gap: .75rem; }
+  .pulsante-viola { background: var(--viola); color: #fff; box-shadow: var(--ombra-brutal-lime); }
+  .pulsante-viola:hover { background: var(--viola-acceso); }
+  .ritiro { display: grid; grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr)); gap: .75rem; }
+  .ritiro li { display: grid; gap: .2rem; padding: .875rem 1rem; border-radius: .75rem; border: 1px solid var(--linea-tenue); background: rgb(14 9 38 / .9); font-size: .8rem; color: var(--testo-tenue); font-weight: 600; }
+  .ritiro b { color: #fff; font-size: .9rem; }
+  .altri { margin-top: 3.5rem; }
+  .piccolo { font-size: 1.5rem; margin-bottom: 1.25rem; }
+  @media (min-width: 640px) { .piccolo { font-size: 2rem; } }
+  .griglia { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .75rem; }
+  @media (min-width: 640px) { .griglia { gap: 1.25rem; } }
+  @media (min-width: 1024px) { .griglia { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+</style>
