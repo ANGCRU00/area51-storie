@@ -33,6 +33,18 @@ Si parla in italiano. Tutti i testi visibili sono in italiano.
 - Orari: non ancora forniti.
 - Sito attuale (compilato, senza sorgente): https://app-fumetteria-area-51-78465e.gitlab.io
 
+## Nuovo sito: stack deciso (25/11/2026, decisione di Angelo)
+
+- **Tutto su Cloudflare, niente Supabase e niente VPS** nel nuovo sito. Analisi completa (versione 2): https://claude.ai/artifact/8kKuoNuSjPjStTtrpz1JYm
+- Front end: **Astro 7 + isole React 19** (scelto React invece di Solid: ecosistema e stabilita'), Tailwind, TypeScript; adattatore `@astrojs/cloudflare` (pagine e interfacce `/api` sui Workers nello stesso progetto). Demo di confronto: `sito-astro` (Solid) e `sito-astro-react` (React).
+- Back end: **D1** (database, tabelle con Drizzle), **Better Auth** (login clienti e gestore, ruoli, salvato in D1), **R2** (copertine e foto), **Worker `starshop` separato** con Cron Triggers e credenziali nei segreti (`STARSHOP_USER`, `STARSHOP_PASSWORD`), email con servizio esterno (da scegliere).
+- Permessi: il browser non parla mai con D1; ogni interfaccia passa da un controllo unico (`soloCliente`, `soloGestore`), chiusa per impostazione, con test automatici per ogni interfaccia.
+- Pagine dai dati (catalogo, uscite, schede) scritte sul momento da D1 con cache: nessuna ricostruzione quando il gestore cambia qualcosa.
+- Supabase resta acceso (anche piano gratuito) finche' il nuovo sito non e' online: il sito attuale lo usa. Poi trasferimento dati con script, copertine su R2, archiviazione.
+- Costi previsti: 0 EUR in sviluppo; dopo circa 5 $/mese (Workers a pagamento) piu' il dominio. Dominio `.it` da registrare presso un registrar (Cloudflare probabilmente non vende i .it: da verificare), intestato al negozio, collegato a Cloudflare.
+- Piano: 1 base progetto, 2 pagine fisse e home, 3 database e trasferimento, 4 catalogo e uscite, 5 login e account, 6 Worker Starshop, 7 area gestore React, 8 club/tornei/automazioni, 9 pubblicazione.
+- Da decidere: dominio, servizio email, tipo di accesso clienti, destino delle tabelle Supabase non nostre (prodotti, documenti, opere...: circa 13.700 prodotti).
+
 ## Sito: decisioni prese
 
 - Direzione scelta: **Proposta 1 · Notte stellata** (esiste anche una Proposta 2 chiara, accantonata per ora).
