@@ -1,0 +1,261 @@
+<script is:inline src="dati/catalogo.js"></script>
+<script is:inline src="dati/eventi.js"></script>
+<script is:inline src="js/area51-db.js"></script>
+<script is:inline src="js/eventi-db.js"></script>
+<script is:inline src="js/prenota.js"></script>
+<script is:inline>
+(function () {
+  function euroIt(n) { return Number(n).toLocaleString('it-IT', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }); }
+  function disegnaLivelli(box, l) {
+    box.textContent = '';
+    if (!l.length) {
+      /* Nessun livello nel database: restano i nomi scelti dal negozio, con soglie e vantaggi da definire */
+      ['Avvistamento', 'Rapito dagli alieni', 'Amico degli Alieni'].forEach(function (nome, i) {
+        var li = document.createElement('li'); li.className = 'flex items-start gap-3 rounded-xl border border-white/10 bg-[#120a2e] px-3 py-2 sm:px-4 sm:py-3';
+        var n = document.createElement('span'); n.className = 'shrink-0 w-7 h-7 rounded-full bg-brand-lime text-black font-heavy text-xs hidden sm:flex items-center justify-center'; n.textContent = String(i + 1);
+        var d = document.createElement('span'); d.className = 'min-w-0';
+        var t1 = document.createElement('b'); t1.className = 'block font-heavy text-white'; t1.textContent = nome;
+        var t2 = document.createElement('span'); t2.className = 'block text-sm font-semibold text-brand-muted'; t2.textContent = '[SOGLIA] · [VANTAGGIO]';
+        d.appendChild(t1); d.appendChild(t2); li.appendChild(n); li.appendChild(d); box.appendChild(li);
+      });
+      return;
+    }
+    l.forEach(function (x, i) {
+      var li = document.createElement('li'); li.className = 'flex items-start gap-3 rounded-xl border border-white/10 bg-[#120a2e] px-3 py-2 sm:px-4 sm:py-3';
+      var n = document.createElement('span'); n.className = 'shrink-0 w-7 h-7 rounded-full bg-brand-lime text-black font-heavy text-xs hidden sm:flex items-center justify-center'; n.textContent = String(i + 1);
+      var d = document.createElement('span'); d.className = 'min-w-0';
+      var t1 = document.createElement('b'); t1.className = 'block font-heavy text-white'; t1.textContent = x.nome;
+      var t2 = document.createElement('span'); t2.className = 'block text-xs font-bold text-brand-lime uppercase tracking-wider'; t2.textContent = Number(x.soglia) > 0 ? 'da ' + euroIt(x.soglia) + ' spesi' : 'dall\'iscrizione';
+      var t3 = document.createElement('span'); t3.className = 'block text-sm font-semibold text-brand-muted mt-0.5'; t3.textContent = x.vantaggio;
+      d.appendChild(t1); d.appendChild(t2); d.appendChild(t3); li.appendChild(n); li.appendChild(d); box.appendChild(li);
+    });
+  }
+  var box = document.getElementById('club-livelli'); if (box) A51DB.livelli().then(function (l) { disegnaLivelli(box, l); });
+})();
+</script>
+<script is:inline src="dati/trame.js"></script>
+<script is:inline>
+/* Home: le tre informazioni in alto (aperto ora, prossimo evento, ultimo arrivo) e il modale del prodotto.
+   Parte a pagina caricata: il modale sta in fondo alla pagina, dopo gli script. */
+(function () {
+  function avvia() {
+  var MESI = ['gennaio', 'febbraio', 'marzo', 'aprile', 'maggio', 'giugno', 'luglio', 'agosto', 'settembre', 'ottobre', 'novembre', 'dicembre'];
+  var GIORNI = ['domenica', 'lunedì', 'martedì', 'mercoledì', 'giovedì', 'venerdì', 'sabato'];
+  var EDITORI = { star: 'Star Comics', jpop: 'J-POP', panini: 'Panini Comics' };
+  var EDIZIONI = { standard: 'Standard', variant: 'Variant', deluxe: 'Deluxe', box: 'Cofanetto' };
+  var D = window.CATALOGO_DATI || [], E = window.EVENTI_DATI || [];
+  function $(id) { return document.getElementById(id); }
+  function el(tag, cls, testo) { var e = document.createElement(tag); if (cls) e.className = cls; if (testo != null) e.textContent = testo; return e; }
+  function euro(x) { return x.toFixed(2).replace('.', ',') + ' €'; }
+  function quando(r) { return r[8] ? new Date(r[8] + 'T00:00:00').getTime() : 0; }
+  function dataTesto(r) { var q = quando(r); if (!q) return ''; var d = new Date(q); return (r[9] ? d.getDate() + ' ' : '') + MESI[d.getMonth()] + ' ' + d.getFullYear(); }
+
+  /* ---------- Orari (gli stessi della pagina del negozio) ---------- */
+  var MS = [['09:30', '13:00'], ['17:00', '20:30']];
+  var ORARI = [null, [['17:00', '20:30']], MS, MS, MS, MS, MS];
+  function minuti(h) { var p = h.split(':'); return Number(p[0]) * 60 + Number(p[1]); }
+  function breve(h) { var p = h.split(':'); return String(Number(p[0])) + (p[1] === '00' ? '' : ':' + p[1]); }
+  function fasce(g) { return ORARI[g] ? ORARI[g].map(function (f) { return breve(f[0]) + '–' + breve(f[1]); }).join(' e ') : 'chiuso'; }
+  function stato() {
+    var d = new Date(), g = d.getDay(), m = d.getHours() * 60 + d.getMinutes(), oggi = ORARI[g] || [], i;
+    for (i = 0; i < oggi.length; i++) if (m >= minuti(oggi[i][0]) && m < minuti(oggi[i][1])) return { aperto: true, testo: 'Aperto ora, chiude alle ' + breve(oggi[i][1]) };
+    for (i = 0; i < oggi.length; i++) if (m < minuti(oggi[i][0])) return { aperto: false, testo: 'Chiuso, riapre oggi alle ' + breve(oggi[i][0]) };
+    for (var k = 1; k <= 7; k++) { var gg = (g + k) % 7; if (ORARI[gg]) return { aperto: false, testo: 'Chiuso, riapre ' + (k === 1 ? 'domani' : GIORNI[gg]) + ' alle ' + breve(ORARI[gg][0][0]) }; }
+    return { aperto: false, testo: 'Chiuso' };
+  }
+  function riga(id, titolo, sotto, puntoColore) {
+    var a = $(id); if (!a) return;
+    var b = a.querySelector('b'), s = a.querySelector('span span:last-child');
+    b.textContent = ''; if (puntoColore) { var p = el('span', 'inline-block w-2 h-2 rounded-full mr-2 align-middle ' + puntoColore); p.setAttribute('aria-hidden', 'true'); b.appendChild(p); }
+    b.appendChild(document.createTextNode(titolo)); s.textContent = sotto;
+  }
+  function orari() { var s = stato(), g = new Date().getDay(); riga('hi-orari', s.testo, GIORNI[g].charAt(0).toUpperCase() + GIORNI[g].slice(1) + ' ' + fasce(g), s.aperto ? 'bg-brand-lime' : 'bg-[#FB923C]'); }
+  orari(); setInterval(orari, 60000);
+
+  /* ---------- Prossimo evento ---------- */
+  var NM = { Gen: 0, Feb: 1, Mar: 2, Apr: 3, Mag: 4, Giu: 5, Lug: 6, Ago: 7, Set: 8, Ott: 9, Nov: 10, Dic: 11 };
+  if (E.length) {
+    var oggi0 = new Date(); oggi0.setHours(0, 0, 0, 0);
+    var ev = E.map(function (r) { return { r: r, d: A51Eventi.quando(r) }; }).sort(function (a, b) { return a.d - b.d || a.r[7].localeCompare(b.r[7]); });
+    var pross = ev.filter(function (x) { return x.d >= oggi0.getTime(); }), e = (pross[0] || ev[0]).r;
+    riga('hi-evento', e[3], e[4] + ' ' + e[5] + ' ' + e[6] + ', ore ' + e[7] + ' · ' + (e[8] ? 'quota ' + e[8] + ' €' : 'gratis'));
+  }
+
+  /* ---------- Modale del prodotto ---------- */
+  var M = $('modale-prodotto'); if (!M) return;
+  var chiudi = $('mp-chiudi'), ultimo = null, scroll = '', corrente = null, tempo = 0;
+  function trova(ean) { for (var i = 0; i < D.length; i++) if (D[i][0] === ean) return D[i]; return null; }
+  function apriProdotto(ean) {
+    var r = trova(ean); if (!r) return false;
+    corrente = r;
+    var q = quando(r), ora = Date.now(), pre = q > ora, nov = !pre && q > 0 && ora - q <= 60 * 864e5;
+    $('mp-editore').textContent = (EDITORI[r[4]] || r[4]) + (r[6] !== 'standard' ? ' · ' + EDIZIONI[r[6]] : '');
+    $('mp-titolo').textContent = r[2]; $('mp-volume').textContent = r[3] ? 'Volume ' + r[3] : ''; $('mp-volume').hidden = !r[3];
+    var im = $('mp-img'); im.alt = 'Copertina di ' + r[1]; im.hidden = !r[10]; if (r[10]) im.src = 'img/copertine/' + r[0] + '.webp'; else im.removeAttribute('src');
+    var et = $('mp-et'); et.textContent = pre ? 'PREORDINE' : nov ? 'NOVITÀ' : ''; et.hidden = !(pre || nov);
+    et.className = 'absolute top-2 left-2 font-heavy text-[10px] px-2.5 py-0.5 rounded -rotate-2 ' + (pre ? 'bg-brand-violet text-white' : 'bg-brand-lime text-black');
+    var dati = [['Uscita', dataTesto(r) || '—'], ['Edizione', EDIZIONI[r[6]]], ['Autore', r[11] || ''], ['Pagine', r[12] ? String(r[12]) : ''], ['EAN', r[0]]].filter(function (v) { return v[1]; });
+    var dl = $('mp-dati'); dl.textContent = '';
+    dati.forEach(function (v) { var d = el('div'); d.appendChild(el('dt', 'text-[10px] font-heavy uppercase tracking-widest text-brand-muted mb-0.5', v[0])); d.appendChild(el('dd', 'font-bold text-white', v[1])); dl.appendChild(d); });
+    $('mp-prezzo').textContent = euro(r[7]);
+    $('mp-disp').textContent = pre ? 'Preordine · esce ' + dataTesto(r) : 'Disponibile in negozio';
+    var tr = (window.TRAME || {})[r[2].toLowerCase()], bx = $('mp-trama'); bx.textContent = '';
+    (tr || ['[TRAMA: la scrive il negozio]']).forEach(function (par) { bx.appendChild(el('p', '', par)); });
+    var az = $('mp-azione'); az.textContent = pre ? 'Prenota' : 'Aggiungi al carrello';
+    az.className = 'font-heavy text-sm px-7 py-3.5 rounded-full rounded-bl-[4px] transition-colors ' + (pre ? 'bg-brand-violet text-white shadow-[4px_4px_0_#B9E62E] hover:bg-brand-violetGlow' : 'bg-brand-lime text-black shadow-brutal-violet hover:bg-[#a6d420]');
+    az.dataset.pre = pre ? '1' : ''; $('mp-esito').textContent = '';
+    statoMp(A51.pref.ha(r[0]));
+    $('mp-scheda').href = 'prodotto.html?cat=catalogo&ean=' + r[0];
+    ultimo = document.activeElement; scroll = document.body.style.overflow;
+    M.hidden = false; document.body.style.overflow = 'hidden'; M.querySelector('[role=dialog]').scrollTop = 0; chiudi.focus();
+    return true;
+  }
+  function chiudiProdotto() {
+    if (M.hidden) return; M.hidden = true; document.body.style.overflow = scroll;
+    if (ultimo && ultimo.focus) ultimo.focus();
+  }
+  window.apriProdotto = apriProdotto;
+  chiudi.addEventListener('click', chiudiProdotto);
+  M.addEventListener('click', function (e) { if (e.target === M) chiudiProdotto(); });
+  document.addEventListener('keydown', function (e) {
+    if (M.hidden) return;
+    if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); chiudiProdotto(); return; }
+    if (e.key === 'Tab') {
+      var f = Array.prototype.slice.call(M.querySelectorAll('button, a[href]')).filter(function (x) { return x.offsetParent; }), a = f[0], z = f[f.length - 1];
+      if (e.shiftKey && document.activeElement === a) { e.preventDefault(); z.focus(); } else if (!e.shiftKey && document.activeElement === z) { e.preventDefault(); a.focus(); }
+    }
+  }, true);
+  function statoMp(on) { var b = $('mp-pref'); b.setAttribute('aria-pressed', String(on)); b.setAttribute('aria-label', on ? 'Togli dai preferiti' : 'Aggiungi ai preferiti'); }
+  $('mp-pref').addEventListener('click', function () {
+    if (!corrente) return;
+    var on = A51.pref.toggle(A51.daRiga(corrente)); statoMp(on);
+    $('mp-esito').textContent = on ? 'Aggiunto ai preferiti. Li trovi nel tuo profilo.' : '';
+  });
+  A51.onChange(function () { if (corrente && !M.hidden) statoMp(A51.pref.ha(corrente[0])); });
+  $('mp-azione').addEventListener('click', function () {
+    if (!corrente) return;
+    var pre = this.dataset.pre === '1', es = $('mp-esito'), s = A51.daRiga(corrente);
+    if (pre) s.e = s.e + ' · Preordine';
+    A51.carrello.aggiungi(s, 1);
+    this.textContent = 'Aggiunto ✓'; clearTimeout(tempo); var b = this; tempo = setTimeout(function () { b.textContent = pre ? 'Prenota' : 'Aggiungi al carrello'; }, 1800);
+    es.textContent = pre ? 'Preordine nel carrello: lo paghi al ritiro in negozio.' : 'Aggiunto al carrello. Lo trovi nella pagina Carrello.';
+  });
+  // clic su una scheda (o sull'ultimo arrivo): si apre il modale; con Ctrl o Cmd resta il link normale
+  document.addEventListener('click', function (e) {
+    var a = e.target.closest ? e.target.closest('a[data-ean]') : null;
+    if (!a || e.ctrlKey || e.metaKey || e.shiftKey || e.button) return;
+    if (apriProdotto(a.dataset.ean)) e.preventDefault();
+  });
+
+  /* ---------- Ultimo arrivo (apre il modale) ---------- */
+  var ora1 = Date.now(), ult = null;
+  D.forEach(function (r) { var q = quando(r); if (r[10] === 1 && q && q <= ora1 && (!ult || q > quando(ult))) ult = r; });
+  var ar = $('hi-arrivo');
+  if (ar && ult) {
+    ar.href = 'prodotto.html?cat=catalogo&ean=' + ult[0]; ar.dataset.ean = ult[0];
+    var ic = ar.querySelector('svg'); var img = el('img', 'w-9 h-[3.4rem] shrink-0 rounded object-cover'); img.src = 'img/copertine/' + ult[0] + '.webp'; img.alt = ''; img.width = 36; img.height = 54; ar.replaceChild(img, ic);
+    riga('hi-arrivo', ult[1], 'Ultimo arrivo · uscito il ' + dataTesto(ult));
+  }
+  }
+  A51Eventi.pronti(function () {
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', avvia); else avvia();
+  });
+})();
+</script>
+<script is:inline>
+(function () {
+  /* Menu da telefono */
+  var btn = document.getElementById('menu-btn'), menu = document.getElementById('menu-mobile');
+  btn.addEventListener('click', function () {
+    var aperto = menu.hidden;
+    menu.hidden = !aperto;
+    btn.setAttribute('aria-expanded', String(aperto));
+    btn.setAttribute('aria-label', aperto ? 'Chiudi il menu' : 'Apri il menu');
+  });
+
+  /* Disco volante che segue la voce del menu sotto il mouse */
+  var nav = document.getElementById('main-nav'), ufo = document.getElementById('nav-ufo-follower');
+  if (nav && ufo) {
+    var links = Array.from(nav.querySelectorAll('.nav-link')), attivo = links[0];
+    /* Molla con inerzia: la navicella accelera, si inclina nel verso in cui va,
+       e quando cambia direzione frena, oscilla e si raddrizza */
+    var ridotto = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var px = 0, vel = 0, meta = 0, giro = 0;
+    ufo.style.transformOrigin = '50% 35%';
+    function disegnaUfo(incl) { ufo.style.transform = 'translateX(' + px.toFixed(2) + 'px) rotate(' + incl.toFixed(2) + 'deg)'; }
+    function passo() {
+      vel = (vel + (meta - px) * 0.045) * 0.80;   // forza della molla, poi attrito
+      px += vel;
+      if (Math.abs(meta - px) < 0.3 && Math.abs(vel) < 0.05) { px = meta; vel = 0; disegnaUfo(0); giro = 0; return; }
+      disegnaUfo(Math.max(-15, Math.min(15, vel * 2.2)));
+      giro = requestAnimationFrame(passo);
+    }
+    function vai(el, subito) {
+      var n = nav.getBoundingClientRect(), r = el.getBoundingClientRect();
+      meta = r.left - n.left + r.width / 2 - (ufo.offsetWidth || 40) / 2;
+      if (subito || ridotto) { cancelAnimationFrame(giro); giro = 0; px = meta; vel = 0; disegnaUfo(0); return; }
+      if (!giro) giro = requestAnimationFrame(passo);
+    }
+    vai(attivo, true);  // subito, senza aspettare immagini e risorse: così la navicella non parte dal bordo e poi salta
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { vai(attivo, true); });  // i caratteri cambiano le larghezze del menu
+    window.addEventListener('load', function () { vai(attivo, true); });
+    window.addEventListener('resize', function () { vai(attivo, true); });
+    links.forEach(function (l) { l.addEventListener('mouseenter', function () { vai(l); }); l.addEventListener('focus', function () { vai(l); }); });
+    nav.addEventListener('mouseleave', function () { vai(attivo); });
+  }
+})();
+</script>
+<script is:inline>
+/* Sistema solare di sfondo: ogni .corpo avanza in orizzontale (data-vel px/s, data-verso 1 o -1),
+   sale e scende lungo un'onda (data-amp px, data-onde onde per larghezza schermo, data-fase),
+   si inclina seguendo la curva e, per gli asteroidi, ruota su se stesso (data-giro gradi/s).
+   Uscito da un lato rientra dall'altro. Con "riduci movimento" resta fermo in data-x. */
+(function () {
+  var corpi = Array.from(document.querySelectorAll('.corpo')), fascia = document.querySelector('.fascia');
+  if (!corpi.length) return;
+  var ridotto = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var W = 0;
+  function onda(x, amp, onde, fase) { return amp * Math.sin((x / W * onde + fase) * Math.PI * 2); }
+  function pendenza(x, amp, onde, fase) { return amp * Math.cos((x / W * onde + fase) * Math.PI * 2) * (onde / W) * Math.PI * 2; }
+  var stato = corpi.map(function (el) {
+    var d = el.dataset;
+    return { el: el, vel: +d.vel, verso: +d.verso || 1, x0: +d.x, amp: +d.amp, onde: +d.onde, fase: +d.fase, giro: +d.giro || 0, inclina: +d.inclina || 0, x: 0, r: Math.random() * 360, w: 0 };
+  });
+  function misura() {
+    W = document.documentElement.clientWidth || window.innerWidth || 1024;
+    stato.forEach(function (s) { var b = s.el.firstElementChild.getBoundingClientRect(); s.w = b.width || 80; s.h = b.height || s.w; if (!s.pronto) { s.x = s.x0 * W; s.pronto = true; } });
+    if (fascia) {
+      var a = +fascia.dataset.amp, o = +fascia.dataset.onde, f = +fascia.dataset.fase, pa = '', pb = '';
+      for (var x = -20; x <= W + 20; x += 12) {
+        var y = 48 + onda(x, a, o, f);
+        pa += (pa ? ' L' : 'M') + x + ' ' + y.toFixed(1);
+        pb += (pb ? ' L' : 'M') + x + ' ' + (y + 12 + 4 * Math.sin(x / W * 9)).toFixed(1);
+      }
+      fascia.querySelector('.fascia-a').setAttribute('d', pa);
+      fascia.querySelector('.fascia-b').setAttribute('d', pb);
+    }
+  }
+  function posa(s) {
+    var y = onda(s.x, s.amp, s.onde, s.fase), incl = Math.atan(pendenza(s.x, s.amp, s.onde, s.fase)) * 180 / Math.PI;
+    var rot = s.giro ? s.r : Math.max(-s.inclina, Math.min(s.inclina, incl));
+    s.el.style.transform = 'translate(' + (s.x - s.w / 2).toFixed(1) + 'px,' + (y - s.h / 2).toFixed(1) + 'px) rotate(' + rot.toFixed(1) + 'deg)';
+  }
+  var prima = 0;
+  function passo(t) {
+    var dt = prima ? Math.min(0.05, (t - prima) / 1000) : 0; prima = t;
+    stato.forEach(function (s) {
+      s.x += s.vel * s.verso * dt;
+      var m = s.w / 2 + 30;
+      if (s.verso > 0 && s.x > W + m) s.x = -m;
+      if (s.verso < 0 && s.x < -m) s.x = W + m;
+      s.r += s.giro * dt;
+      posa(s);
+    });
+    requestAnimationFrame(passo);
+  }
+  misura();
+  window.addEventListener('resize', misura);
+  stato.forEach(function (s) { posa(s); s.el.classList.add('pronto'); });
+  if (!ridotto) requestAnimationFrame(passo);
+})();
+</script>

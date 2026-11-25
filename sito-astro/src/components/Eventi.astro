@@ -1,0 +1,41 @@
+---
+/* Prossimi eventi: generati quando si costruisce il sito (nessun JavaScript nel browser).
+   Nel sito vero li leggeremmo dalla tabella "eventi" di Supabase. */
+import home from '../data/home.json';
+const GIOCO = { magic: 'Magic', pokemon: 'Pokémon', riftbound: 'Riftbound' };
+const FAMIGLIA = { serate: 'Giochi da tavolo', ruolo: 'Gioco di ruolo', carte: 'Carte' };
+---
+<section id="eventi" class="pt-10 lg:pt-14 pb-10 lg:pb-14 max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
+  <div class="mb-12">
+    <p class="text-xs font-heavy text-brand-lime uppercase tracking-widest mb-2">Fuori dallo schermo, dentro l'avventura</p>
+    <h2 class="font-heavy text-3xl sm:text-4xl lg:text-5xl text-white leading-tight">Stesso pianeta. Stesse passioni.</h2>
+  </div>
+  <ul id="ev-lista" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    {home.eventi.map((e) => {
+      const perc = e.posti ? Math.round((e.occupati / e.posti) * 100) : 0;
+      return (
+        <li><a href={`eventi.html?linea=${e.linea}`} class="flex flex-col gap-4 h-full bg-[#0e0926]/90 border border-white/10 hover:border-brand-lime rounded-2xl p-5 transition-colors group">
+          <div class="flex items-start gap-4">
+            <div class="shrink-0 w-[4.5rem] rounded-xl border border-brand-lime/40 bg-[#140C2B] text-center py-2">
+              <span class="block font-heavy text-[10px] tracking-widest text-brand-lime uppercase">{e.giorno}</span>
+              <span class="block font-heavy text-3xl text-white leading-none my-1">{e.numero}</span>
+              <span class="block font-heavy text-[10px] tracking-widest text-brand-lime uppercase">{e.mese}</span>
+            </div>
+            <div class="min-w-0">
+              <span class="inline-block bg-brand-violet/60 border border-brand-violet text-white font-heavy text-[10px] uppercase tracking-wider px-2.5 py-1 rounded-md">{GIOCO[e.gioco] || FAMIGLIA[e.linea] || e.linea}</span>
+              <h3 class="font-heavy text-base text-white uppercase mt-2 leading-snug group-hover:text-brand-lime transition-colors">{e.titolo}</h3>
+              <p class="text-sm font-bold text-brand-muted mt-1">Ore {e.ora} · {e.quota ? `Quota ${e.quota} €` : 'Gratis'}</p>
+            </div>
+          </div>
+          <div class="mt-auto space-y-2">
+            <div class="flex items-center justify-between gap-3 text-xs font-bold"><span class="text-brand-muted">{e.occupati} / {e.posti} posti occupati</span></div>
+            <div class="h-2 rounded-full bg-white/10 overflow-hidden" aria-hidden="true"><div class="h-full bg-brand-lime rounded-full" style={`width:${perc}%`}></div></div>
+          </div>
+        </a></li>
+      );
+    })}
+  </ul>
+  <div class="mt-8 flex flex-wrap items-center gap-x-6 gap-y-1 text-sm font-heavy">
+    <a class="text-brand-lime hover:underline py-2" href="eventi.html">Tutti gli eventi →</a>
+  </div>
+</section>

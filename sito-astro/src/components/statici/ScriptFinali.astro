@@ -1,0 +1,114 @@
+<script is:inline>
+(function () {
+  /* Modale account: dopo RITARDO millisecondi dall'arrivo, se non è già stato chiuso negli ultimi GIORNI giorni.
+     La chiusura si ricorda nel browser (localStorage; se è bloccato, solo per la sessione). */
+  var CHIAVE = 'area51-modale-account', GIORNI = 7, RITARDO = 6000;
+  var m = document.getElementById('modale-account');
+  if (!m) return;
+  var chiudi = document.getElementById('modale-chiudi'), precedente = null, overflow = '', mostrata = false;
+  function giaVisto() {
+    try { var v = localStorage.getItem(CHIAVE); return !!v && (Date.now() - Number(v) < GIORNI * 864e5); }
+    catch (e) { try { return sessionStorage.getItem(CHIAVE) === '1'; } catch (e2) { return false; } }
+  }
+  function ricorda() {
+    try { localStorage.setItem(CHIAVE, String(Date.now())); }
+    catch (e) { try { sessionStorage.setItem(CHIAVE, '1'); } catch (e2) {} }
+  }
+  function apri() {
+    if (mostrata || !m.hidden || giaVisto()) return;
+    var mp = document.getElementById('modale-prodotto');
+    if (mp && !mp.hidden) { setTimeout(apri, 4000); return; }
+    mostrata = true;
+    precedente = document.activeElement;
+    overflow = document.body.style.overflow;
+    m.hidden = false;
+    document.body.style.overflow = 'hidden';
+    chiudi.focus();
+  }
+  function chiudiModale() {
+    if (m.hidden) return;
+    m.hidden = true;
+    document.body.style.overflow = overflow;
+    ricorda();
+    if (precedente && precedente.focus) precedente.focus();
+  }
+  chiudi.addEventListener('click', chiudiModale);
+  m.addEventListener('click', function (e) { if (e.target === m) chiudiModale(); });
+  m.querySelectorAll('a').forEach(function (a) { a.addEventListener('click', chiudiModale); });
+  document.addEventListener('keydown', function (e) {
+    if (m.hidden) return;
+    if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); chiudiModale(); return; }
+    if (e.key === 'Tab') {
+      var f = Array.from(m.querySelectorAll('button, a[href]')), primo = f[0], ultimo = f[f.length - 1];
+      if (e.shiftKey && document.activeElement === primo) { e.preventDefault(); ultimo.focus(); }
+      else if (!e.shiftKey && document.activeElement === ultimo) { e.preventDefault(); primo.focus(); }
+    }
+  }, true);
+  if (!giaVisto()) setTimeout(apri, RITARDO);
+})();
+</script>
+<script is:inline>
+/* Ricerca dalla lente: suggerisce le serie del catalogo mentre si scrive; invio (o "Cerca") apre catalogo.html?cerca=...
+   Il catalogo (dati/catalogo.js) si carica solo alla prima apertura, tranne dove c'è già. */
+(function () {
+  var p = document.getElementById('ricerca'); if (!p) return;
+  var btn = document.querySelector('button[aria-label="Cerca prodotti"]'), btnM = document.getElementById('cerca-mobile');
+  var inp = document.getElementById('ricerca-input'), ris = document.getElementById('ricerca-risultati'), nota = document.getElementById('ricerca-nota');
+  var chiudi = document.getElementById('ricerca-chiudi'), menu = document.getElementById('menu-mobile'), menuBtn = document.getElementById('menu-btn');
+  var EDITORI = { star: 'Star Comics', jpop: 'J-POP', panini: 'Panini Comics' };
+  var caricando = false;
+  function semplifica(t) { return String(t).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, ''); }
+  function parole(t) { return semplifica(t).replace(/[^a-z0-9]+/g, ' ').trim(); }
+  function carica() {
+    if (window.CATALOGO_DATI || caricando) return;
+    caricando = true; nota.textContent = 'Carico il catalogo…';
+    var s = document.createElement('script'); s.src = 'dati/catalogo.js';
+    s.onload = function () { caricando = false; mostra(); };
+    s.onerror = function () { caricando = false; nota.textContent = 'Il catalogo non si carica: premi Cerca per provare lo stesso.'; };
+    document.head.appendChild(s);
+  }
+  function mostra() {
+    ris.textContent = ''; ris.hidden = true;
+    var q = parole(inp.value);
+    if (q.length < 2) { nota.textContent = 'Scrivi almeno due lettere. Premi invio per vedere tutti i risultati.'; return; }
+    var D = window.CATALOGO_DATI; if (!D) { carica(); return; }
+    var trovati = 0, serie = {}, ordine = [];
+    for (var i = 0; i < D.length; i++) {
+      var r = D[i], t = ' ' + parole(r[1] + ' ' + r[2]);
+      if (t.indexOf(' ' + q) < 0) continue;
+      trovati++;
+      var k = r[2].toLowerCase() + '|' + r[4];
+      if (!serie[k]) { serie[k] = { r: r, n: 0, cop: null }; ordine.push(k); }
+      serie[k].n++;
+      if (!serie[k].cop && r[10] === 1) serie[k].cop = r;
+    }
+    if (!trovati) { nota.textContent = 'Nessun titolo trovato per "' + inp.value.trim() + '". Premi invio per cercare ovunque, oppure chiedicelo in negozio.'; return; }
+    nota.textContent = trovati + (trovati === 1 ? ' risultato' : ' risultati') + '. Premi invio per vederli tutti.';
+    ordine.slice(0, window.innerWidth < 640 ? 4 : 6).forEach(function (k) {
+      var s = serie[k], r = s.r, li = document.createElement('li'), a = document.createElement('a');
+      a.href = 'catalogo.html?cerca=' + encodeURIComponent(r[2]);
+      a.className = 'flex items-center gap-3 rounded-xl border border-white/10 bg-[#120a2e] hover:border-brand-lime p-2 transition-colors';
+      var im = document.createElement('span'); im.className = 'shrink-0 w-12 h-[4.5rem] rounded-md overflow-hidden bg-brand-violet/30';
+      if (s.cop) { var img = document.createElement('img'); img.src = 'img/copertine/' + s.cop[0] + '.webp'; img.alt = ''; img.width = 48; img.height = 72; img.className = 'w-full h-full object-cover'; img.loading = 'lazy'; im.appendChild(img); }
+      var tx = document.createElement('span'); tx.className = 'min-w-0';
+      var b = document.createElement('span'); b.className = 'block font-heavy text-sm text-white leading-snug'; b.textContent = r[2];
+      var c = document.createElement('span'); c.className = 'block text-xs font-semibold text-brand-muted mt-0.5'; c.textContent = (EDITORI[r[4]] || r[4]) + ' · ' + s.n + (s.n === 1 ? ' prodotto' : ' prodotti');
+      tx.appendChild(b); tx.appendChild(c); a.appendChild(im); a.appendChild(tx); li.appendChild(a); ris.appendChild(li);
+    });
+    ris.hidden = false;
+  }
+  function apri() {
+    if (menu && !menu.hidden) { menu.hidden = true; if (menuBtn) menuBtn.setAttribute('aria-expanded', 'false'); }
+    p.hidden = false; if (btn) btn.setAttribute('aria-expanded', 'true');
+    inp.focus(); inp.select();
+    if (!window.CATALOGO_DATI) carica(); else mostra();
+  }
+  function chiudiP() { p.hidden = true; if (btn) { btn.setAttribute('aria-expanded', 'false'); if (btn.offsetParent) btn.focus(); } }
+  if (btn) btn.addEventListener('click', function () { if (p.hidden) apri(); else chiudiP(); });
+  if (btnM) btnM.addEventListener('click', apri);
+  chiudi.addEventListener('click', chiudiP);
+  inp.addEventListener('input', mostra);
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !p.hidden) chiudiP(); });
+  document.addEventListener('click', function (e) { if (!p.hidden && !p.contains(e.target) && !(btn && btn.contains(e.target)) && !(btnM && btnM.contains(e.target))) chiudiP(); });
+})();
+</script>

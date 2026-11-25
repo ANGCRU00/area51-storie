@@ -1,0 +1,47 @@
+---
+import StatoNegozio from '../isole/StatoNegozio.tsx';
+---
+<!-- Hero -->
+<section class="relative pt-[2.85rem] pb-[4.75rem] lg:pt-[4.75rem] lg:pb-[6.65rem]">
+  <div class="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-12 gap-14 lg:gap-8 items-center">
+    <div class="scala-95 lg:col-span-7 flex flex-col items-start gap-6">
+      <span class="-rotate-2 inline-flex items-center gap-2 bg-brand-lime text-black px-4 py-1.5 rounded font-heavy text-xs uppercase tracking-wider shadow-brutal-violet">
+        <span class="w-2 h-2 rounded-full bg-black"></span>Avvistamento confermato
+      </span>
+      <h1 class="font-heavy text-[2.6rem] sm:text-6xl lg:text-7xl leading-[1.02] text-white">Storie di un altro <span class="text-brand-lime">pianeta.</span></h1>
+      <ul id="hero-info" class="w-full max-w-xl space-y-2.5">
+        <li class="isola" data-nome="Isola: Stato del negozio"><StatoNegozio client:load /></li>
+        <li><a id="hi-evento" href="eventi.html" class="flex items-center gap-3 rounded-xl border border-white/10 bg-[#120a2e]/80 hover:border-brand-lime px-4 py-3 transition-colors">
+          <svg class="w-6 h-6 shrink-0 text-brand-lime" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M8 3v4M16 3v4M3 10h18"/></svg>
+          <span class="min-w-0"><b class="block font-heavy text-sm sm:text-base text-white">Prossimo evento</b><span class="block text-xs sm:text-sm font-semibold text-brand-muted">Tornei, serate e avventure in negozio</span></span></a></li>
+        <li><a id="hi-arrivo" href="catalogo.html" class="flex items-center gap-3 rounded-xl border border-white/10 bg-[#120a2e]/80 hover:border-brand-lime px-4 py-3 transition-colors">
+          <svg class="w-6 h-6 shrink-0 text-brand-lime" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5a2 2 0 012-2h12v18H6a2 2 0 01-2-2V5z"/><path d="M8 3v18"/></svg>
+          <span class="min-w-0"><b class="block font-heavy text-sm sm:text-base text-white">Ultimo arrivo</b><span class="block text-xs sm:text-sm font-semibold text-brand-muted">Guarda le novità del catalogo</span></span></a></li>
+      </ul>
+      <div class="flex flex-wrap items-center gap-4 pt-1">
+        <a class="bg-brand-lime text-black font-heavy text-sm sm:text-base px-7 py-4 rounded-full flex items-center gap-2 shadow-brutal-violet hover:bg-[#a6d420] transition-colors" href="catalogo.html">Esplora gli scaffali <span aria-hidden="true">→</span></a>
+        <a class="border-2 border-brand-violet hover:border-brand-lime bg-[#130d31]/80 text-white font-heavy text-sm sm:text-base px-6 py-3.5 rounded-full transition-colors" href="negozio.html">Vieni a trovarci <span class="text-brand-lime" aria-hidden="true">↗</span></a>
+      </div>
+    </div>
+
+    <div class="scala-95 lg:col-span-5 relative flex flex-col items-center">
+      <svg class="w-48 sm:w-72 h-20 sm:h-32 relative z-30 animate-ufo drop-shadow-[0_10px_25px_rgba(185,230,46,.35)]" aria-hidden="true"><use href="#disco"/></svg>
+      <div class="tractor-beam w-64 sm:w-96 h-56 sm:h-80 absolute top-16 sm:top-24 z-10 animate-ufo" aria-hidden="true"></div>
+      <article class="relative z-20 w-72 sm:w-80 bg-gradient-to-b from-[#1b1240] to-[#0c0822] p-3 rounded-2xl border-2 border-brand-lime/80 shadow-glow-lime -rotate-2">
+        <div class="relative h-40 sm:h-72 rounded-xl overflow-hidden">
+          <img class="w-full h-full object-cover" src="img/angolo-manga.jpg" alt="L'angolo manga della fumetteria Area 51">
+          <span class="absolute top-3 left-3 bg-brand-lime text-black font-heavy text-[11px] px-2.5 py-0.5 rounded">IN EVIDENZA</span>
+        </div>
+        <div class="pt-3 pb-1 px-2">
+          <p class="text-[11px] font-bold text-brand-lime uppercase tracking-widest">Manga · Novità</p>
+          <h2 class="font-heavy text-lg text-white mt-0.5">Orbita. Volume 01</h2>
+          <div class="flex items-center justify-between mt-2 pt-2 border-t border-white/10">
+            <span class="font-heavy text-brand-lime text-xl">6,90 €</span>
+            <span class="text-xs font-semibold text-brand-muted bg-white/5 px-2 py-1 rounded">In negozio</span>
+          </div>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
