@@ -654,11 +654,11 @@ legend { display: block; margin-bottom: 6px; padding: 0; font-family: "Archivo-B
     });
     var titolo = valore('post-titolo');
     var px = adatta(titolo, 820, BLACK, 92);
-    var w = larghezza(titolo) + 96, h = 156;
-    ruota(50 + w / 2, 254 + h / 2, -3, function () {
-      rettangolo(64, 268, w, h, SCURO);
-      rettangolo(50, 254, w, h, SCURO);
-      usa(BLACK, px); scrivi(titolo, 98, 254 + h / 2 + 4, LIME, 'sinistra');
+    var w = larghezza(titolo) + 96, h = 156, ET = inPost ? 254 : 230;   /* nel post la banda parte a y 240 */
+    ruota(50 + w / 2, ET + h / 2, -3, function () {
+      rettangolo(64, ET + 14, w, h, SCURO);
+      rettangolo(50, ET, w, h, SCURO);
+      usa(BLACK, px); scrivi(titolo, 98, ET + h / 2 + 4, LIME, 'sinistra');
     });
     ruota(965, 1485, 6, function () { alieno(860, 1380, 210, { ombra: SCURO, scarto: 9, bordo: true }); });
     var invito = invitoPost(valore('post-invito'), 'SCOPRILO IN NEGOZIO');
@@ -670,7 +670,8 @@ legend { display: block; margin-bottom: 6px; padding: 0; font-family: "Archivo-B
   function disegnaTorneoLocandina() {
     rettangolo(0, 0, W, H, SCURO);
     var img = sfondoAttivo();
-    var AL = 990;                                   /* altezza della zona illustrata (la scheda e l'invito restano sopra la zona coperta in basso, da y 1670) */
+    var AL = inPost ? 990 : 1080;                   /* altezza della zona illustrata (misure originali della storia; per il post sale tutto di 90 px per stare nella fascia 4:5) */
+    var DY = inPost ? -90 : 0;
     var sc = Math.max(W / img.width, AL / img.height), iw = img.width * sc, ih = img.height * sc;
     ctx.save(); ctx.beginPath(); ctx.rect(0, 0, W, AL); ctx.clip();
     ctx.imageSmoothingEnabled = true; ctx.imageSmoothingQuality = 'high';
@@ -679,11 +680,11 @@ legend { display: block; margin-bottom: 6px; padding: 0; font-family: "Archivo-B
     var f = ctx.createLinearGradient(0, AL - 330, 0, AL);
     f.addColorStop(0, 'rgba(20,12,43,0)'); f.addColorStop(1, SCURO);
     ctx.fillStyle = f; ctx.fillRect(0, AL - 330, W, 330);
-    ruota(550, 910, -6, function () { rettangolo(-200, 898, 1500, 24, LIME); });
-    marchio(48, 270, Object.assign({ ruota: -2, contorno: LIME, ombra: VIOLA, scarto: 14 }, MARCHIO_MEDIO));   /* sotto la zona coperta in alto (250 px) */
+    ruota(550, 1000 + DY, -6, function () { rettangolo(-200, 988 + DY, 1500, 24, LIME); });
+    marchio(48, inPost ? 270 : 60, Object.assign({ ruota: -2, contorno: LIME, ombra: VIOLA, scarto: 14 }, MARCHIO_MEDIO));
 
     var righe = [['FORMATO', valore('t-formato')], ['QUANDO', quandoTorneo()], ['PARTECIPANTI', valore('t-posti')], ['PREMI', valore('t-premi')]];
-    var X = 70, Y = 950, LARGA = 940, TESTA = 170, RIGA = 96, ALTA = 10 + TESTA + RIGA * 4 + 15 + 10;
+    var X = 70, Y = 1040 + DY, LARGA = 940, TESTA = 170, RIGA = 96, ALTA = 10 + TESTA + RIGA * 4 + 15 + 10;
     ruota(X + LARGA / 2, Y + ALTA / 2, -1.5, function () {
       rettangolo(X + 18, Y + 18, LARGA, ALTA, VIOLA);
       rettangolo(X, Y, LARGA, ALTA, LIME);
@@ -705,15 +706,15 @@ legend { display: block; margin-bottom: 6px; padding: 0; font-family: "Archivo-B
     });
     usa(BLACK, 66);
     var pw = larghezza('TORNEO!') + 76, ph = 112, px = W - 50 - pw;
-    ruota(px + pw / 2, 810 + ph / 2, 4, function () {
-      rettangolo(px, 810, pw, ph, LIME);
-      rettangolo(px + 7, 817, pw - 14, ph - 14, VIOLA);
-      usa(BLACK, 66); scrivi('TORNEO!', px + 38, 810 + ph / 2 + 3, LIME, 'sinistra');
+    ruota(px + pw / 2, 900 + DY + ph / 2, 4, function () {
+      rettangolo(px, 900 + DY, pw, ph, LIME);
+      rettangolo(px + 7, 907 + DY, pw - 14, ph - 14, VIOLA);
+      usa(BLACK, 66); scrivi('TORNEO!', px + 38, 900 + DY + ph / 2 + 3, LIME, 'sinistra');
     });
     var invito = invitoPost(valore('t-invito'), 'ISCRIVITI IN NEGOZIO');
     adatta(invito, 780, BOLD, 44, 8);
-    scrivi(invito, 540, 1578, LIME, 'centro', 8);
-    if (!inPost) { freccia(500, 1606, LIME); }
+    scrivi(invito, 540, 1690 + (inPost ? -112 : 0), LIME, 'centro', 8);
+    if (!inPost) { freccia(500, 1722, LIME); }
   }
 
   /* ---------- Storia: torneo (scuro) ---------- */
