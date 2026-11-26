@@ -26,6 +26,10 @@ export const uscite = sqliteTable(
     lingua: text('lingua'),
     /** codice della serie su Starshop (codice articolo senza il numero finale) */
     codicePadre: text('codice_padre'),
+    /** vero per ristampe e arretrati riproposti (non per le novità); null = non si sa */
+    ristampa: integer('ristampa', { mode: 'boolean' }),
+    /** paese d'origine dell'opera, ricavato dal tipo di fumetto (manga = Giappone…); null = non si sa */
+    origine: text('origine'),
     /** prezzo di copertina, mai prezzi B2B */
     prezzo: real('prezzo'),
     dataUscita: text('data_uscita'),

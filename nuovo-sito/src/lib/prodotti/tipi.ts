@@ -65,6 +65,8 @@ export type Prodotto = {
   disponibilita: Disponibilita;
   pagine: number | null;
   lingua: string | null;
+  ristampa: boolean | null;
+  origine: string | null;
   codiceSerie: string | null;
   generi: string[];
   perAdulti: boolean;

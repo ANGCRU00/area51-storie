@@ -31,6 +31,11 @@ export function dettagliDi(prodotto: Prodotto): { nome: string; valore: string }
     ['Edizione', prodotto.edizione],
     ['Pagine', prodotto.pagine ? String(prodotto.pagine) : null],
     ['Lingua', prodotto.lingua && maiuscolaIniziale(prodotto.lingua)],
+    ['Origine', prodotto.origine],
+    [
+      'Tipo di uscita',
+      prodotto.ristampa === null ? null : prodotto.ristampa ? 'Ristampa o arretrato' : 'Novità',
+    ],
     ['Tipo', prodotto.categoria && NOME_CATEGORIA[prodotto.categoria]],
     ['EAN', prodotto.ean],
   ];

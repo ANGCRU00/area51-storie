@@ -47,6 +47,16 @@ Niente Tailwind: ogni componente ha il suo CSS. Analisi tecnica completa: vedi C
   `npx wrangler d1 execute area51 --remote --command "UPDATE utenti SET ruolo = 'gestore' WHERE email = '...'"`.
   Le interfacce del gestore usano `soloGestore` (`src/lib/permessi.ts`).
 
+## Uscite da Starshop (fase 6)
+
+- Un **Worker separato con Cron** aggiorna ogni notte la tabella `uscite` (prossimi 60 giorni) e scarica in R2 le
+  copertine mancanti. Il suo codice sta in `privato/worker-starshop/` (esclusa da git: il repository è pubblico),
+  con il suo `LEGGIMI.md` per provarlo e pubblicarlo. Non tocca `visibile` e `data_limite`, che decide il gestore.
+- Segreti del Worker: `STARSHOP_USER`, `STARSHOP_PASSWORD` (in locale nel suo `.dev.vars`, online con `wrangler secret put`).
+- Colonne nuove di `uscite` (migrazione 0005): `ristampa` (ristampa o arretrato) e `origine` (paese dell'opera,
+  dal tipo di fumetto). La scheda prodotto le mostra come "Tipo di uscita" e "Origine".
+- Serve il piano Workers a pagamento (tempo di CPU e numero di richieste per esecuzione).
+
 ## Struttura
 
 | Cartella | Contenuto |
