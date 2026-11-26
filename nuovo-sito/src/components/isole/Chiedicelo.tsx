@@ -1,6 +1,7 @@
 /* Isola: modulo "Chiedicelo" della pagina /negozio. Invia la richiesta a /api/chiedicelo e mostra l'esito.
+   /negozio?cosa=testo#chiedicelo precompila il campo "Cosa cerchi" (dai link "Non lo trovi?" del catalogo).
    Il controllo vero dei dati lo fa il server; qui si controlla solo quanto basta per avvisare subito chi compila. */
-import { useState, type FormEvent } from 'react';
+import { useEffect, useRef, useState, type FormEvent } from 'react';
 import css from './Chiedicelo.module.css';
 
 const CATEGORIE = [
@@ -16,6 +17,12 @@ type Stato = { tipo: 'pronto' } | { tipo: 'invio' } | { tipo: 'ok' } | { tipo: '
 
 export default function Chiedicelo() {
   const [stato, setStato] = useState<Stato>({ tipo: 'pronto' });
+  const campoCosa = useRef<HTMLTextAreaElement>(null);
+
+  useEffect(() => {
+    const cosa = new URLSearchParams(location.search).get('cosa');
+    if (cosa && campoCosa.current && !campoCosa.current.value) campoCosa.current.value = cosa.slice(0, 300);
+  }, []);
 
   async function invia(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -67,6 +74,7 @@ export default function Chiedicelo() {
         </label>
         <textarea
           id="ch-cosa"
+          ref={campoCosa}
           name="cosa"
           rows={3}
           maxLength={300}

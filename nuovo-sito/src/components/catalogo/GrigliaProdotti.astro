@@ -6,8 +6,9 @@ interface Props {
   prodotti: Prodotto[];
   conFiltri: boolean;
   messaggioVuoto?: string;
+  cerca?: string;
 }
-const { prodotti, conFiltri, messaggioVuoto } = Astro.props;
+const { prodotti, conFiltri, messaggioVuoto, cerca = '' } = Astro.props;
 
 const suggerimento =
   messaggioVuoto ??
@@ -30,7 +31,11 @@ const suggerimento =
     <div>
       <p class="pesante">Nessun prodotto qui, per ora.</p>
       <p>
-        {suggerimento} Cerchi qualcosa? <a href="/negozio#chiedicelo">Chiedicelo</a>.
+        {suggerimento} Non lo trovi?{' '}
+        <a href={'/negozio' + (cerca ? '?cosa=' + encodeURIComponent(cerca) : '') + '#chiedicelo'}>
+          Chiedicelo
+        </a>
+        .
       </p>
     </div>
   </div>

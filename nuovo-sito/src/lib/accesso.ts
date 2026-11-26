@@ -7,6 +7,7 @@ import { drizzle } from 'drizzle-orm/d1';
 import { env } from 'cloudflare:workers';
 import { credenziali, sessioni, utenti, verifiche } from '../db/schema';
 import { componiEmail, inviaEmail } from './email';
+import { cancellaFileFoto } from './foto-profilo';
 
 const variabili = env as unknown as { BETTER_AUTH_SECRET?: string; BETTER_AUTH_URL?: string; DB: D1Database };
 
@@ -25,7 +26,10 @@ function creaAccesso() {
         ruolo: { type: 'string', defaultValue: 'cliente', input: false },
         telefono: { type: 'string', required: false, input: false },
       },
-      deleteUser: { enabled: true },
+      deleteUser: {
+        enabled: true,
+        beforeDelete: async (utente) => cancellaFileFoto(utente.id, utente.image),
+      },
     },
     emailAndPassword: {
       enabled: true,

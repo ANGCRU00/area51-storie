@@ -33,7 +33,12 @@ Niente Tailwind: ogni componente ha il suo CSS. Analisi tecnica completa: vedi C
   sono salvati anche in D1 (tabelle `preferiti` e `serie_seguite`, `/api/raccolte`). Al primo accesso da un dispositivo
   le liste si uniscono, poi comanda quella dell'account; uscendo dall'account spariscono dal dispositivo.
   Ogni serie mostra la prossima uscita (per codice della serie Starshop, altrimenti per nome ed editore).
-- **Prenotazioni** legate all'account: `/api/prenotazioni` (solo clienti connessi). I pulsanti "Prenota" chiedono di accedere se serve.
+- **Prenotazioni** legate all'account: `/api/prenotazioni` (solo clienti connessi). **Ogni prodotto del sito si prenota**
+  (magazzino, prossime uscite, uscite già uscite, esauriti): non c'è più il carrello, in testata c'è "Prenotazioni".
+  Massimo 30 prenotazioni aperte per cliente. Chi non trova un prodotto usa "Non lo trovi? Chiedicelo"
+  (in fondo ai risultati del catalogo, `/negozio?cosa=testo#chiedicelo` precompila il modulo).
+- **Foto del profilo**: dalla pagina account, ritagliata a 256 px nel browser, in R2 `profili/<utente>-<istante>.jpg`
+  (`/api/profilo/foto`, solo la propria; la chiave si accetta solo se contiene l'id dell'utente). Si cancella con l'account.
 - **Email** con Resend (`src/lib/email.ts`): senza chiave le email si stampano nel terminale, così si provano i flussi in locale.
 - **Segreti**: in locale nel file `.dev.vars` (escluso da git; contiene `BETTER_AUTH_SECRET`). Online:
   `npx wrangler secret put BETTER_AUTH_SECRET`, `npx wrangler secret put RESEND_API_KEY`, e le variabili

@@ -1,7 +1,7 @@
 ---
 /* Testata comune: logo, menu delle categorie con la navicella che segue il mouse (da 1420 px),
-   ricerca, preferiti, profilo, carrello e menu da telefono. Carrello e preferiti sono isole React (contatori sempre aggiornati). */
-import PulsanteCarrello from '../isole/PulsanteCarrello.tsx';
+   ricerca, preferiti, profilo, prenotazioni e menu da telefono. I preferiti sono un'isola React (contatore sempre aggiornato). */
+import PulsantePrenotazioni from './PulsantePrenotazioni.astro';
 import PulsantePreferiti from '../isole/PulsantePreferiti.tsx';
 
 const voci = [
@@ -64,7 +64,8 @@ const voci = [
       <span class="solo-largo-640">
         <PulsantePreferiti client:idle />
       </span>
-      <a href="/account" class="tondo solo-largo-640" aria-label="Il tuo profilo">
+      <a href="/account" class="tondo solo-largo-640 account" id="icona-account" aria-label="Il tuo profilo">
+        <img class="foto-account" alt="" width="44" height="44" hidden />
         <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
           <path
             d="M12 11a4 4 0 100-8 4 4 0 000 8zM4 21v-1a6 6 0 016-6h4a6 6 0 016 6v1"
@@ -74,7 +75,7 @@ const voci = [
           />
         </svg>
       </a>
-      <PulsanteCarrello client:idle />
+      <PulsantePrenotazioni />
       <button
         type="button"
         class="tondo pulsante-menu"
@@ -141,6 +142,25 @@ const voci = [
 </header>
 
 <script>
+  import { ascolta, indirizzoFotoProfilo } from '../../lib/negozio';
+
+  /* Foto del profilo al posto dell'icona, per chi ha fatto l'accesso da questo dispositivo */
+  const iconaAccount = document.getElementById('icona-account');
+  const fotoAccount = iconaAccount?.querySelector('img');
+  function mostraFotoAccount() {
+    if (!iconaAccount || !fotoAccount) return;
+    const indirizzo = indirizzoFotoProfilo();
+    if (indirizzo && fotoAccount.getAttribute('src') !== indirizzo) fotoAccount.src = indirizzo;
+    fotoAccount.hidden = !indirizzo;
+    iconaAccount.classList.toggle('con-foto', !!indirizzo);
+  }
+  fotoAccount?.addEventListener('error', () => {
+    fotoAccount.hidden = true;
+    iconaAccount?.classList.remove('con-foto');
+  });
+  ascolta(mostraFotoAccount);
+  mostraFotoAccount();
+
   /* Menu da telefono */
   const pulsanteMenu = document.getElementById('apri-menu') as HTMLButtonElement;
   const menuTelefono = document.getElementById('menu-telefono') as HTMLElement;
@@ -230,6 +250,18 @@ const voci = [
 </script>
 
 <style>
+  .account.con-foto {
+    padding: 0;
+    overflow: hidden;
+  }
+  .account.con-foto svg {
+    display: none;
+  }
+  .foto-account {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
   .testata {
     position: sticky;
     top: 0;

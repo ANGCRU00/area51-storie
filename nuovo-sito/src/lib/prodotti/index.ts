@@ -11,15 +11,7 @@ export {
   type Risultato,
   type Stato,
 } from './catalogo';
-export { trovaProdotto, type SchedaProdotto } from './scheda';
+export { prodottoPerCodice, trovaProdotto, type SchedaProdotto } from './scheda';
 export { perLaHome } from './home';
 export { filtriScelti, indirizzoConFiltri, vedeSoloAdulti, type FiltroScelto } from './indirizzi';
-export {
-  dettagliDi,
-  eLibro,
-  repartoDi,
-  siCompra,
-  siPrenota,
-  tutteLeEdizioni,
-  type Reparto,
-} from './presentazione';
+export { dettagliDi, eLibro, repartoDi, siPrenota, tutteLeEdizioni, type Reparto } from './presentazione';

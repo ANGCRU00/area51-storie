@@ -1,0 +1,39 @@
+---
+/* Invito in fondo ai risultati: chi non trova un prodotto lo chiede al negozio con il modulo Chiedicelo. */
+interface Props {
+  cerca?: string;
+}
+const { cerca = '' } = Astro.props;
+const indirizzo = '/negozio' + (cerca ? '?cosa=' + encodeURIComponent(cerca) : '') + '#chiedicelo';
+---
+
+<aside class="non-lo-trovi">
+  <p class="pesante domanda">Non lo trovi?</p>
+  <p class="testo">Scrivici cosa cerchi: verifichiamo se possiamo averlo e ti rispondiamo.</p>
+  <a class="pulsante" href={indirizzo}>
+    Chiedicelo
+  </a>
+</aside>
+
+<style>
+  .non-lo-trovi {
+    margin-top: 2rem;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem 1.5rem;
+    padding: 1.25rem 1.5rem;
+    border-radius: var(--raggio);
+    border: 2px dashed rgb(185 230 46 / 0.5);
+    background: rgb(14 9 38 / 0.9);
+  }
+  .domanda {
+    font-size: 1.25rem;
+    color: var(--lime);
+  }
+  .testo {
+    flex: 1 1 16rem;
+    font-weight: 600;
+    color: var(--testo-tenue);
+  }
+</style>

@@ -6,6 +6,7 @@ import DatiAccount from '../components/isole/DatiAccount.tsx';
 import ElencoPreferiti from '../components/isole/ElencoPreferiti.tsx';
 import SerieSeguite from '../components/isole/SerieSeguite.tsx';
 import { prenotazioniDi } from '../lib/prenotazioni';
+import { chiaveFotoDi } from '../lib/foto-profilo';
 import { profiloDi } from '../lib/profilo';
 import { dataLunga } from '../lib/prodotti';
 
@@ -14,7 +15,11 @@ const utente = Astro.locals.utente;
 if (!utente) return Astro.redirect('/accedi?torna=/account');
 Astro.response.headers.set('cache-control', 'private, no-store');
 
-const [prenotazioni, profilo] = await Promise.all([prenotazioniDi(utente.id), profiloDi(utente.id)]);
+const [prenotazioni, profilo, chiaveFoto] = await Promise.all([
+  prenotazioniDi(utente.id),
+  profiloDi(utente.id),
+  chiaveFotoDi(utente.id),
+]);
 const nome = profilo?.nome ?? utente.nome;
 const benvenuto = Astro.url.searchParams.has('benvenuto');
 const prenotazioniAperte = prenotazioni.filter((p) =>
@@ -40,8 +45,11 @@ const SEZIONI = [
   <div class="contenitore pagina" data-utente={utente.id}>
     <aside class="colonna riquadro">
       <div class="chi">
-        <span class="iniziale pesante" aria-hidden="true">
-          {nome.slice(0, 1).toUpperCase()}
+        <span class="ritratto" data-foto-profilo={chiaveFoto ?? ''}>
+          <span class="iniziale pesante" aria-hidden="true">
+            {nome.slice(0, 1).toUpperCase()}
+          </span>
+          <img alt="La tua foto del profilo" width="72" height="72" />
         </span>
         <div class="chi-testo">
           <span class="bollino">Il mio account</span>
@@ -53,6 +61,16 @@ const SEZIONI = [
           </h1>
           <p class="email">{utente.email}</p>
         </div>
+      </div>
+      <div class="foto-azioni">
+        <label class="foto-cambia">
+          Cambia foto
+          <input type="file" id="scegli-foto" accept="image/*" class="solo-lettori" />
+        </label>
+        <button type="button" id="togli-foto" class="foto-togli" hidden={!chiaveFoto}>
+          Togli foto
+        </button>
+        <p id="messaggio-foto" class="foto-messaggio" role="status"></p>
       </div>
       {benvenuto && (
         <p class="benvenuto" role="status">
@@ -129,6 +147,7 @@ const SEZIONI = [
 </Base>
 
 <script>
+  import '../scripts/foto-profilo';
   import { ascolta, collegaAccount, preferiti, scollegaAccount, serie } from '../lib/negozio';
 
   const pagina = document.querySelector<HTMLElement>('[data-utente]');
@@ -219,17 +238,71 @@ const SEZIONI = [
     align-items: center;
     gap: 1rem;
   }
-  .iniziale {
+  .ritratto {
+    position: relative;
     flex: none;
     width: 4.5rem;
     height: 4.5rem;
     border-radius: 50%;
+    overflow: hidden;
+    background: var(--lime);
+    box-shadow: var(--ombra-brutal);
+  }
+  .iniziale {
+    position: absolute;
+    inset: 0;
     display: grid;
     place-items: center;
-    background: var(--lime);
     color: #000;
     font-size: 2rem;
-    box-shadow: var(--ombra-brutal);
+  }
+  .ritratto img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: none;
+  }
+  .ritratto:global(.con-foto) img {
+    display: block;
+  }
+  .foto-azioni {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.4rem 1rem;
+    margin-top: -0.5rem;
+  }
+  .foto-cambia,
+  .foto-togli {
+    font-size: 0.8rem;
+    font-weight: 800;
+    color: var(--lime);
+    text-decoration: underline;
+    cursor: pointer;
+  }
+  .foto-cambia:focus-within {
+    outline: 2px solid var(--lime);
+    outline-offset: 2px;
+  }
+  .foto-togli {
+    color: var(--testo-tenue);
+  }
+  .foto-togli:hover {
+    color: #fb923c;
+  }
+  .foto-messaggio {
+    flex-basis: 100%;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--lime);
+  }
+  .foto-messaggio:empty {
+    display: none;
+  }
+  .foto-messaggio:global(.errore) {
+    color: #fb923c;
   }
   .chi-testo {
     display: grid;

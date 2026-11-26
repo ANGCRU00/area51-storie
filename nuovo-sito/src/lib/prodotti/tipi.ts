@@ -39,7 +39,7 @@ export const TESTO_DISPONIBILITA: Record<Disponibilita, string> = {
   appena_arrivato: 'Appena arrivato',
   esaurito: 'Esaurito, ordinabile',
   preordine: 'Prenotabile',
-  uscito: 'Uscito: chiedi in negozio',
+  uscito: 'Già uscito',
 };
 
 export const COOKIE_ETA_CONFERMATA = 'area51_adulti';

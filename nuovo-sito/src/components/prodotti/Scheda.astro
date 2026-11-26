@@ -1,6 +1,6 @@
 ---
-/* Scheda di un prodotto negli elenchi (catalogo, uscite, altri volumi). HTML fisso: il pulsante "Aggiungi"/"Prenota"
-   lo gestisce lo script di AzioniCarrello.astro (uno per pagina), tramite gli attributi data-*. */
+/* Scheda di un prodotto negli elenchi (catalogo, uscite, altri volumi). HTML fisso: il pulsante "Prenota"
+   lo gestisce lo script di AzioniPrenota.astro (uno per pagina), tramite gli attributi data-*. */
 import { TESTO_DISPONIBILITA, euro, quandoEsce, type Prodotto } from '../../lib/prodotti';
 interface Props {
   p: Prodotto;
@@ -19,7 +19,6 @@ const etichetta =
           ? 'USCITO'
           : 'IN NEGOZIO';
 const prenota = p.disponibilita === 'preordine';
-const acquistabile = p.disponibilita === 'in_negozio' || p.disponibilita === 'appena_arrivato' || prenota;
 // colore del riquadro senza copertina, sempre lo stesso per lo stesso titolo
 const COL = [
   ['#22D3EE', '#5B21B6'],
@@ -75,24 +74,9 @@ const c = COL[[...p.codice].reduce((s, ch) => s + ch.charCodeAt(0), 0) % COL.len
   </a>
   <div class="piede">
     <span class="pesante prezzo">{euro(p.prezzo)}</span>
-    {acquistabile ? (
-      <button
-        type="button"
-        class:list={['pesante azione', { prenota }]}
-        data-aggiungi={p.codice}
-        data-titolo={p.titolo}
-        data-prezzo={p.prezzo ?? 0}
-        data-editore={p.editore ?? ''}
-        data-copertina={p.copertina ?? ''}
-        data-preordine={prenota ? '1' : ''}
-      >
-        {prenota ? 'Prenota' : 'Aggiungi'}
-      </button>
-    ) : (
-      <a class="pesante azione" href="/negozio#chiedicelo">
-        Chiedilo
-      </a>
-    )}
+    <button type="button" class="pesante azione" data-prenota={p.codice}>
+      Prenota
+    </button>
   </div>
 </article>
 
@@ -240,26 +224,17 @@ const c = COL[[...p.codice].reduce((s, ch) => s + ch.charCodeAt(0), 0) % COL.len
     padding: 0.5rem 0.875rem;
     border-radius: var(--raggio-pillola);
     border-bottom-left-radius: 4px;
-    border: 1px solid rgb(255 255 255 / 0.25);
-    box-shadow: 3px 3px 0 var(--viola);
-    transition:
-      background-color var(--transizione),
-      color var(--transizione),
-      border-color var(--transizione);
-  }
-  .azione:hover {
-    background: var(--lime);
-    color: #000;
-    border-color: var(--lime);
-  }
-  .azione.prenota {
+    border: 1px solid var(--viola);
     background: var(--viola);
     color: #fff;
-    border-color: var(--viola);
     box-shadow: var(--ombra-brutal-lime);
+    transition: background-color var(--transizione);
   }
-  .azione.prenota:hover {
+  .azione:hover {
     background: var(--viola-acceso);
+  }
+  .azione:disabled {
+    opacity: 0.8;
   }
   @media (max-width: 420px) {
     .azione {

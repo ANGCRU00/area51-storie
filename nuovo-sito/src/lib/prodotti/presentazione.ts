@@ -16,11 +16,6 @@ export const repartoDi = (prodotto: Prodotto): Reparto =>
 
 export const siPrenota = (prodotto: Prodotto) => prodotto.disponibilita === 'preordine';
 
-export const siCompra = (prodotto: Prodotto) =>
-  siPrenota(prodotto) ||
-  prodotto.disponibilita === 'in_negozio' ||
-  prodotto.disponibilita === 'appena_arrivato';
-
 export const eLibro = (prodotto: Prodotto) =>
   prodotto.categoria === 'manga' || prodotto.categoria === 'fumetti';
 

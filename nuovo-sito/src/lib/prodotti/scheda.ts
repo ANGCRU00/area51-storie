@@ -17,7 +17,8 @@ export type SchedaProdotto = {
 
 const CODICE_VALIDO = /^[A-Za-z0-9-]{4,40}$/;
 
-async function cercaPerCodice(codice: string): Promise<Prodotto | null> {
+/** Il prodotto visibile sul sito con questo codice: prima il magazzino, poi le uscite. */
+export async function prodottoPerCodice(codice: string): Promise<Prodotto | null> {
   const [articolo] = await db()
     .select()
     .from(articoli)
@@ -99,7 +100,7 @@ const perVolumeEUscita = (a: Prodotto, b: Prodotto) =>
 
 export async function trovaProdotto(codice: string): Promise<SchedaProdotto | null> {
   if (!CODICE_VALIDO.test(codice)) return null;
-  const trovato = await cercaPerCodice(codice);
+  const trovato = await prodottoPerCodice(codice);
   if (!trovato) return null;
 
   const schede = await leggiSchedeSerie();

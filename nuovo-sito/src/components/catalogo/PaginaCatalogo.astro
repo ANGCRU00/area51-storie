@@ -9,7 +9,8 @@ import {
   type Filtri,
 } from '../../lib/prodotti';
 import Percorso from '../comuni/Percorso.astro';
-import AzioniCarrello from '../prodotti/AzioniCarrello.astro';
+import AzioniPrenota from '../prodotti/AzioniPrenota.astro';
+import NonLoTrovi from './NonLoTrovi.astro';
 import BarraFiltri from './BarraFiltri.astro';
 import FiltriScelti from './FiltriScelti.astro';
 import GrigliaProdotti from './GrigliaProdotti.astro';
@@ -78,11 +79,13 @@ const indirizzoPagina = (numero: number) => indirizzoConFiltri(qui, filtri, { pa
       prodotti={risultato.prodotti}
       conFiltri={scelti.length > 0}
       messaggioVuoto={messaggioVuoto}
+      cerca={filtri.cerca}
     />
     <Paginazione pagina={risultato.pagina} pagine={risultato.pagine} indirizzoPagina={indirizzoPagina} />
+    {risultato.prodotti.length > 0 && <NonLoTrovi cerca={filtri.cerca} />}
   </section>
 </div>
-<AzioniCarrello />
+<AzioniPrenota />
 
 <style>
   .pagina {

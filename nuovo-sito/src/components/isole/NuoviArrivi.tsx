@@ -1,8 +1,7 @@
 /* Isola: i due pulsanti "Appena usciti / Prossime uscite" e le schede della home.
    Le schede arrivano già pronte dal server (props), quindi sono nell'HTML anche senza JavaScript;
-   qui c'è solo ciò che risponde ai tocchi: cambio di elenco e "Aggiungi" / "Prenota". */
+   qui c'è solo ciò che risponde ai tocchi: cambio di elenco e "Prenota". */
 import { useRef, useState } from 'react';
-import { carrello } from '../../lib/negozio';
 import { prenotaDalSito } from '../../lib/prenota-dal-sito';
 import css from './NuoviArrivi.module.css';
 
@@ -35,21 +34,6 @@ export default function NuoviArrivi({ nuovi, prossime }: { nuovi: Scheda[]; pros
     setAggiunto(s.codice);
     clearTimeout(timer.current);
     timer.current = setTimeout(() => setAggiunto(''), 2500);
-  }
-
-  function aggiungi(s: Scheda) {
-    if (s.pre) return void prenota(s);
-    carrello.aggiungi({
-      k: s.codice,
-      t: s.titolo,
-      p: s.prezzo ?? 0,
-      l: '/prodotto/' + encodeURIComponent(s.codice),
-      i: s.copertina ?? '',
-      e: s.editore ?? '',
-    });
-    setAggiunto(s.codice);
-    clearTimeout(timer.current);
-    timer.current = setTimeout(() => setAggiunto(''), 1800);
   }
 
   return (
@@ -104,18 +88,8 @@ export default function NuoviArrivi({ nuovi, prossime }: { nuovi: Scheda[]; pros
             </a>
             <div className={css.piede}>
               <span className={'pesante ' + css.prezzo}>{euro(s.prezzo)}</span>
-              <button
-                type="button"
-                onClick={() => aggiungi(s)}
-                className={'pesante ' + (s.pre ? css.prenota : css.aggiungi)}
-              >
-                {aggiunto === s.codice
-                  ? s.pre
-                    ? 'Prenotato ✓'
-                    : 'Aggiunto ✓'
-                  : s.pre
-                    ? 'Prenota'
-                    : 'Aggiungi'}
+              <button type="button" onClick={() => prenota(s)} className={'pesante ' + css.prenota}>
+                {aggiunto === s.codice ? 'Prenotato ✓' : 'Prenota'}
               </button>
               {avviso?.codice === s.codice && (
                 <p className={css.avviso} role="status">

@@ -1,0 +1,51 @@
+---
+/* Pulsante lime della testata: porta alle prenotazioni del proprio account (o all'accesso, se serve). */
+---
+
+<a class="prenotazioni" href="/account#prenotazioni" aria-label="Le mie prenotazioni">
+  <svg class="icona" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+    <path
+      d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      stroke-width="2.5"
+    ></path>
+  </svg>
+  <span class="esteso">Prenotazioni</span>
+</a>
+
+<style>
+  .prenotazioni {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    white-space: nowrap;
+    background: var(--lime);
+    color: #000;
+    font-weight: 900;
+    font-stretch: 125%;
+    font-size: 0.75rem;
+    padding: 0.75rem 0.875rem;
+    border-radius: var(--raggio-pillola);
+    box-shadow: var(--ombra-brutal);
+    transition: background-color var(--transizione);
+  }
+  .prenotazioni:hover {
+    background: var(--lime-scuro);
+  }
+  .icona {
+    width: 1rem;
+    height: 1rem;
+  }
+  .esteso {
+    display: none;
+  }
+  @media (min-width: 640px) {
+    .prenotazioni {
+      padding-inline: 1rem;
+    }
+    .esteso {
+      display: inline;
+    }
+  }
+</style>

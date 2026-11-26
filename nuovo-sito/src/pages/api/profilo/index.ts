@@ -1,9 +1,9 @@
 /* /api/profilo. Chi può usarla: SOLO clienti con account (soloCliente), e solo sui propri dati.
    PATCH {nome, telefono}: cambia nome e telefono. Email, password e ruolo non si cambiano da qui. */
 import type { APIRoute } from 'astro';
-import { errore, json, leggiJson, testo } from '../../lib/api';
-import { soloCliente } from '../../lib/permessi';
-import { aggiornaProfilo, telefonoValido } from '../../lib/profilo';
+import { errore, json, leggiJson, testo } from '../../../lib/api';
+import { soloCliente } from '../../../lib/permessi';
+import { aggiornaProfilo, telefonoValido } from '../../../lib/profilo';
 
 export const prerender = false;
 

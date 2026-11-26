@@ -1,24 +1,14 @@
-/* Dati del visitatore su QUESTO dispositivo: carrello, preferiti e serie seguite (localStorage).
-   Stesse chiavi del sito attuale (js/area51.js), così chi passa dal vecchio al nuovo sito ritrova il carrello.
+/* Dati del visitatore su QUESTO dispositivo: preferiti e serie seguite (localStorage).
+   Stesse chiavi del sito attuale (js/area51.js), così chi passa dal vecchio al nuovo sito ritrova i preferiti.
    Chi ha fatto l'accesso ritrova preferiti e serie anche sugli altri dispositivi: vedi "Account collegato" in fondo. */
 
-export type Riga = {
-  k: string;
-  t: string;
-  p: number;
-  l: string;
-  i: string;
-  e: string;
-  d?: string;
-  q: number;
-};
 export type Preferito = { k: string; t: string; p: number; l: string; i: string; e: string };
 
 const CH = {
-  carrello: 'area51-carrello',
   preferiti: 'area51-preferiti',
   serie: 'area51-serie',
   account: 'area51-account',
+  foto: 'area51-foto',
 } as const;
 const memoria: Record<string, unknown> = {};
 const ascoltatori = new Set<() => void>();
@@ -60,7 +50,7 @@ function avvisa() {
 }
 
 if (typeof window !== 'undefined') {
-  // un'altra scheda del browser ha cambiato carrello o preferiti
+  // un'altra scheda del browser ha cambiato preferiti o serie
   window.addEventListener('storage', (e) => {
     if (e.key && e.key.startsWith('area51-')) avvisa();
   });
@@ -75,29 +65,6 @@ export function ascolta(f: () => void) {
 }
 
 const testo = (x: unknown) => String(x ?? '').slice(0, 200);
-
-export const carrello = {
-  tutti: () => leggi<Riga[]>(CH.carrello, []),
-  conta: () => leggi<Riga[]>(CH.carrello, []).reduce((t, x) => t + (Number(x.q) || 0), 0),
-  aggiungi(s: Omit<Riga, 'q'>, q = 1) {
-    const l = leggi<Riga[]>(CH.carrello, []);
-    q = Math.max(1, Math.min(9, q));
-    const x = l.find((y) => y.k === s.k);
-    if (x) x.q = Math.min(9, x.q + q);
-    else
-      l.push({
-        k: testo(s.k),
-        t: testo(s.t),
-        p: Number(s.p) || 0,
-        l: String(s.l ?? '').slice(0, 700),
-        i: testo(s.i),
-        e: testo(s.e),
-        d: testo(s.d),
-        q,
-      });
-    scrivi(CH.carrello, l);
-  },
-};
 
 export const preferiti = {
   tutti: () => leggi<Preferito[]>(CH.preferiti, []),
@@ -159,7 +126,7 @@ export const serie = {
    le liste del dispositivo e dell'account si uniscono; poi comanda la copia dell'account.
    All'uscita dall'account le due liste spariscono da questo dispositivo (restano salvate nell'account). */
 
-type Raccolte = { preferiti?: Preferito[]; serie?: SerieSeguita[] };
+type Raccolte = { preferiti?: Preferito[]; serie?: SerieSeguita[]; foto?: string };
 
 const idCollegato = () => leggi<string>(CH.account, '');
 
@@ -200,6 +167,7 @@ export async function collegaAccount(utenteId: string) {
   if (!dati) return;
   if (dati.preferiti) scrivi(CH.preferiti, dati.preferiti);
   if (dati.serie) scrivi(CH.serie, dati.serie.map(soloDatiSerie));
+  if (dati.foto !== undefined) impostaFotoProfilo(dati.foto);
   scrivi(CH.account, utenteId);
 }
 
@@ -208,4 +176,16 @@ export function scollegaAccount() {
   rimuovi(CH.account);
   rimuovi(CH.preferiti);
   rimuovi(CH.serie);
+  rimuovi(CH.foto);
+}
+
+/** Indirizzo della foto del profilo per la testata ('' = nessuna). La chiave cambia a ogni foto nuova. */
+export const indirizzoFotoProfilo = () => {
+  const chiave = leggi<string>(CH.foto, '');
+  return chiave ? '/api/profilo/foto?v=' + encodeURIComponent(chiave.replace(/^profili\//, '')) : '';
+};
+
+export function impostaFotoProfilo(chiave: string) {
+  if (chiave) scrivi(CH.foto, chiave);
+  else rimuovi(CH.foto);
 }

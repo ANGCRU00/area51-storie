@@ -1,5 +1,5 @@
 ---
-import { dataLunga, euro, siCompra, siPrenota, TESTO_DISPONIBILITA, type Prodotto } from '../../lib/prodotti';
+import { dataLunga, euro, siPrenota, TESTO_DISPONIBILITA, type Prodotto } from '../../lib/prodotti';
 
 interface Props {
   prodotto: Prodotto;
@@ -8,8 +8,8 @@ interface Props {
 }
 const { prodotto: p, edizioni } = Astro.props;
 
-const prenotabile = siPrenota(p);
-const acquistabile = siCompra(p);
+const inUscita = siPrenota(p);
+const aScaffale = p.disponibilita === 'in_negozio' || p.disponibilita === 'appena_arrivato';
 const ultimoGiorno = p.dataLimite
   ? `Prenota entro il ${dataLunga(p.dataLimite)}.`
   : 'Ultimo giorno per prenotare: da confermare.';
@@ -20,24 +20,21 @@ const QUANTITA = [1, 2, 3, 4, 5];
   <div class="prezzo-riga">
     <span class="pesante prezzo">{euro(p.prezzo)}</span>
     <span class="disponibile">
-      <span
-        class:list={['spia', { verde: acquistabile && !prenotabile, viola: prenotabile }]}
-        aria-hidden="true"
-      ></span>
+      <span class:list={['spia', { verde: aScaffale, viola: inUscita }]} aria-hidden="true"></span>
       {TESTO_DISPONIBILITA[p.disponibilita]}
     </span>
   </div>
   <p class="nota" id="stato-negozio" hidden></p>
 
-  {prenotabile && (
-    <p class="nota">{ultimoGiorno} La prenotazione vale quando la confermiamo per email o telefono.</p>
-  )}
+  {inUscita && <p class="nota">{ultimoGiorno}</p>}
+  {aScaffale && <p class="nota">Prenotalo e te lo mettiamo da parte: lo ritiri e lo paghi in negozio.</p>}
   {p.disponibilita === 'uscito' && (
-    <p class="nota">È già uscito: chiedi in negozio se è disponibile, o scrivici con il modulo Chiedicelo.</p>
+    <p class="nota">È già uscito: prenotalo e verifichiamo se possiamo averlo.</p>
   )}
   {p.disponibilita === 'esaurito' && (
-    <p class="nota">Al momento è esaurito in negozio: possiamo provare a ordinarlo per te.</p>
+    <p class="nota">Al momento è esaurito: prenotalo e verifichiamo se possiamo riordinarlo.</p>
   )}
+  <p class="nota">La prenotazione vale quando la confermiamo per email o telefono.</p>
 
   {edizioni.length > 1 && (
     <div>
@@ -61,36 +58,21 @@ const QUANTITA = [1, 2, 3, 4, 5];
   )}
 
   <div class="bottoni">
-    {acquistabile ? (
-      <>
-        <label class="quantita">
-          <span class="solo-lettori">Quantità</span>
-          <select id="quantita">
-            {QUANTITA.map((n) => (
-              <option value={n}>{n}</option>
-            ))}
-          </select>
-        </label>
-        <button
-          type="button"
-          class:list={['pulsante', { 'pulsante-viola': prenotabile }]}
-          data-aggiungi={p.codice}
-          data-titolo={p.titolo}
-          data-prezzo={p.prezzo ?? 0}
-          data-editore={p.editore ?? ''}
-          data-copertina={p.copertina ?? ''}
-          data-preordine={prenotabile ? '1' : ''}
-          data-quantita-da="quantita"
-        >
-          {prenotabile ? 'Prenota' : 'Aggiungi al carrello'}
-        </button>
-      </>
-    ) : (
-      <a class="pulsante" href="/negozio#chiedicelo">
-        Chiedilo al negozio
-      </a>
-    )}
+    <label class="quantita">
+      <span class="solo-lettori">Copie</span>
+      <select id="quantita">
+        {QUANTITA.map((n) => (
+          <option value={n}>{n}</option>
+        ))}
+      </select>
+    </label>
+    <button type="button" class="pulsante pulsante-viola" data-prenota={p.codice} data-quantita-da="quantita">
+      Prenota
+    </button>
   </div>
+  <p class="nota">
+    Cerchi un'altra edizione o un altro prodotto? <a href="/negozio#chiedicelo">Chiedicelo</a>.
+  </p>
 </div>
 
 <script>
@@ -149,6 +131,10 @@ const QUANTITA = [1, 2, 3, 4, 5];
     font-weight: 600;
     color: var(--testo-tenue);
     line-height: 1.5;
+  }
+  .nota a {
+    color: var(--lime);
+    text-decoration: underline;
   }
   .etichetta-campo {
     font-size: 0.75rem;

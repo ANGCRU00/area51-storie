@@ -180,7 +180,6 @@
     font-size: 1rem;
   }
 }
-.aggiungi,
 .prenota {
   font-size: 0.75rem;
   padding: 0.5rem 0.875rem;
@@ -191,15 +190,6 @@
     color var(--transizione),
     border-color var(--transizione);
 }
-.aggiungi {
-  border: 1px solid rgb(255 255 255 / 0.25);
-  box-shadow: 3px 3px 0 var(--viola);
-}
-.aggiungi:hover {
-  background: var(--lime);
-  color: #000;
-  border-color: var(--lime);
-}
 .prenota {
   background: var(--viola);
   color: #fff;
@@ -209,7 +199,6 @@
   background: var(--viola-acceso);
 }
 @media (max-width: 420px) {
-  .aggiungi,
   .prenota {
     width: 100%;
     text-align: center;

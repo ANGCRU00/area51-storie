@@ -1,0 +1,54 @@
+---
+/* Da mettere una volta nelle pagine con schede: gestisce i pulsanti "Prenota" (attributo data-prenota con il codice
+   del prodotto; data-quantita-da con l'id del menu delle copie, se c'è). Senza account porta alla pagina di accesso. */
+---
+
+<script>
+  import { prenotaDalSito } from '../../lib/prenota-dal-sito';
+
+  const COPIE_MASSIME = 5;
+
+  function copieScelte(pulsante: HTMLButtonElement): number {
+    const id = pulsante.dataset.quantitaDa;
+    const menu = id ? (document.getElementById(id) as HTMLSelectElement | null) : null;
+    return Math.max(1, Math.min(COPIE_MASSIME, Number(menu?.value) || 1));
+  }
+
+  function mostraPerUnAttimo(pulsante: HTMLButtonElement, testo: string) {
+    const prima = pulsante.textContent;
+    pulsante.textContent = testo;
+    setTimeout(() => {
+      pulsante.textContent = prima;
+      pulsante.disabled = false;
+    }, 2500);
+  }
+
+  function avvisoSottoIlPulsante(pulsante: HTMLButtonElement, messaggio: string) {
+    const avviso = document.createElement('p');
+    avviso.className = 'avviso-prenota';
+    avviso.setAttribute('role', 'status');
+    avviso.textContent = messaggio;
+    pulsante.parentElement?.querySelector('.avviso-prenota')?.remove();
+    pulsante.parentElement?.append(avviso);
+  }
+
+  document.addEventListener('click', async (evento) => {
+    const pulsante = (evento.target as Element).closest<HTMLButtonElement>('[data-prenota]');
+    if (!pulsante) return;
+    pulsante.disabled = true;
+    const esito = await prenotaDalSito(pulsante.dataset.prenota ?? '', copieScelte(pulsante));
+    if (esito.ok) return mostraPerUnAttimo(pulsante, esito.messaggio);
+    pulsante.disabled = false;
+    if (esito.messaggio) avvisoSottoIlPulsante(pulsante, esito.messaggio);
+  });
+</script>
+
+<style is:global>
+  .avviso-prenota {
+    flex-basis: 100%;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #fb923c;
+    line-height: 1.35;
+  }
+</style>

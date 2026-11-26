@@ -2,7 +2,7 @@
 /* Scheda prodotto: /prodotto/<EAN o codice Starshop>. Solo dati di fatto: niente descrizioni Starshop né prezzi B2B. */
 import Base from '../../layouts/Base.astro';
 import Percorso from '../../components/comuni/Percorso.astro';
-import AzioniCarrello from '../../components/prodotti/AzioniCarrello.astro';
+import AzioniPrenota from '../../components/prodotti/AzioniPrenota.astro';
 import AcquistoProdotto from '../../components/scheda/AcquistoProdotto.astro';
 import ConfermaEta from '../../components/scheda/ConfermaEta.astro';
 import CopertinaProdotto from '../../components/scheda/CopertinaProdotto.astro';
@@ -52,7 +52,7 @@ const descrizione =
     <SezioneProdotti titolo="Tutti i volumi della serie" prodotti={altri} />
     <SezioneProdotti titolo="Ti potrebbe piacere" prodotti={simili} />
   </div>
-  <AzioniCarrello />
+  <AzioniPrenota />
 </Base>
 
 <style>
