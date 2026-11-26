@@ -7,7 +7,7 @@ export default function PulsantePreferiti() {
   const n = useSyncExternalStore(ascolta, preferiti.conta, () => 0);
   return (
     <a
-      href="/profilo#preferiti"
+      href="/account#preferiti"
       className={'tondo ' + css.pulsante}
       aria-label={'Preferiti' + (n ? ', ' + n : '')}
     >

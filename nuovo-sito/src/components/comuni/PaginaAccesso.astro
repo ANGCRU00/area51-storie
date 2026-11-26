@@ -1,0 +1,63 @@
+---
+/* Impaginazione delle pagine dell'account: riquadro centrale con titolo, modulo e collegamenti sotto. */
+interface Props {
+  titolo: string;
+  introduzione: string;
+}
+const { titolo, introduzione } = Astro.props;
+---
+
+<div class="contenitore pagina">
+  <section class="riquadro accesso">
+    <svg class="alieno" aria-hidden="true">
+      <use href="#alieno"></use>
+    </svg>
+    <h1 class="pesante">{titolo}</h1>
+    <p class="introduzione">{introduzione}</p>
+    <slot />
+    <div class="altri">
+      <slot name="altri" />
+    </div>
+  </section>
+</div>
+
+<style>
+  .pagina {
+    padding-block: 2.5rem 4rem;
+  }
+  .accesso {
+    max-width: 30rem;
+    margin-inline: auto;
+    display: grid;
+    gap: 1rem;
+    border: 2px solid rgb(185 230 46 / 0.6);
+    box-shadow: var(--ombra-brutal);
+  }
+  .alieno {
+    width: 3.5rem;
+    height: 3.5rem;
+  }
+  h1 {
+    font-size: 1.75rem;
+    line-height: 1.15;
+    color: #fff;
+  }
+  .introduzione {
+    color: var(--testo-tenue);
+    font-weight: 600;
+    line-height: 1.5;
+  }
+  .altri {
+    display: grid;
+    gap: 0.4rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--linea-tenue);
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--testo-tenue);
+  }
+  .altri :global(a) {
+    color: var(--lime);
+    text-decoration: underline;
+  }
+</style>

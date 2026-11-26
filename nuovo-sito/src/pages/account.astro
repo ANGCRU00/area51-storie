@@ -1,0 +1,228 @@
+---
+/* Il mio account: prenotazioni (dal database) e preferiti (sul dispositivo). Solo per chi ha fatto l'accesso. */
+import Base from '../layouts/Base.astro';
+import ElencoPreferiti from '../components/isole/ElencoPreferiti.tsx';
+import { prenotazioniDi } from '../lib/prenotazioni';
+import { dataLunga } from '../lib/prodotti';
+
+export const prerender = false;
+const utente = Astro.locals.utente;
+if (!utente) return Astro.redirect('/accedi?torna=/account');
+Astro.response.headers.set('cache-control', 'private, no-store');
+
+const prenotazioni = await prenotazioniDi(utente.id);
+const benvenuto = Astro.url.searchParams.has('benvenuto');
+const STATO: Record<string, string> = {
+  richiesta: 'In attesa di conferma',
+  confermata: 'Confermata',
+  arrivata: 'Arrivata: passa a ritirarla',
+  ritirata: 'Ritirata',
+  annullata: 'Annullata',
+};
+---
+
+<Base titolo="Il mio account · Area 51 Fumetteria">
+  <div class="contenitore pagina">
+    <header class="testa">
+      <span class="bollino">Il mio account</span>
+      <h1 class="pesante">
+        Ciao, <span class="lime">{utente.nome}</span>
+      </h1>
+      <p class="email">{utente.email}</p>
+      {benvenuto && (
+        <p class="benvenuto" role="status">
+          Email confermata: il tuo account è pronto.
+        </p>
+      )}
+      <button type="button" class="esci" id="esci">
+        Esci dall'account
+      </button>
+    </header>
+
+    <section class="riquadro" id="prenotazioni">
+      <h2 class="pesante">Le mie prenotazioni</h2>
+      {prenotazioni.length === 0 ? (
+        <p class="vuoto">
+          Nessuna prenotazione. Le prossime uscite si prenotano dalla pagina{' '}
+          <a href="/uscite">Prossime uscite</a>.
+        </p>
+      ) : (
+        <ul class="prenotazioni">
+          {prenotazioni.map((p) => (
+            <li class:list={['prenotazione', p.stato]}>
+              <a href={'/prodotto/' + encodeURIComponent(p.codiceProdotto)} class="pesante titolo">
+                {p.titolo}
+              </a>
+              <span class="dettaglio">
+                {p.copie} {p.copie === 1 ? 'copia' : 'copie'} · prenotata il{' '}
+                {dataLunga(p.creataIl.slice(0, 10))}
+              </span>
+              <span class="stato">{STATO[p.stato] ?? p.stato}</span>
+              {p.stato === 'richiesta' && (
+                <button type="button" class="annulla" data-annulla={p.id}>
+                  Annulla
+                </button>
+              )}
+            </li>
+          ))}
+        </ul>
+      )}
+    </section>
+
+    <section class="riquadro" id="preferiti">
+      <h2 class="pesante">I miei preferiti</h2>
+      <p class="nota">I preferiti restano su questo dispositivo.</p>
+      <ElencoPreferiti client:load />
+    </section>
+  </div>
+</Base>
+
+<script>
+  document.getElementById('esci')?.addEventListener('click', async () => {
+    await fetch('/api/accesso/sign-out', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: '{}',
+    });
+    location.href = '/';
+  });
+
+  document.addEventListener('click', async (evento) => {
+    const pulsante = (evento.target as Element).closest<HTMLButtonElement>('[data-annulla]');
+    if (!pulsante) return;
+    pulsante.disabled = true;
+    const risposta = await fetch('/api/prenotazioni/' + encodeURIComponent(pulsante.dataset.annulla ?? ''), {
+      method: 'DELETE',
+    });
+    if (risposta.ok) location.reload();
+    else {
+      const corpo = await risposta.json().catch(() => ({}));
+      pulsante.textContent = corpo.errore ?? 'Non riuscito';
+    }
+  });
+</script>
+
+<style>
+  .pagina {
+    padding-block: 2rem 4rem;
+    display: grid;
+    gap: 1.5rem;
+    max-width: 56rem;
+  }
+  .testa {
+    display: grid;
+    gap: 0.5rem;
+    justify-items: start;
+  }
+  h1 {
+    font-size: 2rem;
+    line-height: 1.1;
+    color: #fff;
+    overflow-wrap: anywhere;
+  }
+  @media (min-width: 640px) {
+    h1 {
+      font-size: 2.75rem;
+    }
+  }
+  .email {
+    color: var(--testo-tenue);
+    font-weight: 700;
+  }
+  .benvenuto {
+    color: var(--lime);
+    font-weight: 800;
+  }
+  .esci {
+    font-size: 0.85rem;
+    font-weight: 800;
+    color: var(--testo-tenue);
+    text-decoration: underline;
+  }
+  .esci:hover {
+    color: var(--lime);
+  }
+  h2 {
+    font-size: 1.25rem;
+    color: #fff;
+    margin-bottom: 1rem;
+  }
+  .vuoto,
+  .nota {
+    color: var(--testo-tenue);
+    font-weight: 600;
+  }
+  .nota {
+    margin: -0.5rem 0 1rem;
+    font-size: 0.85rem;
+  }
+  .vuoto a {
+    color: var(--lime);
+    text-decoration: underline;
+  }
+  .prenotazioni {
+    display: grid;
+    gap: 0.6rem;
+  }
+  .prenotazione {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 0.2rem 1rem;
+    align-items: center;
+    padding: 0.8rem 1rem;
+    border-radius: 0.75rem;
+    border: 1px solid var(--linea-tenue);
+    background: var(--scheda);
+  }
+  .titolo {
+    color: #fff;
+    overflow-wrap: anywhere;
+  }
+  .titolo:hover {
+    color: var(--lime);
+  }
+  .dettaglio {
+    grid-column: 1;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--testo-tenue);
+  }
+  .stato {
+    grid-column: 2;
+    grid-row: 1;
+    font-size: 0.75rem;
+    font-weight: 800;
+    padding: 0.25rem 0.6rem;
+    border-radius: var(--raggio-pillola);
+    background: rgb(91 33 182 / 0.5);
+    color: #fff;
+    white-space: nowrap;
+  }
+  .confermata .stato,
+  .arrivata .stato {
+    background: var(--lime);
+    color: #000;
+  }
+  .annullata {
+    opacity: 0.6;
+  }
+  @media (max-width: 480px) {
+    .prenotazione {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .stato,
+    .annulla {
+      grid-column: 1;
+      grid-row: auto;
+      justify-self: start;
+    }
+  }
+  .annulla {
+    grid-column: 2;
+    justify-self: end;
+    font-size: 0.8rem;
+    font-weight: 800;
+    color: #fb923c;
+    text-decoration: underline;
+  }
+</style>

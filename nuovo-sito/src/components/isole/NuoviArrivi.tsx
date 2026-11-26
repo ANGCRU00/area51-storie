@@ -3,6 +3,7 @@
    qui c'è solo ciò che risponde ai tocchi: cambio di elenco e "Aggiungi" / "Prenota". */
 import { useRef, useState } from 'react';
 import { carrello } from '../../lib/negozio';
+import { prenotaDalSito } from '../../lib/prenota-dal-sito';
 import css from './NuoviArrivi.module.css';
 
 export type Scheda = {
@@ -24,7 +25,20 @@ export default function NuoviArrivi({ nuovi, prossime }: { nuovi: Scheda[]; pros
   const timer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const elenco = tipo === 'nuovi' ? nuovi : prossime;
 
+  const [avviso, setAvviso] = useState<{ codice: string; testo: string } | null>(null);
+
+  async function prenota(s: Scheda) {
+    const esito = await prenotaDalSito(s.codice, 1);
+    if (!esito.messaggio) return;
+    if (!esito.ok) return setAvviso({ codice: s.codice, testo: esito.messaggio });
+    setAvviso(null);
+    setAggiunto(s.codice);
+    clearTimeout(timer.current);
+    timer.current = setTimeout(() => setAggiunto(''), 2500);
+  }
+
   function aggiungi(s: Scheda) {
+    if (s.pre) return void prenota(s);
     carrello.aggiungi({
       k: s.codice,
       t: s.titolo,
@@ -32,7 +46,6 @@ export default function NuoviArrivi({ nuovi, prossime }: { nuovi: Scheda[]; pros
       l: '/prodotto/' + encodeURIComponent(s.codice),
       i: s.copertina ?? '',
       e: s.editore ?? '',
-      d: s.pre ? 'Preordine' : '',
     });
     setAggiunto(s.codice);
     clearTimeout(timer.current);
@@ -96,8 +109,19 @@ export default function NuoviArrivi({ nuovi, prossime }: { nuovi: Scheda[]; pros
                 onClick={() => aggiungi(s)}
                 className={'pesante ' + (s.pre ? css.prenota : css.aggiungi)}
               >
-                {aggiunto === s.codice ? 'Aggiunto ✓' : s.pre ? 'Prenota' : 'Aggiungi'}
+                {aggiunto === s.codice
+                  ? s.pre
+                    ? 'Prenotato ✓'
+                    : 'Aggiunto ✓'
+                  : s.pre
+                    ? 'Prenota'
+                    : 'Aggiungi'}
               </button>
+              {avviso?.codice === s.codice && (
+                <p className={css.avviso} role="status">
+                  {avviso.testo}
+                </p>
+              )}
             </div>
           </article>
         ))}

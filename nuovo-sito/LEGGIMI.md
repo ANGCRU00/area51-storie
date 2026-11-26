@@ -22,6 +22,19 @@ Niente Tailwind: ogni componente ha il suo CSS. Analisi tecnica completa: vedi C
   toccano). I titoli per adulti sono nascosti finché il visitatore non conferma di essere maggiorenne (cookie `area51_adulti`).
 - **Dati provvisori**: solo gli eventi della home, da `../sito/dati/eventi.js` tramite `scripts/dati-provvisori.mjs` (fino alla fase 8).
 
+## Account (fase 5)
+
+- **Better Auth** con email e password, email confermata e recupero della password (`src/lib/accesso.ts`, interfacce in `/api/accesso/*`).
+  Pagine `/accedi`, `/registrati`, `/recupera-password`, `/nuova-password`, `/account` (prenotazioni e preferiti).
+- **Prenotazioni** legate all'account: `/api/prenotazioni` (solo clienti connessi). I pulsanti "Prenota" chiedono di accedere se serve.
+- **Email** con Resend (`src/lib/email.ts`): senza chiave le email si stampano nel terminale, così si provano i flussi in locale.
+- **Segreti**: in locale nel file `.dev.vars` (escluso da git; contiene `BETTER_AUTH_SECRET`). Online:
+  `npx wrangler secret put BETTER_AUTH_SECRET`, `npx wrangler secret put RESEND_API_KEY`, e le variabili
+  `BETTER_AUTH_URL` (indirizzo del sito) ed `EMAIL_MITTENTE` (es. `Area 51 Fumetteria <noreply@dominio.it>`).
+- **Gestore**: dopo che si è registrato, gli si dà il ruolo con
+  `npx wrangler d1 execute area51 --remote --command "UPDATE utenti SET ruolo = 'gestore' WHERE email = '...'"`.
+  Le interfacce del gestore usano `soloGestore` (`src/lib/permessi.ts`).
+
 ## Struttura
 
 | Cartella | Contenuto |

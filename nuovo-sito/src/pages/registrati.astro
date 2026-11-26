@@ -1,0 +1,24 @@
+---
+import Base from '../layouts/Base.astro';
+import PaginaAccesso from '../components/comuni/PaginaAccesso.astro';
+import ModuloAccesso from '../components/isole/ModuloAccesso.tsx';
+import { percorsoInterno } from '../lib/indirizzo-sicuro';
+
+export const prerender = false;
+const torna = percorsoInterno(Astro.url.searchParams.get('torna'));
+if (Astro.locals.utente) return Astro.redirect(torna);
+---
+
+<Base titolo="Registrati · Area 51 Fumetteria">
+  <PaginaAccesso
+    titolo="Crea il tuo account"
+    introduzione="Con l'account prenoti le prossime uscite e trovi tutte le tue prenotazioni in un posto. Ritiri e paghi sempre in negozio."
+  >
+    <ModuloAccesso client:load modo="registrati" />
+    <Fragment slot="altri">
+      <span>
+        Hai già un account? <a href={'/accedi?torna=' + encodeURIComponent(torna)}>Accedi</a>
+      </span>
+    </Fragment>
+  </PaginaAccesso>
+</Base>

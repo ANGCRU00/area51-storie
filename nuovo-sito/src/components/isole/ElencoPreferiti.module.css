@@ -1,0 +1,66 @@
+.vuoto {
+  color: var(--testo-tenue);
+  font-weight: 600;
+}
+.elenco {
+  display: grid;
+  gap: 0.6rem;
+}
+.voce {
+  display: grid;
+  grid-template-columns: 48px minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 0.9rem;
+  padding: 0.6rem;
+  border-radius: 0.75rem;
+  border: 1px solid var(--linea-tenue);
+  background: var(--scheda);
+}
+.voce img,
+.senza {
+  width: 48px;
+  height: 72px;
+  object-fit: cover;
+  border-radius: 0.4rem;
+  background: var(--scheda-sopra);
+}
+.titolo {
+  display: grid;
+  gap: 0.15rem;
+  font-weight: 800;
+  color: #fff;
+  overflow-wrap: anywhere;
+}
+.titolo span {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--testo-tenue);
+}
+.titolo:hover {
+  color: var(--lime);
+}
+.prezzo {
+  font-weight: 900;
+  font-stretch: 125%;
+  color: var(--lime);
+  font-size: 0.875rem;
+}
+.togli {
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: var(--testo-tenue);
+  text-decoration: underline;
+}
+.togli:hover {
+  color: #fb923c;
+}
+@media (max-width: 480px) {
+  .voce {
+    grid-template-columns: 48px minmax(0, 1fr);
+  }
+  .prezzo,
+  .togli {
+    grid-column: 2;
+    justify-self: start;
+  }
+}

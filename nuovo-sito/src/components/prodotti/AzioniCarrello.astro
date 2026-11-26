@@ -1,16 +1,32 @@
 ---
-/* Da mettere una volta nelle pagine con schede: gestisce tutti i pulsanti "Aggiungi"/"Prenota" (attributo data-aggiungi). */
+/* Da mettere una volta nelle pagine con schede: gestisce i pulsanti "Aggiungi" (carrello sul dispositivo)
+   e "Prenota" (prenotazione collegata all'account, attributo data-preordine). */
 ---
 
 <script>
   import { carrello } from '../../lib/negozio';
-  document.addEventListener('click', (e) => {
-    const b = (e.target as Element).closest<HTMLButtonElement>('[data-aggiungi]');
-    if (!b) return;
-    const d = b.dataset;
-    // quantità scelta in un menu della pagina (scheda prodotto), se il pulsante ne indica uno
-    const menu = d.quantitaDa ? (document.getElementById(d.quantitaDa) as HTMLSelectElement | null) : null;
-    const quante = Math.max(1, Math.min(5, Number(menu?.value) || 1));
+  import { prenotaDalSito } from '../../lib/prenota-dal-sito';
+
+  const COPIE_MASSIME = 5;
+
+  function quantitaScelta(pulsante: HTMLButtonElement): number {
+    const id = pulsante.dataset.quantitaDa;
+    const menu = id ? (document.getElementById(id) as HTMLSelectElement | null) : null;
+    return Math.max(1, Math.min(COPIE_MASSIME, Number(menu?.value) || 1));
+  }
+
+  function mostraPerUnAttimo(pulsante: HTMLButtonElement, testo: string, durata = 1800) {
+    const prima = pulsante.textContent;
+    pulsante.textContent = testo;
+    pulsante.disabled = true;
+    setTimeout(() => {
+      pulsante.textContent = prima;
+      pulsante.disabled = false;
+    }, durata);
+  }
+
+  function aggiungiAlCarrello(pulsante: HTMLButtonElement) {
+    const d = pulsante.dataset;
     carrello.aggiungi(
       {
         k: d.aggiungi ?? '',
@@ -19,16 +35,44 @@
         l: '/prodotto/' + encodeURIComponent(d.aggiungi ?? ''),
         i: d.copertina ?? '',
         e: d.editore ?? '',
-        d: d.preordine ? 'Preordine' : '',
       },
-      quante,
+      quantitaScelta(pulsante),
     );
-    const prima = b.textContent;
-    b.textContent = 'Aggiunto ✓';
-    b.disabled = true;
-    setTimeout(() => {
-      b.textContent = prima;
-      b.disabled = false;
-    }, 1800);
+    mostraPerUnAttimo(pulsante, 'Aggiunto ✓');
+  }
+
+  async function prenota(pulsante: HTMLButtonElement) {
+    pulsante.disabled = true;
+    const esito = await prenotaDalSito(pulsante.dataset.aggiungi ?? '', quantitaScelta(pulsante));
+    pulsante.disabled = false;
+    if (!esito.messaggio) return;
+    if (esito.ok) mostraPerUnAttimo(pulsante, esito.messaggio, 2500);
+    else avvisoSottoIlPulsante(pulsante, esito.messaggio);
+  }
+
+  function avvisoSottoIlPulsante(pulsante: HTMLButtonElement, messaggio: string) {
+    const avviso = document.createElement('p');
+    avviso.className = 'avviso-prenota';
+    avviso.setAttribute('role', 'status');
+    avviso.textContent = messaggio;
+    pulsante.parentElement?.querySelector('.avviso-prenota')?.remove();
+    pulsante.parentElement?.append(avviso);
+  }
+
+  document.addEventListener('click', (evento) => {
+    const pulsante = (evento.target as Element).closest<HTMLButtonElement>('[data-aggiungi]');
+    if (!pulsante) return;
+    if (pulsante.dataset.preordine) prenota(pulsante);
+    else aggiungiAlCarrello(pulsante);
   });
 </script>
+
+<style is:global>
+  .avviso-prenota {
+    flex-basis: 100%;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #fb923c;
+    line-height: 1.35;
+  }
+</style>

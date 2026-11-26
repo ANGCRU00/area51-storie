@@ -182,3 +182,101 @@ export type Serie = typeof serie.$inferSelect;
 export type Uscita = typeof uscite.$inferSelect;
 export type Articolo = typeof articoli.$inferSelect;
 export type Richiesta = typeof richieste.$inferSelect;
+
+/* ---------- Account (Better Auth) ----------
+   I nomi delle proprietà (name, emailVerified, userId…) sono quelli che Better Auth si aspetta;
+   tabelle e colonne nel database hanno nomi italiani. */
+const istante = (nome: string) => integer(nome, { mode: 'timestamp_ms' });
+export const RUOLI = ['cliente', 'gestore'] as const;
+
+export const utenti = sqliteTable('utenti', {
+  id: text('id').primaryKey(),
+  name: text('nome').notNull(),
+  email: text('email').notNull().unique(),
+  emailVerified: integer('email_verificata', { mode: 'boolean' }).notNull().default(false),
+  image: text('immagine'),
+  ruolo: text('ruolo', { enum: RUOLI }).notNull().default('cliente'),
+  telefono: text('telefono'),
+  createdAt: istante('creato_il').notNull(),
+  updatedAt: istante('aggiornato_il').notNull(),
+});
+
+export const sessioni = sqliteTable(
+  'sessioni',
+  {
+    id: text('id').primaryKey(),
+    token: text('token').notNull().unique(),
+    userId: text('utente_id')
+      .notNull()
+      .references(() => utenti.id, { onDelete: 'cascade' }),
+    expiresAt: istante('scade_il').notNull(),
+    ipAddress: text('indirizzo_ip'),
+    userAgent: text('browser'),
+    createdAt: istante('creata_il').notNull(),
+    updatedAt: istante('aggiornata_il').notNull(),
+  },
+  (t) => [index('sessioni_utente').on(t.userId)],
+);
+
+export const credenziali = sqliteTable(
+  'credenziali',
+  {
+    id: text('id').primaryKey(),
+    accountId: text('account_id').notNull(),
+    providerId: text('fornitore').notNull(),
+    userId: text('utente_id')
+      .notNull()
+      .references(() => utenti.id, { onDelete: 'cascade' }),
+    accessToken: text('access_token'),
+    refreshToken: text('refresh_token'),
+    idToken: text('id_token'),
+    accessTokenExpiresAt: istante('access_token_scade_il'),
+    refreshTokenExpiresAt: istante('refresh_token_scade_il'),
+    scope: text('scope'),
+    password: text('password'),
+    createdAt: istante('creata_il').notNull(),
+    updatedAt: istante('aggiornata_il').notNull(),
+  },
+  (t) => [index('credenziali_utente').on(t.userId)],
+);
+
+export const verifiche = sqliteTable(
+  'verifiche',
+  {
+    id: text('id').primaryKey(),
+    identifier: text('identificativo').notNull(),
+    value: text('valore').notNull(),
+    expiresAt: istante('scade_il').notNull(),
+    createdAt: istante('creata_il').notNull(),
+    updatedAt: istante('aggiornata_il').notNull(),
+  },
+  (t) => [index('verifiche_identificativo').on(t.identifier)],
+);
+
+/* Prenotazioni delle prossime uscite, fatte da clienti con account. Valgono quando il negozio le conferma. */
+export const STATI_PRENOTAZIONE = ['richiesta', 'confermata', 'arrivata', 'ritirata', 'annullata'] as const;
+export const prenotazioni = sqliteTable(
+  'prenotazioni',
+  {
+    id: text('id').primaryKey().$defaultFn(idCasuale),
+    utenteId: text('utente_id')
+      .notNull()
+      .references(() => utenti.id, { onDelete: 'cascade' }),
+    uscitaId: text('uscita_id').references(() => uscite.id, { onDelete: 'set null' }),
+    codiceProdotto: text('codice_prodotto').notNull(),
+    titolo: text('titolo').notNull(),
+    copie: integer('copie').notNull().default(1),
+    stato: text('stato', { enum: STATI_PRENOTAZIONE }).notNull().default('richiesta'),
+    notaCliente: text('nota_cliente'),
+    creataIl: text('creata_il').notNull().default(adesso),
+    aggiornataIl: text('aggiornata_il').notNull().default(adesso),
+  },
+  (t) => [
+    index('prenotazioni_utente').on(t.utenteId, t.creataIl),
+    index('prenotazioni_stato').on(t.stato),
+    check('prenotazioni_copie', sql`${t.copie} BETWEEN 1 AND 5`),
+  ],
+);
+
+export type Utente = typeof utenti.$inferSelect;
+export type Prenotazione = typeof prenotazioni.$inferSelect;
