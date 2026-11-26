@@ -47,6 +47,14 @@ Niente Tailwind: ogni componente ha il suo CSS. Analisi tecnica completa: vedi C
   `npx wrangler d1 execute area51 --remote --command "UPDATE utenti SET ruolo = 'gestore' WHERE email = '...'"`.
   Le interfacce del gestore usano `soloGestore` (`src/lib/permessi.ts`).
 
+## Area gestore (fase 7)
+
+- Pagina `/gestore`, solo per il ruolo gestore. Sezioni: Prenotazioni (cambio di stato con email al cliente),
+  Richieste Chiedicelo, Uscite (visibile e data limite), Genere e 18+ delle serie (conferma della proposta AniList).
+- Interfacce `/api/gestore/*`, tutte con `soloGestore`. Logica in `src/lib/gestore/`, isole in `src/components/isole/gestore/`.
+- Avviso al negozio per nuove prenotazioni e richieste: impostare la variabile `EMAIL_NEGOZIO` (online in
+  `wrangler.jsonc` o come segreto). Senza, non parte nessun avviso: le novità si vedono nell'area gestore.
+
 ## Uscite da Starshop (fase 6)
 
 - Un **Worker separato con Cron** aggiorna ogni notte la tabella `uscite` (prossimi 60 giorni) e scarica in R2 le

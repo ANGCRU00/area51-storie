@@ -1,0 +1,178 @@
+---
+/* Area gestore: solo per chi ha il ruolo "gestore" (chi non ce l'ha vede la pagina 404, chi non ha fatto l'accesso
+   va alla pagina di accesso). Una sezione alla volta, come nell'account; ogni sezione è un'isola React che parla
+   con le interfacce /api/gestore/*, protette da soloGestore. */
+import { count, eq, inArray } from 'drizzle-orm';
+import Base from '../layouts/Base.astro';
+import PrenotazioniGestore from '../components/isole/gestore/PrenotazioniGestore.tsx';
+import RichiesteGestore from '../components/isole/gestore/RichiesteGestore.tsx';
+import SerieGestore from '../components/isole/gestore/SerieGestore.tsx';
+import UsciteGestore from '../components/isole/gestore/UsciteGestore.tsx';
+import { db, prenotazioni, richieste, serie } from '../db';
+import { NOME_GENERE } from '../lib/prodotti';
+
+export const prerender = false;
+const utente = Astro.locals.utente;
+if (!utente) return Astro.redirect('/accedi?torna=/gestore');
+if (utente.ruolo !== 'gestore') return Astro.rewrite('/404');
+Astro.response.headers.set('cache-control', 'private, no-store');
+
+const [[daConfermare], [nuoveRichieste], [serieConfermate]] = await Promise.all([
+  db().select({ n: count() }).from(prenotazioni).where(eq(prenotazioni.stato, 'richiesta')),
+  db()
+    .select({ n: count() })
+    .from(richieste)
+    .where(inArray(richieste.stato, ['nuova'])),
+  db().select({ n: count() }).from(serie).where(eq(serie.confermata, true)),
+]);
+
+const SEZIONI = [
+  { id: 'prenotazioni', nome: 'Prenotazioni', numero: daConfermare?.n ?? 0, nota: 'da confermare' },
+  { id: 'richieste', nome: 'Richieste', numero: nuoveRichieste?.n ?? 0, nota: 'nuove' },
+  { id: 'uscite', nome: 'Uscite' },
+  { id: 'serie', nome: 'Genere e 18+', numero: undefined, nota: `${serieConfermate?.n ?? 0} confermate` },
+];
+const generi = Object.entries(NOME_GENERE) as [string, string][];
+---
+
+<Base titolo="Area gestore · Area 51 Fumetteria">
+  <div class="contenitore pagina">
+    <header class="testa">
+      <span class="bollino">Area gestore</span>
+      <h1 class="pesante">
+        Ciao, <span class="lime">{utente.nome}</span>
+      </h1>
+      <nav class="sezioni" aria-label="Sezioni dell'area gestore">
+        {SEZIONI.map((s) => (
+          <a href={'#' + s.id} class="sezione" data-sezione={s.id}>
+            {s.nome}
+            {s.numero !== undefined && s.numero > 0 && (
+              <span class="numero" title={s.nota}>
+                {s.numero}
+              </span>
+            )}
+          </a>
+        ))}
+      </nav>
+    </header>
+
+    <section class="riquadro pannello" id="prenotazioni">
+      <h2 class="pesante">Prenotazioni</h2>
+      <p class="nota">
+        Conferma le prenotazioni, segna quando arrivano e quando vengono ritirate. Il cliente riceve un'email
+        quando confermi, quando è arrivata e se annulli.
+      </p>
+      <PrenotazioniGestore client:visible />
+    </section>
+
+    <section class="riquadro pannello" id="richieste">
+      <h2 class="pesante">Richieste "Chiedicelo"</h2>
+      <p class="nota">Tocca l'email per rispondere; poi segna come è andata.</p>
+      <RichiesteGestore client:visible />
+    </section>
+
+    <section class="riquadro pannello" id="uscite">
+      <h2 class="pesante">Prossime uscite</h2>
+      <p class="nota">
+        Arrivano ogni notte da Starshop. Qui scegli cosa mostrare sul sito e fino a quando si prenota: la
+        sincronizzazione non cambia queste scelte.
+      </p>
+      <UsciteGestore client:visible />
+    </section>
+
+    <section class="riquadro pannello" id="serie">
+      <h2 class="pesante">Genere e 18+ delle serie</h2>
+      <p class="nota">
+        Per i manga c'è la proposta di AniList: controllala (alcuni abbinamenti sono sbagliati), correggi se
+        serve e conferma. I titoli 18+ si vedono solo a chi conferma di essere maggiorenne.
+      </p>
+      <SerieGestore client:visible generi={generi} />
+    </section>
+  </div>
+</Base>
+
+<script>
+  const sezioni = [...document.querySelectorAll<HTMLElement>('.pannello')];
+  function mostraSezione() {
+    const scelta = sezioni.find((s) => '#' + s.id === location.hash)?.id ?? 'prenotazioni';
+    sezioni.forEach((s) => (s.hidden = s.id !== scelta));
+    document.querySelectorAll<HTMLElement>('[data-sezione]').forEach((a) => {
+      if (a.dataset.sezione === scelta) a.setAttribute('aria-current', 'true');
+      else a.removeAttribute('aria-current');
+    });
+  }
+  document.querySelectorAll<HTMLAnchorElement>('[data-sezione]').forEach((a) =>
+    a.addEventListener('click', (evento) => {
+      evento.preventDefault();
+      history.replaceState(null, '', a.getAttribute('href'));
+      mostraSezione();
+    }),
+  );
+  window.addEventListener('hashchange', mostraSezione);
+  mostraSezione();
+</script>
+
+<style>
+  .pagina {
+    padding-block: 2rem 4rem;
+    display: grid;
+    gap: 1.5rem;
+    max-width: 64rem;
+  }
+  .testa {
+    display: grid;
+    gap: 0.75rem;
+    justify-items: start;
+  }
+  h1 {
+    font-size: 2rem;
+    line-height: 1.1;
+    color: #fff;
+    overflow-wrap: anywhere;
+  }
+  .sezioni {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .sezione {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.55rem 1rem;
+    border-radius: var(--raggio-pillola);
+    border: 1px solid var(--linea);
+    font-size: 0.85rem;
+    font-weight: 800;
+    color: #fff;
+  }
+  .sezione:hover {
+    border-color: var(--lime);
+  }
+  .sezione[aria-current='true'] {
+    background: var(--lime);
+    border-color: var(--lime);
+    color: #000;
+  }
+  .numero {
+    min-width: 1.4rem;
+    padding: 0.05rem 0.4rem;
+    border-radius: var(--raggio-pillola);
+    background: #fb923c;
+    color: #000;
+    font-size: 0.72rem;
+    text-align: center;
+  }
+  h2 {
+    font-size: 1.25rem;
+    color: #fff;
+    margin-bottom: 0.5rem;
+  }
+  .nota {
+    color: var(--testo-tenue);
+    font-weight: 600;
+    font-size: 0.85rem;
+    margin-bottom: 1.25rem;
+    line-height: 1.5;
+  }
+</style>

@@ -1,0 +1,246 @@
+.barra {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+.filtro {
+  padding: 0.45rem 0.9rem;
+  border-radius: var(--raggio-pillola);
+  border: 1px solid var(--linea);
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: #fff;
+}
+.filtro:hover {
+  border-color: var(--lime);
+}
+.filtro[aria-pressed='true'] {
+  background: var(--lime);
+  border-color: var(--lime);
+  color: #000;
+}
+.cerca {
+  flex: 1 1 14rem;
+  min-width: 0;
+  background: var(--notte);
+  border: 1px solid var(--linea);
+  border-radius: var(--raggio-pillola);
+  padding: 0.55rem 1rem;
+  color: #fff;
+  font-size: 0.95rem;
+}
+.cerca:focus {
+  outline: none;
+  border-color: var(--lime);
+}
+.conteggio {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--testo-tenue);
+}
+.elenco {
+  display: grid;
+  gap: 0.6rem;
+}
+.voce {
+  display: grid;
+  gap: 0.5rem;
+  padding: 0.9rem 1rem;
+  border-radius: 0.75rem;
+  border: 1px solid var(--linea-tenue);
+  background: var(--scheda);
+  min-width: 0;
+}
+.voce.spenta {
+  opacity: 0.6;
+}
+.riga {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.3rem 1rem;
+}
+.titolo {
+  font-weight: 900;
+  font-stretch: 125%;
+  color: #fff;
+  overflow-wrap: anywhere;
+}
+a.titolo:hover {
+  color: var(--lime);
+}
+.dettaglio {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--testo-tenue);
+  overflow-wrap: anywhere;
+}
+.dettaglio a {
+  color: var(--lime);
+  text-decoration: underline;
+}
+.stato {
+  font-size: 0.72rem;
+  font-weight: 800;
+  padding: 0.2rem 0.6rem;
+  border-radius: var(--raggio-pillola);
+  background: rgb(91 33 182 / 0.55);
+  color: #fff;
+  white-space: nowrap;
+}
+.stato.verde {
+  background: var(--lime);
+  color: #000;
+}
+.stato.grigio {
+  background: #3a2f5e;
+}
+.azioni {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+.azione {
+  padding: 0.4rem 0.85rem;
+  border-radius: var(--raggio-pillola);
+  border-bottom-left-radius: 4px;
+  border: 1px solid var(--viola);
+  background: var(--viola);
+  color: #fff;
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+.azione:hover {
+  background: var(--viola-acceso);
+}
+.azione.secondaria {
+  background: none;
+  border-color: var(--linea);
+}
+.azione.secondaria:hover {
+  border-color: var(--lime);
+  color: var(--lime);
+}
+.azione.pericolo {
+  background: none;
+  border-color: rgb(251 146 60 / 0.6);
+  color: #fb923c;
+}
+.azione:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+.vuoto {
+  color: var(--testo-tenue);
+  font-weight: 600;
+}
+.errore {
+  color: #fb923c;
+  font-weight: 700;
+  font-size: 0.85rem;
+}
+.pagine {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--testo-tenue);
+}
+.uscita {
+  display: grid;
+  grid-template-columns: 48px minmax(0, 1fr);
+  gap: 0.8rem;
+  align-items: start;
+}
+.copertina {
+  width: 48px;
+  height: 72px;
+  object-fit: cover;
+  border-radius: 0.4rem;
+  background: var(--scheda-sopra);
+}
+.campi {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 1.25rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #fff;
+}
+.campi label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  cursor: pointer;
+}
+.campi input[type='checkbox'],
+.generi input {
+  width: 1.05rem;
+  height: 1.05rem;
+  accent-color: var(--lime);
+}
+.campi input[type='date'] {
+  background: var(--notte);
+  border: 1px solid var(--linea);
+  border-radius: 0.5rem;
+  padding: 0.3rem 0.5rem;
+  color: #fff;
+  color-scheme: dark;
+}
+.togli {
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: var(--testo-tenue);
+  text-decoration: underline;
+}
+.proposta {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--testo-tenue);
+  padding: 0.5rem 0.7rem;
+  border-radius: 0.5rem;
+  border: 1px dashed var(--linea);
+  overflow-wrap: anywhere;
+}
+.proposta a {
+  color: var(--lime);
+  text-decoration: underline;
+}
+.dubbia {
+  color: #fb923c;
+  font-weight: 800;
+}
+.generi {
+  border: 0;
+  margin: 0;
+  padding: 0;
+  min-width: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 0.9rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #fff;
+}
+.generi label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  cursor: pointer;
+}
+.adulti {
+  color: #fb923c;
+}
+.messaggio {
+  font-size: 0.78rem;
+  font-weight: 800;
+  color: var(--lime);
+}

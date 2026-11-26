@@ -3,7 +3,7 @@
 import { and, count, desc, eq, inArray } from 'drizzle-orm';
 import { db, prenotazioni, type Prenotazione } from '../db';
 import type { UtenteConnesso } from './accesso';
-import { componiEmail, inviaEmail } from './email';
+import { avvisaNegozio, componiEmail, inviaEmail } from './email';
 import { dataLunga, prodottoPerCodice, type Prodotto } from './prodotti';
 
 export const COPIE_MASSIME = 5;
@@ -93,6 +93,13 @@ export async function prenota(
     { testo: 'Vedi le tue prenotazioni', indirizzo: origine + '/account' },
   );
   await inviaEmail({ a: utente.email, oggetto: 'Area 51 · prenotazione ricevuta', testo, html });
+  await avvisaNegozio(
+    'Nuova prenotazione',
+    [
+      `${utente.nome} (${utente.email}) ha prenotato ${prodotto.titolo}: ${copie} ${copie === 1 ? 'copia' : 'copie'}.`,
+    ],
+    origine,
+  );
 
   return { ok: true, prenotazione: nuova };
 }

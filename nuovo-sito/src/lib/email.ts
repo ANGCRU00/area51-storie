@@ -4,7 +4,11 @@ import { env } from 'cloudflare:workers';
 
 export type Email = { a: string; oggetto: string; testo: string; html: string };
 
-const variabili = env as unknown as { RESEND_API_KEY?: string; EMAIL_MITTENTE?: string };
+const variabili = env as unknown as {
+  RESEND_API_KEY?: string;
+  EMAIL_MITTENTE?: string;
+  EMAIL_NEGOZIO?: string;
+};
 
 export async function inviaEmail(email: Email): Promise<void> {
   if (!variabili.RESEND_API_KEY) {
@@ -25,6 +29,17 @@ export async function inviaEmail(email: Email): Promise<void> {
     }),
   });
   if (!risposta.ok) console.log(`Invio email non riuscito: HTTP ${risposta.status}`);
+}
+
+/** Avviso al negozio (nuova prenotazione, nuova richiesta) all'indirizzo EMAIL_NEGOZIO. Senza indirizzo non parte:
+    le novità si vedono comunque nell'area gestore. */
+export async function avvisaNegozio(oggetto: string, righe: string[], origine: string) {
+  if (!variabili.EMAIL_NEGOZIO) return;
+  const { testo, html } = componiEmail(oggetto, righe, {
+    testo: "Apri l'area gestore",
+    indirizzo: origine + '/gestore',
+  });
+  await inviaEmail({ a: variabili.EMAIL_NEGOZIO, oggetto: 'Sito · ' + oggetto, testo, html });
 }
 
 const protetto = (testo: string) =>

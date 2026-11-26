@@ -6,6 +6,7 @@ import type { APIRoute } from 'astro';
 import { and, count, eq, gt } from 'drizzle-orm';
 import { db, richieste } from '../../db';
 import { emailValida, errore, json, leggiJson, testo } from '../../lib/api';
+import { avvisaNegozio } from '../../lib/email';
 
 export const prerender = false;
 
@@ -19,7 +20,7 @@ const CATEGORIE = [
   'Gadget',
 ];
 
-export const POST: APIRoute = async ({ request }) => {
+export const POST: APIRoute = async ({ request, url }) => {
   const d = await leggiJson(request);
   if (!d) return errore('Richiesta non valida.');
 
@@ -49,5 +50,6 @@ export const POST: APIRoute = async ({ request }) => {
   await db()
     .insert(richieste)
     .values({ cosa, categoria, nome, email, telefono: telefono || null });
+  await avvisaNegozio('Nuova richiesta Chiedicelo', [`${nome} (${email}) cerca: ${cosa}`], url.origin);
   return json({ ok: true }, 201);
 };

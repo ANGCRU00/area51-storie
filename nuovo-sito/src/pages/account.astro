@@ -90,6 +90,11 @@ const SEZIONI = [
           </a>
         ))}
       </nav>
+      {utente.ruolo === 'gestore' && (
+        <a href="/gestore" class="pulsante area-gestore">
+          Area gestore
+        </a>
+      )}
       <button type="button" class="esci" id="esci">
         Esci dall'account
       </button>
@@ -371,6 +376,9 @@ const SEZIONI = [
   .sezione[aria-current='true'] .numero {
     background: #000;
     color: var(--lime);
+  }
+  .area-gestore {
+    justify-self: start;
   }
   .esci {
     justify-self: start;
