@@ -107,7 +107,7 @@ input[type="file"]:focus-visible::file-selector-button { outline: 0; }
 .azioni { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 20px; }
 .spunta { display: flex; align-items: center; gap: 10px; margin: 14px 0 0; font-size: 15px; cursor: pointer; }
 .spunta input { width: 24px; height: 24px; margin: 0; accent-color: var(--lime); }
-#storia {
+#storia, #storia2 {
   display: block;
   width: min(100%, 360px);
   height: auto;
@@ -419,6 +419,8 @@ legend { display: block; margin-bottom: 6px; padding: 0; font-family: "Archivo-B
     <section class="anteprima" aria-labelledby="s-titolo-anteprima">
       <h2 id="s-titolo-anteprima">Anteprima</h2>
       <canvas id="storia" width="540" height="960" role="img" aria-label="Anteprima della storia"></canvas>
+      <p id="nota-pagina2" class="aiuto" hidden style="margin:14px 0 0">Titolo lungo: il testo va in una seconda storia, da pubblicare subito dopo la prima.</p>
+      <canvas id="storia2" width="540" height="960" role="img" aria-label="Anteprima della seconda storia" hidden></canvas>
       <label class="spunta"><input type="checkbox" id="zone"> Mostra le zone coperte da Instagram</label>
       <button type="button" class="primario salva" id="salva">Salva storia</button>
       <p id="s-esito" role="status"></p>
@@ -448,6 +450,8 @@ legend { display: block; margin-bottom: 6px; padding: 0; font-family: "Archivo-B
 
   function el(id) { return document.getElementById(id); }
   var tela = el('storia'), esito = el('s-esito'), bottoneSalva = el('salva');
+  var tela2 = el('storia2'), PAGINA = 1;
+  var TITOLO_LUNGO = 40;   /* oltre questi caratteri ("/" escluse) il titolo va a capo da solo e, se c'è un testo, il testo va in una seconda storia */
   var linguetta = 'uscite';
   var foto = null;            /* mai salvata */
   /* Illustrazioni standard per gioco (ritagliate quadrate 1080x1080, senza loghi): Magic, One Piece, Pokémon e Riftbound */
@@ -903,7 +907,8 @@ legend { display: block; margin-bottom: 6px; padding: 0; font-family: "Archivo-B
     marchio(60, 270, MARCHIO_MEDIO);
 
     /* testo facoltativo sotto il titolo (per gli annunci): se c'è, tutto sale un po' e il titolo si riduce */
-    var testoEv = grezzo('e-testo'), haTesto = !!testoEv, TY = haTesto ? 740 : 810;
+    if (PAGINA === 2) { disegnaTestoEvento(); return; }
+    var testoEv = grezzo('e-testo'), haTesto = !!testoEv && !eventoDuePagine(), TY = haTesto ? 740 : 810;
 
     /* quando: data e ora sono facoltative (senza nessuna delle due il riquadro non compare) */
     var dEv = leggiData(grezzo('e-data')), oEv = grezzo('e-ora');
@@ -912,10 +917,12 @@ legend { display: block; margin-bottom: 6px; padding: 0; font-family: "Archivo-B
 
     /* titolo luminoso (sempre lo stesso stile); se è lungo (più di 40 caratteri, senza "/") va a capo da solo e si rimpicciolisce fino a starci */
     var titoloTesto = grezzo('e-titolo').toLocaleUpperCase('it'), alto, t;   /* il titolo è facoltativo: senza, niente scritta luminosa */
-    if (titoloTesto.length > 40 && titoloTesto.indexOf('/') < 0) {
+    if (titoloLungo(titoloTesto)) {
       var spazio = (q ? 1450 : 1570) - (haSotto ? 100 : 0) - TY - 20, px = 100, righe = [];
+      var pezzi = titoloTesto.split('/').map(function (r) { return r.trim(); }).filter(Boolean);   /* "/" resta un a capo voluto */
       for (; px >= 28; px -= 2) {
-        usa(BLACK, px); righe = aCapoLargo(titoloTesto, 900, 0);
+        usa(BLACK, px); righe = [];
+        pezzi.forEach(function (pz) { aCapoLargo(pz, 900, 0).forEach(function (r) { righe.push(r); }); });
         if (righe.length * px * 1.06 <= spazio) { break; }
       }
       t = { righe: righe, px: px };
@@ -991,6 +998,44 @@ legend { display: block; margin-bottom: 6px; padding: 0; font-family: "Archivo-B
     scrivi(saluto, 540, 1630, LIME, 'centro', 8);
   }
 
+  /* Evento su due storie: titolo lungo + testo. La prima storia ha titolo, data e saluto; la seconda solo il testo. */
+  /* lunghezza del titolo senza le "/" (che servono solo per andare a capo) */
+  function titoloLungo(titolo) { return titolo.replace(/\//g, '').trim().length > TITOLO_LUNGO; }
+  function eventoDuePagine() {
+    return !!grezzo('e-testo') && titoloLungo(grezzo('e-titolo'));
+  }
+  function disegnaTestoEvento() {
+    var cielo = ctx.createLinearGradient(0, 0, 0, H);
+    cielo.addColorStop(0, '#070514'); cielo.addColorStop(.42, '#1A0E3D'); cielo.addColorStop(.70, '#4A1C8C'); cielo.addColorStop(1, '#7A3BB8');
+    rettangolo(0, 0, W, H, cielo);
+    stelleUfo();
+    marchio(60, 270, MARCHIO_MEDIO);
+    ctx.save(); ctx.translate(850, 380); ctx.scale(.42, .42); ctx.translate(-850, -380); discoVolante(850, 380); ctx.restore();
+
+    /* testo grande in un riquadro che occupa la zona visibile della storia (tra 520 e 1640) */
+    var parT = grezzo('e-testo').split(/\n+/).filter(Boolean), LARGO = 860, ALTO_MAX = 1640 - 540 - 80, pxT = 56, rT = [], hT = 0;
+    for (; pxT >= 24; pxT -= 2) {
+      usa(BOLD, pxT); rT = [];
+      parT.forEach(function (pp, i) { aCapoLargo(pp, LARGO, 0).forEach(function (r) { rT.push(r); }); if (i < parT.length - 1) { rT.push(''); } });
+      hT = rT.reduce(function (s, r) { return s + (r ? pxT * 1.3 : pxT * 0.6); }, 0);
+      if (hT <= ALTO_MAX) { break; }
+    }
+    var bh = hT + 80, y0 = Math.max(540, Math.round((540 + 1640 - bh) / 2));
+    ctx.save();
+    ctx.beginPath();
+    if (ctx.roundRect) { ctx.roundRect(60, y0, W - 120, bh, 28); } else { ctx.rect(60, y0, W - 120, bh); }
+    ctx.fillStyle = 'rgba(20, 12, 43, 0.85)'; ctx.fill();
+    ctx.lineWidth = 4; ctx.strokeStyle = LIME; ctx.stroke();
+    ctx.restore();
+    var yT = y0 + 40;
+    usa(BOLD, pxT);
+    rT.forEach(function (r) {
+      if (!r) { yT += pxT * 0.6; return; }
+      scrivi(r, 540, yT + pxT * 0.65, BIANCO, 'centro');
+      yT += pxT * 1.3;
+    });
+  }
+
   function disegnaZone() {
     rettangolo(0, 0, W, 250, 'rgba(255,40,80,0.35)');
     rettangolo(0, 1670, W, 250, 'rgba(255,40,80,0.35)');
@@ -1013,8 +1058,19 @@ legend { display: block; margin-bottom: 6px; padding: 0; font-family: "Archivo-B
     if (!fontPronti || linguetta === 'uscite') { return; }
     var c = tela.getContext('2d');
     c.setTransform(0.5, 0, 0, 0.5, 0, 0);
+    PAGINA = 1;
     disegnaStoria(c, el('zone').checked);
     tela.setAttribute('aria-label', 'Anteprima della storia ' + NOMI_TAB[linguetta]);
+    var due = linguetta === 'evento' && eventoDuePagine();
+    tela2.hidden = !due; el('nota-pagina2').hidden = !due;
+    bottoneSalva.textContent = due ? 'Salva le 2 storie' : 'Salva storia';
+    if (due) {
+      var c2 = tela2.getContext('2d');
+      c2.setTransform(0.5, 0, 0, 0.5, 0, 0);
+      PAGINA = 2;
+      disegnaStoria(c2, el('zone').checked);
+      PAGINA = 1;
+    }
     pianificaPreparazione();
   }
 
@@ -1095,6 +1151,10 @@ legend { display: block; margin-bottom: 6px; padding: 0; font-family: "Archivo-B
 
   /* ---------- Salvataggio ---------- */
   function nomeFile() {
+    var n = nomeFileBase();
+    return PAGINA === 2 ? n.replace('.jpg', '-2-testo.jpg') : n;
+  }
+  function nomeFileBase() {
     if (linguetta === 'torneo') {
       var gioco = (grezzo('t-nome') || 'gioco').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
       return 'area51-storia-torneo-' + gioco + (grezzo('t-data') ? '-' + grezzo('t-data') : '') + '.jpg';
@@ -1104,12 +1164,14 @@ legend { display: block; margin-bottom: 6px; padding: 0; font-family: "Archivo-B
     return 'area51-storia-nuovo-post-' + iso(new Date()) + '.jpg';
   }
 
-  function creaJpeg() {
+  function creaJpeg(pagina) {
     return new Promise(function (ok, no) {
       var cv = document.createElement('canvas');
       cv.width = W;
       cv.height = H;
+      PAGINA = pagina || 1;
       disegnaStoria(cv.getContext('2d', { colorSpace: 'srgb' }), false);
+      PAGINA = 1;
       cv.toBlob(function (b) {
         cv.width = 0;
         cv.height = 0;
@@ -1138,7 +1200,10 @@ legend { display: block; margin-bottom: 6px; padding: 0; font-family: "Archivo-B
   function preparaFile() {
     var v = versione;
     if (pronto && pronto.v === v) { return pronto.promessa; }
-    var promessa = creaJpeg().then(function (b) { return new File([b], nomeFile(), { type: 'image/jpeg' }); });
+    var pagine = linguetta === 'evento' && eventoDuePagine() ? [1, 2] : [1];
+    var promessa = Promise.all(pagine.map(function (pg) {
+      return creaJpeg(pg).then(function (b) { PAGINA = pg; var f = new File([b], nomeFile(), { type: 'image/jpeg' }); PAGINA = 1; return f; });
+    }));
     pronto = { v: v, promessa: promessa, file: null };
     var questo = pronto;
     promessa.then(function (f) { questo.file = f; }, function () { if (pronto === questo) { pronto = null; } });
@@ -1152,15 +1217,18 @@ legend { display: block; margin-bottom: 6px; padding: 0; font-family: "Archivo-B
     attesaPreparazione = setTimeout(function () { preparaFile().catch(function () {}); }, 600);
   }
 
-  function condividi(file) {
-    return navigator.share({ files: [file] }).then(function () {
-      esito.textContent = 'Storia condivisa.';
+  function condividi(files) {
+    return navigator.share({ files: files }).then(function () {
+      esito.textContent = files.length > 1 ? 'Storie condivise.' : 'Storia condivisa.';
     }).catch(function (e) {
       if (e && e.name === 'AbortError') { esito.textContent = 'Condivisione annullata.'; return; }
       if (e && e.name === 'NotAllowedError') { esito.textContent = 'Storia pronta: tocca di nuovo "Salva storia".'; return; }
-      scarica(file, file.name);
-      esito.textContent = 'Storia salvata: ' + file.name;
+      salvaTutti(files);
     });
+  }
+  function salvaTutti(files) {
+    files.forEach(function (f, i) { setTimeout(function () { scarica(f, f.name); }, i * 400); });
+    esito.textContent = (files.length > 1 ? 'Storie salvate: ' : 'Storia salvata: ') + files.map(function (f) { return f.name; }).join(', ');
   }
 
   /* Pulsante pieno che copre l'adesivo Link di Instagram (il tocco passa al Link sotto): immagine unica, riutilizzabile */
@@ -1189,14 +1257,13 @@ legend { display: block; margin-bottom: 6px; padding: 0; font-family: "Archivo-B
     clearTimeout(attesa);
     ricorda();
     var gia = puoCondividere() && pronto && pronto.v === versione && pronto.file;
-    if (gia && navigator.canShare({ files: [gia] })) { condividi(gia); return; }
+    if (gia && navigator.canShare({ files: gia })) { condividi(gia); return; }
     bottoneSalva.disabled = true;
     function fine() { bottoneSalva.disabled = false; }
     esito.textContent = 'Preparo la storia...';
-    preparaFile().then(function (file) {
-      if (puoCondividere() && navigator.canShare({ files: [file] })) { return condividi(file); }
-      scarica(file, file.name);
-      esito.textContent = 'Storia salvata: ' + file.name;
+    preparaFile().then(function (files) {
+      if (puoCondividere() && navigator.canShare({ files: files })) { return condividi(files); }
+      salvaTutti(files);
       return undefined;
     }).catch(function () {
       esito.textContent = 'Non sono riuscito a creare la storia.';
