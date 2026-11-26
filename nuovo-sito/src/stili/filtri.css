@@ -1,7 +1,7 @@
 /* Barra dei filtri del catalogo, filtri scelti, griglia e pagine. Tutto dentro .catalogo, così non tocca il resto del sito. */
 .catalogo {
   /* barra */
-  .barra {
+  .barra-filtri {
     display: grid;
     gap: 0.75rem;
     margin-bottom: 1rem;
@@ -426,7 +426,7 @@
     font-weight: 700;
   }
   .pagine a,
-  .attuale {
+  .pagina-attuale {
     min-width: 2.5rem;
     height: 2.5rem;
     padding: 0 0.8rem;
@@ -440,7 +440,7 @@
     border-color: var(--lime);
     color: var(--lime);
   }
-  .attuale {
+  .pagina-attuale {
     background: var(--lime);
     color: #000;
     border-color: var(--lime);

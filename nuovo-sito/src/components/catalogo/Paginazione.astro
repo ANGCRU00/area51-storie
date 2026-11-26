@@ -22,7 +22,7 @@ const salto = (indice: number) => indice > 0 && numeri[indice] - numeri[indice -
       <>
         {salto(i) && <span class="salto">…</span>}
         {n === pagina ? (
-          <span class="pesante attuale" aria-current="page">
+          <span class="pesante pagina-attuale" aria-current="page">
             {n}
           </span>
         ) : (
