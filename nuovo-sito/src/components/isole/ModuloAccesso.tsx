@@ -1,40 +1,13 @@
 /* Isola: i quattro moduli dell'account (accedi, registrati, recupera la password, nuova password).
    Parla con Better Auth su /api/accesso; i messaggi d'errore sono tradotti in italiano. */
 import { useState, type FormEvent } from 'react';
+import { chiamaAccesso as chiama } from '../../lib/accesso-browser';
+import { collegaAccount } from '../../lib/negozio';
 import css from './ModuloAccesso.module.css';
 
 export type Modo = 'accedi' | 'registrati' | 'recupera' | 'nuova';
 type Esito =
   { tipo: 'pronto' } | { tipo: 'invio' } | { tipo: 'ok'; testo: string } | { tipo: 'errore'; testo: string };
-
-const MESSAGGI: Record<string, string> = {
-  INVALID_EMAIL_OR_PASSWORD: 'Email o password non corrette.',
-  EMAIL_NOT_VERIFIED:
-    'Prima di accedere conferma la tua email: trovi il link nella posta (guarda anche nello spam).',
-  USER_ALREADY_EXISTS:
-    'Esiste già un account con questa email: prova ad accedere o a recuperare la password.',
-  USER_ALREADY_EXISTS_USE_ANOTHER_EMAIL:
-    'Esiste già un account con questa email: prova ad accedere o a recuperare la password.',
-  PASSWORD_TOO_SHORT: 'La password deve avere almeno 8 caratteri.',
-  PASSWORD_TOO_LONG: 'La password è troppo lunga.',
-  INVALID_EMAIL: "Controlla l'indirizzo email.",
-  INVALID_TOKEN: 'Il link non è più valido: chiedi un nuovo link per la password.',
-};
-
-async function chiama(percorso: string, dati: Record<string, unknown>) {
-  const risposta = await fetch('/api/accesso/' + percorso, {
-    method: 'POST',
-    headers: { 'content-type': 'application/json' },
-    body: JSON.stringify(dati),
-  });
-  const corpo = await risposta.json().catch(() => ({}));
-  if (risposta.status === 429) throw new Error('Troppi tentativi: aspetta un minuto e riprova.');
-  if (!risposta.ok)
-    throw Object.assign(new Error(MESSAGGI[corpo.code] ?? 'Qualcosa non ha funzionato. Riprova.'), {
-      codice: corpo.code,
-    });
-  return corpo;
-}
 
 const valore = (dati: FormData, nome: string) => String(dati.get(nome) ?? '').trim();
 
@@ -58,7 +31,8 @@ export default function ModuloAccesso({
     setEsito({ tipo: 'invio' });
     try {
       if (modo === 'accedi') {
-        await chiama('sign-in/email', { email, password });
+        const accesso = await chiama('sign-in/email', { email, password });
+        if (accesso?.user?.id) await collegaAccount(accesso.user.id);
         location.href = torna;
         return;
       }

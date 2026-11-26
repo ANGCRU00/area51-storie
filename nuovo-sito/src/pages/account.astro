@@ -1,8 +1,12 @@
 ---
-/* Il mio account: prenotazioni (dal database) e preferiti (sul dispositivo). Solo per chi ha fatto l'accesso. */
+/* Il mio account: colonna con nome e sezioni, a destra una sezione alla volta (senza JavaScript si vedono tutte).
+   Prenotazioni e dati dal database; preferiti e serie dal dispositivo, allineati all'account (lib/negozio.ts). */
 import Base from '../layouts/Base.astro';
+import DatiAccount from '../components/isole/DatiAccount.tsx';
 import ElencoPreferiti from '../components/isole/ElencoPreferiti.tsx';
+import SerieSeguite from '../components/isole/SerieSeguite.tsx';
 import { prenotazioniDi } from '../lib/prenotazioni';
+import { profiloDi } from '../lib/profilo';
 import { dataLunga } from '../lib/prodotti';
 
 export const prerender = false;
@@ -10,8 +14,13 @@ const utente = Astro.locals.utente;
 if (!utente) return Astro.redirect('/accedi?torna=/account');
 Astro.response.headers.set('cache-control', 'private, no-store');
 
-const prenotazioni = await prenotazioniDi(utente.id);
+const [prenotazioni, profilo] = await Promise.all([prenotazioniDi(utente.id), profiloDi(utente.id)]);
+const nome = profilo?.nome ?? utente.nome;
 const benvenuto = Astro.url.searchParams.has('benvenuto');
+const prenotazioniAperte = prenotazioni.filter((p) =>
+  ['richiesta', 'confermata', 'arrivata'].includes(p.stato),
+);
+
 const STATO: Record<string, string> = {
   richiesta: 'In attesa di conferma',
   confermata: 'Confermata',
@@ -19,71 +28,149 @@ const STATO: Record<string, string> = {
   ritirata: 'Ritirata',
   annullata: 'Annullata',
 };
+const SEZIONI = [
+  { id: 'prenotazioni', nome: 'Prenotazioni' },
+  { id: 'preferiti', nome: 'Preferiti' },
+  { id: 'serie', nome: 'Serie che segui' },
+  { id: 'dati', nome: 'I miei dati' },
+];
 ---
 
 <Base titolo="Il mio account · Area 51 Fumetteria">
-  <div class="contenitore pagina">
-    <header class="testa">
-      <span class="bollino">Il mio account</span>
-      <h1 class="pesante">
-        Ciao, <span class="lime">{utente.nome}</span>
-      </h1>
-      <p class="email">{utente.email}</p>
+  <div class="contenitore pagina" data-utente={utente.id}>
+    <aside class="colonna riquadro">
+      <div class="chi">
+        <span class="iniziale pesante" aria-hidden="true">
+          {nome.slice(0, 1).toUpperCase()}
+        </span>
+        <div class="chi-testo">
+          <span class="bollino">Il mio account</span>
+          <h1 class="pesante">
+            Ciao,{' '}
+            <span class="lime" data-nome-utente>
+              {nome}
+            </span>
+          </h1>
+          <p class="email">{utente.email}</p>
+        </div>
+      </div>
       {benvenuto && (
         <p class="benvenuto" role="status">
           Email confermata: il tuo account è pronto.
         </p>
       )}
+      <nav class="sezioni" aria-label="Sezioni dell'account">
+        {SEZIONI.map((s) => (
+          <a href={'#' + s.id} class="sezione" data-sezione={s.id}>
+            {s.nome}
+            {s.id === 'prenotazioni' && <span class="numero">{prenotazioniAperte.length}</span>}
+            {(s.id === 'preferiti' || s.id === 'serie') && (
+              <span class="numero" data-conta={s.id}>
+                0
+              </span>
+            )}
+          </a>
+        ))}
+      </nav>
       <button type="button" class="esci" id="esci">
         Esci dall'account
       </button>
-    </header>
+    </aside>
 
-    <section class="riquadro" id="prenotazioni">
-      <h2 class="pesante">Le mie prenotazioni</h2>
-      {prenotazioni.length === 0 ? (
-        <p class="vuoto">
-          Nessuna prenotazione. Le prossime uscite si prenotano dalla pagina{' '}
-          <a href="/uscite">Prossime uscite</a>.
-        </p>
-      ) : (
-        <ul class="prenotazioni">
-          {prenotazioni.map((p) => (
-            <li class:list={['prenotazione', p.stato]}>
-              <a href={'/prodotto/' + encodeURIComponent(p.codiceProdotto)} class="pesante titolo">
-                {p.titolo}
-              </a>
-              <span class="dettaglio">
-                {p.copie} {p.copie === 1 ? 'copia' : 'copie'} · prenotata il{' '}
-                {dataLunga(p.creataIl.slice(0, 10))}
-              </span>
-              <span class="stato">{STATO[p.stato] ?? p.stato}</span>
-              {p.stato === 'richiesta' && (
-                <button type="button" class="annulla" data-annulla={p.id}>
-                  Annulla
-                </button>
-              )}
-            </li>
-          ))}
-        </ul>
-      )}
-    </section>
+    <div class="pannelli">
+      <section class="riquadro pannello" id="prenotazioni">
+        <h2 class="pesante">Le mie prenotazioni</h2>
+        {prenotazioni.length === 0 ? (
+          <p class="vuoto">
+            Nessuna prenotazione. Le prossime uscite si prenotano dalla pagina{' '}
+            <a href="/uscite">Prossime uscite</a>.
+          </p>
+        ) : (
+          <ul class="prenotazioni">
+            {prenotazioni.map((p) => (
+              <li class:list={['prenotazione', p.stato]}>
+                <a href={'/prodotto/' + encodeURIComponent(p.codiceProdotto)} class="pesante titolo">
+                  {p.titolo}
+                </a>
+                <span class="dettaglio">
+                  {p.copie} {p.copie === 1 ? 'copia' : 'copie'} · prenotata il{' '}
+                  {dataLunga(p.creataIl.slice(0, 10))}
+                </span>
+                <span class="stato">{STATO[p.stato] ?? p.stato}</span>
+                {p.stato === 'richiesta' && (
+                  <button type="button" class="annulla" data-annulla={p.id}>
+                    Annulla
+                  </button>
+                )}
+              </li>
+            ))}
+          </ul>
+        )}
+      </section>
 
-    <section class="riquadro" id="preferiti">
-      <h2 class="pesante">I miei preferiti</h2>
-      <p class="nota">I preferiti restano su questo dispositivo.</p>
-      <ElencoPreferiti client:load />
-    </section>
+      <section class="riquadro pannello" id="preferiti">
+        <h2 class="pesante">I miei preferiti</h2>
+        <p class="nota">Salvati nel tuo account: li ritrovi su ogni dispositivo dopo l'accesso.</p>
+        <ElencoPreferiti client:load />
+      </section>
+
+      <section class="riquadro pannello" id="serie">
+        <h2 class="pesante">Serie che segui</h2>
+        <p class="nota">Per ogni serie trovi la prossima uscita da prenotare, se è già annunciata.</p>
+        <SerieSeguite client:load />
+      </section>
+
+      <section class="riquadro pannello" id="dati">
+        <h2 class="pesante">I miei dati</h2>
+        <DatiAccount client:visible nome={nome} email={utente.email} telefono={profilo?.telefono ?? ''} />
+      </section>
+    </div>
   </div>
 </Base>
 
 <script>
+  import { ascolta, collegaAccount, preferiti, scollegaAccount, serie } from '../lib/negozio';
+
+  const pagina = document.querySelector<HTMLElement>('[data-utente]');
+  if (pagina?.dataset.utente) void collegaAccount(pagina.dataset.utente);
+
+  function mostraConteggi() {
+    const conteggi: Record<string, number> = { preferiti: preferiti.conta(), serie: serie.tutti().length };
+    document.querySelectorAll<HTMLElement>('[data-conta]').forEach((n) => {
+      n.textContent = String(conteggi[n.dataset.conta ?? ''] ?? 0);
+    });
+  }
+  ascolta(mostraConteggi);
+  mostraConteggi();
+
+  const sezioni = [...document.querySelectorAll<HTMLElement>('.pannello')];
+  function mostraSezione() {
+    const scelta = sezioni.find((s) => '#' + s.id === location.hash)?.id ?? 'prenotazioni';
+    sezioni.forEach((s) => (s.hidden = s.id !== scelta));
+    document.querySelectorAll<HTMLElement>('[data-sezione]').forEach((a) => {
+      if (a.dataset.sezione === scelta) a.setAttribute('aria-current', 'true');
+      else a.removeAttribute('aria-current');
+    });
+  }
+  document.querySelectorAll<HTMLAnchorElement>('[data-sezione]').forEach((a) =>
+    a.addEventListener('click', (evento) => {
+      evento.preventDefault();
+      history.replaceState(null, '', a.getAttribute('href'));
+      mostraSezione();
+      if (matchMedia('(max-width: 1023px)').matches)
+        document.querySelector('.pannelli')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }),
+  );
+  window.addEventListener('hashchange', mostraSezione);
+  mostraSezione();
+
   document.getElementById('esci')?.addEventListener('click', async () => {
     await fetch('/api/accesso/sign-out', {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
       body: '{}',
     });
+    scollegaAccount();
     location.href = '/';
   });
 
@@ -107,33 +194,113 @@ const STATO: Record<string, string> = {
     padding-block: 2rem 4rem;
     display: grid;
     gap: 1.5rem;
-    max-width: 56rem;
+    align-items: start;
   }
-  .testa {
+  @media (min-width: 1024px) {
+    .pagina {
+      grid-template-columns: 20rem minmax(0, 1fr);
+    }
+    .colonna {
+      position: sticky;
+      top: calc(var(--altezza-testata) + 1rem);
+    }
+  }
+  .colonna {
     display: grid;
-    gap: 0.5rem;
+    gap: 1.25rem;
+  }
+  @media (min-width: 640px) {
+    .colonna.riquadro {
+      padding: 1.5rem;
+    }
+  }
+  .chi {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  .iniziale {
+    flex: none;
+    width: 4.5rem;
+    height: 4.5rem;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    background: var(--lime);
+    color: #000;
+    font-size: 2rem;
+    box-shadow: var(--ombra-brutal);
+  }
+  .chi-testo {
+    display: grid;
+    gap: 0.4rem;
     justify-items: start;
+    min-width: 0;
   }
   h1 {
-    font-size: 2rem;
+    font-size: 1.5rem;
     line-height: 1.1;
     color: #fff;
     overflow-wrap: anywhere;
   }
-  @media (min-width: 640px) {
-    h1 {
-      font-size: 2.75rem;
-    }
-  }
   .email {
+    font-size: 0.8rem;
     color: var(--testo-tenue);
     font-weight: 700;
+    overflow-wrap: anywhere;
   }
   .benvenuto {
     color: var(--lime);
     font-weight: 800;
   }
+  .sezioni {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  @media (min-width: 1024px) {
+    .sezioni {
+      display: grid;
+    }
+  }
+  .sezione {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.6rem;
+    padding: 0.55rem 0.9rem;
+    border-radius: var(--raggio-pillola);
+    border: 1px solid var(--linea);
+    font-size: 0.85rem;
+    font-weight: 800;
+    color: #fff;
+    transition:
+      border-color var(--transizione),
+      background-color var(--transizione);
+  }
+  .sezione:hover {
+    border-color: var(--lime);
+  }
+  .sezione[aria-current='true'] {
+    background: var(--lime);
+    border-color: var(--lime);
+    color: #000;
+  }
+  .numero {
+    min-width: 1.5rem;
+    padding: 0.05rem 0.45rem;
+    border-radius: var(--raggio-pillola);
+    background: rgb(91 33 182 / 0.6);
+    color: #fff;
+    font-size: 0.75rem;
+    text-align: center;
+  }
+  .sezione[aria-current='true'] .numero {
+    background: #000;
+    color: var(--lime);
+  }
   .esci {
+    justify-self: start;
     font-size: 0.85rem;
     font-weight: 800;
     color: var(--testo-tenue);
@@ -141,6 +308,11 @@ const STATO: Record<string, string> = {
   }
   .esci:hover {
     color: var(--lime);
+  }
+  .pannelli {
+    display: grid;
+    gap: 1.5rem;
+    scroll-margin-top: calc(var(--altezza-testata) + 1rem);
   }
   h2 {
     font-size: 1.25rem;
@@ -206,6 +378,14 @@ const STATO: Record<string, string> = {
   .annullata {
     opacity: 0.6;
   }
+  .annulla {
+    grid-column: 2;
+    justify-self: end;
+    font-size: 0.8rem;
+    font-weight: 800;
+    color: #fb923c;
+    text-decoration: underline;
+  }
   @media (max-width: 480px) {
     .prenotazione {
       grid-template-columns: minmax(0, 1fr);
@@ -216,13 +396,5 @@ const STATO: Record<string, string> = {
       grid-row: auto;
       justify-self: start;
     }
-  }
-  .annulla {
-    grid-column: 2;
-    justify-self: end;
-    font-size: 0.8rem;
-    font-weight: 800;
-    color: #fb923c;
-    text-decoration: underline;
   }
 </style>

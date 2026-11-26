@@ -25,7 +25,14 @@ Niente Tailwind: ogni componente ha il suo CSS. Analisi tecnica completa: vedi C
 ## Account (fase 5)
 
 - **Better Auth** con email e password, email confermata e recupero della password (`src/lib/accesso.ts`, interfacce in `/api/accesso/*`).
-  Pagine `/accedi`, `/registrati`, `/recupera-password`, `/nuova-password`, `/account` (prenotazioni e preferiti).
+  Pagine `/accedi`, `/registrati`, `/recupera-password`, `/nuova-password`, `/account`.
+- **Pagina account** (`/account`): colonna con nome e sezioni, a destra una sezione alla volta (`#prenotazioni`,
+  `#preferiti`, `#serie`, `#dati`). I miei dati: nome e telefono (`/api/profilo`), cambio password ed eliminazione
+  dell'account (Better Auth `change-password` e `delete-user`, con la password). L'email non si cambia dal sito.
+- **Preferiti e serie seguite**: il browser ne tiene una copia (`src/lib/negozio.ts`); per chi ha fatto l'accesso
+  sono salvati anche in D1 (tabelle `preferiti` e `serie_seguite`, `/api/raccolte`). Al primo accesso da un dispositivo
+  le liste si uniscono, poi comanda quella dell'account; uscendo dall'account spariscono dal dispositivo.
+  Ogni serie mostra la prossima uscita (per codice della serie Starshop, altrimenti per nome ed editore).
 - **Prenotazioni** legate all'account: `/api/prenotazioni` (solo clienti connessi). I pulsanti "Prenota" chiedono di accedere se serve.
 - **Email** con Resend (`src/lib/email.ts`): senza chiave le email si stampano nel terminale, così si provano i flussi in locale.
 - **Segreti**: in locale nel file `.dev.vars` (escluso da git; contiene `BETTER_AUTH_SECRET`). Online:

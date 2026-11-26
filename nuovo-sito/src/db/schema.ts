@@ -2,7 +2,7 @@
    con `npm run db:genera`, e il codice del sito usa questi tipi per leggere e scrivere.
    Date come testo ISO (YYYY-MM-DD per i giorni, YYYY-MM-DDTHH:MM:SSZ per gli istanti), sì/no come 0/1. */
 import { sql } from 'drizzle-orm';
-import { check, index, integer, real, sqliteTable, text } from 'drizzle-orm/sqlite-core';
+import { check, index, integer, primaryKey, real, sqliteTable, text } from 'drizzle-orm/sqlite-core';
 
 const adesso = sql`(strftime('%Y-%m-%dT%H:%M:%SZ', 'now'))`;
 const idCasuale = () => crypto.randomUUID();
@@ -276,6 +276,41 @@ export const prenotazioni = sqliteTable(
     index('prenotazioni_stato').on(t.stato),
     check('prenotazioni_copie', sql`${t.copie} BETWEEN 1 AND 5`),
   ],
+);
+
+/* Preferiti e serie seguite dei clienti con account: gli stessi dati che il browser tiene sul dispositivo,
+   salvati anche qui per ritrovarli su ogni dispositivo. */
+export const preferiti = sqliteTable(
+  'preferiti',
+  {
+    utenteId: text('utente_id')
+      .notNull()
+      .references(() => utenti.id, { onDelete: 'cascade' }),
+    codice: text('codice').notNull(),
+    titolo: text('titolo').notNull(),
+    prezzo: real('prezzo'),
+    /** percorso della scheda prodotto, es. "/prodotto/9788822640245" */
+    indirizzo: text('indirizzo').notNull(),
+    copertina: text('copertina').notNull().default(''),
+    editore: text('editore').notNull().default(''),
+    creatoIl: text('creato_il').notNull().default(adesso),
+  },
+  (t) => [primaryKey({ columns: [t.utenteId, t.codice] })],
+);
+
+export const serieSeguite = sqliteTable(
+  'serie_seguite',
+  {
+    utenteId: text('utente_id')
+      .notNull()
+      .references(() => utenti.id, { onDelete: 'cascade' }),
+    nome: text('nome').notNull(),
+    editore: text('editore').notNull().default(''),
+    /** codice della serie su Starshop, per trovare le prossime uscite */
+    codiceSerie: text('codice_serie'),
+    creataIl: text('creata_il').notNull().default(adesso),
+  },
+  (t) => [primaryKey({ columns: [t.utenteId, t.nome, t.editore] })],
 );
 
 export type Utente = typeof utenti.$inferSelect;

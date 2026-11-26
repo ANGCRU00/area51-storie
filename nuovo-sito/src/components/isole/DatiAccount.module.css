@@ -1,0 +1,123 @@
+.sezioni {
+  display: grid;
+  gap: 1.25rem;
+}
+.modulo,
+.pericolo {
+  display: grid;
+  gap: 1rem;
+  padding: 1.25rem;
+  border-radius: 0.75rem;
+  border: 1px solid var(--linea-tenue);
+  background: var(--scheda);
+}
+.pericolo {
+  border-color: rgb(251 146 60 / 0.45);
+}
+.titolo {
+  font-size: 1rem;
+  font-weight: 900;
+  font-stretch: 125%;
+  color: #fff;
+}
+.campo {
+  display: grid;
+  gap: 0.4rem;
+}
+.campo label {
+  font-size: 0.75rem;
+  font-weight: 900;
+  font-stretch: 125%;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--lime);
+}
+.campo input {
+  width: 100%;
+  background: var(--notte);
+  border: 1px solid var(--linea);
+  border-radius: var(--raggio-pillola);
+  padding: 0.7rem 1.1rem;
+  font-size: 1rem;
+  color: #fff;
+}
+.campo input:focus {
+  outline: none;
+  border-color: var(--lime);
+  box-shadow: 0 0 0 1px var(--lime);
+}
+.campo input[readonly] {
+  color: var(--testo-tenue);
+  border-style: dashed;
+}
+.aiuto {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--testo-tenue);
+}
+.casella {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--testo-tenue);
+  cursor: pointer;
+}
+.casella input {
+  margin-top: 0.1rem;
+  width: 1.1rem;
+  height: 1.1rem;
+  accent-color: var(--lime);
+}
+.modulo button[type='submit'],
+.elimina {
+  justify-self: start;
+}
+.modulo button:disabled {
+  opacity: 0.7;
+  cursor: wait;
+}
+.messaggio,
+.errore {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--lime);
+  min-height: 1.2em;
+}
+.errore {
+  color: #fb923c;
+}
+.avviso {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #fb923c;
+  line-height: 1.5;
+}
+.azioni {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem;
+}
+.elimina {
+  border-radius: var(--raggio-pillola);
+  border: 2px solid #fb923c;
+  padding: 0.6rem 1.2rem;
+  font-size: 0.85rem;
+  font-weight: 900;
+  color: #fb923c;
+  transition:
+    background-color var(--transizione),
+    color var(--transizione);
+}
+.elimina:hover {
+  background: #fb923c;
+  color: #000;
+}
+.annulla {
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: var(--testo-tenue);
+  text-decoration: underline;
+}

@@ -23,8 +23,9 @@ function creaAccesso() {
     user: {
       additionalFields: {
         ruolo: { type: 'string', defaultValue: 'cliente', input: false },
-        telefono: { type: 'string', required: false },
+        telefono: { type: 'string', required: false, input: false },
       },
+      deleteUser: { enabled: true },
     },
     emailAndPassword: {
       enabled: true,
