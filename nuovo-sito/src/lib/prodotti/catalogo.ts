@@ -6,7 +6,7 @@ import { giorniFa } from './formati';
 import { conGenereEEta, leggiSchedeSerie } from './genere-eta';
 import { GENERI, type Categoria, type CategoriaUscita, type Prodotto } from './tipi';
 
-export type Ordine = 'recenti' | 'uscita' | 'prezzo' | 'titolo';
+export type Ordine = 'recenti' | 'uscita' | 'prezzo' | 'prezzo-alto' | 'titolo';
 export type Stato = 'tutti' | 'negozio' | 'preordini';
 
 export type Filtri = {
@@ -121,6 +121,7 @@ const ORDINAMENTI: Record<Ordine, (a: Prodotto, b: Prodotto) => number> = {
   recenti: inEvidenza,
   uscita: (a, b) => perUscita(a, b) || perTitolo(a, b),
   prezzo: (a, b) => (a.prezzo ?? Infinity) - (b.prezzo ?? Infinity) || perTitolo(a, b),
+  'prezzo-alto': (a, b) => (b.prezzo ?? -Infinity) - (a.prezzo ?? -Infinity) || perTitolo(a, b),
   titolo: perTitolo,
 };
 
@@ -194,7 +195,7 @@ export async function cercaProdotti(filtri: Filtri): Promise<Risultato> {
 
 /* ---------- filtri dall'indirizzo ---------- */
 
-const ORDINI: Ordine[] = ['recenti', 'uscita', 'prezzo', 'titolo'];
+const ORDINI: Ordine[] = ['recenti', 'uscita', 'prezzo', 'prezzo-alto', 'titolo'];
 const STATI: Stato[] = ['negozio', 'preordini'];
 
 export type FiltriDellaPagina = Filtri & { cat: Categoria | '' };
